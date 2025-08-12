@@ -1,0 +1,482 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 0 72% 51%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
+    --radius: 0.5rem;
+
+    /* Enhanced Typography System */
+    --font-heading: "Playfair Display", serif;
+    --font-body: "Inter", sans-serif;
+    
+    /* Typography Scale */
+    --text-xs: 0.75rem;     /* 12px */
+    --text-sm: 0.875rem;    /* 14px */
+    --text-base: 1rem;      /* 16px */
+    --text-lg: 1.125rem;    /* 18px */
+    --text-xl: 1.25rem;     /* 20px */
+    --text-2xl: 1.5rem;     /* 24px */
+    --text-3xl: 1.875rem;   /* 30px */
+    --text-4xl: 2.25rem;    /* 36px */
+    --text-5xl: 3rem;       /* 48px */
+    
+    /* Enhanced Spacing System */
+    --space-1: 0.25rem;     /* 4px */
+    --space-2: 0.5rem;      /* 8px */
+    --space-3: 0.75rem;     /* 12px */
+    --space-4: 1rem;        /* 16px */
+    --space-6: 1.5rem;      /* 24px */
+    --space-8: 2rem;        /* 32px */
+    --space-12: 3rem;       /* 48px */
+    --space-16: 4rem;       /* 64px */
+    --space-24: 6rem;       /* 96px */
+
+    /* DA LUZ General Palette - Enhanced */
+    --color-brand-primary: #AE0000;
+    --color-brand-secondary: #C70000;
+    --color-accent: #DB3600;
+    --color-warning: #FE1F02;
+    --color-highlight: #F8D794;
+    --color-bg-light: #F0EACE;
+    --color-bg-lighter: #FFF4B3;
+    --color-bg-cream: #F6FBD6;
+    --color-text-primary: #1C1B1A;
+    --color-text-inverse: #FFFFFF;
+
+    /* Complete Line-Specific Palettes */
+    
+    /* ALMA TERRA Line */
+    --alma-primary: #9B201A;
+    --alma-secondary: #BD311C;
+    --alma-accent: #DF4E21;
+    --alma-light: #FFE58D;
+    --alma-lightest: #FFEFC6;
+    --alma-text-primary: #1C1B1A;
+    --alma-text-inverse: #FFFFFF;
+    
+    /* ECOS Line */
+    --ecos-primary: #12406F;
+    --ecos-secondary: #005180;
+    --ecos-accent: #0084AC;
+    --ecos-light: #81CCD7;
+    --ecos-lightest: #B7DFE5;
+    --ecos-text-primary: #1C1B1A;
+    --ecos-text-inverse: #FFFFFF;
+    
+    /* JADE RITUAL Line */
+    --jade-primary: #04412D;
+    --jade-secondary: #286939;
+    --jade-accent: #0C9E5D;
+    --jade-light: #7BC38E;
+    --jade-lightest: #D3E1BE;
+    --jade-text-primary: #1C1B1A;
+    --jade-text-inverse: #FFFFFF;
+    
+    /* UMBRAL Line */
+    --umbral-primary: #EA4F12;
+    --umbral-secondary: #F17E06;
+    --umbral-accent: #F49200;
+    --umbral-light: #FFD18A;
+    --umbral-lightest: #FFF2DB;
+    --umbral-text-primary: #1C1B1A;
+    --umbral-text-inverse: #FFFFFF;
+    
+    /* UTÓPICA Line */
+    --utopica-primary: #392E13;
+    --utopica-secondary: #72571C;
+    --utopica-accent: #D2A00C;
+    --utopica-light: #F8EE76;
+    --utopica-lightest: #F9F5C5;
+    --utopica-text-primary: #1C1B1A;
+    --utopica-text-inverse: #FFFFFF;
+  }
+
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 72% 51%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+  }
+
+  /* Enhanced Theme Classes for Dynamic Switching */
+  .theme-default {
+    --primary: 0 100% 34%; /* #AE0000 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 100% 39%; /* #C70000 */
+    --accent: 12 100% 43%; /* #DB3600 */
+    --muted: 52 65% 91%; /* #F0EACE */
+    --background: 60 71% 95%; /* #F6FBD6 */
+    
+    /* Dynamic line variables - Fixed with direct values */
+    --line-primary: #AE0000;
+    --line-secondary: #C70000;
+    --line-accent: #DB3600;
+    --line-light: #F0EACE;
+    --line-lightest: #F6FBD6;
+  }
+
+  .theme-alma-terra {
+    --primary: 7 85% 35%; /* #9B201A */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 10 75% 42%; /* #BD311C */
+    --accent: 12 85% 51%; /* #DF4E21 */
+    --muted: 46 100% 77%; /* #FFE58D */
+    --background: 45 100% 89%; /* #FFEFC6 */
+    
+    /* Dynamic line variables - Fixed with direct values */
+    --line-primary: #9B201A;
+    --line-secondary: #BD311C;
+    --line-accent: #DF4E21;
+    --line-light: #FFE58D;
+    --line-lightest: #FFEFC6;
+  }
+
+  .theme-ecos {
+    --primary: 208 83% 25%; /* #12406F */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 203 100% 25%; /* #005180 */
+    --accent: 194 100% 34%; /* #0084AC */
+    --muted: 188 51% 68%; /* #81CCD7 */
+    --background: 191 50% 81%; /* #B7DFE5 */
+    
+    /* Dynamic line variables - Fixed with direct values */
+    --line-primary: #12406F;
+    --line-secondary: #005180;
+    --line-accent: #0084AC;
+    --line-light: #81CCD7;
+    --line-lightest: #B7DFE5;
+  }
+
+  .theme-jade-ritual {
+    --primary: 161 92% 13%; /* #04412D */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 139 47% 35%; /* #286939 */
+    --accent: 150 91% 33%; /* #0C9E5D */
+    --muted: 142 42% 63%; /* #7BC38E */
+    --background: 81 37% 80%; /* #D3E1BE */
+    
+    /* Dynamic line variables - Fixed with direct values */
+    --line-primary: #04412D;
+    --line-secondary: #286939;
+    --line-accent: #0C9E5D;
+    --line-light: #7BC38E;
+    --line-lightest: #D3E1BE;
+  }
+
+  .theme-umbral {
+    --primary: 18 88% 49%; /* #EA4F12 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 27 94% 49%; /* #F17E06 */
+    --accent: 35 100% 48%; /* #F49200 */
+    --muted: 39 100% 76%; /* #FFD18A */
+    --background: 43 100% 93%; /* #FFF2DB */
+    
+    /* Dynamic line variables - Fixed with direct values */
+    --line-primary: #EA4F12;
+    --line-secondary: #F17E06;
+    --line-accent: #F49200;
+    --line-light: #FFD18A;
+    --line-lightest: #FFF2DB;
+  }
+
+  .theme-utopica {
+    --primary: 49 48% 18%; /* #392E13 */
+    --primary-foreground: 0 0% 98%;
+    --secondary: 44 63% 28%; /* #72571C */
+    --accent: 50 92% 44%; /* #D2A00C */
+    --muted: 52 92% 72%; /* #F8EE76 */
+    --background: 51 86% 88%; /* #F9F5C5 */
+    
+    /* Dynamic line variables - Fixed with direct values */
+    --line-primary: #392E13;
+    --line-secondary: #72571C;
+    --line-accent: #D2A00C;
+    --line-light: #F8EE76;
+    --line-lightest: #F9F5C5;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  
+  /* Enhanced Typography Classes */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  
+  h1 { font-size: var(--text-5xl); }
+  h2 { font-size: var(--text-4xl); }
+  h3 { font-size: var(--text-3xl); }
+  h4 { font-size: var(--text-2xl); }
+  h5 { font-size: var(--text-xl); }
+  h6 { font-size: var(--text-lg); }
+  
+  p, span, div {
+    font-family: var(--font-body);
+    line-height: 1.6;
+  }
+  
+  .text-heading {
+    font-family: var(--font-heading);
+  }
+  
+  .text-body {
+    font-family: var(--font-body);
+  }
+}
+
+/* Enhanced DA LUZ Custom Classes */
+.alkimya-gradient {
+  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+}
+
+.alkimya-hero {
+  background: linear-gradient(135deg, rgba(174, 0, 0, 0.8), rgba(220, 54, 0, 0.6));
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.alkimya-text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Card Hover Effects */
+.alkimya-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.alkimya-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(174, 0, 0, 0.2);
+}
+
+/* Dynamic Line Theme Classes */
+.line-themed-bg {
+  background-color: var(--line-primary);
+}
+
+.line-themed-text {
+  color: var(--line-primary);
+}
+
+.line-themed-border {
+  border-color: var(--line-primary);
+}
+
+.line-themed-accent-bg {
+  background-color: var(--line-accent);
+}
+
+.line-themed-light-bg {
+  background-color: var(--line-light);
+}
+
+.line-themed-lightest-bg {
+  background-color: var(--line-lightest);
+}
+
+/* Enhanced Button Variants */
+.btn-line-primary {
+  background-color: var(--line-primary);
+  color: var(--line-text-inverse, #FFFFFF);
+  border: 2px solid var(--line-primary);
+  transition: all 0.3s ease;
+}
+
+.btn-line-primary:hover {
+  background-color: var(--line-secondary);
+  border-color: var(--line-secondary);
+  transform: translateY(-2px);
+}
+
+.btn-line-secondary {
+  background-color: transparent;
+  color: var(--line-primary);
+  border: 2px solid var(--line-primary);
+  transition: all 0.3s ease;
+}
+
+.btn-line-secondary:hover {
+  background-color: var(--line-primary);
+  color: var(--line-text-inverse, #FFFFFF);
+  transform: translateY(-2px);
+}
+
+/* Custom animations for style tester */
+@keyframes alkimya-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.alkimya-float {
+  animation: alkimya-float 3s ease-in-out infinite;
+}
+
+@keyframes alkimya-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.alkimya-pulse {
+  animation: alkimya-pulse 2s ease-in-out infinite;
+}
+
+@keyframes alkimya-shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+
+.alkimya-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  background-size: 200px 100%;
+  animation: alkimya-shimmer 2s infinite;
+}
+
+/* Enhanced Style tester specific utilities */
+.style-tester {
+  --dynamic-border-radius: 8px;
+  --dynamic-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  --dynamic-font-size: 16px;
+  --dynamic-spacing: 16px;
+}
+
+.style-tester-preview {
+  border-radius: var(--dynamic-border-radius);
+  box-shadow: var(--dynamic-shadow);
+  font-size: var(--dynamic-font-size);
+  padding: var(--dynamic-spacing);
+  transition: all 0.3s ease;
+}
+
+/* React Bits compatible classes */
+.react-bits-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: react-bits-fade-in-up 0.6s ease-out forwards;
+}
+
+@keyframes react-bits-fade-in-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.react-bits-slide-in {
+  opacity: 0;
+  transform: translateX(-50px);
+  animation: react-bits-slide-in-right 0.6s ease-out forwards;
+}
+
+@keyframes react-bits-slide-in-right {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.react-bits-scale-in {
+  opacity: 0;
+  transform: scale(0.8);
+  animation: react-bits-scale-in 0.6s ease-out forwards;
+}
+
+@keyframes react-bits-scale-in {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Enhanced Component theme adjustments */
+.theme-alma-terra .bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.theme-ecos .bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.theme-jade-ritual .bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.theme-umbral .bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+.theme-utopica .bg-primary {
+  background-color: hsl(var(--primary));
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+  .alkimya-float,
+  .alkimya-pulse,
+  .alkimya-shimmer,
+  .react-bits-fade-in,
+  .react-bits-slide-in,
+  .react-bits-scale-in,
+  .alkimya-card-hover,
+  .btn-line-primary,
+  .btn-line-secondary {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .alkimya-hero {
+    background: var(--color-brand-primary);
+    color: white;
+  }
+  
+  .alkimya-gradient {
+    background: var(--color-brand-primary);
+  }
+} 
