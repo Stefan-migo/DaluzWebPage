@@ -1,41 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-import { createClient } from '@/utils/supabase/server'; // Correct import
-import { createClient as createAdminClient } from '@supabase/supabase-js';
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 
 const mpClient = new MercadoPagoConfig({ 
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN! 
 });
 
-// Admin client for database operations that require elevated privileges
-const supabaseAdmin = createAdminClient(
+const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
 export async function POST(req: NextRequest) {
-  // 1. Create a Supabase client that can read cookies
-  const supabase = await createClient(); // Use the correct, existing function
+  const cookieStore = cookies();
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        get(name: string) {
+          return cookieStore.get(name)?.value;
+        },
+      },
+    }
+  );
 
-  // 2. Get the current user from the session
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  // 3. Get cart items and customer info from the request body
   const { items, customerInfo } = await req.json();
-  if (!items || items.length === 0) {
+  if (!items || !items.length === 0) {
     return NextResponse.json({ error: 'No items in cart' }, { status: 400 });
   }
 
-  // 4. Validate address number server-side
   const streetNumber = parseInt(customerInfo.addressNumber, 10);
   if (isNaN(streetNumber) || streetNumber <= 0) {
     return NextResponse.json({ error: 'Invalid address number' }, { status: 400 });
   }
 
-  // 5. Create a new order record in the database first
   const totalAmount = items.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0);
   const { data: order, error: orderError } = await supabaseAdmin
     .from('orders')
@@ -44,7 +50,6 @@ export async function POST(req: NextRequest) {
       status: 'pending',
       total: totalAmount,
       currency: 'ARS',
-      // You can add more customer info here if your table supports it
     })
     .select()
     .single();
@@ -54,7 +59,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
   }
 
-  // 6. Prepare the preference for Mercado Pago
   const preferenceItems = items.map((item: any) => ({
     id: item.productId,
     title: item.name,
@@ -81,12 +85,11 @@ export async function POST(req: NextRequest) {
           failure: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/failure`,
         },
         auto_return: 'approved',
-        external_reference: order.id.toString(), // Link the payment to our order ID
+        external_reference: order.id.toString(),
         notification_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mercadopago`,
       },
     });
 
-    // 7. Update our order with the preference ID from Mercado Pago
     await supabaseAdmin
       .from('orders')
       .update({ mercadopago_preference_id: result.id })
@@ -112,7 +115,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const supabase = createClient();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookies().get(name)?.value;
+          },
+        },
+      }
+    );
 
     // Get order from database
     const { data: order, error: orderError } = await supabase
