@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +19,7 @@ interface OrderDetails {
   created_at: string;
 }
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
@@ -267,5 +267,22 @@ export default function CheckoutSuccessPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-crema-suave to-blanco flex items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-8 text-center">
+            <div className="animate-spin h-8 w-8 border-b-2 border-dorado mx-auto mb-4"></div>
+            <p className="text-gris-oscuro">Cargando detalles de tu orden...</p>
+          </CardContent>
+        </Card>
+      </div>
+    }>
+      <CheckoutSuccessContent />
+    </Suspense>
   );
 } 

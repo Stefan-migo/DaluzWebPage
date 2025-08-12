@@ -14,8 +14,5 @@ export default defineCliConfig({
   },
   project: {
     basePath: '/studio',
-  },
-  studio: {
-    host: 'daluzconsciente'
   }
 })

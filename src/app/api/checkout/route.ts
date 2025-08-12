@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   }
 
   const { items, customerInfo } = await req.json();
-  if (!items || !items.length === 0) {
+  if (!items || items.length === 0) {
     return NextResponse.json({ error: 'No items in cart' }, { status: 400 });
   }
 

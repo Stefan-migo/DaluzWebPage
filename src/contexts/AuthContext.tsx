@@ -8,8 +8,9 @@ type Profile = Tables<'profiles'>
 
 interface AuthContextType extends AuthState {
   signUp: (email: string, password: string, userData?: {
-    first_name?: string
-    last_name?: string
+    firstName?: string
+    lastName?: string
+    phone?: string
   }) => Promise<{ data: any; error: any }>
   signIn: (email: string, password: string) => Promise<{ data: any; error: any }>
   signOut: () => Promise<{ error: any }>
