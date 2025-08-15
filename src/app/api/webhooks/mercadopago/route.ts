@@ -84,6 +84,10 @@ export async function POST(req: NextRequest) {
           updateData.transaction_amount = paymentInfo.transaction_amount;
           updateData.net_received_amount = paymentInfo.net_received_amount || paymentInfo.transaction_amount;
           updateData.fees = paymentInfo.fee_details ? paymentInfo.fee_details.reduce((sum: number, fee: any) => sum + fee.amount, 0) : 0;
+          // Update total_amount if not set
+          if (!updateData.total_amount) {
+            updateData.total_amount = paymentInfo.transaction_amount;
+          }
         }
 
         const { error } = await supabaseAdmin
@@ -106,10 +110,27 @@ export async function POST(req: NextRequest) {
 
             if (orderItems && orderItems.length > 0) {
               for (const item of orderItems) {
-                await supabaseAdmin.rpc('decrease_product_stock', {
-                  product_id: item.product_id,
-                  quantity: item.quantity
-                });
+                try {
+                  // Use the inventory function or direct update if function fails
+                  const { error: stockError } = await supabaseAdmin.rpc('decrease_product_stock', {
+                    product_id: item.product_id,
+                    quantity: item.quantity
+                  });
+                  
+                  if (stockError) {
+                    console.warn('RPC function failed, updating inventory directly:', stockError);
+                    // Fallback: direct inventory update
+                    await supabaseAdmin
+                      .from('products')
+                      .update({ 
+                        inventory_quantity: supabaseAdmin.raw('GREATEST(0, inventory_quantity - ?)', [item.quantity]),
+                        stock_quantity: supabaseAdmin.raw('GREATEST(0, stock_quantity - ?)', [item.quantity])
+                      })
+                      .eq('id', item.product_id);
+                  }
+                } catch (err) {
+                  console.error(`Failed to update inventory for product ${item.product_id}:`, err);
+                }
               }
             }
           } catch (inventoryError) {

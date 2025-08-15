@@ -48,12 +48,13 @@ CREATE TABLE IF NOT EXISTS stock_movements (
 ALTER TABLE stock_movements ENABLE ROW LEVEL SECURITY;
 
 -- Policy for admins to view all stock movements
+-- Note: Using membership_tier as role indicator since role column doesn't exist
 CREATE POLICY "Admins can view all stock movements" ON stock_movements
   FOR SELECT USING (
     EXISTS (
       SELECT 1 FROM profiles 
       WHERE profiles.id = auth.uid() 
-      AND profiles.role = 'admin'
+      AND profiles.membership_tier = 'admin'
     )
   );
 
@@ -63,7 +64,7 @@ CREATE POLICY "Admins can insert stock movements" ON stock_movements
     EXISTS (
       SELECT 1 FROM profiles 
       WHERE profiles.id = auth.uid() 
-      AND profiles.role = 'admin'
+      AND profiles.membership_tier = 'admin'
     )
   );
 

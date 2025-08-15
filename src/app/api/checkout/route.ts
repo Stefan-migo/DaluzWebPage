@@ -38,48 +38,24 @@ export async function POST(req: NextRequest) {
       }
     );
 
-    // Try multiple auth methods
+    // Simplified authentication - try token first, then cookies
     let user = null;
-    let authMethod = 'none';
 
-    // Method 1: Try cookie-based auth first
-    const { data: { user: cookieUser } } = await supabase.auth.getUser();
-    if (cookieUser) {
-      user = cookieUser;
-      authMethod = 'cookies';
-    }
-
-    // Method 2: Try token-based auth if cookies failed
-    if (!user && bearerToken) {
+    if (bearerToken) {
       const { data: { user: tokenUser } } = await supabase.auth.getUser(bearerToken);
-      if (tokenUser) {
-        user = tokenUser;
-        authMethod = 'bearer_token';
-      }
+      user = tokenUser;
     }
 
-    // Debug logging
-    console.log('Checkout auth attempt:', {
-      authMethod,
-      hasUser: !!user,
-      userId: user?.id,
-      hasAuthHeader: !!authHeader,
-      cookieCount: cookieStore.getAll().length,
-      supabaseCookies: cookieStore.getAll().filter(c => c.name.startsWith('sb-')).length
-    });
+    if (!user) {
+      const { data: { user: cookieUser } } = await supabase.auth.getUser();
+      user = cookieUser;
+    }
     
     if (!user) {
       return NextResponse.json({ 
-        error: 'Authentication required. Please log in and try again.',
-        debug: {
-          cookieCount: cookieStore.getAll().length,
-          hasAuthHeader: !!authHeader,
-          supabaseCookies: cookieStore.getAll().filter(c => c.name.startsWith('sb-')).map(c => c.name)
-        }
+        error: 'Authentication required. Please log in and try again.'
       }, { status: 401 });
     }
-
-    console.log('Checkout: User authenticated via', authMethod, '- User ID:', user.id);
 
     const { items, customerInfo } = await req.json();
   if (!items || items.length === 0) {
@@ -224,9 +200,9 @@ export async function GET(request: NextRequest) {
       success: true,
       order_id: order.id,
       status: order.status,
-      total_amount: order.total_amount,
+      total_amount: order.total_amount || order.total,
       currency: order.currency,
-      preference_id: order.mp_preference_id,
+      preference_id: order.mercadopago_preference_id,
       created_at: order.created_at
     });
 
