@@ -23,14 +23,31 @@ export async function POST(req: NextRequest) {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
+        set(name: string, value: string, options: any) {
+          // For API routes, we don't set cookies but need this method
+          // to prevent Supabase from throwing errors
+        },
+        remove(name: string, options: any) {
+          // For API routes, we don't remove cookies but need this method
+          // to prevent Supabase from throwing errors
+        },
       },
     }
   );
 
   const { data: { user } } = await supabase.auth.getUser();
+  
+  // Enhanced error logging for debugging
   if (!user) {
+    console.error('Checkout: User not authenticated. Session data:', {
+      hasAccessToken: !!cookieStore.get('sb-access-token'),
+      hasRefreshToken: !!cookieStore.get('sb-refresh-token'),
+      cookies: cookieStore.getAll().map(c => c.name)
+    });
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  console.log('Checkout: User authenticated:', user.id);
 
   const { items, customerInfo } = await req.json();
   if (!items || items.length === 0) {
@@ -144,6 +161,12 @@ export async function GET(request: NextRequest) {
         cookies: {
           get(name: string) {
             return cookies().get(name)?.value;
+          },
+          set(name: string, value: string, options: any) {
+            // For API routes, we don't set cookies
+          },
+          remove(name: string, options: any) {
+            // For API routes, we don't remove cookies
           },
         },
       }
