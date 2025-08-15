@@ -27,29 +27,58 @@ export function useAuth() {
   useEffect(() => {
     let mounted = true
 
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      if (mounted) {
+        console.warn('Auth initialization timed out, setting loading to false')
+        setAuthState(prev => ({ ...prev, loading: false }))
+      }
+    }, 5000) // 5 second timeout
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
       if (!mounted) return
+      clearTimeout(timeoutId)
       
       if (error) {
+        console.error('Auth session error:', error)
         setAuthState(prev => ({ ...prev, error, loading: false }))
         return
       }
 
       if (session?.user) {
-        // Fetch user profile
-        fetchProfile(session.user.id).then(profile => {
-          if (!mounted) return
-          setAuthState({
-            user: session.user,
-            profile,
-            session,
-            loading: false,
-            error: null
+        // Fetch user profile with error handling
+        fetchProfile(session.user.id)
+          .then(profile => {
+            if (!mounted) return
+            setAuthState({
+              user: session.user,
+              profile,
+              session,
+              loading: false,
+              error: null
+            })
           })
-        })
+          .catch(profileError => {
+            console.error('Profile fetch error:', profileError)
+            // Still set user data even if profile fails
+            if (!mounted) return
+            setAuthState({
+              user: session.user,
+              profile: null,
+              session,
+              loading: false,
+              error: null
+            })
+          })
       } else {
         setAuthState(prev => ({ ...prev, loading: false }))
+      }
+    }).catch(sessionError => {
+      console.error('Session check error:', sessionError)
+      if (mounted) {
+        clearTimeout(timeoutId)
+        setAuthState(prev => ({ ...prev, loading: false, error: sessionError }))
       }
     })
 
@@ -87,20 +116,32 @@ export function useAuth() {
 
     return () => {
       mounted = false
+      clearTimeout(timeoutId)
       subscription.unsubscribe()
     }
   }, [])
 
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
     try {
-      const { data, error } = await supabase
+      // Add timeout to profile fetch
+      const profilePromise = supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .single()
 
+      const timeoutPromise = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
+      )
+
+      const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any
+
       if (error) {
         console.error('Error fetching profile:', error)
+        // If profile doesn't exist, that's okay - we'll create it later
+        if (error.code === 'PGRST116') {
+          console.log('Profile not found for user, will create one')
+        }
         return null
       }
 
@@ -173,17 +214,26 @@ export function useAuth() {
   const signIn = async (email: string, password: string) => {
     setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    })
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      })
 
-    if (error) {
+      if (error) {
+        setAuthState(prev => ({ ...prev, error, loading: false }))
+        return { data: null, error }
+      }
+
+      // Don't set loading false here - let the auth state change handler do it
+      // This prevents race conditions
+      return { data, error: null }
+
+    } catch (error: any) {
+      console.error('SignIn error:', error)
       setAuthState(prev => ({ ...prev, error, loading: false }))
       return { data: null, error }
     }
-
-    return { data, error: null }
   }
 
   const signOut = async () => {
