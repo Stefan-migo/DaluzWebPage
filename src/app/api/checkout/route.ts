@@ -71,9 +71,12 @@ export async function POST(req: NextRequest) {
   const { data: order, error: orderError } = await supabaseAdmin
     .from('orders')
     .insert({
+      order_number: `DL-${Date.now()}`,
       user_id: user.id,
+      email: customerInfo.email,
       status: 'pending',
-      total: totalAmount,
+      subtotal: totalAmount,
+      total_amount: totalAmount,
       currency: 'ARS',
     })
     .select()
@@ -92,8 +95,9 @@ export async function POST(req: NextRequest) {
     quantity: item.quantity,
     unit_price: item.price,
     total_price: item.price * item.quantity,
-    size: item.size || null,
-    created_at: new Date().toISOString()
+    product_name: item.name,
+    variant_title: item.size || null,
+    sku: item.sku || null,
   }));
 
   const { error: orderItemsError } = await supabaseAdmin
