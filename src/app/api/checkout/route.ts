@@ -59,6 +59,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Failed to create order' }, { status: 500 });
   }
 
+  // Create order items
+  const orderItems = items.map((item: any) => ({
+    order_id: order.id,
+    product_id: item.productId,
+    variant_id: item.variantId || null,
+    quantity: item.quantity,
+    unit_price: item.price,
+    total_price: item.price * item.quantity,
+    size: item.size || null,
+    created_at: new Date().toISOString()
+  }));
+
+  const { error: orderItemsError } = await supabaseAdmin
+    .from('order_items')
+    .insert(orderItems);
+
+  if (orderItemsError) {
+    console.error('Error creating order items:', orderItemsError);
+    // Don't fail the whole process, but log the error
+    console.warn('Order created but order items failed:', order.id);
+  }
+
   const preferenceItems = items.map((item: any) => ({
     id: item.productId,
     title: item.name,
