@@ -24,7 +24,7 @@ import {
 import { toast } from "sonner";
 import Link from "next/link";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/client';
 
 interface CheckoutForm {
   firstName: string;
@@ -117,10 +117,7 @@ export default function CheckoutPage() {
     
     try {
       // Get the current session token for authentication
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      );
+      const supabase = createClient();
       
       const { data: { session } } = await supabase.auth.getSession();
       
