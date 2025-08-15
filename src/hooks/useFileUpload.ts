@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@/utils/supabase/client';
 
 interface UploadOptions {
   bucket: string;
@@ -46,6 +46,7 @@ export function useFileUpload() {
       }
 
       // Get current user
+      const supabase = createClient()
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) {
         throw new Error('Usuario no autenticado');

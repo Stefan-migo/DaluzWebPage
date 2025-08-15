@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { User, Session, AuthError } from '@supabase/supabase-js'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/client'
 import { Tables } from '@/types/database'
 
 type Profile = Tables<'profiles'>
@@ -26,6 +26,7 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true
+    const supabase = createClient()
 
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
@@ -122,6 +123,7 @@ export function useAuth() {
   }, [])
 
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
+    const supabase = createClient()
     try {
       // Add timeout to profile fetch
       const profilePromise = supabase
@@ -157,6 +159,7 @@ export function useAuth() {
     lastName?: string
     phone?: string
   }) => {
+    const supabase = createClient()
     setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
     try {
@@ -212,6 +215,7 @@ export function useAuth() {
   }
 
   const signIn = async (email: string, password: string) => {
+    const supabase = createClient()
     setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
     try {
@@ -237,6 +241,7 @@ export function useAuth() {
   }
 
   const signOut = async () => {
+    const supabase = createClient()
     setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
     const { error } = await supabase.auth.signOut()
@@ -250,6 +255,7 @@ export function useAuth() {
   }
 
   const updateProfile = async (updates: Partial<Profile>) => {
+    const supabase = createClient()
     if (!authState.user) {
       throw new Error('No user logged in')
     }
@@ -275,6 +281,7 @@ export function useAuth() {
   }
 
   const resetPassword = async (email: string) => {
+    const supabase = createClient()
     setAuthState(prev => ({ ...prev, loading: true, error: null }))
 
     try {

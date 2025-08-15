@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@/utils/supabase/client";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -77,6 +77,7 @@ export default function SettingsPage() {
     
     try {
       // Update password with Supabase Auth
+      const supabase = createClient()
       const { error } = await supabase.auth.updateUser({
         password: data.newPassword
       });
@@ -135,6 +136,7 @@ export default function SettingsPage() {
 
     try {
       // Sign out the user directly (profile deletion would be handled server-side)
+      const supabase = createClient()
       await supabase.auth.signOut();
       
       toast.success('Cuenta eliminada correctamente');
