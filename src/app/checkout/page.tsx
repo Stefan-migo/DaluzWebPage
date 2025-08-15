@@ -24,6 +24,7 @@ import {
 import { toast } from "sonner";
 import Link from "next/link";
 import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
+import { createClient } from '@supabase/supabase-js';
 
 interface CheckoutForm {
   firstName: string;
@@ -115,11 +116,29 @@ export default function CheckoutPage() {
     setLoading(true);
     
     try {
+      // Get the current session token for authentication
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      );
+      
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      const headers: HeadersInit = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Add authorization header if session exists
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+        console.log('Checkout: Adding auth token to request');
+      } else {
+        console.warn('Checkout: No session token available, trying without auth');
+      }
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers,
         body: JSON.stringify({
           items: items,
           customerInfo: form,

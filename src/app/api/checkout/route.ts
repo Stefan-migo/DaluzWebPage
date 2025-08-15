@@ -14,42 +14,74 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(req: NextRequest) {
-  const cookieStore = cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return cookieStore.get(name)?.value;
+  try {
+    // Get Authorization header as fallback for cookie-based auth
+    const authHeader = req.headers.get('authorization');
+    const bearerToken = authHeader?.replace('Bearer ', '');
+    
+    const cookieStore = cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+          set(name: string, value: string, options: any) {
+            // For API routes, we don't set cookies
+          },
+          remove(name: string, options: any) {
+            // For API routes, we don't remove cookies
+          },
         },
-        set(name: string, value: string, options: any) {
-          // For API routes, we don't set cookies but need this method
-          // to prevent Supabase from throwing errors
-        },
-        remove(name: string, options: any) {
-          // For API routes, we don't remove cookies but need this method
-          // to prevent Supabase from throwing errors
-        },
-      },
+      }
+    );
+
+    // Try multiple auth methods
+    let user = null;
+    let authMethod = 'none';
+
+    // Method 1: Try cookie-based auth first
+    const { data: { user: cookieUser } } = await supabase.auth.getUser();
+    if (cookieUser) {
+      user = cookieUser;
+      authMethod = 'cookies';
     }
-  );
 
-  const { data: { user } } = await supabase.auth.getUser();
-  
-  // Enhanced error logging for debugging
-  if (!user) {
-    console.error('Checkout: User not authenticated. Session data:', {
-      hasAccessToken: !!cookieStore.get('sb-access-token'),
-      hasRefreshToken: !!cookieStore.get('sb-refresh-token'),
-      cookies: cookieStore.getAll().map(c => c.name)
+    // Method 2: Try token-based auth if cookies failed
+    if (!user && bearerToken) {
+      const { data: { user: tokenUser } } = await supabase.auth.getUser(bearerToken);
+      if (tokenUser) {
+        user = tokenUser;
+        authMethod = 'bearer_token';
+      }
+    }
+
+    // Debug logging
+    console.log('Checkout auth attempt:', {
+      authMethod,
+      hasUser: !!user,
+      userId: user?.id,
+      hasAuthHeader: !!authHeader,
+      cookieCount: cookieStore.getAll().length,
+      supabaseCookies: cookieStore.getAll().filter(c => c.name.startsWith('sb-')).length
     });
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+    
+    if (!user) {
+      return NextResponse.json({ 
+        error: 'Authentication required. Please log in and try again.',
+        debug: {
+          cookieCount: cookieStore.getAll().length,
+          hasAuthHeader: !!authHeader,
+          supabaseCookies: cookieStore.getAll().filter(c => c.name.startsWith('sb-')).map(c => c.name)
+        }
+      }, { status: 401 });
+    }
 
-  console.log('Checkout: User authenticated:', user.id);
+    console.log('Checkout: User authenticated via', authMethod, '- User ID:', user.id);
 
-  const { items, customerInfo } = await req.json();
+    const { items, customerInfo } = await req.json();
   if (!items || items.length === 0) {
     return NextResponse.json({ error: 'No items in cart' }, { status: 400 });
   }
@@ -110,7 +142,6 @@ export async function POST(req: NextRequest) {
 
   const preference = new Preference(mpClient);
 
-  try {
     const result = await preference.create({
       body: {
         items: preferenceItems,
@@ -136,8 +167,11 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ id: result.id, init_point: result.init_point });
   } catch (error) {
-    console.error('Error creating Mercado Pago preference:', error);
-    return NextResponse.json({ error: 'Failed to create payment preference' }, { status: 500 });
+    console.error('Checkout API error:', error);
+    return NextResponse.json({ 
+      error: 'Failed to process checkout',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    }, { status: 500 });
   }
 }
 
