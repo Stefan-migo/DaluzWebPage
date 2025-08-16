@@ -315,32 +315,193 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Featured Blog Posts Section */}
-      {featuredPosts.length > 0 && (
-        <section className="py-20 px-6" style={{ backgroundColor: '#AE0000' }}>
-          <div className="container mx-auto max-w-6xl">
-            <h2 className="font-velista text-4xl md:text-5xl text-white text-center mb-16">
-              BLOG DE LA COMUNIDAD
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
-              {featuredPosts.map((post) => (
-                <div key={post._id} className="bg-white rounded-lg p-6 shadow-lg">
-                  <h3 className="font-velista text-xl text-brand-primary mb-4">{post.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-4">
-                    {post.excerpt || "Descubre más contenido de transformación y consciencia."}
-                  </p>
-                  <Link 
-                    href={`/blog/${post.slug.current}`}
-                    className="text-brand-primary font-semibold hover:underline"
-                  >
-                    Leer más →
-                  </Link>
+      {/* PROCESOS Section */}
+      <section className="py-20 px-6 bg-white">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="font-velista text-4xl md:text-5xl text-brand-primary mb-8">
+                PROCESOS
+              </h2>
+              <div className="space-y-6 text-lg leading-relaxed text-gray-700">
+                <p>
+                  Nuestros procesos integrales están diseñados para acompañarte en 
+                  cada etapa de tu transformación personal. Combinamos técnicas ancestrales 
+                  con enfoques contemporáneos para crear un camino único hacia el bienestar.
+                </p>
+                <p>
+                  Cada proceso es personalizado según tus necesidades específicas, 
+                  honrando tu ritmo natural y respetando los ciclos de transformación 
+                  que requiere todo crecimiento auténtico.
+                </p>
+                <p>
+                  Desde la primera consulta hasta el seguimiento posterior, 
+                  te acompañamos con presencia consciente y herramientas efectivas 
+                  para que puedas integrar los cambios de manera sostenible.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-center">
+              {/* Large white circle for process visualization */}
+              <div className="w-80 h-80 rounded-full bg-gradient-to-br from-white to-bg-cream border-4 border-brand-primary/20 shadow-2xl flex items-center justify-center">
+                <div className="w-60 h-60 rounded-full bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="font-velista text-2xl text-brand-primary mb-2">Proceso</div>
+                    <div className="font-velista text-lg text-brand-primary/70">Integral</div>
+                    <div className="w-16 h-0.5 bg-brand-primary/50 mx-auto my-4"></div>
+                    <div className="text-sm text-gray-600">Transformación</div>
+                    <div className="text-sm text-gray-600">Consciente</div>
+                  </div>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
+
+      {/* SESIONES Section */}
+      <section className="py-20 px-6 bg-cream">
+        <div className="container mx-auto max-w-6xl text-center">
+          <h2 className="font-velista text-4xl md:text-5xl text-brand-primary mb-12">
+            SESIONES
+          </h2>
+          <div className="max-w-4xl mx-auto space-y-8">
+            <p className="text-xl leading-relaxed text-gray-700">
+              Nuestras sesiones individuales están diseñadas para crear un espacio sagrado 
+              de encuentro contigo mismo, donde puedas explorar, sanar y expandir tu consciencia 
+              en un ambiente de total confianza y respeto.
+            </p>
+            <div className="grid md:grid-cols-3 gap-8 mt-12">
+              <div className="text-center">
+                <h3 className="font-velista text-2xl text-brand-primary mb-4">
+                  Sesiones de Reiki
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Equilibrio energético a través de la canalización de energía universal, 
+                  promoviendo la auto-sanación natural del cuerpo.
+                </p>
+              </div>
+              <div className="text-center">
+                <h3 className="font-velista text-2xl text-brand-primary mb-4">
+                  Armonización con Cuencos
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Terapia sonora que utiliza las frecuencias sagradas para armonizar 
+                  los chakras y liberar bloqueos energéticos.
+                </p>
+              </div>
+              <div className="text-center">
+                <h3 className="font-velista text-2xl text-brand-primary mb-4">
+                  Lectura de Aura
+                </h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Exploración del campo energético personal para comprender patrones, 
+                  potenciales y áreas de crecimiento espiritual.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* BLOG DE LA COMUNIDAD Section - Redesigned to match reference */}
+      <section className="py-20 px-6" style={{ backgroundColor: '#AE0000' }}>
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="font-velista text-4xl md:text-5xl text-white text-center mb-16">
+            BLOG DE LA COMUNIDAD
+          </h2>
+          
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {/* SABIDURÍA 1 Category */}
+            <div className="bg-white rounded-lg p-8 shadow-lg">
+              <div className="text-center mb-6">
+                <h3 className="font-velista text-2xl text-brand-primary mb-4">SABIDURÍA 1</h3>
+                <div className="w-16 h-0.5 bg-brand-primary mx-auto mb-4"></div>
+                <p className="text-gray-600">Conocimiento Ancestral y Biocosmética Natural</p>
+              </div>
+              
+              {featuredPosts.length > 0 ? (
+                <div className="space-y-4">
+                  {featuredPosts.slice(0, 2).map((post) => (
+                    <Link key={post._id} href={`/blog/${post.slug.current}`} className="block">
+                      <div className="border-l-4 border-brand-primary pl-4 py-2 hover:bg-gray-50 transition-colors">
+                        <h4 className="font-semibold text-gray-800 mb-1">{post.title}</h4>
+                        <p className="text-sm text-gray-600 line-clamp-2">
+                          {post.excerpt || "Descubre más sobre sabiduría ancestral..."}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4 text-gray-600">
+                  <div className="border-l-4 border-brand-primary pl-4 py-2">
+                    <h4 className="font-semibold text-gray-800 mb-1">Los Secretos de la Alkimia Botánica</h4>
+                    <p className="text-sm">Descubre cómo nuestros ancestros utilizaban las plantas para la sanación...</p>
+                  </div>
+                  <div className="border-l-4 border-brand-primary pl-4 py-2">
+                    <h4 className="font-semibold text-gray-800 mb-1">Rituales de Belleza Consciente</h4>
+                    <p className="text-sm">Transforma tu rutina de cuidado personal en un acto sagrado...</p>
+                  </div>
+                </div>
+              )}
+              
+              <div className="text-center mt-6">
+                <Link 
+                  href="/blog" 
+                  className="inline-flex items-center text-brand-primary font-semibold hover:underline"
+                >
+                  Ver más artículos →
+                </Link>
+              </div>
+            </div>
+
+            {/* SABIDURÍA 2 Category */}
+            <div className="bg-white rounded-lg p-8 shadow-lg">
+              <div className="text-center mb-6">
+                <h3 className="font-velista text-2xl text-brand-primary mb-4">SABIDURÍA 2</h3>
+                <div className="w-16 h-0.5 bg-brand-primary mx-auto mb-4"></div>
+                <p className="text-gray-600">Transformación Personal y Bienestar Holístico</p>
+              </div>
+              
+              {featuredPosts.length > 0 ? (
+                <div className="space-y-4">
+                  {featuredPosts.slice(2, 4).map((post) => (
+                    <Link key={post._id} href={`/blog/${post.slug.current}`} className="block">
+                      <div className="border-l-4 border-brand-primary pl-4 py-2 hover:bg-gray-50 transition-colors">
+                        <h4 className="font-semibold text-gray-800 mb-1">{post.title}</h4>
+                        <p className="text-sm text-gray-600 line-clamp-2">
+                          {post.excerpt || "Explora herramientas de transformación..."}
+                        </p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="space-y-4 text-gray-600">
+                  <div className="border-l-4 border-brand-primary pl-4 py-2">
+                    <h4 className="font-semibold text-gray-800 mb-1">El Poder de los Chakras en el Cuidado Personal</h4>
+                    <p className="text-sm">Aprende a equilibrar tu energía mientras cuidas tu piel...</p>
+                  </div>
+                  <div className="border-l-4 border-brand-primary pl-4 py-2">
+                    <h4 className="font-semibold text-gray-800 mb-1">Meditación y Belleza Interior</h4>
+                    <p className="text-sm">Descubre cómo la práctica contemplativa transforma tu ser...</p>
+                  </div>
+                </div>
+              )}
+              
+              <div className="text-center mt-6">
+                <Link 
+                  href="/blog" 
+                  className="inline-flex items-center text-brand-primary font-semibold hover:underline"
+                >
+                  Ver más contenido →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Gallery Section */}
       <section className="py-20 px-6" style={{ backgroundColor: '#AE0000' }}>
