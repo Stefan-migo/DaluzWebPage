@@ -17,7 +17,8 @@
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
     "supabase:status": "npx supabase status",
-    "supabase:reset": "npx supabase db reset"
+    "supabase:reset": "npx supabase db reset",
+    "admin:setup": "node setup-admin.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

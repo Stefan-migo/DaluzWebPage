@@ -119,8 +119,7 @@ export async function POST(req: NextRequest) {
               .single();
 
             if (order && order.email) {
-              const emailService = new EmailNotificationService();
-              await emailService.sendOrderConfirmation(order);
+              await EmailNotificationService.sendOrderConfirmation(order);
               console.log(`📧 Order confirmation email sent to ${order.email}`);
             }
           } catch (emailError) {

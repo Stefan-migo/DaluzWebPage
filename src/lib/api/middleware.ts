@@ -126,25 +126,81 @@ export async function requireAuth(request: NextRequest): Promise<{ userId: strin
   }
 }
 
-// Role-based authorization middleware (placeholder - requires role column in profiles table)
-export async function requireRole(userId: string, requiredRole: string): Promise<void> {
-  // Note: This requires a 'role' column in the profiles table
-  // For now, we'll implement basic admin check via environment variable or user metadata
+// Role-based authorization middleware using admin_users table
+export async function requireRole(userId: string, requiredRole: string = 'admin'): Promise<void> {
   const supabase = createServiceRoleClient()
   
-  const { data: profile, error } = await supabase
-    .from('profiles')
-    .select('id, full_name')
-    .eq('id', userId)
-    .single()
-  
-  if (error || !profile) {
-    throw new AuthorizationError('User profile not found')
+  try {
+    // Check if user is in admin_users table
+    const { data: isAdmin, error: adminError } = await (supabase as any)
+      .rpc('is_admin', { user_id: userId })
+    
+    if (adminError) {
+      console.error('Error checking admin status:', adminError)
+      throw new AuthorizationError('Unable to verify admin status')
+    }
+    
+    if (!isAdmin) {
+      throw new AuthorizationError('Insufficient permissions - admin access required')
+    }
+    
+    // If specific role is required, check that too
+    if (requiredRole !== 'admin') {
+      const { data: userRole, error: roleError } = await (supabase as any)
+        .rpc('get_admin_role', { user_id: userId })
+      
+      if (roleError) {
+        console.error('Error getting admin role:', roleError)
+        throw new AuthorizationError('Unable to verify admin role')
+      }
+      
+      // Define role hierarchy
+      const roleHierarchy = {
+        'super_admin': 4,
+        'store_manager': 3,
+        'customer_support': 2,
+        'content_manager': 1
+      }
+      
+      const userRoleLevel = roleHierarchy[userRole as keyof typeof roleHierarchy] || 0
+      const requiredRoleLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0
+      
+      if (userRoleLevel < requiredRoleLevel) {
+        throw new AuthorizationError(`Insufficient permissions - ${requiredRole} role required`)
+      }
+    }
+    
+    console.log(`Admin access verified for user ${userId} with role check: ${requiredRole}`)
+  } catch (error) {
+    if (error instanceof AuthorizationError) {
+      throw error
+    }
+    console.error('Unexpected error in role check:', error)
+    throw new AuthorizationError('Authentication system error')
   }
-  
-  // TODO: Implement proper role system
-  // For now, all authenticated users have basic access
-  console.log(`Role check for ${requiredRole} - user ${userId} (placeholder implementation)`)
+}
+
+// Log admin activity for audit trail
+export async function logAdminActivity(
+  userId: string,
+  action: string,
+  resourceType: string,
+  resourceId?: string,
+  details?: any
+): Promise<void> {
+  try {
+    const supabase = createServiceRoleClient()
+    
+    await (supabase as any).rpc('log_admin_activity', {
+      p_action: action,
+      p_resource_type: resourceType,
+      p_resource_id: resourceId || null,
+      p_details: details ? JSON.stringify(details) : null
+    })
+  } catch (error) {
+    console.error('Error logging admin activity:', error)
+    // Don't throw here - logging failures shouldn't break the main operation
+  }
 }
 
 // Security headers middleware

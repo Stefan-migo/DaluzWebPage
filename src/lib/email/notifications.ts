@@ -313,6 +313,355 @@ ${data.message}
     })
   }
 
+  // Send order status update notification (Admin function)
+  async sendOrderStatusUpdate(order: any, customMessage?: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const customerName = order.profiles?.full_name || 'Cliente'
+      const customerEmail = order.email || order.profiles?.email
+      
+      if (!customerEmail) {
+        return { success: false, error: 'No customer email found' }
+      }
+
+      const statusLabels = {
+        pending: 'Pendiente',
+        processing: 'En Procesamiento',
+        shipped: 'Enviado',
+        completed: 'Completado',
+        cancelled: 'Cancelado',
+        failed: 'Fallido'
+      }
+
+      const statusLabel = statusLabels[order.status as keyof typeof statusLabels] || order.status
+
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #AE0000 0%, #D4A574 100%); color: white; padding: 30px; text-align: center;">
+            <h1 style="margin: 0;">DA LUZ CONSCIENTE</h1>
+            <p style="margin: 10px 0 0 0;">Actualización de tu pedido</p>
+          </div>
+          <div style="padding: 30px;">
+            <h2>Hola ${customerName},</h2>
+            <p>Tu pedido <strong>${order.order_number}</strong> ha sido actualizado.</p>
+            
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="margin: 0 0 10px 0; color: #AE0000;">Estado Actual</h3>
+              <p style="font-size: 18px; font-weight: bold; color: #AE0000; margin: 0;">
+                ${statusLabel}
+              </p>
+            </div>
+
+            ${customMessage ? `
+              <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin: 20px 0;">
+                <h4 style="margin: 0 0 10px 0; color: #28a745;">Mensaje de nuestro equipo:</h4>
+                <p style="margin: 0;">${customMessage}</p>
+              </div>
+            ` : ''}
+
+            <div style="margin: 30px 0;">
+              <h4>Resumen de tu pedido:</h4>
+              <div style="border: 1px solid #ddd; border-radius: 8px; overflow: hidden;">
+                ${order.order_items?.map((item: any) => `
+                  <div style="padding: 15px; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <div>
+                        <strong>${item.product_name}</strong>
+                        ${item.variant_title ? `<br><small style="color: #666;">Variante: ${item.variant_title}</small>` : ''}
+                        <br><small>Cantidad: ${item.quantity}</small>
+                      </div>
+                      <strong>${formatCurrency(item.unit_price)}</strong>
+                    </div>
+                  </div>
+                `).join('') || ''}
+                <div style="padding: 15px; background: #f8f9fa;">
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 18px;">
+                    <strong>Total:</strong>
+                    <strong style="color: #28a745;">${formatCurrency(order.total_amount)}</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p>Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos.</p>
+            <p>¡Gracias por elegir DA LUZ CONSCIENTE!</p>
+          </div>
+          <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666;">
+            <p><strong>DA LUZ CONSCIENTE</strong><br>Argentina | contacto@daluzconsciente.com</p>
+          </div>
+        </div>
+      `
+
+      const text = `
+DA LUZ CONSCIENTE - Actualización de pedido
+
+Hola ${customerName},
+
+Tu pedido ${order.order_number} ha sido actualizado.
+
+Estado actual: ${statusLabel}
+
+${customMessage ? `Mensaje de nuestro equipo: ${customMessage}\n` : ''}
+
+Si tienes alguna pregunta sobre tu pedido, no dudes en contactarnos.
+
+¡Gracias por elegir DA LUZ CONSCIENTE!
+
+DA LUZ CONSCIENTE
+Argentina | contacto@daluzconsciente.com
+      `
+      
+      return await sendEmail({
+        to: customerEmail,
+        subject: `DA LUZ CONSCIENTE - Actualización de tu pedido ${order.order_number}`,
+        html,
+        text
+      })
+      
+    } catch (error) {
+      console.error('Error sending order status update email:', error)
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      }
+    }
+  }
+
+  // Send shipping notification (Admin function)
+  async sendShippingNotification(order: any): Promise<{ success: boolean; error?: string }> {
+    try {
+      const customerName = order.profiles?.full_name || 'Cliente'
+      const customerEmail = order.email || order.profiles?.email
+      
+      if (!customerEmail) {
+        return { success: false, error: 'No customer email found' }
+      }
+
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #AE0000 0%, #D4A574 100%); color: white; padding: 30px; text-align: center;">
+            <h1 style="margin: 0;">DA LUZ CONSCIENTE</h1>
+            <p style="margin: 10px 0 0 0;">¡Tu pedido está en camino!</p>
+          </div>
+          <div style="padding: 30px;">
+            <h2>¡Buenas noticias, ${customerName}!</h2>
+            <p>Tu pedido <strong>${order.order_number}</strong> ha sido enviado y está en camino.</p>
+            
+            ${order.tracking_number ? `
+              <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin: 20px 0;">
+                <h4 style="margin: 0 0 10px 0; color: #28a745;">Información de envío:</h4>
+                <p><strong>Número de seguimiento:</strong> ${order.tracking_number}</p>
+                ${order.carrier ? `<p><strong>Transportista:</strong> ${order.carrier}</p>` : ''}
+              </div>
+            ` : ''}
+
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h4 style="margin: 0 0 15px 0;">¿Qué sigue?</h4>
+              <ul style="margin: 0; padding-left: 20px;">
+                <li>Tu pedido será entregado en la dirección que proporcionaste</li>
+                <li>Recibirás una notificación cuando sea entregado</li>
+                <li>El tiempo estimado de entrega es de 3-7 días hábiles</li>
+              </ul>
+            </div>
+
+            <p>¡Estamos emocionadas de que pronto puedas disfrutar de tus productos DA LUZ CONSCIENTE!</p>
+            <p>Si tienes alguna pregunta sobre tu envío, no dudes en contactarnos.</p>
+          </div>
+          <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666;">
+            <p><strong>DA LUZ CONSCIENTE</strong><br>Argentina | contacto@daluzconsciente.com</p>
+          </div>
+        </div>
+      `
+
+      const text = `
+DA LUZ CONSCIENTE - ¡Tu pedido está en camino!
+
+¡Buenas noticias, ${customerName}!
+
+Tu pedido ${order.order_number} ha sido enviado y está en camino.
+
+${order.tracking_number ? `Número de seguimiento: ${order.tracking_number}` : ''}
+${order.carrier ? `Transportista: ${order.carrier}` : ''}
+
+¿Qué sigue?
+- Tu pedido será entregado en la dirección que proporcionaste
+- Recibirás una notificación cuando sea entregado  
+- El tiempo estimado de entrega es de 3-7 días hábiles
+
+¡Estamos emocionadas de que pronto puedas disfrutar de tus productos DA LUZ CONSCIENTE!
+
+DA LUZ CONSCIENTE
+Argentina | contacto@daluzconsciente.com
+      `
+      
+      return await sendEmail({
+        to: customerEmail,
+        subject: `DA LUZ CONSCIENTE - ¡Tu pedido ${order.order_number} está en camino!`,
+        html,
+        text
+      })
+      
+    } catch (error) {
+      console.error('Error sending shipping notification email:', error)
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      }
+    }
+  }
+
+  // Send delivery confirmation (Admin function)
+  async sendDeliveryConfirmation(order: any): Promise<{ success: boolean; error?: string }> {
+    try {
+      const customerName = order.profiles?.full_name || 'Cliente'
+      const customerEmail = order.email || order.profiles?.email
+      
+      if (!customerEmail) {
+        return { success: false, error: 'No customer email found' }
+      }
+
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #28a745 0%, #D4A574 100%); color: white; padding: 30px; text-align: center;">
+            <h1 style="margin: 0;">DA LUZ CONSCIENTE</h1>
+            <p style="margin: 10px 0 0 0;">¡Pedido entregado!</p>
+          </div>
+          <div style="padding: 30px;">
+            <h2>¡Perfecto, ${customerName}!</h2>
+            <p>Tu pedido <strong>${order.order_number}</strong> ha sido entregado exitosamente.</p>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745; margin: 20px 0; text-align: center;">
+              <h3 style="margin: 0 0 10px 0; color: #28a745;">✨ ¡Disfruta tu experiencia DA LUZ! ✨</h3>
+              <p style="margin: 0;">Esperamos que ames tus productos tanto como nosotras amamos crearlos para ti.</p>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h4 style="margin: 0 0 15px 0;">¿Te encantaron tus productos?</h4>
+              <p style="margin: 0;">¡Nos encantaría conocer tu experiencia! Comparte tus fotos y testimonios en nuestras redes sociales o envíanos un mensaje.</p>
+            </div>
+
+            <div style="background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 20px 0;">
+              <h4 style="margin: 0 0 10px 0; color: #856404;">Únete a nuestro programa de membresía</h4>
+              <p style="margin: 0; color: #856404;">Descubre nuestro programa de transformación de 7 meses y profundiza en tu camino de bienestar consciente.</p>
+            </div>
+
+            <p>¡Gracias por ser parte de la comunidad DA LUZ CONSCIENTE!</p>
+            <p>Con amor y luz,<br><em>El equipo de DA LUZ</em></p>
+          </div>
+          <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666;">
+            <p><strong>DA LUZ CONSCIENTE</strong><br>Argentina | contacto@daluzconsciente.com</p>
+          </div>
+        </div>
+      `
+
+      const text = `
+DA LUZ CONSCIENTE - ¡Pedido entregado!
+
+¡Perfecto, ${customerName}!
+
+Tu pedido ${order.order_number} ha sido entregado exitosamente.
+
+✨ ¡Disfruta tu experiencia DA LUZ! ✨
+
+Esperamos que ames tus productos tanto como nosotras amamos crearlos para ti.
+
+¿Te encantaron tus productos?
+¡Nos encantaría conocer tu experiencia! Comparte tus fotos y testimonios en nuestras redes sociales o envíanos un mensaje.
+
+Únete a nuestro programa de membresía
+Descubre nuestro programa de transformación de 7 meses y profundiza en tu camino de bienestar consciente.
+
+¡Gracias por ser parte de la comunidad DA LUZ CONSCIENTE!
+
+Con amor y luz,
+El equipo de DA LUZ
+
+DA LUZ CONSCIENTE
+Argentina | contacto@daluzconsciente.com
+      `
+      
+      return await sendEmail({
+        to: customerEmail,
+        subject: `DA LUZ CONSCIENTE - ¡Tu pedido ${order.order_number} ha sido entregado! ✨`,
+        html,
+        text
+      })
+      
+    } catch (error) {
+      console.error('Error sending delivery confirmation email:', error)
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      }
+    }
+  }
+
+  // Send custom message to customer (Admin function)
+  async sendCustomMessage(order: any, message: string): Promise<{ success: boolean; error?: string }> {
+    try {
+      const customerName = order.profiles?.full_name || 'Cliente'
+      const customerEmail = order.email || order.profiles?.email
+      
+      if (!customerEmail) {
+        return { success: false, error: 'No customer email found' }
+      }
+
+      const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #AE0000 0%, #D4A574 100%); color: white; padding: 30px; text-align: center;">
+            <h1 style="margin: 0;">DA LUZ CONSCIENTE</h1>
+            <p style="margin: 10px 0 0 0;">Mensaje personalizado</p>
+          </div>
+          <div style="padding: 30px;">
+            <h2>Hola ${customerName},</h2>
+            <p>Nuestro equipo tiene un mensaje especial para ti en relación a tu pedido <strong>${order.order_number}</strong>:</p>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 8px; border-left: 4px solid #AE0000; margin: 20px 0;">
+              <p style="margin: 0; font-size: 16px; line-height: 1.6;">${message.replace(/\n/g, '<br>')}</p>
+            </div>
+
+            <p>Si tienes alguna pregunta, no dudes en contactarnos. Estamos aquí para ayudarte.</p>
+            <p>Con cariño,<br><em>El equipo de DA LUZ CONSCIENTE</em></p>
+          </div>
+          <div style="background: #f8f9fa; padding: 20px; text-align: center; color: #666;">
+            <p><strong>DA LUZ CONSCIENTE</strong><br>Argentina | contacto@daluzconsciente.com</p>
+          </div>
+        </div>
+      `
+
+      const text = `
+DA LUZ CONSCIENTE - Mensaje personalizado
+
+Hola ${customerName},
+
+Nuestro equipo tiene un mensaje especial para ti en relación a tu pedido ${order.order_number}:
+
+${message}
+
+Si tienes alguna pregunta, no dudes en contactarnos. Estamos aquí para ayudarte.
+
+Con cariño,
+El equipo de DA LUZ CONSCIENTE
+
+DA LUZ CONSCIENTE
+Argentina | contacto@daluzconsciente.com
+      `
+      
+      return await sendEmail({
+        to: customerEmail,
+        subject: `DA LUZ CONSCIENTE - Mensaje sobre tu pedido ${order.order_number}`,
+        html,
+        text
+      })
+      
+    } catch (error) {
+      console.error('Error sending custom message email:', error)
+      return { 
+        success: false, 
+        error: error instanceof Error ? error.message : 'Unknown error' 
+      }
+    }
+  }
+
   // Send bulk emails (for marketing)
   static async sendBulkEmail(
     recipients: string[], 

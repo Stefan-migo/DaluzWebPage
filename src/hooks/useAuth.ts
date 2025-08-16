@@ -34,7 +34,7 @@ export function useAuth() {
         console.warn('Auth initialization timed out, setting loading to false')
         setAuthState(prev => ({ ...prev, loading: false }))
       }
-    }, 5000) // 5 second timeout
+    }, 10000) // 10 second timeout - increased for admin flows
 
     // Get initial session
     supabase.auth.getSession().then(({ data: { session }, error }) => {
@@ -133,7 +133,7 @@ export function useAuth() {
         .single()
 
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000) // Increased to 5s
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 8000) // Increased to 8s for admin flows
       )
 
       const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any
