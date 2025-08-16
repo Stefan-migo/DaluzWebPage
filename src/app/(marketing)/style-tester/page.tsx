@@ -52,11 +52,11 @@ const productLines: { value: ProductLine; label: string; color: string; descript
     color: '#AE0000', 
     description: 'Alkimyas para alma y cuerpo',
     colors: {
-      primary: '#8B5A3C',
-      secondary: '#B17A47',
-      accent: '#D4A574',
-      light: '#F0E6D6',
-      lightest: '#F8F4EF'
+      primary: '#AE0000',
+      secondary: '#C70000',
+      accent: '#DB3600',
+      light: '#F0EACE',
+      lightest: '#F6FBD6'
     }
   },
   { 
@@ -79,10 +79,10 @@ const productLines: { value: ProductLine; label: string; color: string; descript
     description: 'Ritmos naturales',
     colors: {
       primary: '#12406F',
-      secondary: '#1B5B8C',
-      accent: '#2481C4',
-      light: '#A8D4F0',
-      lightest: '#E8F4FC'
+      secondary: '#005180',
+      accent: '#0084AC',
+      light: '#81CCD7',
+      lightest: '#B7DFE5'
     }
   },
   { 
@@ -91,11 +91,11 @@ const productLines: { value: ProductLine; label: string; color: string; descript
     color: '#04412D', 
     description: 'Ceremonias sagradas',
     colors: {
-      primary: '#345511',
-      secondary: '#4A7A16',
-      accent: '#6BA424',
-      light: '#C8E6A0',
-      lightest: '#E8F5D8'
+      primary: '#04412D',
+      secondary: '#286939',
+      accent: '#0C9E5D',
+      light: '#7BC38E',
+      lightest: '#D3E1BE'
     }
   },
   { 
@@ -172,24 +172,86 @@ export default function StyleTesterPage() {
     setState(prev => ({ ...prev, currentTheme: theme }));
   };
 
-  // Live Editor Functions
+  // Live Editor Functions - Enhanced
   const updateColorRole = (color: string) => {
     const root = document.documentElement;
     const property = `--line-${selectedColorRole}`;
     
-    // Apply the CSS variable with important flag
+    // Apply the CSS variable with maximum specificity
     root.style.setProperty(property, color, 'important');
     
-    // Also update the theme context to maintain consistency
+    // Also update all related CSS properties for maximum compatibility
+    const relatedProperties = [
+      `--${selectedColorRole}-primary`,
+      `--${selectedColorRole}-color`,
+      `--color-line-${selectedColorRole}`,
+      `--theme-${selectedColorRole}`
+    ];
+    
+    relatedProperties.forEach(prop => {
+      root.style.setProperty(prop, color, 'important');
+    });
+    
     console.log(`🎨 Updating CSS Variable: ${property} = ${color}`);
     
-    // Force style recalculation
-    document.body.offsetHeight; // Trigger reflow
+    // Force immediate style recalculation and repaint
+    const forceRepaint = () => {
+      document.body.style.display = 'none';
+      document.body.offsetHeight; // Trigger reflow
+      document.body.style.display = '';
+    };
     
-    // Update all elements that might be using this variable
-    const elementsToUpdate = document.querySelectorAll(`[class*="text-line-${selectedColorRole}"], [class*="bg-line-${selectedColorRole}"], [class*="border-line-${selectedColorRole}"]`);
-    elementsToUpdate.forEach((element) => {
-      (element as HTMLElement).style.setProperty('--color-update-trigger', Math.random().toString());
+    // Apply changes immediately to all relevant elements
+    const selectors = [
+      `[class*="text-line-${selectedColorRole}"]`,
+      `[class*="bg-line-${selectedColorRole}"]`,
+      `[class*="border-line-${selectedColorRole}"]`,
+      `.line-themed-bg`,
+      `.line-themed-text`,
+      `.line-themed-border`,
+      `.line-themed-accent-bg`,
+      `.line-themed-light-bg`,
+      `.line-themed-lightest-bg`
+    ];
+    
+    selectors.forEach(selector => {
+      try {
+        const elements = document.querySelectorAll(selector);
+        elements.forEach((element) => {
+          const htmlElement = element as HTMLElement;
+          // Force style recalculation
+          htmlElement.style.setProperty('--force-update', Math.random().toString());
+          
+          // Apply specific styles based on role for all color roles
+          if (selector.includes(`bg-line-${selectedColorRole}`) || selector.includes('line-themed-bg')) {
+            htmlElement.style.setProperty('background-color', color, 'important');
+          }
+          if (selector.includes(`text-line-${selectedColorRole}`) || selector.includes('line-themed-text')) {
+            htmlElement.style.setProperty('color', color, 'important');
+          }
+          if (selector.includes(`border-line-${selectedColorRole}`) || selector.includes('line-themed-border')) {
+            htmlElement.style.setProperty('border-color', color, 'important');
+          }
+          
+          // Handle accent and light specific cases
+          if (selectedColorRole === 'accent' && selector.includes('line-themed-accent-bg')) {
+            htmlElement.style.setProperty('background-color', color, 'important');
+          }
+          if (selectedColorRole === 'light' && selector.includes('line-themed-light-bg')) {
+            htmlElement.style.setProperty('background-color', color, 'important');
+          }
+          if (selectedColorRole === 'lightest' && selector.includes('line-themed-lightest-bg')) {
+            htmlElement.style.setProperty('background-color', color, 'important');
+          }
+        });
+      } catch (e) {
+        console.warn(`Could not update selector ${selector}:`, e);
+      }
+    });
+    
+    // Force repaint
+    requestAnimationFrame(() => {
+      forceRepaint();
     });
     
     console.log('📍 After update - CSS Variables:', {
@@ -200,34 +262,123 @@ export default function StyleTesterPage() {
       lightest: getComputedStyle(root).getPropertyValue('--line-lightest').trim()
     });
     
-    // Show enhanced visual feedback
+    // Enhanced visual feedback with actual color preview
     const notification = document.createElement('div');
     notification.innerHTML = `
-      <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded" style="background-color: ${color}"></div>
-        <span>✅ ${selectedColorRole.toUpperCase()} → ${color}</span>
+      <div class="flex items-center gap-3 p-4">
+        <div class="w-6 h-6 rounded-full border-2 border-white shadow-md" style="background-color: ${color}"></div>
+        <div>
+          <div class="font-semibold">✅ Color Actualizado</div>
+          <div class="text-sm opacity-90">${selectedColorRole.toUpperCase()} → ${color}</div>
+        </div>
       </div>
     `;
-    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-3 rounded-lg z-50 shadow-lg border border-green-400';
+    notification.className = 'fixed top-6 right-6 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl z-[100] shadow-2xl border border-green-400 transform transition-all duration-300 ease-out';
+    notification.style.cssText += `
+      backdrop-filter: blur(10px);
+      box-shadow: 0 20px 40px rgba(34, 197, 94, 0.3);
+    `;
+    
     document.body.appendChild(notification);
     
-    // Auto-remove notification
+    // Animate in
+    requestAnimationFrame(() => {
+      notification.style.transform = 'translateX(0) scale(1)';
+      notification.style.opacity = '1';
+    });
+    
+    // Auto-remove notification with smooth animation
     setTimeout(() => {
       if (document.body.contains(notification)) {
+        notification.style.transform = 'translateX(100%) scale(0.8)';
         notification.style.opacity = '0';
-        notification.style.transform = 'translateX(100%)';
         setTimeout(() => {
           if (document.body.contains(notification)) {
             document.body.removeChild(notification);
           }
         }, 300);
       }
-    }, 2500);
+    }, 3000);
   };
 
   const resetToOriginalTheme = () => {
-    setCurrentTheme(currentTheme); // This will trigger the theme context to reset colors
-    console.log('🔄 Reset to original theme');
+    const root = document.documentElement;
+    
+    // Get the original theme colors from the productLines array
+    const currentLineData = productLines.find(line => line.value === currentTheme);
+    if (!currentLineData) return;
+    
+    // Reset all CSS variables to original theme colors
+    const colorMappings = {
+      primary: currentLineData.colors.primary,
+      secondary: currentLineData.colors.secondary,
+      accent: currentLineData.colors.accent,
+      light: currentLineData.colors.light,
+      lightest: currentLineData.colors.lightest
+    };
+    
+    // Apply original colors back
+    Object.entries(colorMappings).forEach(([role, color]) => {
+      const property = `--line-${role}`;
+      root.style.setProperty(property, color, 'important');
+      
+      // Also clear any inline styles on elements
+      const selectors = [
+        `[class*="text-line-${role}"]`,
+        `[class*="bg-line-${role}"]`,
+        `[class*="border-line-${role}"]`,
+        `.line-themed-bg`,
+        `.line-themed-text`,
+        `.line-themed-border`
+      ];
+      
+      selectors.forEach(selector => {
+        try {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach((element) => {
+            const htmlElement = element as HTMLElement;
+            htmlElement.style.removeProperty('background-color');
+            htmlElement.style.removeProperty('color');
+            htmlElement.style.removeProperty('border-color');
+          });
+        } catch (e) {
+          console.warn(`Could not reset selector ${selector}:`, e);
+        }
+      });
+    });
+    
+    // Force page repaint
+    document.body.style.display = 'none';
+    document.body.offsetHeight;
+    document.body.style.display = '';
+    
+    // Show reset notification
+    const notification = document.createElement('div');
+    notification.innerHTML = `
+      <div class="flex items-center gap-3 p-4">
+        <div class="text-2xl">🔄</div>
+        <div>
+          <div class="font-semibold">Tema Restaurado</div>
+          <div class="text-sm opacity-90">${currentLineData.label} - Colores originales</div>
+        </div>
+      </div>
+    `;
+    notification.className = 'fixed top-6 right-6 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-xl z-[100] shadow-2xl border border-blue-400 transform transition-all duration-300 ease-out';
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      if (document.body.contains(notification)) {
+        notification.style.transform = 'translateX(100%) scale(0.8)';
+        notification.style.opacity = '0';
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 300);
+      }
+    }, 2000);
+    
+    console.log('🔄 Reset to original theme:', currentLineData.label, colorMappings);
   };
 
   // Sync local state with global theme changes
@@ -235,43 +386,85 @@ export default function StyleTesterPage() {
     setState(prev => ({ ...prev, currentTheme }));
   }, [currentTheme]);
 
+  // Initialize theme colors when component mounts or theme changes
+  useEffect(() => {
+    const currentLineData = productLines.find(line => line.value === currentTheme);
+    if (!currentLineData) return;
+
+    const root = document.documentElement;
+    
+    // Apply the correct theme colors
+    Object.entries(currentLineData.colors).forEach(([role, color]) => {
+      const property = `--line-${role}`;
+      root.style.setProperty(property, color, 'important');
+    });
+
+    console.log('🎨 Theme initialized:', currentTheme, currentLineData.colors);
+  }, [currentTheme, productLines]);
+
   // Dynamic theme class based on current selection
   const themeClass = `theme-${currentTheme}`;
   console.log('🎯 Current theme:', currentTheme, 'Theme class:', themeClass);
 
   return (
     <div 
-      className={`${themeClass} bg-background min-h-screen transition-all duration-500`}
+      className={`${themeClass} min-h-screen transition-all duration-500`}
+      style={{ backgroundColor: 'var(--line-lightest, #F6FBD6)' }}
       data-theme={state.currentTheme}
     >
       {/* Header */}
-      <div className="border-b border-line-primary/20 bg-gradient-to-r from-line-lightest/30 to-white p-6 shadow-soft transition-all duration-500">
+      <div 
+        className="border-b p-6 shadow-soft transition-all duration-500"
+        style={{ 
+          backgroundColor: 'var(--line-primary)',
+          borderBottomColor: 'var(--line-secondary)',
+          color: 'white'
+        }}
+      >
         <div className="container mx-auto">
-          <h1 className="text-4xl font-heading font-bold text-line-primary mb-2 transition-colors duration-500">
+          <h1 className="text-4xl font-heading font-bold mb-2 transition-colors duration-500" style={{ color: 'white' }}>
             DA LUZ CONSCIENTE
           </h1>
-          <p className="text-lg text-line-secondary font-body transition-colors duration-500">
+          <p className="text-lg font-body transition-colors duration-500" style={{ color: 'rgba(255,255,255,0.9)' }}>
             Sistema de Diseño Avanzado - Colaboración con Cliente
           </p>
           <div className="mt-3">
-            <Badge variant="secondary" className="mr-2 bg-line-light/30 text-line-primary border-line-primary/20 transition-all duration-500">
+            <Badge 
+              variant="secondary" 
+              className="mr-2 transition-all duration-500"
+              style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}
+            >
               Fase 1: Foundation ✅
             </Badge>
-            <Badge variant="secondary" className="mr-2 bg-line-light/30 text-line-primary border-line-primary/20 transition-all duration-500">
+            <Badge 
+              variant="secondary" 
+              className="mr-2 transition-all duration-500"
+              style={{ backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', borderColor: 'rgba(255,255,255,0.3)' }}
+            >
               Fase 2: Core Components ✅
             </Badge>
-            <Badge variant="outline" className="bg-line-primary text-white border-line-primary transition-all duration-500">
+            <Badge 
+              variant="outline" 
+              className="transition-all duration-500"
+              style={{ backgroundColor: 'var(--line-accent)', color: 'white', borderColor: 'var(--line-accent)' }}
+            >
               {currentLine?.label} - {currentLine?.description}
             </Badge>
             
             {/* DEBUG: Visual theme indicator */}
-            <div className="mt-3 p-3 bg-line-lightest/50 border border-line-primary/20 rounded-lg transition-all duration-500">
-              <p className="text-sm font-mono text-line-primary">
+            <div 
+              className="mt-3 p-3 rounded-lg transition-all duration-500"
+              style={{ 
+                backgroundColor: 'rgba(255,255,255,0.1)', 
+                border: '1px solid rgba(255,255,255,0.2)' 
+              }}
+            >
+              <p className="text-sm font-mono" style={{ color: 'white' }}>
                 <strong>🔍 DEBUG:</strong> Theme: {state.currentTheme} | Class: {themeClass}
               </p>
               <div 
                 className="w-8 h-8 rounded-lg mt-2 transition-all duration-500"
-                style={{ backgroundColor: 'var(--line-primary)', border: '2px solid var(--line-secondary)' }}
+                style={{ backgroundColor: 'var(--line-accent)', border: '2px solid white' }}
                 title="This should show the theme color if CSS is working"
               ></div>
             </div>
@@ -1340,6 +1533,63 @@ export default function StyleTesterPage() {
                         </Button>
                       </div>
 
+                      {/* Live Test Components */}
+                      <div className="p-6 bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-lg">
+                        <h5 className="font-semibold text-gray-800 mb-4">🧪 Componentes de Prueba en Vivo</h5>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {/* Test buttons */}
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-700">Botones:</p>
+                            <Button 
+                              variant="line-primary" 
+                              size="sm"
+                              className="w-full"
+                            >
+                              Primary Button
+                            </Button>
+                            <Button 
+                              variant="line-outline" 
+                              size="sm"
+                              className="w-full"
+                            >
+                              Secondary Button
+                            </Button>
+                          </div>
+                          
+                          {/* Test color swatches */}
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-700">Colores:</p>
+                            <div className="grid grid-cols-5 gap-1">
+                              {['primary', 'secondary', 'accent', 'light', 'lightest'].map((role) => (
+                                <div key={role} className="text-center">
+                                  <div 
+                                    className="w-full h-8 rounded border border-gray-300 shadow-sm transition-all duration-300"
+                                    style={{ backgroundColor: `var(--line-${role})` }}
+                                  ></div>
+                                  <span className="text-xs text-gray-600 mt-1 block">{role}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          {/* Test text */}
+                          <div className="space-y-2">
+                            <p className="text-sm font-medium text-gray-700">Texto:</p>
+                            <div 
+                              className="p-3 rounded border transition-all duration-300"
+                              style={{ 
+                                backgroundColor: 'var(--line-lightest)',
+                                borderColor: 'var(--line-primary)',
+                                color: 'var(--line-primary)'
+                              }}
+                            >
+                              <div className="font-semibold">DA LUZ CONSCIENTE</div>
+                              <div className="text-sm opacity-80">Alkimyas para alma y cuerpo</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
                       {/* Real-time Debug Panel */}
                       <div className="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 rounded-lg">
                         <h5 className="font-semibold text-purple-800 mb-3">🔍 Panel de Debug en Tiempo Real</h5>
@@ -1353,9 +1603,12 @@ export default function StyleTesterPage() {
                                   : '#cccccc';
                                 return (
                                   <div key={role} className="flex items-center gap-2">
-                                    <div className="w-4 h-4 rounded border" style={{ backgroundColor: `var(--line-${role})` }}></div>
+                                    <div 
+                                      className="w-4 h-4 rounded border transition-colors duration-300" 
+                                      style={{ backgroundColor: `var(--line-${role})` }}
+                                    ></div>
                                     <span className="text-purple-600">--line-{role}:</span>
-                                    <span className="text-purple-800">{color || 'no definido'}</span>
+                                    <span className="text-purple-800 font-semibold">{color || 'no definido'}</span>
                                   </div>
                                 );
                               })}
@@ -1367,6 +1620,7 @@ export default function StyleTesterPage() {
                               <div>🎯 <strong>Rol Seleccionado:</strong> {selectedColorRole}</div>
                               <div>🎨 <strong>Color Personalizado:</strong> {customColor}</div>
                               <div>📱 <strong>Tema Actual:</strong> {currentTheme}</div>
+                              <div>🔄 <strong>Última Actualización:</strong> {new Date().toLocaleTimeString()}</div>
                             </div>
                           </div>
                         </div>

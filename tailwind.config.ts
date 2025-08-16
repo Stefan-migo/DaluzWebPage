@@ -186,6 +186,8 @@ const config = {
         body: ["var(--font-body)", "Inter", "sans-serif"],
         sans: ["var(--font-body)", "Inter", "sans-serif"],
         serif: ["var(--font-heading)", "Playfair Display", "serif"],
+        malisha: ["var(--font-malisha)", "Malisha", "cursive"],
+        velista: ["var(--font-velista)", "VELISTA", "serif"],
       },
       fontSize: {
         // Enhanced Typography Scale using CSS variables

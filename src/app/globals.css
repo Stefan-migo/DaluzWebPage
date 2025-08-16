@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Custom DA LUZ CONSCIENTE Fonts */
+@font-face {
+  font-family: 'Malisha';
+  src: url('/fonts/Malisha.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'VELISTA';
+  src: url('/fonts/VELISTA.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -28,6 +45,8 @@
     /* Enhanced Typography System */
     --font-heading: "Playfair Display", serif;
     --font-body: "Inter", sans-serif;
+    --font-malisha: "Malisha", cursive;
+    --font-velista: "VELISTA", serif;
     
     /* Typography Scale */
     --text-xs: 0.75rem;     /* 12px */
@@ -266,11 +285,23 @@
   .text-body {
     font-family: var(--font-body);
   }
+  
+  .text-malisha {
+    font-family: var(--font-malisha);
+  }
+  
+  .text-velista {
+    font-family: var(--font-velista);
+  }
 }
 
 /* Enhanced DA LUZ Custom Classes */
 .alkimya-gradient {
   background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+}
+
+.bg-cream {
+  background-color: var(--color-bg-light);
 }
 
 .alkimya-hero {
