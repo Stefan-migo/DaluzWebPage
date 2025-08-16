@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { EmailNotificationService } from '@/lib/email/notifications';
 
 const client = new MercadoPagoConfig({ 
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN! 
@@ -98,6 +99,34 @@ export async function POST(req: NextRequest) {
         if (error) {
           console.error('Error updating order status:', error);
           return NextResponse.json({ error: 'Failed to update order' }, { status: 500 });
+        }
+
+        // Send email notification for successful payment
+        if (paymentInfo.status === 'approved') {
+          try {
+            // Get order details for email
+            const { data: order } = await supabaseAdmin
+              .from('orders')
+              .select(`
+                *,
+                order_items (
+                  *,
+                  product_name,
+                  variant_title
+                )
+              `)
+              .eq('id', orderId)
+              .single();
+
+            if (order && order.email) {
+              const emailService = new EmailNotificationService();
+              await emailService.sendOrderConfirmation(order);
+              console.log(`📧 Order confirmation email sent to ${order.email}`);
+            }
+          } catch (emailError) {
+            console.error('Failed to send order confirmation email:', emailError);
+            // Don't fail the webhook for email errors
+          }
         }
 
         // If payment is approved, update product inventory
