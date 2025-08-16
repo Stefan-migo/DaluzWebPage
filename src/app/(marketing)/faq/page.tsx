@@ -1,3 +1,5 @@
+'use client'
+
 import { Metadata } from 'next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -11,8 +13,6 @@ export const metadata: Metadata = {
   title: 'Preguntas Frecuentes | DA LUZ CONSCIENTE',
   description: 'Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios.',
 }
-
-'use client'
 
 interface CollapsibleFAQProps {
   question: string
