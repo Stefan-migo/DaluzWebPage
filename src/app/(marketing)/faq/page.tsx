@@ -2,7 +2,8 @@ import { Metadata } from 'next'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import { ChevronDown } from 'lucide-react'
+import { useState } from 'react'
 import { MessageCircle, Phone, Mail } from 'lucide-react'
 import Link from 'next/link'
 
@@ -11,7 +12,51 @@ export const metadata: Metadata = {
   description: 'Encuentra respuestas a las preguntas más comunes sobre nuestros productos y servicios.',
 }
 
+'use client'
+
+interface CollapsibleFAQProps {
+  question: string
+  answer: string
+  isOpen: boolean
+  onToggle: () => void
+}
+
+function CollapsibleFAQ({ question, answer, isOpen, onToggle }: CollapsibleFAQProps) {
+  return (
+    <Card className="border border-gray-200 rounded-lg overflow-hidden">
+      <button
+        onClick={onToggle}
+        className="w-full p-6 text-left hover:bg-gray-50 transition-colors focus:outline-none focus:bg-gray-50"
+      >
+        <div className="flex items-center justify-between">
+          <h3 className="font-medium text-gray-900">{question}</h3>
+          <ChevronDown
+            className={`w-5 h-5 text-gray-500 transition-transform ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+          />
+        </div>
+      </button>
+      {isOpen && (
+        <CardContent className="px-6 pb-6 pt-0">
+          <p className="text-gray-600">{answer}</p>
+        </CardContent>
+      )}
+    </Card>
+  )
+}
+
 export default function FAQPage() {
+  const [openItems, setOpenItems] = useState<string[]>([])
+  
+  const toggleItem = (id: string) => {
+    setOpenItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    )
+  }
+
   const faqs = [
     {
       category: "Productos",
@@ -109,18 +154,20 @@ export default function FAQPage() {
                 {category.category}
               </h2>
               
-              <Accordion type="single" collapsible className="space-y-4">
-                {category.questions.map((faq, index) => (
-                  <AccordionItem key={index} value={`${categoryIndex}-${index}`} className="border border-gray-200 rounded-lg px-6">
-                    <AccordionTrigger className="text-left font-medium hover:text-brand-primary">
-                      {faq.question}
-                    </AccordionTrigger>
-                    <AccordionContent className="text-gray-600 pb-4">
-                      {faq.answer}
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
+              <div className="space-y-4">
+                {category.questions.map((faq, index) => {
+                  const itemId = `${categoryIndex}-${index}`
+                  return (
+                    <CollapsibleFAQ
+                      key={index}
+                      question={faq.question}
+                      answer={faq.answer}
+                      isOpen={openItems.includes(itemId)}
+                      onToggle={() => toggleItem(itemId)}
+                    />
+                  )
+                })}
+              </div>
             </div>
           ))}
         </div>
