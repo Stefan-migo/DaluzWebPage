@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Package, CreditCard, Clock, ArrowRight } from 'lucide-react';
 import { formatArgentinePesos } from '@/lib/mercadopago';
+import { useCart } from '@/contexts/CartContext';
 
 interface OrderDetails {
   order_id: string;
@@ -22,9 +23,11 @@ interface OrderDetails {
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { clearCart } = useCart();
   const [orderDetails, setOrderDetails] = useState<OrderDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cartCleared, setCartCleared] = useState(false);
 
   // Get URL parameters from Mercado Pago redirect
   const collection_id = searchParams.get('collection_id');
@@ -61,6 +64,13 @@ function CheckoutSuccessContent() {
           payment_method: payment_type || undefined,
           created_at: data.created_at
         });
+
+        // Clear cart only after successful order confirmation and only once
+        if (!cartCleared && (status === 'approved' || collection_status === 'approved')) {
+          clearCart();
+          setCartCleared(true);
+          console.log('🛒 Cart cleared after successful payment');
+        }
       } catch (err) {
         console.error('Error fetching order details:', err);
         setError('No se pudieron cargar los detalles de la orden.');
@@ -70,7 +80,7 @@ function CheckoutSuccessContent() {
     };
 
     fetchOrderDetails();
-  }, [external_reference, payment_id, payment_type]);
+  }, [external_reference, payment_id, payment_type, status, collection_status, clearCart, cartCleared]);
 
   const getStatusInfo = () => {
     const statusLower = status?.toLowerCase() || collection_status?.toLowerCase();
