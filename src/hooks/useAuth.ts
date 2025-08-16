@@ -125,7 +125,7 @@ export function useAuth() {
   const fetchProfile = async (userId: string): Promise<Profile | null> => {
     const supabase = createClient()
     try {
-      // Add timeout to profile fetch
+      // Add timeout to profile fetch with more graceful handling
       const profilePromise = supabase
         .from('profiles')
         .select('*')
@@ -133,23 +133,39 @@ export function useAuth() {
         .single()
 
       const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 3000)
+        setTimeout(() => reject(new Error('Profile fetch timeout')), 5000) // Increased to 5s
       )
 
       const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any
 
       if (error) {
-        console.error('Error fetching profile:', error)
-        // If profile doesn't exist, that's okay - we'll create it later
+        // Handle different error types more gracefully
+        if (error.message === 'Profile fetch timeout') {
+          console.warn('⏱️ Profile fetch timed out - this is normal for new users or slow connections')
+          return null
+        }
+        
         if (error.code === 'PGRST116') {
-          console.log('Profile not found for user, will create one')
+          console.log('📝 Profile not found for user - will be created automatically on first update')
+          return null
+        }
+
+        // Only log actual errors, not expected cases
+        if (error.code !== '42P01') { // Table doesn't exist
+          console.error('❌ Profile fetch error:', error)
         }
         return null
       }
 
+      console.log('✅ Profile loaded successfully')
       return data
-    } catch (error) {
-      console.error('Error fetching profile:', error)
+    } catch (error: any) {
+      // More specific error handling
+      if (error.message === 'Profile fetch timeout') {
+        console.warn('⏱️ Profile fetch timeout - continuing without profile data')
+      } else {
+        console.error('❌ Unexpected profile fetch error:', error)
+      }
       return null
     }
   }
