@@ -22,7 +22,8 @@ import {
   Eye,
   AlertTriangle,
   TrendingUp,
-  BarChart3
+  BarChart3,
+  Settings
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -207,12 +208,20 @@ export default function ProductsPage() {
           </p>
         </div>
         
-        <Button asChild>
-          <Link href="/admin/products/add">
-            <Plus className="h-4 w-4 mr-2" />
-            Agregar Producto
-          </Link>
-        </Button>
+        <div className="flex space-x-2">
+          <Button variant="outline" asChild>
+            <Link href="/admin/products/bulk">
+              <Settings className="h-4 w-4 mr-2" />
+              Operaciones Masivas
+            </Link>
+          </Button>
+          <Button asChild>
+            <Link href="/admin/products/add">
+              <Plus className="h-4 w-4 mr-2" />
+              Agregar Producto
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}

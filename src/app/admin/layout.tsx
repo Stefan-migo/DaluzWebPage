@@ -20,7 +20,9 @@ import {
   Bell,
   User,
   ChevronRight,
-  Home
+  Home,
+  MessageSquare,
+  Server
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -59,6 +61,24 @@ const navigationItems = [
     label: 'Analíticas',
     icon: BarChart3,
     description: 'Reportes y estadísticas'
+  },
+  {
+    href: '/admin/support',
+    label: 'Soporte',
+    icon: MessageSquare,
+    description: 'Tickets y atención al cliente'
+  },
+  {
+    href: '/admin/admin-users',
+    label: 'Administradores',
+    icon: Users,
+    description: 'Gestión de usuarios admin'
+  },
+  {
+    href: '/admin/system',
+    label: 'Sistema',
+    icon: Server,
+    description: 'Administración del sistema'
   },
   {
     href: '/admin/settings',
