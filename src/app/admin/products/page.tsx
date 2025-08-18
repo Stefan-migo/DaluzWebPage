@@ -6,6 +6,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { 
   Select,
   SelectContent,
   SelectItem,
@@ -35,6 +43,9 @@ export default function ProductsPage() {
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<any>(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   // Fetch real products data
   useEffect(() => {
@@ -70,42 +81,50 @@ export default function ProductsPage() {
     fetchData();
   }, []);
 
-  // Mock data - keep as fallback for reference
-  const mockProducts = [
-    {
-      id: '1',
-      name: 'Crema Hidratante de Rosa Mosqueta',
-      slug: 'crema-hidratante-rosa-mosqueta',
-      price: 12500,
-      stock: 3,
-      category: 'Cremas Faciales',
-      status: 'active',
-      featured: true,
-      lowStock: true
-    },
-    {
-      id: '2',
-      name: 'Aceite Corporal de Lavanda',
-      slug: 'aceite-corporal-lavanda',
-      price: 8900,
-      stock: 52,
-      category: 'Aceites Corporales',
-      status: 'active',
-      featured: false,
-      lowStock: false
-    },
-    {
-      id: '3',
-      name: 'Hidrolato de Rosas',
-      slug: 'hidrolato-rosas',
-      price: 6700,
-      stock: 1,
-      category: 'Hidrolatos',
-      status: 'active',
-      featured: false,
-      lowStock: true
+  // Removed mock data - now using only real Supabase data
+
+  const handleDeleteProduct = async () => {
+    if (!productToDelete) return;
+    
+    try {
+      setDeleteLoading(true);
+      
+      const response = await fetch(`/api/products/${productToDelete.id}`, {
+        method: 'DELETE',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete product');
+      }
+      
+      const result = await response.json();
+      
+      // Remove the product from the local state
+      setProducts(prevProducts => 
+        prevProducts.filter(p => p.id !== productToDelete.id)
+      );
+      
+      // Close the dialog and reset state
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+      
+      // You can add a toast notification here if you have one
+      console.log(result.message);
+      
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      // You can add error toast notification here
+      alert('Error al eliminar el producto. Por favor, inténtalo de nuevo.');
+    } finally {
+      setDeleteLoading(false);
     }
-  ];
+  };
+
+  const openDeleteDialog = (product: any) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
 
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat('es-AR', {
@@ -269,7 +288,7 @@ export default function ProductsPage() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-tierra-media">Valor Total</p>
                 <p className="text-2xl font-bold text-dorado">
-                  {formatPrice(mockProducts.reduce((sum, p) => sum + p.price * p.stock, 0))}
+                  {formatPrice(products.reduce((sum, p) => sum + (p.price || 0) * (p.inventory_quantity || 0), 0))}
                 </p>
               </div>
             </div>
@@ -384,12 +403,7 @@ export default function ProductsPage() {
                 <Button 
                   variant="outline" 
                   size="sm"
-                  onClick={() => {
-                    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
-                      // TODO: Implement delete functionality
-                      console.log('Delete product:', product.id);
-                    }
-                  }}
+                  onClick={() => openDeleteDialog(product)}
                 >
                   <Trash2 className="h-4 w-4" />
                 </Button>
@@ -471,6 +485,39 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogDescription>
+              ¿Estás seguro de que deseas eliminar el producto "{productToDelete?.name}"?
+              <br />
+              Esta acción no se puede deshacer y el producto será marcado como eliminado.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setDeleteDialogOpen(false);
+                setProductToDelete(null);
+              }}
+              disabled={deleteLoading}
+            >
+              Cancelar
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteProduct}
+              disabled={deleteLoading}
+            >
+              {deleteLoading ? 'Eliminando...' : 'Eliminar Producto'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

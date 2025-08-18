@@ -130,4 +130,70 @@ export async function PUT(
       { status: 500 }
     );
   }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Params }
+) {
+  try {
+    const supabase = await createClient();
+    const { id } = params;
+
+    // Check if product exists
+    const { data: existingProduct, error: checkError } = await supabase
+      .from('products')
+      .select('id, name')
+      .eq('id', id)
+      .single();
+
+    if (checkError) {
+      if (checkError.code === 'PGRST116') {
+        return NextResponse.json(
+          { error: 'Product not found' },
+          { status: 404 }
+        );
+      }
+      console.error('Error checking product:', checkError);
+      return NextResponse.json(
+        { error: 'Failed to check product' },
+        { status: 500 }
+      );
+    }
+
+    // Soft delete: Update status to 'deleted' instead of hard delete
+    // This preserves order history and prevents issues with foreign key references
+    const { data: product, error } = await supabase
+      .from('products')
+      .update({
+        status: 'deleted',
+        deleted_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error deleting product:', error);
+      return NextResponse.json(
+        { error: 'Failed to delete product' },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ 
+      message: 'Product deleted successfully',
+      product: {
+        id: product.id,
+        name: existingProduct.name
+      }
+    });
+  } catch (error) {
+    console.error('Unexpected error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 } 

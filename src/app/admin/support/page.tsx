@@ -114,8 +114,14 @@ export default function SupportPage() {
   useEffect(() => {
     fetchTickets();
     fetchCategories();
-    fetchStats();
   }, [currentPage, searchTerm, statusFilter, priorityFilter, categoryFilter, assignedFilter]);
+
+  // Recalculate stats when tickets data changes
+  useEffect(() => {
+    if (tickets.length > 0) {
+      fetchStats();
+    }
+  }, [tickets]);
 
   const fetchTickets = async () => {
     try {
@@ -161,21 +167,39 @@ export default function SupportPage() {
 
   const fetchStats = async () => {
     try {
-      // Mock stats for now - would come from a dedicated stats API
+      // Calculate real-time stats from current tickets data
+      const totalTickets = tickets.length;
+      const openTickets = tickets.filter(t => t.status === 'open').length;
+      const inProgressTickets = tickets.filter(t => t.status === 'in_progress').length;
+      const urgentTickets = tickets.filter(t => t.priority === 'urgent').length;
+      
+      // Calculate average response time
+      const ticketsWithResponse = tickets.filter(t => t.first_response_at);
+      const avgResponseTimeHours = ticketsWithResponse.length > 0 
+        ? ticketsWithResponse.reduce((acc, ticket) => {
+            const created = new Date(ticket.created_at).getTime();
+            const firstResponse = new Date(ticket.first_response_at!).getTime();
+            return acc + (firstResponse - created) / (1000 * 60 * 60);
+          }, 0) / ticketsWithResponse.length
+        : 0;
+      
+      // Calculate tickets this week
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      const ticketsThisWeek = tickets.filter(t => {
+        return new Date(t.created_at) > weekAgo;
+      }).length;
+
       setStats({
-        totalTickets: tickets.length,
-        openTickets: tickets.filter(t => t.status === 'open').length,
-        inProgressTickets: tickets.filter(t => t.status === 'in_progress').length,
-        urgentTickets: tickets.filter(t => t.priority === 'urgent').length,
-        avgResponseTimeHours: 4.2,
-        ticketsThisWeek: tickets.filter(t => {
-          const weekAgo = new Date();
-          weekAgo.setDate(weekAgo.getDate() - 7);
-          return new Date(t.created_at) > weekAgo;
-        }).length
+        totalTickets,
+        openTickets,
+        inProgressTickets,
+        urgentTickets,
+        avgResponseTimeHours: Math.round(avgResponseTimeHours * 10) / 10, // Round to 1 decimal
+        ticketsThisWeek
       });
     } catch (err) {
-      console.error('Error fetching support stats:', err);
+      console.error('Error calculating support stats:', err);
     }
   };
 
@@ -353,7 +377,9 @@ export default function SupportPage() {
                 <Clock className="h-6 w-6 text-verde-suave" />
                 <div className="ml-3">
                   <p className="text-xs text-tierra-media">Tiempo Resp.</p>
-                  <p className="text-lg font-bold text-verde-suave">{stats.avgResponseTimeHours}h</p>
+                  <p className="text-lg font-bold text-verde-suave">
+                    {stats.avgResponseTimeHours > 0 ? `${stats.avgResponseTimeHours}h` : '-'}
+                  </p>
                 </div>
               </div>
             </CardContent>

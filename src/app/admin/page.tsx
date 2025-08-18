@@ -22,84 +22,40 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 
-// Mock data - replace with real API calls
-const dashboardData = {
+// Default fallback data structure
+const defaultDashboardData = {
   kpis: {
     revenue: {
-      current: 48320,
-      previous: 41200,
-      change: 17.3,
+      current: 0,
+      previous: 0,
+      change: 0,
       currency: 'ARS'
     },
     orders: {
-      total: 156,
-      pending: 12,
-      processing: 8,
-      completed: 134,
-      failed: 2
+      total: 0,
+      pending: 0,
+      processing: 0,
+      completed: 0,
+      failed: 0
     },
     products: {
-      total: 45,
-      lowStock: 3,
+      total: 0,
+      lowStock: 0,
       outOfStock: 0
     },
     customers: {
-      total: 324,
-      new: 28,
-      returning: 296
+      total: 0,
+      new: 0,
+      returning: 0
     }
   },
-  recentOrders: [
-    {
-      id: '1',
-      orderNumber: 'DL-1704123456',
-      customerName: 'María González',
-      total: 15750,
-      status: 'pending',
-      createdAt: '2024-01-20T10:30:00Z'
-    },
-    {
-      id: '2',
-      orderNumber: 'DL-1704123455',
-      customerName: 'Carlos Ruiz',
-      total: 8900,
-      status: 'completed',
-      createdAt: '2024-01-20T09:15:00Z'
-    },
-    {
-      id: '3',
-      orderNumber: 'DL-1704123454',
-      customerName: 'Ana Martín',
-      total: 12300,
-      status: 'processing',
-      createdAt: '2024-01-20T08:45:00Z'
-    }
-  ],
-  lowStockProducts: [
-    {
-      id: '1',
-      name: 'Crema Hidratante Rosa Mosqueta',
-      currentStock: 3,
-      threshold: 5
-    },
-    {
-      id: '2',
-      name: 'Aceite Corporal Lavanda',
-      currentStock: 2,
-      threshold: 5
-    },
-    {
-      id: '3',
-      name: 'Hidrolato de Rosas',
-      currentStock: 1,
-      threshold: 5
-    }
-  ]
+  recentOrders: [] as any[],
+  lowStockProducts: [] as any[]
 };
 
 export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(dashboardData);
+  const [data, setData] = useState(defaultDashboardData);
   const [dashboardMetrics, setDashboardMetrics] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -112,7 +68,7 @@ export default function AdminDashboard() {
         const productsResponse = await fetch('/api/products');
         const productsData = await productsResponse.json();
         
-        // Try to fetch orders data (may fail if no orders exist yet)
+        // Fetch orders data
         let ordersData = { orders: [] };
         try {
           const ordersResponse = await fetch('/api/orders');
@@ -123,14 +79,62 @@ export default function AdminDashboard() {
           console.log('Orders endpoint not available, using empty data');
         }
 
+        // Fetch customers data
+        let customersData = { profiles: [] };
+        try {
+          const customersResponse = await fetch('/api/admin/customers');
+          if (customersResponse.ok) {
+            const customerResult = await customersResponse.json();
+            customersData = { profiles: customerResult.customers || [] };
+          }
+        } catch (customerError) {
+          console.log('Customers endpoint not available, using empty data');
+        }
+
         // Calculate metrics from real data
         const products = productsData.products || [];
         const orders = ordersData.orders || [];
+        const customers = customersData.profiles || [];
         
+        // Get low stock products (≤5 units)
+        const lowStockProducts = products
+          .filter((p: any) => (p.inventory_quantity || 0) <= 5)
+          .map((p: any) => ({
+            id: p.id,
+            name: p.name || p.title,
+            currentStock: p.inventory_quantity || 0,
+            threshold: 5
+          }))
+          .slice(0, 5); // Show top 5 low stock items
+
+        // Get recent orders (last 5)
+        const recentOrders = orders
+          .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+          .slice(0, 5)
+          .map((o: any) => ({
+            id: o.id,
+            orderNumber: o.order_number || `DL-${o.id}`,
+            customerName: o.customer_name || 'Cliente no especificado',
+            total: o.total_amount || 0,
+            status: o.status || 'pending',
+            createdAt: o.created_at
+          }));
+
+        // Calculate revenue from completed orders
+        const completedOrders = orders.filter((o: any) => o.status === 'completed' || o.payment_status === 'paid');
+        const currentRevenue = completedOrders.reduce((sum: number, o: any) => sum + (o.total_amount || 0), 0);
+
+        // Calculate customers metrics
+        const now = new Date();
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const newCustomers = customers.filter((c: any) => 
+          new Date(c.created_at) >= thirtyDaysAgo
+        ).length;
+
         const metrics = {
           products: {
             total: products.length,
-            lowStock: products.filter((p: any) => (p.inventory_quantity || 0) <= 5).length,
+            lowStock: lowStockProducts.length,
             outOfStock: products.filter((p: any) => (p.inventory_quantity || 0) === 0).length,
             active: products.filter((p: any) => p.status === 'active' || !p.status).length
           },
@@ -142,19 +146,36 @@ export default function AdminDashboard() {
             failed: orders.filter((o: any) => o.status === 'failed').length
           },
           revenue: {
-            current: orders
-              .filter((o: any) => o.status === 'completed')
-              .reduce((sum: number, o: any) => sum + (o.total_amount || 0), 0),
+            current: currentRevenue,
+            previous: 0, // TODO: Calculate from previous period data
+            change: 0, // TODO: Calculate percentage change
             currency: 'ARS'
+          },
+          customers: {
+            total: customers.length,
+            new: newCustomers,
+            returning: customers.length - newCustomers
           }
         };
+        
+        // Update data with real information
+        setData({
+          kpis: {
+            revenue: metrics.revenue,
+            orders: metrics.orders,
+            products: metrics.products,
+            customers: metrics.customers
+          },
+          recentOrders,
+          lowStockProducts
+        });
         
         setDashboardMetrics(metrics);
         setError(null);
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
         setError('Error al cargar algunos datos');
-        // Continue with mock data as fallback
+        // Keep default data as fallback
       } finally {
         setIsLoading(false);
       }
@@ -170,19 +191,8 @@ export default function AdminDashboard() {
     }).format(amount);
   };
 
-  // Get current data (real data if available, fallback to mock data)
-  const currentData = dashboardMetrics ? {
-    kpis: {
-      revenue: {
-        current: dashboardMetrics.revenue.current,
-        change: 0, // TODO: Calculate change from previous period
-        currency: dashboardMetrics.revenue.currency
-      },
-      orders: dashboardMetrics.orders,
-      products: dashboardMetrics.products,
-      customers: data.kpis.customers // Keep mock data for customers for now
-    }
-  } : data;
+  // Use the current data state (always real data or default empty state)
+  const currentData = data;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-AR', {
@@ -267,7 +277,7 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center text-xs text-verde-suave mt-1">
               <TrendingUp className="h-3 w-3 mr-1" />
-              {dashboardMetrics ? 'Datos en tiempo real' : `+${currentData.kpis.revenue.change}% vs mes anterior`}
+              Datos en tiempo real
             </div>
           </CardContent>
         </Card>
@@ -340,30 +350,39 @@ export default function AdminDashboard() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {data.recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="font-medium text-azul-profundo text-sm">
-                        {order.orderNumber}
+              {data.recentOrders.length > 0 ? (
+                data.recentOrders.map((order) => (
+                  <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-azul-profundo text-sm">
+                          {order.orderNumber}
+                        </p>
+                        {getOrderStatusBadge(order.status)}
+                      </div>
+                      <p className="text-xs text-tierra-media mb-1">
+                        {order.customerName}
                       </p>
-                      {getOrderStatusBadge(order.status)}
-                    </div>
-                    <p className="text-xs text-tierra-media mb-1">
-                      {order.customerName}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <p className="font-semibold text-verde-suave">
-                        {formatPrice(order.total)}
-                      </p>
-                      <p className="text-xs text-tierra-media flex items-center">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        {formatDate(order.createdAt)}
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="font-semibold text-verde-suave">
+                          {formatPrice(order.total)}
+                        </p>
+                        <p className="text-xs text-tierra-media flex items-center">
+                          <Calendar className="h-3 w-3 mr-1" />
+                          {formatDate(order.createdAt)}
+                        </p>
+                      </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <ShoppingCart className="h-12 w-12 text-tierra-media mx-auto mb-2" />
+                  <p className="text-tierra-media">
+                    No hay pedidos recientes para mostrar.
+                  </p>
                 </div>
-              ))}
+              )}
             </div>
           </CardContent>
         </Card>
@@ -385,27 +404,27 @@ export default function AdminDashboard() {
             </div>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {data.lowStockProducts.map((product) => (
-                <div key={product.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
-                  <div className="flex-1">
-                    <p className="font-medium text-azul-profundo text-sm mb-1">
-                      {product.name}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <p className="text-xs text-tierra-media">
-                        Stock actual: <span className="font-semibold text-red-600">{product.currentStock}</span>
+            {data.lowStockProducts.length > 0 ? (
+              <div className="space-y-4">
+                {data.lowStockProducts.map((product) => (
+                  <div key={product.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
+                    <div className="flex-1">
+                      <p className="font-medium text-azul-profundo text-sm mb-1">
+                        {product.name}
                       </p>
-                      <p className="text-xs text-tierra-media">
-                        Mínimo: {product.threshold}
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs text-tierra-media">
+                          Stock actual: <span className="font-semibold text-red-600">{product.currentStock}</span>
+                        </p>
+                        <p className="text-xs text-tierra-media">
+                          Mínimo: {product.threshold}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-            
-            {data.lowStockProducts.length === 0 && (
+                ))}
+              </div>
+            ) : (
               <div className="text-center py-8">
                 <CheckCircle className="h-12 w-12 text-verde-suave mx-auto mb-2" />
                 <p className="text-tierra-media">
