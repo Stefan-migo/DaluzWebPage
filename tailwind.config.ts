@@ -182,6 +182,14 @@ const config = {
         "fade-in-down": "fade-in-down 0.6s ease-out",
       },
       fontFamily: {
+        // ENHANCED FONT HIERARCHY - DA LUZ CONSCIENTE
+        display: ["var(--font-display)", "Malisha", "cursive"],
+        title: ["var(--font-title)", "VELISTA", "serif"],
+        subtitle: ["var(--font-subtitle)", "Playfair Display", "serif"],
+        text: ["var(--font-text)", "Inter", "sans-serif"],
+        caption: ["var(--font-caption)", "Inter", "sans-serif"],
+        
+        // LEGACY SUPPORT (existing)
         heading: ["var(--font-heading)", "Playfair Display", "serif"],
         body: ["var(--font-body)", "Inter", "sans-serif"],
         sans: ["var(--font-body)", "Inter", "sans-serif"],

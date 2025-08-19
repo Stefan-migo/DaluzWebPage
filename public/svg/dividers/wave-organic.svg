@@ -1,0 +1,6 @@
+<svg width="1440" height="100" viewBox="0 0 1440 100" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <path d="M0 50 Q360 0 720 30 T1440 20 V100 H0 Z" fill="currentColor"/>
+  
+  <!-- Add subtle pattern overlay -->
+  <path d="M0 55 Q360 10 720 35 T1440 25 V100 H0 Z" fill="currentColor" opacity="0.7"/>
+</svg>

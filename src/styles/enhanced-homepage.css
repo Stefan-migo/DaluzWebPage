@@ -1,0 +1,370 @@
+/* 🎨 DA LUZ CONSCIENTE - Enhanced Homepage Styles */
+
+/* ✨ MODERN ANIMATIONS & TRANSITIONS */
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(2deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(174, 0, 0, 0.3);
+    opacity: 0.8;
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(174, 0, 0, 0.6);
+    opacity: 1;
+  }
+}
+
+@keyframes text-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ✨ ENHANCED HERO SECTION */
+.hero-enhanced {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(135deg, 
+    rgba(174, 0, 0, 0.1) 0%, 
+    rgba(0, 0, 0, 0.4) 50%, 
+    rgba(174, 0, 0, 0.2) 100%);
+}
+
+.hero-logo-text {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #f8f8f8 25%,
+    #ffffff 50%,
+    #f8f8f8 75%,
+    #ffffff 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 3s linear infinite;
+}
+
+.floating-element {
+  animation: float-gentle 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.floating-element:nth-child(2n) {
+  animation-delay: -1s;
+}
+
+.floating-element:nth-child(3n) {
+  animation-delay: -2s;
+}
+
+/* ✨ ENHANCED GLASS MORPHISM */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 
+    0 15px 45px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* ✨ ENHANCED BUTTONS */
+.btn-enhanced {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #AE0000, #C70000);
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.btn-enhanced:hover::before {
+  left: 100%;
+}
+
+.btn-enhanced:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 10px 25px rgba(174, 0, 0, 0.4),
+    0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ✨ ENHANCED SECTION DIVIDERS */
+.section-divider {
+  position: relative;
+  height: 100px;
+  overflow: hidden;
+}
+
+.section-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(135deg, 
+    var(--section-color-from, #F0EACE) 0%,
+    var(--section-color-to, #ffffff) 100%
+  );
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 0 100%);
+}
+
+/* ✨ ENHANCED CARDS */
+.card-enhanced {
+  position: relative;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(240, 234, 206, 0.8) 100%
+  );
+  border: 1px solid rgba(174, 0, 0, 0.1);
+  border-radius: 20px;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.card-enhanced::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #AE0000, #C70000, #DB3600);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+
+.card-enhanced:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 20px 40px rgba(174, 0, 0, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1);
+  border-color: rgba(174, 0, 0, 0.3);
+}
+
+.card-enhanced:hover::before {
+  transform: scaleX(1);
+}
+
+/* ✨ ENHANCED TYPOGRAPHY */
+.text-enhanced-heading {
+  background: linear-gradient(135deg, #AE0000 0%, #C70000 50%, #DB3600 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.text-enhanced-heading::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: linear-gradient(90deg, #AE0000, transparent);
+  border-radius: 2px;
+}
+
+/* ✨ ENHANCED GRID LAYOUTS */
+.enhanced-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+@media (min-width: 768px) {
+  .enhanced-grid {
+    gap: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .enhanced-grid {
+    gap: 4rem;
+  }
+}
+
+/* ✨ ENHANCED SCROLL EFFECTS */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ✨ ENHANCED BACKGROUND PATTERNS */
+.pattern-dots {
+  background-image: radial-gradient(circle, rgba(174, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: pattern-move 20s linear infinite;
+}
+
+@keyframes pattern-move {
+  0% { background-position: 0 0; }
+  100% { background-position: 20px 20px; }
+}
+
+.pattern-lines {
+  background-image: 
+    linear-gradient(90deg, rgba(174, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(rgba(174, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ✨ ENHANCED PRODUCT LINE SECTIONS */
+.product-line-section {
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0;
+}
+
+.product-line-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.product-line-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+}
+
+/* ✨ ENHANCED CONTACT FORM */
+.form-enhanced input,
+.form-enhanced textarea {
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(174, 0, 0, 0.1);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.form-enhanced input:focus,
+.form-enhanced textarea:focus {
+  border-color: #AE0000;
+  box-shadow: 
+    0 0 0 3px rgba(174, 0, 0, 0.1),
+    0 4px 12px rgba(174, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  outline: none;
+}
+
+/* ✨ ENHANCED SCROLL INDICATORS */
+.scroll-indicator {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #AE0000, #C70000, #DB3600);
+  z-index: 1000;
+  transform-origin: left;
+  transition: transform 0.1s ease;
+}
+
+/* ✨ RESPONSIVE ENHANCEMENTS */
+@media (max-width: 768px) {
+  .hero-logo-text {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+  }
+  
+  .card-enhanced {
+    margin: 0 1rem;
+  }
+  
+  .enhanced-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+/* ✨ ACCESSIBILITY ENHANCEMENTS */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ✨ DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .card-enhanced {
+    background: linear-gradient(135deg, 
+      rgba(20, 20, 20, 0.9) 0%,
+      rgba(40, 40, 40, 0.8) 100%
+    );
+    border-color: rgba(174, 0, 0, 0.3);
+  }
+}
+
+/* ✨ HIGH CONTRAST MODE */
+@media (prefers-contrast: high) {
+  .text-enhanced-heading {
+    -webkit-text-fill-color: #AE0000;
+    background: none;
+  }
+  
+  .btn-enhanced {
+    border: 2px solid #ffffff;
+  }
+}
