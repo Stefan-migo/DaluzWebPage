@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Separator } from "@/components/ui/separator";
+
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/contexts/ThemeContext";
 import { 
@@ -10,6 +10,7 @@ import {
   MapPin, 
   Instagram, 
   Facebook, 
+  MessageCircle,
   Heart,
   Leaf,
   Sparkles 
@@ -66,11 +67,10 @@ export default function Footer() {
     <footer 
       className="border-t transition-all duration-300"
       style={{
-        background: `linear-gradient(to bottom, white, var(--line-lightest, #f6f9ea))`,
-        borderTopColor: `var(--line-primary, #fe1f02)`,
-        borderTopWidth: '1px',
-        borderTopStyle: 'solid',
-        opacity: '0.8'
+        backgroundColor: '#AE0000',
+        borderTopColor: '#C70000',
+        borderTopWidth: '2px',
+        borderTopStyle: 'solid'
       }}
     >
       {/* Main Footer Content */}
@@ -79,37 +79,37 @@ export default function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-2 space-y-4">
             <div className="space-y-2">
-              <h3 className="text-2xl font-bold text-line-primary transition-colors duration-300">
+              <h3 className="text-2xl font-display font-normal" style={{ color: '#FFF4B3' }}>
                 DA LUZ CONSCIENTE
               </h3>
-              <Badge variant="secondary" className="bg-line-primary/20 text-line-primary transition-all duration-300">
-                {currentLine.description}
-              </Badge>
+              <div className="text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+                Alkimyas para alma y cuerpo
+              </div>
             </div>
             
-            <p className="text-line-secondary text-sm leading-relaxed transition-colors duration-300">
+            <p className="text-sm font-text leading-relaxed" style={{ color: '#FFF4B3', opacity: 0.9 }}>
               Transformamos vidas a través de la biocosmética artesanal y terapias holísticas. 
               Acompañamos tu camino hacia el bienestar integral con productos naturales y 
               un programa de transformación personal de 7 meses.
             </p>
 
             {/* Contact Info */}
-            <div className="space-y-2 text-sm text-line-secondary transition-colors duration-300">
+            <div className="space-y-2 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
               <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4 text-line-accent transition-colors duration-300" />
-                <a href="mailto:contacto@daluzconsciente.com" className="hover:text-line-primary transition-colors duration-300">
+                <Mail className="h-4 w-4" style={{ color: '#F8D794' }} />
+                <a href="mailto:contacto@daluzconsciente.com" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
                   contacto@daluzconsciente.com
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4 text-line-accent transition-colors duration-300" />
-                <a href="tel:+5491112345678" className="hover:text-line-primary transition-colors duration-300">
+                <Phone className="h-4 w-4" style={{ color: '#F8D794' }} />
+                <a href="tel:+5491112345678" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
                   +54 9 11 1234-5678
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4 text-line-accent transition-colors duration-300" />
-                <span>Buenos Aires, Argentina</span>
+                <MapPin className="h-4 w-4" style={{ color: '#F8D794' }} />
+                <span>Córdoba, Argentina</span>
               </div>
             </div>
 
@@ -119,7 +119,8 @@ export default function Footer() {
                 href="https://instagram.com/daluzconsciente" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-line-primary/20 text-line-primary hover:bg-line-primary/30 transition-all duration-300"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                style={{ color: '#FFF4B3' }}
                 aria-label="Instagram"
               >
                 <Instagram className="h-5 w-5" />
@@ -128,10 +129,21 @@ export default function Footer() {
                 href="https://facebook.com/daluzconsciente" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="p-2 rounded-full bg-line-primary/20 text-line-primary hover:bg-line-primary/30 transition-all duration-300"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                style={{ color: '#FFF4B3' }}
                 aria-label="Facebook"
               >
                 <Facebook className="h-5 w-5" />
+              </a>
+              <a 
+                href="https://wa.me/5493511234567" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                style={{ color: '#FFF4B3' }}
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5" />
               </a>
             </div>
           </div>
@@ -139,13 +151,14 @@ export default function Footer() {
           {/* Footer Links */}
           {footerSections.map((section) => (
             <div key={section.title} className="space-y-4">
-              <h4 className="font-semibold text-line-primary transition-colors duration-300">{section.title}</h4>
+              <h4 className="font-title font-medium" style={{ color: '#FFF4B3' }}>{section.title}</h4>
               <ul className="space-y-2">
                 {section.links.map((link) => (
                   <li key={link.name}>
                     <Link 
                       href={link.href as any}
-                      className="text-sm text-line-secondary hover:text-line-primary transition-colors duration-300"
+                      className="text-sm font-text transition-colors duration-300 block px-2 py-1 rounded hover:bg-white/10 hover:text-white"
+                      style={{ color: '#FFF4B3', opacity: 0.9 }}
                     >
                       {link.name}
                     </Link>
@@ -157,40 +170,40 @@ export default function Footer() {
         </div>
       </div>
 
-      <Separator />
+      <div className="h-px mx-4 my-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-60" />
 
       {/* Bottom Footer */}
       <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-4 text-sm text-line-secondary transition-colors duration-300">
+          <div className="flex items-center space-x-4 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.8 }}>
             <span>© {currentYear} DA LUZ CONSCIENTE</span>
             <span>•</span>
             <span>Todos los derechos reservados</span>
           </div>
 
           {/* Values Icons */}
-          <div className="flex items-center space-x-6 text-line-secondary transition-colors duration-300">
+          <div className="flex items-center space-x-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
             <div className="flex items-center space-x-1 text-xs">
-              <Leaf className="h-4 w-4 text-line-accent transition-colors duration-300" />
+              <Leaf className="h-4 w-4" style={{ color: '#F8D794' }} />
               <span>100% Natural</span>
             </div>
             <div className="flex items-center space-x-1 text-xs">
-              <Heart className="h-4 w-4 text-line-accent transition-colors duration-300" />
+              <Heart className="h-4 w-4" style={{ color: '#F8D794' }} />
               <span>Cruelty Free</span>
             </div>
             <div className="flex items-center space-x-1 text-xs">
-              <Sparkles className="h-4 w-4 text-line-accent transition-colors duration-300" />
+              <Sparkles className="h-4 w-4" style={{ color: '#F8D794' }} />
               <span>Artesanal</span>
             </div>
           </div>
 
           {/* Payment Methods */}
-          <div className="flex items-center space-x-2 text-xs text-line-secondary transition-colors duration-300">
+          <div className="flex items-center space-x-2 text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
             <span>Aceptamos:</span>
-            <Badge variant="outline" className="text-xs border-line-primary text-line-primary transition-all duration-300">
+            <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
               Mercado Pago
             </Badge>
-            <Badge variant="outline" className="text-xs border-line-primary text-line-primary transition-all duration-300">
+            <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
               Transferencia
             </Badge>
           </div>

@@ -3,6 +3,7 @@ import { client, queries } from "@/lib/sanity/client";
 import BlogCard from "@/components/ui/brand/BlogCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import BlurText from "@/components/ui/BlurText";
 import { BookOpen, ArrowRight, Sparkles, Leaf, Heart, Star, Users, Zap } from "lucide-react";
 import { 
   AnimatedBackground, 
@@ -86,29 +87,84 @@ export default async function HomePage() {
         <AnimatedBackground />
         
         {/* Main Content with Enhanced Typography */}
-        <div className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto">
-          {/* Enhanced Logo with Animation */}
-          <div className="space-y-6 mb-12">
-            <div className="relative">
-              <div className="hero-logo-text font-malisha text-6xl md:text-8xl lg:text-9xl font-bold leading-none tracking-wider drop-shadow-2xl">
-                <span className="inline-block transform hover:scale-105 transition-transform duration-700">
-                  DA LUZ
-                </span>
+        <div className="relative z-10 text-center text-white px-6 max-w-6xl mx-auto">
+          {/* Enhanced Logo with BlurText Animation */}
+          <div className="space-y-8 mb-16">
+            {/* Main Logo with Magical Hover Effect + BlurText - VELISTA Font */}
+            <div className="relative group cursor-pointer">
+              <div className="relative transition-all duration-700 ease-out group-hover:scale-105 group-hover:-translate-y-2">
+                {/* Background Glow Effect */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                  <div className="absolute inset-0 blur-2xl bg-gradient-to-r from-yellow-400/30 via-orange-400/30 to-red-400/30 animate-pulse"></div>
+                </div>
+                
+                {/* Main Text with BlurText + Shimmer Effect - VELISTA Font */}
+                <div className="relative z-10">
+                  <BlurText
+                    text="DA LUZ CONSCIENTE"
+                    as="h1"
+                    className="text-5xl md:text-7xl lg:text-[8rem] font-normal leading-none tracking-wider drop-shadow-2xl group-hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.8)] transition-all duration-700 group-hover:text-yellow-100"
+                    style={{ 
+                      fontFamily: 'VELISTA, var(--font-velista), serif',
+                      fontWeight: 'normal',
+                      fontStyle: 'normal'
+                    }}
+                    delay={150}
+                    direction="top"
+                    animateBy="words"
+                    stepDuration={0.4}
+                  />
+                  
+                  {/* Shimmer Overlay on Hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+                </div>
               </div>
-              <div className="hero-logo-text font-malisha text-4xl md:text-6xl lg:text-7xl font-bold leading-none tracking-wider drop-shadow-2xl mt-2">
-                <span className="inline-block transform hover:scale-105 transition-transform duration-700 delay-100">
-                  CONSCIENTE
-                </span>
+                
+                {/* Floating Sparkles */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
+                  <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-300 rounded-full animate-ping delay-100"></div>
+                  <div className="absolute top-3/4 right-1/4 w-1.5 h-1.5 bg-orange-300 rounded-full animate-ping delay-300"></div>
+                  <div className="absolute top-1/2 left-1/3 w-1 h-1 bg-red-300 rounded-full animate-ping delay-500"></div>
+                  <div className="absolute bottom-1/4 right-1/3 w-2 h-2 bg-yellow-400 rounded-full animate-ping delay-700"></div>
+                  <div className="absolute top-1/3 right-1/2 w-1.5 h-1.5 bg-orange-400 rounded-full animate-ping delay-200"></div>
+            </div>
+            
+                {/* Subtle Border Glow */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-lg border border-gradient-to-r from-yellow-400/20 via-orange-400/20 to-red-400/20 blur-sm"></div>
               </div>
             </div>
             
-            {/* Enhanced Tagline */}
-            <div className="relative">
-              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-6" />
-              <div className="font-velista text-xl md:text-2xl opacity-95 max-w-2xl mx-auto leading-relaxed tracking-wide">
-                Alkimyas para alma y cuerpo
+            {/* Enhanced Tagline with BlurText + Hover Effect */}
+            <div className="relative group cursor-pointer">
+              <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
+              <div className="relative transition-all duration-500 ease-out group-hover:scale-105">
+                {/* Background Glow for Tagline */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <div className="absolute inset-0 blur-xl bg-gradient-to-r from-white/20 via-yellow-200/20 to-white/20"></div>
+                </div>
+                
+                <BlurText
+                  text="Alkimyas para alma y cuerpo"
+                  as="div"
+                  className="text-1xl md:text-2xl lg:text-3xl opacity-95 max-w-4xl mx-auto leading-relaxed tracking-wide group-hover:text-yellow-50 transition-colors duration-500"
+                  style={{ 
+                    fontFamily: 'var(--font-caption), Inter, sans-serif',
+                    fontWeight: '300',
+                    letterSpacing: '0.05em'
+                  }}
+                  delay={100}
+                  direction="bottom"
+                  animateBy="words"
+                  stepDuration={0.3}
+                />
+                
+                {/* Subtle shimmer for tagline */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                  <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1200 ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"></div>
+                </div>
               </div>
-              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mt-6" />
+              <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mt-8" />
             </div>
           </div>
 
@@ -133,13 +189,7 @@ export default async function HomePage() {
                 Conoce Nuestra Historia
               </Button>
             </div>
-            
-            {/* Scroll Indicator */}
-            <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce">
-              <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-                <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse" />
-              </div>
-            </div>
+
           </div>
         </div>
       </section>
@@ -165,24 +215,24 @@ export default async function HomePage() {
                     Nuestra Esencia
                   </Badge>
                 </div>
-                <h2 className="text-enhanced-heading font-velista text-5xl md:text-6xl leading-tight">
+                <h2 className="text-enhanced-heading font-title text-5xl md:text-6xl leading-tight">
                   SOBRE DA LUZ
                 </h2>
               </div>
               
               {/* Enhanced Content */}
-              <div className="space-y-6 text-lg leading-relaxed text-gray-700">
-                <p className="text-xl font-medium text-gray-800 leading-relaxed">
+              <div className="space-y-6 text-lg leading-relaxed">
+                <p className="text-xl font-text font-medium text-gray-800 leading-relaxed">
                   DA LUZ CONSCIENTE nace de la profunda conexión entre la sabiduría ancestral 
                   y la ciencia moderna, creando puentes entre el alma y el cuerpo a través 
                   de alkimyas transformadoras.
                 </p>
-                <p className="leading-loose">
+                <p className="font-text leading-loose text-gray-700">
                   Trabajamos con productores cuidadosamente seleccionados, honrando los 
                   ciclos naturales y presentando nuestros productos en recipientes 
                   personalizados de cerámica y vidrio que celebran la belleza de lo artesanal.
                 </p>
-                <p className="leading-loose">
+                <p className="font-text leading-loose text-gray-700">
                   Cada línea de productos representa un viaje único hacia el bienestar 
                   integral, acompañado de servicios holísticos y programas de transformación 
                   personal que nutren tanto el cuerpo como el espíritu.
@@ -212,8 +262,8 @@ export default async function HomePage() {
                     <div className="text-center space-y-4">
                       <Sparkles className="w-16 h-16 text-brand-primary mx-auto animate-pulse" />
                       <div className="space-y-2">
-                        <div className="font-velista text-2xl text-brand-primary">Alkimya</div>
-                        <div className="font-velista text-lg text-brand-primary/70">Consciente</div>
+                        <div className="font-title text-2xl text-brand-primary">Alkimya</div>
+                        <div className="font-title text-lg text-brand-primary/70">Consciente</div>
                         <div className="w-16 h-0.5 bg-brand-primary/30 mx-auto my-4" />
                         <div className="text-sm text-gray-600 space-y-1">
                           <div>Alma • Cuerpo</div>
@@ -257,10 +307,10 @@ export default async function HomePage() {
               </Badge>
               <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-brand-primary" />
             </div>
-            <h2 className="text-enhanced-heading font-velista text-5xl md:text-6xl mb-6 leading-tight">
+            <h2 className="text-enhanced-heading font-title text-5xl md:text-6xl mb-6 leading-tight">
               NUESTROS SERVICIOS
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl font-text text-gray-600 max-w-3xl mx-auto leading-relaxed">
               Descubre nuestras modalidades de acompañamiento holístico, diseñadas para tu transformación integral
             </p>
           </div>
@@ -276,12 +326,12 @@ export default async function HomePage() {
                 </div>
                 
                 {/* Title */}
-                <h3 className="font-velista text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                   Biología De Luz
                 </h3>
                 
                 {/* Description */}
-                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                <p className="font-text text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
                   Terapias energéticas que trabajan con la luz interior de cada ser, 
                   activando procesos naturales de sanación y equilibrio.
                 </p>
@@ -306,12 +356,12 @@ export default async function HomePage() {
                 </div>
                 
                 {/* Title */}
-                <h3 className="font-velista text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                   Sesiones
                 </h3>
                 
                 {/* Description */}
-                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
+                <p className="font-text text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
                   Acompañamiento personalizado en procesos de transformación, 
                   integrando técnicas ancestrales y enfoques contemporáneos.
                 </p>
@@ -336,7 +386,7 @@ export default async function HomePage() {
                 </div>
                 
                 {/* Title */}
-                <h3 className="font-velista text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                   Coaching
                 </h3>
                 
@@ -386,7 +436,7 @@ export default async function HomePage() {
               </Badge>
               <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-white/60" />
             </div>
-            <h2 className="font-velista text-5xl md:text-6xl text-white mb-6 leading-tight">
+            <h2 className="font-title text-5xl md:text-6xl text-white mb-6 leading-tight">
               NUESTRA FILOSOFÍA
             </h2>
             <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
@@ -426,10 +476,10 @@ export default async function HomePage() {
                   <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto group-hover:bg-white/30 transition-colors duration-300 text-white">
                     {item.icon}
                   </div>
-                  <h3 className="font-velista text-xl text-white group-hover:text-white/90 transition-colors duration-300">
+                  <h3 className="font-subtitle text-xl text-white group-hover:text-white/90 transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="text-white/80 text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
+                  <p className="font-caption text-white/80 text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300">
                     {item.description}
                   </p>
                 </div>
@@ -460,7 +510,7 @@ export default async function HomePage() {
               <Badge variant="outline" className="border-brand-primary/30 text-brand-primary px-6 py-2">
                 Biocosmética Artesanal
               </Badge>
-              <h2 className="text-enhanced-heading font-velista text-5xl md:text-6xl leading-tight">
+              <h2 className="text-enhanced-heading font-title text-5xl md:text-6xl leading-tight">
                 ALKIMYA DA LUZ
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent mx-auto" />
@@ -468,7 +518,7 @@ export default async function HomePage() {
             
             {/* Enhanced Content */}
             <div className="space-y-8">
-              <p className="text-2xl text-gray-800 max-w-4xl mx-auto leading-relaxed font-light">
+              <p className="text-2xl font-text text-gray-800 max-w-4xl mx-auto leading-relaxed font-light">
                 Cosméticos botánicos artesanales presentados en recipientes personalizados 
                 de cerámica y vidrio, con productores cuidadosamente seleccionados.
               </p>
@@ -477,18 +527,18 @@ export default async function HomePage() {
               <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
                 <div className="card-enhanced p-6 text-center">
                   <Leaf className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-brand-primary mb-2">Ingredientes Naturales</h3>
-                  <p className="text-gray-600 text-sm">Cuidadosamente seleccionados</p>
+                  <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ingredientes Naturales</h3>
+                  <p className="font-caption text-gray-600 text-sm">Cuidadosamente seleccionados</p>
                 </div>
                 <div className="card-enhanced p-6 text-center">
                   <Sparkles className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-brand-primary mb-2">Proceso Artesanal</h3>
-                  <p className="text-gray-600 text-sm">Elaborado con dedicación</p>
+                  <h3 className="font-subtitle text-lg text-brand-primary mb-2">Proceso Artesanal</h3>
+                  <p className="font-caption text-gray-600 text-sm">Elaborado con dedicación</p>
                 </div>
                 <div className="card-enhanced p-6 text-center">
                   <Heart className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-brand-primary mb-2">Recipientes Únicos</h3>
-                  <p className="text-gray-600 text-sm">Cerámica personalizada</p>
+                  <h3 className="font-subtitle text-lg text-brand-primary mb-2">Recipientes Únicos</h3>
+                  <p className="font-caption text-gray-600 text-sm">Cerámica personalizada</p>
                 </div>
               </div>
               
@@ -538,7 +588,7 @@ export default async function HomePage() {
               <Badge variant="outline" className="border-white/30 text-white px-6 py-2 glass-card">
                 Ritmos Oceánicos
               </Badge>
-              <h2 className="font-velista text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
+              <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
                 LÍNEA ECOS
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
@@ -546,7 +596,7 @@ export default async function HomePage() {
             
             {/* Enhanced Content */}
             <div className="space-y-8">
-              <p className="text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
+              <p className="text-2xl font-text text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
                 Ritmos naturales que conectan con la fluidez del agua y los ciclos oceánicos, 
                 productos que honran la pureza y el movimiento constante de la vida.
               </p>
@@ -559,8 +609,8 @@ export default async function HomePage() {
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                   </div>
-                  <h3 className="font-velista text-lg text-white mb-2">Pureza</h3>
-                  <p className="text-white/80 text-sm">Cristalina como el agua</p>
+                  <h3 className="font-subtitle text-lg text-white mb-2">Pureza</h3>
+                  <p className="font-caption text-white/80 text-sm">Cristalina como el agua</p>
                 </div>
                 <div className="glass-card p-6 text-center border border-white/20">
                   <div className="w-12 h-12 text-white mx-auto mb-4">
@@ -568,13 +618,13 @@ export default async function HomePage() {
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                     </svg>
                   </div>
-                  <h3 className="font-velista text-lg text-white mb-2">Fluidez</h3>
-                  <p className="text-white/80 text-sm">Movimiento constante</p>
+                  <h3 className="font-subtitle text-lg text-white mb-2">Fluidez</h3>
+                  <p className="font-caption text-white/80 text-sm">Movimiento constante</p>
                 </div>
                 <div className="glass-card p-6 text-center border border-white/20">
                   <Users className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-white mb-2">Ciclos</h3>
-                  <p className="text-white/80 text-sm">Ritmos oceánicos</p>
+                  <h3 className="font-subtitle text-lg text-white mb-2">Ciclos</h3>
+                  <p className="font-caption text-white/80 text-sm">Ritmos oceánicos</p>
                 </div>
               </div>
               
@@ -618,7 +668,7 @@ export default async function HomePage() {
               <Badge variant="outline" className="border-white/30 text-white px-6 py-2 glass-card">
                 Fuego Sagrado
               </Badge>
-              <h2 className="font-velista text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
+              <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
                 LÍNEA UMBRAL
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
@@ -626,7 +676,7 @@ export default async function HomePage() {
             
             {/* Enhanced Content */}
             <div className="space-y-8">
-              <p className="text-2xl text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
+              <p className="text-2xl font-text text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
                 Transformación interior a través del fuego sagrado, productos que facilitan 
                 procesos profundos de cambio y renovación personal.
               </p>
@@ -635,18 +685,18 @@ export default async function HomePage() {
               <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
                 <div className="glass-card p-6 text-center border border-white/20">
                   <Zap className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-white mb-2">Transformación</h3>
-                  <p className="text-white/80 text-sm">Interior profunda</p>
+                  <h3 className="font-subtitle text-lg text-white mb-2">Transformación</h3>
+                  <p className="font-caption text-white/80 text-sm">Interior profunda</p>
                 </div>
                 <div className="glass-card p-6 text-center border border-white/20">
                   <Star className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-white mb-2">Fuego Sagrado</h3>
-                  <p className="text-white/80 text-sm">Energía renovadora</p>
+                  <h3 className="font-subtitle text-lg text-white mb-2">Fuego Sagrado</h3>
+                  <p className="font-caption text-white/80 text-sm">Energía renovadora</p>
                 </div>
                 <div className="glass-card p-6 text-center border border-white/20">
                   <Heart className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-velista text-lg text-white mb-2">Renovación</h3>
-                  <p className="text-white/80 text-sm">Personal y profunda</p>
+                  <h3 className="font-subtitle text-lg text-white mb-2">Renovación</h3>
+                  <p className="font-caption text-white/80 text-sm">Personal y profunda</p>
                 </div>
               </div>
               
@@ -740,7 +790,7 @@ export default async function HomePage() {
         <div className="container mx-auto max-w-6xl">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-velista text-4xl md:text-5xl text-brand-primary mb-8">
+              <h2 className="font-title text-4xl md:text-5xl text-brand-primary mb-8">
                 PROCESOS
               </h2>
               <div className="space-y-6 text-lg leading-relaxed text-gray-700">
@@ -766,8 +816,8 @@ export default async function HomePage() {
               <div className="w-80 h-80 rounded-full bg-gradient-to-br from-white to-bg-cream border-4 border-brand-primary/20 shadow-2xl flex items-center justify-center">
                 <div className="w-60 h-60 rounded-full bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 flex items-center justify-center">
                   <div className="text-center">
-                    <div className="font-velista text-2xl text-brand-primary mb-2">Proceso</div>
-                    <div className="font-velista text-lg text-brand-primary/70">Integral</div>
+                    <div className="font-title text-2xl text-brand-primary mb-2">Proceso</div>
+                    <div className="font-title text-lg text-brand-primary/70">Integral</div>
                     <div className="w-16 h-0.5 bg-brand-primary/50 mx-auto my-4"></div>
                     <div className="text-sm text-gray-600">Transformación</div>
                     <div className="text-sm text-gray-600">Consciente</div>
@@ -782,7 +832,7 @@ export default async function HomePage() {
       {/* SESIONES Section */}
       <section className="py-20 px-6 bg-cream">
         <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="font-velista text-4xl md:text-5xl text-brand-primary mb-12">
+          <h2 className="font-title text-4xl md:text-5xl text-brand-primary mb-12">
             SESIONES
           </h2>
           <div className="max-w-4xl mx-auto space-y-8">
@@ -835,7 +885,7 @@ export default async function HomePage() {
             {/* SABIDURÍA 1 Category */}
             <div className="bg-white rounded-lg p-8 shadow-lg">
               <div className="text-center mb-6">
-                <h3 className="font-velista text-2xl text-brand-primary mb-4">SABIDURÍA 1</h3>
+                <h3 className="font-subtitle text-2xl text-brand-primary mb-4">SABIDURÍA 1</h3>
                 <div className="w-16 h-0.5 bg-brand-primary mx-auto mb-4"></div>
                 <p className="text-gray-600">Conocimiento Ancestral y Biocosmética Natural</p>
               </div>
@@ -879,7 +929,7 @@ export default async function HomePage() {
             {/* SABIDURÍA 2 Category */}
             <div className="bg-white rounded-lg p-8 shadow-lg">
               <div className="text-center mb-6">
-                <h3 className="font-velista text-2xl text-brand-primary mb-4">SABIDURÍA 2</h3>
+                <h3 className="font-subtitle text-2xl text-brand-primary mb-4">SABIDURÍA 2</h3>
                 <div className="w-16 h-0.5 bg-brand-primary mx-auto mb-4"></div>
                 <p className="text-gray-600">Transformación Personal y Bienestar Holístico</p>
               </div>
@@ -933,7 +983,7 @@ export default async function HomePage() {
             {[1, 2, 3].map((i) => (
               <div key={i} className="bg-white/10 backdrop-blur-sm rounded-lg p-8 text-center">
                 <div className="bg-white/20 h-48 rounded-lg mb-4 flex items-center justify-center">
-                  <span className="text-white font-velista text-xl">IMAGEN {i}</span>
+                  <span className="text-white font-title text-xl">IMAGEN {i}</span>
                 </div>
               </div>
             ))}
@@ -944,7 +994,7 @@ export default async function HomePage() {
       {/* Contact Section */}
       <section className="py-20 px-6 bg-cream">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="font-velista text-4xl md:text-5xl text-brand-primary text-center mb-16">
+          <h2 className="font-title text-4xl md:text-5xl text-brand-primary text-center mb-16">
             PONTE EN CONTACTO
           </h2>
           <div className="grid lg:grid-cols-2 gap-12">

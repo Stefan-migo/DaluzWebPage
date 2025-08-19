@@ -63,7 +63,7 @@ const ListItem = ({ href, title, children }: { href: string, title: string, chil
       <NavigationMenuLink asChild>
         <Link
           href={href}
-          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-brand-primary/10 hover:text-brand-primary focus:bg-brand-primary/10 focus:text-brand-primary"
+          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary"
         >
           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>{title}</div>
           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
@@ -81,7 +81,7 @@ const BlogListItem = ({ href, title, subtitle }: { href: string, title: string, 
       <NavigationMenuLink asChild>
         <Link
           href={href}
-          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-brand-primary/10 hover:text-brand-primary focus:bg-brand-primary/10 focus:text-brand-primary"
+          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary"
         >
           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>{title}</div>
           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
@@ -219,7 +219,7 @@ export default function Header() {
                         </NavigationMenuLink>
                       </div>
                       <NavigationMenuLink asChild>
-                        <Link href="/programa-transformacion" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <Link href="/programa-transformacion" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
                           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Conocé el Programa</div>
                           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                             Detalles del programa de transformación
@@ -227,7 +227,7 @@ export default function Header() {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/mi-membresia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <Link href="/mi-membresia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
                           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Mi Membresía</div>
                           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                             Accede a tu progreso y contenido
@@ -261,7 +261,7 @@ export default function Header() {
                         </NavigationMenuLink>
                       </li>
                       <NavigationMenuLink asChild>
-                        <Link href="/alkimya" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <Link href="/alkimya" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
                           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>ALKIMYA</div>
                           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                             Descubre el corazón de nuestros productos.
@@ -269,7 +269,7 @@ export default function Header() {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/nuestra-historia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <Link href="/nuestra-historia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
                           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Nuestra Historia</div>
                           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                             El camino que nos trajo hasta aquí.
@@ -415,31 +415,31 @@ export default function Header() {
                       </DropdownMenuLabel>
                       <div className="h-px mx-2 my-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-60" />
                       <DropdownMenuItem asChild>
-                        <Link href="/perfil" className="flex items-center hover:bg-brand-primary/10 focus:bg-brand-primary/10" style={{ color: '#1C1B1A' }}>
+                        <Link href="/perfil" className="flex items-center hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary" style={{ color: '#1C1B1A' }}>
                           <User className="mr-2 h-4 w-4" style={{ color: '#AE0000' }} />
                           <span className="font-text">Perfil</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/mis-pedidos" className="flex items-center hover:bg-brand-primary/10 focus:bg-brand-primary/10" style={{ color: '#1C1B1A' }}>
+                        <Link href="/mis-pedidos" className="flex items-center hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary" style={{ color: '#1C1B1A' }}>
                           <Package className="mr-2 h-4 w-4" style={{ color: '#AE0000' }} />
                           <span className="font-text">Mis Pedidos</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/mi-membresia" className="flex items-center hover:bg-brand-primary/10 focus:bg-brand-primary/10" style={{ color: '#1C1B1A' }}>
+                        <Link href="/mi-membresia" className="flex items-center hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary" style={{ color: '#1C1B1A' }}>
                           <BookOpen className="mr-2 h-4 w-4" style={{ color: '#AE0000' }} />
                           <span className="font-text">Mi Membresía</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/configuracion" className="flex items-center hover:bg-brand-primary/10 focus:bg-brand-primary/10" style={{ color: '#1C1B1A' }}>
+                        <Link href="/configuracion" className="flex items-center hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary" style={{ color: '#1C1B1A' }}>
                           <Settings className="mr-2 h-4 w-4" style={{ color: '#AE0000' }} />
                           <span className="font-text">Configuración</span>
                         </Link>
                       </DropdownMenuItem>
                       <div className="h-px mx-2 my-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent opacity-60" />
-                      <DropdownMenuItem onSelect={handleSignOut} className="hover:bg-brand-primary/10 focus:bg-brand-primary/10" style={{ color: '#1C1B1A' }}>
+                      <DropdownMenuItem onSelect={handleSignOut} className="hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary" style={{ color: '#1C1B1A' }}>
                         <LogOut className="mr-2 h-4 w-4" style={{ color: '#AE0000' }} />
                         <span className="font-text">Cerrar Sesión</span>
                       </DropdownMenuItem>
