@@ -831,6 +831,22 @@
   100% { transform: translateX(-100%); }
 }
 
+/* Enhanced Gallery Marquee Animation */
+@keyframes gallery-marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: gallery-marquee 30s linear infinite;
+  will-change: transform;
+}
+
+/* Pause animation on hover for better UX */
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 .marquee_blur {
   position: absolute;
   inset: 0;
@@ -855,6 +871,65 @@
 }
 
 /* ===========================
+   WAVE OVERLAY POSITIONING
+   =========================== */
+
+/* ✨ ABSOLUTE POSITIONED WAVE OVERLAYS - Perfect Between Sections */
+.wave-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  pointer-events: none; /* Allow clicks to pass through */
+}
+
+/* Different overlay positioning options for fine-tuning */
+.wave-overlay-top {
+  top: -50%;
+  transform: translateY(-50%);
+}
+
+.wave-overlay-center {
+  top: -60%;
+  transform: translateY(-40%);
+}
+
+.wave-overlay-bottom {
+  top: -40%;
+  transform: translateY(-60%);
+}
+
+/* Custom positioning - adjustable via browser dev tools */
+.wave-overlay-custom {
+  top: var(--wave-top, -50%);
+  transform: translateY(var(--wave-translate, -50%));
+}
+
+/* ✨ TESTING CLASS - Easy to modify in browser dev tools */
+.wave-test-overlay {
+  /* Use CSS custom properties for fine-tuning in browser dev tools:
+  Example: 
+  --wave-top: -60%;
+  --wave-translate: -40%;
+  
+  Apply with: .wave-test-overlay { top: var(--wave-top) !important; transform: translateY(var(--wave-translate)) !important; }
+  */
+}
+
+/* ✨ SMOOTH WAVE TRANSITIONS - NO ANIMATIONS */
+.wave-smooth {
+  transition: none;
+  transform: none;
+  will-change: auto;
+}
+
+.wave-seamless {
+  border: none;
+  box-shadow: none;
+  filter: none;
+}
+
+/* ===========================
    ACCESSIBILITY ENHANCEMENTS
    =========================== */
 
@@ -872,4 +947,78 @@
   }
 }
 
+/* ===============================================
+   MOBILE SVG BACKGROUND OPTIMIZATIONS
+   =============================================== */
+
+/* Mobile-specific SVG optimizations */
+@media (max-width: 768px) {
+  /* Ensure SVG backgrounds scale properly on mobile */
+  svg[viewBox] {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Performance optimizations for mobile */
+  .section-enhanced {
+    overflow-x: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Mobile-specific SVG container */
+  .section-enhanced > div[class*="absolute"] {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
+/* Touch device optimizations */
+@media (pointer: coarse) {
+  /* Optimize for touch devices */
+  svg {
+    touch-action: none;
+    pointer-events: none;
+  }
+  
+  /* Improve mobile rendering */
+  .section-enhanced {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* High DPI mobile screens */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  svg {
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Very small mobile screens */
+@media (max-width: 480px) {
+  /* Adjust SVG positioning for very small screens */
+  .section-enhanced svg {
+    transform: scale(1.1) translateZ(0);
+    transform-origin: center center;
+  }
+  
+  /* Prevent horizontal overflow on small screens */
+  .section-enhanced {
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  
+  /* Specific fix for SESIONES section on very small screens */
+  .section-enhanced svg[viewBox*="1919.95"] {
+    transform: scale(1.2) translateZ(0);
+    transform-origin: center center;
+    min-height: 130%;
+  }
+}
 

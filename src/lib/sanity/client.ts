@@ -11,7 +11,9 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: process.env.NODE_ENV === 'production',
+  useCdn: false, // Disable CDN for immediate updates
+  // Enable CDN only for static content in production if needed
+  // useCdn: process.env.NODE_ENV === 'production',
 })
 
 // Preview client for draft content
@@ -44,8 +46,15 @@ export const queries = {
     slug,
     excerpt,
     publishedAt,
-    mainImage,
-    author->{name, image, bio},
+    "mainImage": {
+      "asset": {"url": mainImage.asset->url},
+      "alt": mainImage.alt
+    },
+    author->{
+      name, 
+      "image": {"asset": {"url": image.asset->url}}, 
+      bio
+    },
     categories[]->{title, color},
     featured,
     "estimatedReadingTime": round(length(pt::text(content)) / 5 / 200)

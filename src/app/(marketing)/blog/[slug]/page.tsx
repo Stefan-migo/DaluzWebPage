@@ -63,7 +63,17 @@ interface BlogPostPageProps {
 
 async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   try {
-    const post = await client.fetch(queries.postBySlug, { slug });
+    const post = await client.fetch(
+      queries.postBySlug, 
+      { slug },
+      {
+        cache: 'no-store', // Always fetch fresh data
+        next: { 
+          revalidate: 30, // Revalidate every 30 seconds
+          tags: ['blog-posts', 'sanity-content', `post-${slug}`] 
+        }
+      }
+    );
     
     // Debug query to see all fields
     const debugPost = await client.fetch(queries.debugPostBySlug, { slug });

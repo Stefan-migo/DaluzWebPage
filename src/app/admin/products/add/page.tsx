@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useProtectedForm } from "@/hooks/useFormProtection";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -29,8 +30,15 @@ export default function AddProductPage() {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   
-  // Form state
-  const [formData, setFormData] = useState({
+  // 🚀 Protected form state with auto data-loss prevention
+  const {
+    formData,
+    updateFormData,
+    hasChanges,
+    markAsSaving,
+    markAsSaved,
+    resetForm
+  } = useProtectedForm({
     name: '',
     slug: '',
     description: '',
@@ -82,34 +90,28 @@ export default function AddProductPage() {
   };
 
   const handleInputChange = (field: string, value: any) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    const updates: any = { [field]: value };
 
     // Auto-generate slug from name
     if (field === 'name' && value) {
-      setFormData(prev => ({
-        ...prev,
-        slug: generateSlug(value)
-      }));
+      updates.slug = generateSlug(value);
     }
+
+    updateFormData(updates);
   };
 
   const addToArray = (field: 'skin_type' | 'benefits' | 'certifications', value: string) => {
     if (!formData[field].includes(value)) {
-      setFormData(prev => ({
-        ...prev,
-        [field]: [...prev[field], value]
-      }));
+      updateFormData({
+        [field]: [...formData[field], value]
+      });
     }
   };
 
   const removeFromArray = (field: 'skin_type' | 'benefits' | 'certifications', value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].filter(item => item !== value)
-    }));
+    updateFormData({
+      [field]: formData[field].filter(item => item !== value)
+    });
   };
 
   const addSampleProducts = async () => {
@@ -227,6 +229,7 @@ export default function AddProductPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    markAsSaving(); // 🚀 Allow navigation during save process
 
     try {
       const productData = {
@@ -247,14 +250,17 @@ export default function AddProductPage() {
 
       if (response.ok) {
         toast.success('Producto creado exitosamente');
+        markAsSaved(); // 🚀 Mark as saved to allow navigation
         router.push('/admin/products');
       } else {
         const error = await response.json();
         toast.error(error.message || 'Error al crear el producto');
+        markAsSaved(); // Reset saving state on error
       }
     } catch (error) {
       console.error('Error:', error);
       toast.error('Error al crear el producto');
+      markAsSaved(); // Reset saving state on error
     } finally {
       setLoading(false);
     }
@@ -271,7 +277,14 @@ export default function AddProductPage() {
           <ArrowLeft className="h-4 w-4" />
           Volver
         </Button>
-        <h1 className="text-3xl font-bold">Agregar Producto</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold">Agregar Producto</h1>
+          {hasChanges && (
+            <span className="px-2 py-1 text-xs bg-amber-100 text-amber-800 rounded-full border border-amber-200">
+              Cambios sin guardar
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Quick Actions */}

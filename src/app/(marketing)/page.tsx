@@ -1,16 +1,24 @@
 import Link from "next/link";
+import Image from "next/image";
 import { client, queries } from "@/lib/sanity/client";
-import BlogCard from "@/components/ui/brand/BlogCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BlurText from "@/components/ui/BlurText";
-import { BookOpen, ArrowRight, Sparkles, Leaf, Heart, Star, Users, Zap } from "lucide-react";
-import { 
-  AnimatedBackground, 
-  WaveDivider, 
-  BiologiaLuzIcon, 
-  SesionesIcon, 
-  CoachingIcon 
+import { ArrowRight, Sparkles, Leaf, Heart, Star, Users, Zap, ChevronLeft, ChevronRight, Clock, Calendar } from "lucide-react";
+import {
+  AnimatedBackground,
+  SobreNosotrosBackground,
+  NuestrosServiciosBackground,
+  NuestraFilosofiaBackground,
+  AlkimyaBackground,
+  ProcesosBackground,
+  SesionesBackground,
+  BlogComunidadBackground,
+  GaleriaBackground,
+  ContactoBackground,
+  BiologiaLuzIcon,
+  SesionesIcon,
+  CoachingIcon
 } from "@/components/svg/SVGComponents";
 
 // Blog post type
@@ -46,10 +54,21 @@ interface BlogPost {
 
 async function getFeaturedPosts(): Promise<BlogPost[]> {
   try {
-    const allPosts = await client.fetch(queries.allPosts);
-    // Get featured posts, limit to 3 for homepage
-    const featuredPosts = allPosts.filter((post: BlogPost) => post.featured).slice(0, 3);
-    return featuredPosts || [];
+    const posts = await client.fetch(
+      queries.allPosts,
+      {},
+      {
+        cache: 'no-store', // Always fetch fresh data
+        next: {
+          revalidate: 30, // Revalidate every 30 seconds
+          tags: ['blog-posts', 'homepage-posts']
+        }
+      }
+    );
+    // Get recent posts for homepage bento grid, limit to 4
+    const recentPosts = posts?.slice(0, 4) || [];
+    console.log('🏠 Homepage: Fetched posts for blog section:', recentPosts.length);
+    return recentPosts;
   } catch (error) {
     console.error("Error fetching featured posts:", error);
     return [];
@@ -66,17 +85,17 @@ export default async function HomePage() {
         {/* Multiple Background Layers for Depth */}
         <div className="absolute inset-0">
           {/* Primary botanical background */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat"
             style={{
               backgroundImage: "url('/images/hero-botanical-background.jpg')",
               filter: "brightness(0.6) saturate(1.1) contrast(1.1)"
             }}
           />
-          
+
           {/* Gradient overlay for better text readability */}
           <div className="absolute inset-0 bg-gradient-to-br from-black/40 via-black/30 to-black/50" />
-          
+
           {/* Subtle pattern overlay */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent" />
@@ -85,7 +104,7 @@ export default async function HomePage() {
 
         {/* Your Custom SVG Floating Background Elements */}
         <AnimatedBackground />
-        
+
         {/* Main Content with Enhanced Typography */}
         <div className="relative z-10 text-center text-white px-6 max-w-6xl mx-auto">
           {/* Enhanced Logo with BlurText Animation */}
@@ -97,14 +116,14 @@ export default async function HomePage() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
                   <div className="absolute inset-0 blur-2xl bg-gradient-to-r from-yellow-400/30 via-orange-400/30 to-red-400/30 animate-pulse"></div>
                 </div>
-                
+
                 {/* Main Text with BlurText + Shimmer Effect - VELISTA Font */}
                 <div className="relative z-10">
                   <BlurText
                     text="DA LUZ CONSCIENTE"
                     as="h1"
                     className="text-5xl md:text-7xl lg:text-[8rem] font-normal leading-none tracking-wider drop-shadow-2xl group-hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.8)] transition-all duration-700 group-hover:text-yellow-100"
-                    style={{ 
+                    style={{
                       fontFamily: 'VELISTA, var(--font-velista), serif',
                       fontWeight: 'normal',
                       fontStyle: 'normal'
@@ -114,13 +133,13 @@ export default async function HomePage() {
                     animateBy="words"
                     stepDuration={0.4}
                   />
-                  
+
                   {/* Shimmer Overlay on Hover */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                     <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-12"></div>
+                  </div>
                 </div>
-              </div>
-                
+
                 {/* Floating Sparkles */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
                   <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-yellow-300 rounded-full animate-ping delay-100"></div>
@@ -128,13 +147,13 @@ export default async function HomePage() {
                   <div className="absolute top-1/2 left-1/3 w-1 h-1 bg-red-300 rounded-full animate-ping delay-500"></div>
                   <div className="absolute bottom-1/4 right-1/3 w-2 h-2 bg-yellow-400 rounded-full animate-ping delay-700"></div>
                   <div className="absolute top-1/3 right-1/2 w-1.5 h-1.5 bg-orange-400 rounded-full animate-ping delay-200"></div>
-            </div>
-            
+                </div>
+
                 {/* Subtle Border Glow */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 rounded-lg border border-gradient-to-r from-yellow-400/20 via-orange-400/20 to-red-400/20 blur-sm"></div>
               </div>
             </div>
-            
+
             {/* Enhanced Tagline with BlurText + Hover Effect */}
             <div className="relative group cursor-pointer">
               <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-8" />
@@ -143,12 +162,12 @@ export default async function HomePage() {
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
                   <div className="absolute inset-0 blur-xl bg-gradient-to-r from-white/20 via-yellow-200/20 to-white/20"></div>
                 </div>
-                
+
                 <BlurText
                   text="Alkimyas para alma y cuerpo"
                   as="div"
                   className="text-1xl md:text-2xl lg:text-3xl opacity-95 max-w-4xl mx-auto leading-relaxed tracking-wide group-hover:text-yellow-50 transition-colors duration-500"
-                  style={{ 
+                  style={{
                     fontFamily: 'var(--font-caption), Inter, sans-serif',
                     fontWeight: '300',
                     letterSpacing: '0.05em'
@@ -158,7 +177,7 @@ export default async function HomePage() {
                   animateBy="words"
                   stepDuration={0.3}
                 />
-                
+
                 {/* Subtle shimmer for tagline */}
                 <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                   <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1200 ease-in-out bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12"></div>
@@ -171,7 +190,7 @@ export default async function HomePage() {
           {/* Enhanced CTA Section */}
           <div className="space-y-8">
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Button 
+              <Button
                 className="group relative px-10 py-4 text-lg font-semibold glass-card text-white hover:bg-white hover:text-gray-900 transition-all duration-500 transform hover:scale-105"
                 style={{ borderRadius: '50px' }}
               >
@@ -179,8 +198,8 @@ export default async function HomePage() {
                 Descubre Nuestras Alkimyas
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
-              
-              <Button 
+
+              <Button
                 variant="ghost"
                 className="group px-8 py-4 text-lg font-medium text-white border-2 border-white/40 hover:bg-white/10 glass-card transition-all duration-500"
                 style={{ borderRadius: '50px' }}
@@ -194,63 +213,62 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ✨ ENHANCED ABOUT SECTION */}
-      <section className="section-enhanced relative py-24 px-6 bg-gradient-to-br from-bg-cream via-bg-light to-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 20% 50%, #AE0000 2px, transparent 2px), radial-gradient(circle at 80% 50%, #AE0000 2px, transparent 2px)`,
-            backgroundSize: '60px 60px'
-          }} />
+      {/* ✨ ENHANCED ABOUT SECTION - WITH CUSTOM SVG BACKGROUND */}
+      <section className="section-enhanced relative py-14 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <SobreNosotrosBackground
+          bgColor="#F0EACE"  // Cream background
+          waveColor="#AE0000"  // Brand red wave
+          className="opacity-95"
+        />
+        {/* Centered Title */}
+        <div className="text-center pb-5 relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-5" />
+          <h2 className="font-title text-5xl md:text-6xl leading-tight drop-shadow-lg" style={{ color: '#FFF4B3' }}>
+            SOBRE DA LUZ
+          </h2>
+          {/* Bottom gradient divider */}
+          <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mt-4 mb-5" />
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-10">
+        <div className="container mx-auto max-w-7xl relative z-20">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
-              {/* Enhanced Section Header */}
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-0.5 bg-gradient-to-r from-brand-primary to-transparent" />
-                  <Badge variant="outline" className="border-brand-primary/20 text-brand-primary px-4 py-1">
-                    Nuestra Esencia
-                  </Badge>
+              {/* Content Card with Transparency */}
+              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
+                {/* Enhanced Content */}
+                <div className="space-y-6 text-lg leading-relaxed">
+                  <p className="font-text text-gray-800 leading-loose">
+                    DA LUZ CONSCIENTE nace de la profunda conexión entre la sabiduría ancestral
+                    y la ciencia moderna, creando puentes entre el alma y el cuerpo a través
+                    de alkimyas transformadoras.
+                  </p>
+                  <p className="font-text leading-loose text-gray-800">
+                    Trabajamos con productores cuidadosamente seleccionados, honrando los
+                    ciclos naturales y presentando nuestros productos en recipientes
+                    personalizados de cerámica y vidrio que celebran la belleza de lo artesanal.
+                  </p>
+                  <p className="font-text leading-loose text-gray-800">
+                    Cada línea de productos representa un viaje único hacia el bienestar
+                    integral, acompañado de servicios holísticos y programas de transformación
+                    personal que nutren tanto el cuerpo como el espíritu.
+                  </p>
                 </div>
-                <h2 className="text-enhanced-heading font-title text-5xl md:text-6xl leading-tight">
-                  SOBRE DA LUZ
-                </h2>
-              </div>
-              
-              {/* Enhanced Content */}
-              <div className="space-y-6 text-lg leading-relaxed">
-                <p className="text-xl font-text font-medium text-gray-800 leading-relaxed">
-                  DA LUZ CONSCIENTE nace de la profunda conexión entre la sabiduría ancestral 
-                  y la ciencia moderna, creando puentes entre el alma y el cuerpo a través 
-                  de alkimyas transformadoras.
-                </p>
-                <p className="font-text leading-loose text-gray-700">
-                  Trabajamos con productores cuidadosamente seleccionados, honrando los 
-                  ciclos naturales y presentando nuestros productos en recipientes 
-                  personalizados de cerámica y vidrio que celebran la belleza de lo artesanal.
-                </p>
-                <p className="font-text leading-loose text-gray-700">
-                  Cada línea de productos representa un viaje único hacia el bienestar 
-                  integral, acompañado de servicios holísticos y programas de transformación 
-                  personal que nutren tanto el cuerpo como el espíritu.
-                </p>
-              </div>
 
-              {/* Enhanced CTA */}
-              <div className="pt-6">
-                <Button 
-                  className="group btn-enhanced px-8 py-4 text-white font-semibold rounded-full"
-                >
-                  <Leaf className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  Explora Nuestra Filosofía
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
+                {/* Enhanced CTA */}
+                <div className="pt-6">
+                  <Button
+                    className="group btn-enhanced px-8 py-4 text-white font-semibold rounded-full"
+                  >
+                    <Leaf className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                    Explora Nuestra Filosofía
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                </div>
               </div>
             </div>
-            
+
             {/* Enhanced Visual Element */}
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
@@ -262,10 +280,10 @@ export default async function HomePage() {
                     <div className="text-center space-y-4">
                       <Sparkles className="w-16 h-16 text-brand-primary mx-auto animate-pulse" />
                       <div className="space-y-2">
-                        <div className="font-title text-2xl text-brand-primary">Alkimya</div>
-                        <div className="font-title text-lg text-brand-primary/70">Consciente</div>
-                        <div className="w-16 h-0.5 bg-brand-primary/30 mx-auto my-4" />
-                        <div className="text-sm text-gray-600 space-y-1">
+                        <div className="font-title text-2xl text-brand-primary drop-shadow-sm">Alkimya</div>
+                        <div className="font-title text-lg text-brand-primary/80 drop-shadow-sm">Consciente</div>
+                        <div className="w-16 h-0.5 bg-brand-primary/40 mx-auto my-4" />
+                        <div className="text-sm text-gray-800 space-y-1 drop-shadow-sm">
                           <div>Alma • Cuerpo</div>
                           <div>Transformación</div>
                         </div>
@@ -273,7 +291,7 @@ export default async function HomePage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Floating elements around the circle */}
                 <div className="absolute -top-6 -right-6 w-12 h-12 bg-brand-primary/10 rounded-full animate-pulse" />
                 <div className="absolute -bottom-4 -left-4 w-8 h-8 bg-brand-secondary/10 rounded-full animate-pulse delay-1000" />
@@ -284,37 +302,31 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Wave Divider */}
-      <WaveDivider fromColor="#ffffff" toColor="#ffffff" />
+
 
       {/* ✨ ENHANCED SERVICES SECTION */}
-      <section className="section-enhanced relative py-24 px-6 bg-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `linear-gradient(90deg, #AE0000 1px, transparent 1px), linear-gradient(0deg, #AE0000 1px, transparent 1px)`,
-            backgroundSize: '100px 100px'
-          }} />
+      <section className="section-enhanced relative py-14 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <NuestrosServiciosBackground
+          bgColor="#F0EACE"  // Cream background
+          waveColor="#AE0000"  // Brand red wave
+          className="opacity-95"
+        />
+        {/* Centered Title */}
+        <div className="text-center pb-5 mt-[-3rem] mb-[7rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mb-2 " style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl mb-3 leading-tight" style={{ color: '#FFF4B3' }}>
+            NUESTROS SERVICIOS
+          </h2>
+          {/* Bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mt-2 mb-3" style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
+          <p className="text-xl font-text text-gray-600 max-w-3xl mx-auto leading-relaxed" style={{ color: '#F0EACE' }}>
+            Descubre nuestras modalidades de acompañamiento holístico, diseñadas para tu transformación integral
+          </p>
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-10">
-          {/* Enhanced Section Header */}
-          <div className="text-center mb-20">
-            <div className="flex items-center justify-center space-x-4 mb-6">
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-brand-primary" />
-              <Badge variant="outline" className="border-brand-primary/20 text-brand-primary px-6 py-2">
-                Nuestros Servicios
-              </Badge>
-              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-brand-primary" />
-            </div>
-            <h2 className="text-enhanced-heading font-title text-5xl md:text-6xl mb-6 leading-tight">
-              NUESTROS SERVICIOS
-            </h2>
-            <p className="text-xl font-text text-gray-600 max-w-3xl mx-auto leading-relaxed">
-              Descubre nuestras modalidades de acompañamiento holístico, diseñadas para tu transformación integral
-            </p>
-          </div>
-
+        <div className="container mx-auto max-w-7xl relative z-20">
           {/* Enhanced Service Cards with Your Custom SVG Icons */}
           <div className="grid md:grid-cols-3 gap-8">
             {/* Biología De Luz */}
@@ -324,20 +336,20 @@ export default async function HomePage() {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
                   <BiologiaLuzIcon size={48} />
                 </div>
-                
+
                 {/* Title */}
                 <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                   Biología De Luz
                 </h3>
-                
+
                 {/* Description */}
                 <p className="font-text text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                  Terapias energéticas que trabajan con la luz interior de cada ser, 
+                  Terapias energéticas que trabajan con la luz interior de cada ser,
                   activando procesos naturales de sanación y equilibrio.
                 </p>
-                
+
                 {/* CTA */}
-                <Button 
+                <Button
                   variant="ghost"
                   className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
                 >
@@ -354,20 +366,20 @@ export default async function HomePage() {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
                   <SesionesIcon size={48} />
                 </div>
-                
+
                 {/* Title */}
                 <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                   Sesiones
                 </h3>
-                
+
                 {/* Description */}
                 <p className="font-text text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                  Acompañamiento personalizado en procesos de transformación, 
+                  Acompañamiento personalizado en procesos de transformación,
                   integrando técnicas ancestrales y enfoques contemporáneos.
                 </p>
-                
+
                 {/* CTA */}
-                <Button 
+                <Button
                   variant="ghost"
                   className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
                 >
@@ -384,20 +396,20 @@ export default async function HomePage() {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
                   <CoachingIcon size={48} />
                 </div>
-                
+
                 {/* Title */}
                 <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
                   Coaching
                 </h3>
-                
+
                 {/* Description */}
                 <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                  Programa de 7 meses de transformación consciente, diseñado para 
+                  Programa de 7 meses de transformación consciente, diseñado para
                   el desarrollo integral del ser humano.
                 </p>
-                
+
                 {/* CTA */}
-                <Button 
+                <Button
                   variant="ghost"
                   className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
                 >
@@ -410,42 +422,32 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Wave Divider */}
-      <WaveDivider fromColor="#ffffff" toColor="#AE0000" />
-
       {/* ✨ ENHANCED PHILOSOPHY SECTION */}
-      <section className="section-enhanced relative py-24 px-6 overflow-hidden" style={{ backgroundColor: '#AE0000' }}>
-        {/* Enhanced Background */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-primary opacity-90" />
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `radial-gradient(circle at 25% 25%, white 2px, transparent 2px), radial-gradient(circle at 75% 75%, white 2px, transparent 2px)`,
-              backgroundSize: '80px 80px'
-            }} />
-          </div>
+      <section className="section-enhanced relative py-24 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <NuestraFilosofiaBackground
+          bgColor="#AE0000"  // Brand red background
+          className="opacity-95"
+        />
+
+        {/* Centered Title */}
+        <div className="text-center pb-5 mt-[-2rem] mb-[6rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl mb-6 leading-tight" style={{ color: '#F0EACE' }}>
+            NUESTRA FILOSOFÍA
+          </h2>
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mt-5 mb-5" style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
+
+          <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            Los valores fundamentales que guían cada aspecto de nuestro trabajo consciente
+          </p>
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-10">
-          {/* Enhanced Header */}
-          <div className="text-center mb-20">
-            <div className="flex items-center justify-center space-x-4 mb-6">
-              <div className="w-16 h-0.5 bg-gradient-to-r from-transparent to-white/60" />
-              <Badge variant="outline" className="border-white/30 text-white px-6 py-2 glass-card">
-                Nuestra Filosofía
-              </Badge>
-              <div className="w-16 h-0.5 bg-gradient-to-l from-transparent to-white/60" />
-            </div>
-            <h2 className="font-title text-5xl md:text-6xl text-white mb-6 leading-tight">
-              NUESTRA FILOSOFÍA
-            </h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-              Los valores fundamentales que guían cada aspecto de nuestro trabajo consciente
-            </p>
-          </div>
-
+        <div className="container mx-auto max-w-7xl relative z-20">
           {/* Enhanced Philosophy Cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-[-2rem]">
             {[
               {
                 title: "Consciencia",
@@ -468,8 +470,8 @@ export default async function HomePage() {
                 icon: <Heart className="w-8 h-8" />
               }
             ].map((item, index) => (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="group glass-card p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2"
               >
                 <div className="text-center space-y-4">
@@ -489,83 +491,74 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Wave Divider */}
-      <WaveDivider fromColor="#AE0000" toColor="#F0EACE" />
-
-      {/* ✨ ENHANCED PRODUCT LINES SECTIONS */}
       {/* ALKIMYA DA LUZ */}
-      <section className="section-enhanced relative py-24 px-6 overflow-hidden" style={{ backgroundColor: '#F0EACE' }}>
-        {/* Background Texture */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%23AE0000' fill-opacity='0.4'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: '60px 60px'
-          }} />
+      <section className="section-enhanced relative py-24 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <AlkimyaBackground
+          bgColor="#F0EACE"  // Cream background
+          waveColor="#AE0000"  // Brand red wave
+          className="opacity-95"
+        />
+
+        {/* Centered Title */}
+        <div className="text-center mt-[2rem] mb-[5rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl mb-6 leading-tight" style={{ color: '#AE0000' }}>
+            ALKIMYA DA LUZ
+          </h2>
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mt-4 mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <p className="text-2xl font-text text-gray-800 max-w-4xl mx-auto leading-relaxed font-light">
+            Cosméticos botánicos artesanales presentados en recipientes personalizados
+            de cerámica y vidrio, con productores cuidadosamente seleccionados.
+          </p>
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-10">
-          <div className="text-center max-w-5xl mx-auto">
-            {/* Enhanced Header */}
-            <div className="space-y-6 mb-16">
-              <Badge variant="outline" className="border-brand-primary/30 text-brand-primary px-6 py-2">
-                Biocosmética Artesanal
-              </Badge>
-              <h2 className="text-enhanced-heading font-title text-5xl md:text-6xl leading-tight">
-                ALKIMYA DA LUZ
-              </h2>
-              <div className="w-32 h-1 bg-gradient-to-r from-transparent via-brand-primary to-transparent mx-auto" />
+        <div className="container mx-auto max-w-7xl relative z-20">
+          {/* Enhanced Content */}
+          <div className="space-y-8">
+            {/* Features Grid */}
+            <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
+              <div className="card-enhanced p-6 text-center">
+                <Leaf className="w-12 h-12 text-brand-primary mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ingredientes Naturales</h3>
+                <p className="font-caption text-gray-600 text-sm">Cuidadosamente seleccionados</p>
+              </div>
+              <div className="card-enhanced p-6 text-center">
+                <Sparkles className="w-12 h-12 text-brand-primary mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Proceso Artesanal</h3>
+                <p className="font-caption text-gray-600 text-sm">Elaborado con dedicación</p>
+              </div>
+              <div className="card-enhanced p-6 text-center">
+                <Heart className="w-12 h-12 text-brand-primary mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Recipientes Únicos</h3>
+                <p className="font-caption text-gray-600 text-sm">Cerámica personalizada</p>
+              </div>
             </div>
-            
-            {/* Enhanced Content */}
-            <div className="space-y-8">
-              <p className="text-2xl font-text text-gray-800 max-w-4xl mx-auto leading-relaxed font-light">
-                Cosméticos botánicos artesanales presentados en recipientes personalizados 
-                de cerámica y vidrio, con productores cuidadosamente seleccionados.
-              </p>
-              
-              {/* Features Grid */}
-              <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
-                <div className="card-enhanced p-6 text-center">
-                  <Leaf className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ingredientes Naturales</h3>
-                  <p className="font-caption text-gray-600 text-sm">Cuidadosamente seleccionados</p>
-                </div>
-                <div className="card-enhanced p-6 text-center">
-                  <Sparkles className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-brand-primary mb-2">Proceso Artesanal</h3>
-                  <p className="font-caption text-gray-600 text-sm">Elaborado con dedicación</p>
-                </div>
-                <div className="card-enhanced p-6 text-center">
-                  <Heart className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-brand-primary mb-2">Recipientes Únicos</h3>
-                  <p className="font-caption text-gray-600 text-sm">Cerámica personalizada</p>
-                </div>
-              </div>
-              
-              {/* Enhanced CTA */}
-              <div className="pt-8">
-                <Button className="group btn-enhanced px-12 py-4 text-lg text-white font-semibold rounded-full">
-                  <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  Explora Productos
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </div>
+
+            {/* Enhanced CTA */}
+            <div className="pt-8">
+              <Button className="group btn-enhanced px-12 py-4 text-lg text-white font-semibold rounded-full">
+                <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                Explora Productos
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Wave Divider */}
-      <WaveDivider fromColor="#F0EACE" toColor="#12406F" />
+
 
       {/* ✨ ENHANCED LÍNEA ECOS */}
-      <section 
+      <section
         className="section-enhanced relative py-24 px-6 overflow-hidden"
         style={{ backgroundColor: '#12406F' }}
       >
         {/* Enhanced Background */}
         <div className="absolute inset-0">
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
             style={{
               backgroundImage: "url('/images/textures/texture-ecos-ocean.jpg')",
@@ -585,73 +578,33 @@ export default async function HomePage() {
           <div className="text-center max-w-5xl mx-auto">
             {/* Enhanced Header */}
             <div className="space-y-6 mb-16">
-              <Badge variant="outline" className="border-white/30 text-white px-6 py-2 glass-card">
-                Ritmos Oceánicos
-              </Badge>
               <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
                 LÍNEA ECOS
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
             </div>
-            
+
             {/* Enhanced Content */}
             <div className="space-y-8">
               <p className="text-2xl font-text text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
-                Ritmos naturales que conectan con la fluidez del agua y los ciclos oceánicos, 
+                Ritmos naturales que conectan con la fluidez del agua y los ciclos oceánicos,
                 productos que honran la pureza y el movimiento constante de la vida.
               </p>
-              
-              {/* Ocean Features */}
-              <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
-                <div className="glass-card p-6 text-center border border-white/20">
-                  <div className="w-12 h-12 text-white mx-auto mb-4">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                  </div>
-                  <h3 className="font-subtitle text-lg text-white mb-2">Pureza</h3>
-                  <p className="font-caption text-white/80 text-sm">Cristalina como el agua</p>
-                </div>
-                <div className="glass-card p-6 text-center border border-white/20">
-                  <div className="w-12 h-12 text-white mx-auto mb-4">
-                    <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
-                  </div>
-                  <h3 className="font-subtitle text-lg text-white mb-2">Fluidez</h3>
-                  <p className="font-caption text-white/80 text-sm">Movimiento constante</p>
-                </div>
-                <div className="glass-card p-6 text-center border border-white/20">
-                  <Users className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-white mb-2">Ciclos</h3>
-                  <p className="font-caption text-white/80 text-sm">Ritmos oceánicos</p>
-                </div>
-              </div>
-              
-              {/* Enhanced CTA */}
-              <div className="pt-8">
-                <Button className="group glass-card px-12 py-4 text-lg text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white hover:text-blue-900 transition-all duration-500">
-                  <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                  Descubre Ecos
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Wave Divider */}
-      <WaveDivider fromColor="#12406F" toColor="#EA4F12" />
+
 
       {/* ✨ ENHANCED LÍNEA UMBRAL */}
-      <section 
+      <section
         className="section-enhanced relative py-24 px-6 overflow-hidden"
         style={{ backgroundColor: '#EA4F12' }}
       >
         {/* Enhanced Background */}
         <div className="absolute inset-0">
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-40"
             style={{
               backgroundImage: "url('/images/textures/texture-umbral-desert.jpg')",
@@ -665,61 +618,31 @@ export default async function HomePage() {
           <div className="text-center max-w-5xl mx-auto">
             {/* Enhanced Header */}
             <div className="space-y-6 mb-16">
-              <Badge variant="outline" className="border-white/30 text-white px-6 py-2 glass-card">
-                Fuego Sagrado
-              </Badge>
               <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
                 LÍNEA UMBRAL
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
             </div>
-            
+
             {/* Enhanced Content */}
             <div className="space-y-8">
               <p className="text-2xl font-text text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
-                Transformación interior a través del fuego sagrado, productos que facilitan 
+                Transformación interior a través del fuego sagrado, productos que facilitan
                 procesos profundos de cambio y renovación personal.
               </p>
-              
-              {/* Fire Features */}
-              <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
-                <div className="glass-card p-6 text-center border border-white/20">
-                  <Zap className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-white mb-2">Transformación</h3>
-                  <p className="font-caption text-white/80 text-sm">Interior profunda</p>
-                </div>
-                <div className="glass-card p-6 text-center border border-white/20">
-                  <Star className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-white mb-2">Fuego Sagrado</h3>
-                  <p className="font-caption text-white/80 text-sm">Energía renovadora</p>
-                </div>
-                <div className="glass-card p-6 text-center border border-white/20">
-                  <Heart className="w-12 h-12 text-white mx-auto mb-4" />
-                  <h3 className="font-subtitle text-lg text-white mb-2">Renovación</h3>
-                  <p className="font-caption text-white/80 text-sm">Personal y profunda</p>
-                </div>
-              </div>
-              
-              {/* Enhanced CTA */}
-              <div className="pt-8">
-                <Button className="group glass-card px-12 py-4 text-lg text-white font-semibold rounded-full border-2 border-white/30 hover:bg-white hover:text-orange-900 transition-all duration-500">
-                  <Zap className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                  Explora Umbral
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                </Button>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
+
       {/* LÍNEA JADE RITUAL */}
-      <section 
+      <section
         className="relative py-20 px-6 overflow-hidden"
         style={{ backgroundColor: '#04412D' }}
       >
         {/* Background Texture */}
-        <div 
+        <div
           className="absolute inset-0 bg-fit bg-center bg-no-repeat opacity-30"
           style={{
             backgroundImage: "url('/images/textures/texture-jade-forest.jpg')",
@@ -727,23 +650,29 @@ export default async function HomePage() {
           }}
         />
         <div className="relative z-10 container mx-auto max-w-6xl text-center">
-          <h2 className="font-velista text-4xl md:text-5xl text-white mb-8 drop-shadow-lg">
-            LÍNEA JADE RITUAL
-          </h2>
+          {/* Enhanced Header */}
+          <div className="space-y-6 mb-16">
+            <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
+              LÍNEA JADE RITUAL
+            </h2>
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
+          </div>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Ceremonias sagradas que conectan con la sabiduría ancestral de la tierra, 
+            Ceremonias sagradas que conectan con la sabiduría ancestral de la tierra,
             tinturas madre y flores de Bach para el equilibrio orgánico.
           </p>
         </div>
       </section>
 
+
+
       {/* LÍNEA UTÓPICA */}
-      <section 
+      <section
         className="relative py-20 px-6 overflow-hidden"
         style={{ backgroundColor: '#392E13' }}
       >
         {/* Background Texture */}
-        <div 
+        <div
           className="absolute inset-0 bg-fit bg-center bg-no-repeat opacity-30"
           style={{
             backgroundImage: "url('/images/textures/texture-utopica-golden.jpg')",
@@ -751,23 +680,29 @@ export default async function HomePage() {
           }}
         />
         <div className="relative z-10 container mx-auto max-w-6xl text-center">
-          <h2 className="font-velista text-4xl md:text-5xl text-white mb-8 drop-shadow-lg">
-            LÍNEA UTÓPICA
-          </h2>
+          {/* Enhanced Header */}
+          <div className="space-y-6 mb-16">
+            <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
+              LÍNEA UTÓPICA
+            </h2>
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
+          </div>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Visión elevada que trasciende lo cotidiano, cosméticos naturales que 
+            Visión elevada que trasciende lo cotidiano, cosméticos naturales que
             realzan la belleza auténtica del ser.
           </p>
         </div>
       </section>
 
+
+
       {/* LÍNEA ALMA TERRA */}
-      <section 
+      <section
         className="relative py-20 px-6 overflow-hidden"
         style={{ backgroundColor: '#9B201A' }}
       >
         {/* Background Texture */}
-        <div 
+        <div
           className="absolute inset-0 bg-fit bg-center bg-no-repeat opacity-30"
           style={{
             backgroundImage: "url('/images/textures/texture-alma-terra-earth.jpg')",
@@ -775,38 +710,58 @@ export default async function HomePage() {
           }}
         />
         <div className="relative z-10 container mx-auto max-w-6xl text-center">
-          <h2 className="font-velista text-4xl md:text-5xl text-white mb-8 drop-shadow-lg">
-            LÍNEA ALMA TERRA
-          </h2>
+          {/* Enhanced Header */}
+          <div className="space-y-6 mb-16">
+            <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
+              LÍNEA ALMA TERRA
+            </h2>
+            <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
+          </div>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Conexión profunda con la tierra madre, brumas aromáticas y pociones 
+            Conexión profunda con la tierra madre, brumas aromáticas y pociones
             de aromaterapia que nutren el alma.
           </p>
         </div>
       </section>
 
+
+
       {/* PROCESOS Section */}
-      <section className="py-20 px-6 bg-white">
-        <div className="container mx-auto max-w-6xl">
+      <section className="section-enhanced relative py-20 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <ProcesosBackground
+          bgColor="#F0EACE"  // creme background
+          waveColor="#AE0000"  // Brand red wave
+          className="opacity-95"
+        />
+        {/* Centered Title */}
+        <div className="container mx-auto max-w-6xl text-left mt-[-2rem] mb-[7rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-10 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-gray-400xl md:text-5xl leading-tight" style={{ color: '#AE0000' }}>
+            PROCESOS
+          </h2>
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-10 mt-2 mb-10" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative z-20">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="font-title text-4xl md:text-5xl text-brand-primary mb-8">
-                PROCESOS
-              </h2>
-              <div className="space-y-6 text-lg leading-relaxed text-gray-700">
+              <div className="space-y-3 text-lg mt-14 leading-relaxed" style={{ color: '#F0EACE' }}>
                 <p>
-                  Nuestros procesos integrales están diseñados para acompañarte en 
-                  cada etapa de tu transformación personal. Combinamos técnicas ancestrales 
+                  Nuestros procesos integrales están diseñados para acompañarte en
+                  cada etapa de tu transformación personal. Combinamos técnicas ancestrales
                   con enfoques contemporáneos para crear un camino único hacia el bienestar.
                 </p>
                 <p>
-                  Cada proceso es personalizado según tus necesidades específicas, 
-                  honrando tu ritmo natural y respetando los ciclos de transformación 
+                  Cada proceso es personalizado según tus necesidades específicas,
+                  honrando tu ritmo natural y respetando los ciclos de transformación
                   que requiere todo crecimiento auténtico.
                 </p>
                 <p>
-                  Desde la primera consulta hasta el seguimiento posterior, 
-                  te acompañamos con presencia consciente y herramientas efectivas 
+                  Desde la primera consulta hasta el seguimiento posterior,
+                  te acompañamos con presencia consciente y herramientas efectivas
                   para que puedas integrar los cambios de manera sostenible.
                 </p>
               </div>
@@ -829,25 +784,42 @@ export default async function HomePage() {
         </div>
       </section>
 
+
+
       {/* SESIONES Section */}
-      <section className="py-20 px-6 bg-cream">
-        <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="font-title text-4xl md:text-5xl text-brand-primary mb-12">
+      <section className="section-enhanced relative py-20 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <SesionesBackground
+          bgColor="#F0EACE"  // Cream background
+          waveColor="#AE0000"  // Brand red wave
+          className="opacity-95"
+        />
+        {/* Centered Title */}
+        <div className="text-center pb-5 mt-[-2rem] mb-[6rem] mr-[7rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 ml-auto mb-2 mr-[2rem]" style={{ background: 'linear-gradient(to right, transparent, #F0EACE, transparent)' }} />
+          <h2 className="font-title text-right md:text-5xl leading-tight" style={{ color: '#F0EACE' }}>
             SESIONES
           </h2>
-          <div className="max-w-4xl mx-auto space-y-8">
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 ml-auto mt-2 mb-2 mr-[2rem]" style={{ background: 'linear-gradient(to right, transparent, #F0EACE, transparent)' }} />
+        </div>
+
+        <div className="container mx-auto max-w-6xl relative z-20">
+          {/* Enhanced Content */}
+          <div className="max-w-4xl mx-auto mt-16 space-y-8">
             <p className="text-xl leading-relaxed text-gray-700">
-              Nuestras sesiones individuales están diseñadas para crear un espacio sagrado 
-              de encuentro contigo mismo, donde puedas explorar, sanar y expandir tu consciencia 
+              Nuestras sesiones individuales están diseñadas para crear un espacio sagrado
+              de encuentro contigo mismo, donde puedas explorar, sanar y expandir tu consciencia
               en un ambiente de total confianza y respeto.
             </p>
-            <div className="grid md:grid-cols-3 gap-8 mt-12">
+            <div className="grid md:grid-cols-3 gap-8">
               <div className="text-center">
                 <h3 className="font-velista text-2xl text-brand-primary mb-4">
                   Sesiones de Reiki
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Equilibrio energético a través de la canalización de energía universal, 
+                  Equilibrio energético a través de la canalización de energía universal,
                   promoviendo la auto-sanación natural del cuerpo.
                 </p>
               </div>
@@ -856,7 +828,7 @@ export default async function HomePage() {
                   Armonización con Cuencos
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Terapia sonora que utiliza las frecuencias sagradas para armonizar 
+                  Terapia sonora que utiliza las frecuencias sagradas para armonizar
                   los chakras y liberar bloqueos energéticos.
                 </p>
               </div>
@@ -865,7 +837,7 @@ export default async function HomePage() {
                   Lectura de Aura
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Exploración del campo energético personal para comprender patrones, 
+                  Exploración del campo energético personal para comprender patrones,
                   potenciales y áreas de crecimiento espiritual.
                 </p>
               </div>
@@ -874,158 +846,471 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* BLOG DE LA COMUNIDAD Section - Redesigned to match reference */}
-      <section className="py-20 px-6" style={{ backgroundColor: '#AE0000' }}>
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="font-velista text-4xl md:text-5xl text-white text-center mb-16">
+
+
+      {/* ✨ ENHANCED BLOG DE LA COMUNIDAD Section - Bento Grid Design */}
+      <section className=" relative py-24 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <BlogComunidadBackground
+          bgColor="#F0EACE"  // Brand red background
+          waveColor="#AE0000"  // Slightly lighter red for wave
+          className="opacity-95"
+        />
+
+        {/* Centered Title */}
+        <div className="text-center pb-5 mt-[-2rem] mb-[8rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl mb-6 leading-tight" style={{ color: '#AE0000' }}>
             BLOG DE LA COMUNIDAD
           </h2>
-          
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {/* SABIDURÍA 1 Category */}
-            <div className="bg-white rounded-lg p-8 shadow-lg">
-              <div className="text-center mb-6">
-                <h3 className="font-subtitle text-2xl text-brand-primary mb-4">SABIDURÍA 1</h3>
-                <div className="w-16 h-0.5 bg-brand-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Conocimiento Ancestral y Biocosmética Natural</p>
-              </div>
-              
-              {featuredPosts.length > 0 ? (
-                <div className="space-y-4">
-                  {featuredPosts.slice(0, 2).map((post) => (
-                    <Link key={post._id} href={`/blog/${post.slug.current}`} className="block">
-                      <div className="border-l-4 border-brand-primary pl-4 py-2 hover:bg-gray-50 transition-colors">
-                        <h4 className="font-semibold text-gray-800 mb-1">{post.title}</h4>
-                        <p className="text-sm text-gray-600 line-clamp-2">
-                          {post.excerpt || "Descubre más sobre sabiduría ancestral..."}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4 text-gray-600">
-                  <div className="border-l-4 border-brand-primary pl-4 py-2">
-                    <h4 className="font-semibold text-gray-800 mb-1">Los Secretos de la Alkimia Botánica</h4>
-                    <p className="text-sm">Descubre cómo nuestros ancestros utilizaban las plantas para la sanación...</p>
-                  </div>
-                  <div className="border-l-4 border-brand-primary pl-4 py-2">
-                    <h4 className="font-semibold text-gray-800 mb-1">Rituales de Belleza Consciente</h4>
-                    <p className="text-sm">Transforma tu rutina de cuidado personal en un acto sagrado...</p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="text-center mt-6">
-                <Link 
-                  href="/blog" 
-                  className="inline-flex items-center text-brand-primary font-semibold hover:underline"
-                >
-                  Ver más artículos →
-                </Link>
-              </div>
-            </div>
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mt-5 mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            Descubre nuestros artículos sobre alkimyas, transformación personal y bienestar consciente
+          </p>
+        </div>
 
-            {/* SABIDURÍA 2 Category */}
-            <div className="bg-white rounded-lg p-8 shadow-lg">
-              <div className="text-center mb-6">
-                <h3 className="font-subtitle text-2xl text-brand-primary mb-4">SABIDURÍA 2</h3>
-                <div className="w-16 h-0.5 bg-brand-primary mx-auto mb-4"></div>
-                <p className="text-gray-600">Transformación Personal y Bienestar Holístico</p>
-              </div>
-              
-              {featuredPosts.length > 0 ? (
-                <div className="space-y-4">
-                  {featuredPosts.slice(2, 4).map((post) => (
-                    <Link key={post._id} href={`/blog/${post.slug.current}`} className="block">
-                      <div className="border-l-4 border-brand-primary pl-4 py-2 hover:bg-gray-50 transition-colors">
-                        <h4 className="font-semibold text-gray-800 mb-1">{post.title}</h4>
-                        <p className="text-sm text-gray-600 line-clamp-2">
-                          {post.excerpt || "Explora herramientas de transformación..."}
-                        </p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="space-y-4 text-gray-600">
-                  <div className="border-l-4 border-brand-primary pl-4 py-2">
-                    <h4 className="font-semibold text-gray-800 mb-1">El Poder de los Chakras en el Cuidado Personal</h4>
-                    <p className="text-sm">Aprende a equilibrar tu energía mientras cuidas tu piel...</p>
-                  </div>
-                  <div className="border-l-4 border-brand-primary pl-4 py-2">
-                    <h4 className="font-semibold text-gray-800 mb-1">Meditación y Belleza Interior</h4>
-                    <p className="text-sm">Descubre cómo la práctica contemplativa transforma tu ser...</p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="text-center mt-6">
-                <Link 
-                  href="/blog" 
-                  className="inline-flex items-center text-brand-primary font-semibold hover:underline"
+        <div className="container mx-auto max-w-7xl relative z-20">
+
+          {/* Enhanced Bento Grid Layout for Blog Posts */}
+          {featuredPosts.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Featured Main Post (Takes 2 columns) */}
+              {featuredPosts[0] && (
+                <Link
+                  href={`/blog/${featuredPosts[0].slug.current}`}
+                  className="group lg:col-span-2 lg:row-span-2"
                 >
-                  Ver más contenido →
+                  <div className="glass-card h-full p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                    {/* Featured Badge */}
+                    <div className="flex items-center justify-between mb-4">
+                      <Badge className="bg-white/20 text-white border-white/30">
+                        Destacado
+                      </Badge>
+                      <div className="flex items-center text-white/70 text-sm">
+                        <Calendar className="w-4 h-4 mr-1" />
+                        {new Date(featuredPosts[0].publishedAt).toLocaleDateString('es-ES', {
+                          month: 'short',
+                          day: 'numeric'
+                        })}
+                      </div>
+                    </div>
+
+                    {/* Main Image Placeholder */}
+                    <div className="bg-white/10 rounded-lg h-48 lg:h-64 mb-6 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden">
+                      {featuredPosts[0].mainImage?.asset?.url ? (
+                        <Image
+                          src={featuredPosts[0].mainImage.asset.url}
+                          alt={featuredPosts[0].mainImage.alt || featuredPosts[0].title}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="text-center">
+                          <Sparkles className="w-12 h-12 text-white/50 mx-auto mb-2" />
+                          <span className="text-white/40 text-sm">Sin imagen</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="space-y-4">
+                      <h3 className="font-subtitle text-xl lg:text-2xl text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                        {featuredPosts[0].title}
+                      </h3>
+                      <p className="font-text text-white/80 text-sm lg:text-base leading-relaxed group-hover:text-white/90 transition-colors duration-300 line-clamp-3">
+                        {featuredPosts[0].excerpt || "Descubre más sobre este fascinante tema en nuestro artículo completo..."}
+                      </p>
+
+                      {/* Author and Reading Time */}
+                      <div className="flex items-center justify-between pt-4">
+                        <div className="flex items-center text-white/60 text-sm">
+                          <span>{featuredPosts[0].author?.name || "DA LUZ Team"}</span>
+                        </div>
+                        {featuredPosts[0].estimatedReadingTime && (
+                          <div className="flex items-center text-white/60 text-sm">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {featuredPosts[0].estimatedReadingTime} min
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </Link>
-              </div>
+              )}
+
+              {/* Secondary Posts (Smaller cards) */}
+              {featuredPosts.slice(1, 4).map((post, index) => (
+                <Link
+                  key={post._id}
+                  href={`/blog/${post.slug.current}`}
+                  className="group"
+                >
+                  <div className="glass-card h-full p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                    {/* Small Image */}
+                    <div className="bg-white/10 rounded-lg h-32 mb-4 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                      {post.mainImage?.asset?.url ? (
+                        <Image
+                          src={post.mainImage.asset.url}
+                          alt={post.mainImage.alt || post.title}
+                          fill
+                          className="object-cover rounded-lg"
+                        />
+                      ) : (
+                        <div className="text-center">
+                          <Leaf className="w-8 h-8 text-white/50 mx-auto mb-1" />
+                          <span className="text-white/30 text-xs">Sin imagen</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Content */}
+                    <div className="space-y-3">
+                      <h4 className="font-subtitle text-lg text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                        {post.title}
+                      </h4>
+                      <p className="font-text text-white/80 text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                        {post.excerpt || "Explora este contenido único..."}
+                      </p>
+
+                      {/* Meta */}
+                      <div className="flex items-center justify-between pt-2">
+                        <div className="flex items-center text-white/60 text-xs">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {new Date(post.publishedAt).toLocaleDateString('es-ES', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </div>
+                        {post.estimatedReadingTime && (
+                          <div className="flex items-center text-white/60 text-xs">
+                            <Clock className="w-3 h-3 mr-1" />
+                            {post.estimatedReadingTime} min
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
+          ) : (
+            /* Fallback Bento Grid with Placeholder Content */
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {/* Main Featured Card */}
+              <div className="lg:col-span-2 lg:row-span-2 glass-card p-8 rounded-2xl border border-white/20">
+                <div className="flex items-center justify-between mb-4">
+                  <Badge className="bg-white/20 text-white border-white/30">
+                    Destacado
+                  </Badge>
+                </div>
+                <div className="bg-white/10 rounded-lg h-48 lg:h-64 mb-6 flex items-center justify-center">
+                  <Sparkles className="w-12 h-12 text-white/50" />
+                </div>
+                <h3 className="font-subtitle text-xl lg:text-2xl text-white mb-4">
+                  Los Secretos de la Alkimia Botánica
+                </h3>
+                <p className="font-text text-white/80 text-sm lg:text-base leading-relaxed">
+                  Descubre cómo nuestros ancestros utilizaban las plantas para la sanación y cómo estos conocimientos ancestrales se aplican en nuestros productos modernos.
+                </p>
+              </div>
+
+              {/* Smaller Cards */}
+              {[
+                {
+                  title: "Rituales de Belleza Consciente",
+                  excerpt: "Transforma tu rutina de cuidado personal en un acto sagrado de conexión contigo mismo."
+                },
+                {
+                  title: "El Poder de los Chakras",
+                  excerpt: "Aprende a equilibrar tu energía mientras cuidas tu piel con nuestras técnicas holísticas."
+                },
+                {
+                  title: "Meditación y Belleza Interior",
+                  excerpt: "Descubre cómo la práctica contemplativa transforma tu ser desde adentro hacia afuera."
+                }
+              ].map((item, index) => (
+                <div key={index} className="glass-card p-6 rounded-2xl border border-white/20">
+                  <div className="bg-white/10 rounded-lg h-32 mb-4 flex items-center justify-center">
+                    <Leaf className="w-8 h-8 text-white/50" />
+                  </div>
+                  <h4 className="font-subtitle text-lg text-white mb-3">
+                    {item.title}
+                  </h4>
+                  <p className="font-text text-white/80 text-sm leading-relaxed">
+                    {item.excerpt}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Enhanced CTA */}
+          <div className="text-center mt-12">
+            <Button className="group btn-enhanced px-8 py-4 text-lg text-white font-semibold rounded-full">
+              <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+              Ver Todos los Artículos
+              <Sparkles className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform duration-300" />
+            </Button>
           </div>
         </div>
       </section>
 
-      {/* Gallery Section */}
-      <section className="py-20 px-6" style={{ backgroundColor: '#AE0000' }}>
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="font-velista text-4xl md:text-5xl text-white text-center mb-16">
+      {/* ✨ ENHANCED GALERÍA Section - Rolling Gallery Carousel */}
+      <section className="section-enhanced relative py-24 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <GaleriaBackground
+          bgColor="#F0EACE"  // Cream background
+          waveColor="#F0EACE"  // Brand red wave
+          className="opacity-95"
+        />
+
+        {/* Centered Title */}
+        <div className="text-center pb-5 mt-[-2rem] mb-[3rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl mb-3 leading-tight" style={{ color: '#AE0000' }}>
             GALERÍA
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-sm rounded-lg p-8 text-center">
-                <div className="bg-white/20 h-48 rounded-lg mb-4 flex items-center justify-center">
-                  <span className="text-white font-title text-xl">IMAGEN {i}</span>
-                </div>
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-auto mt-3 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <p className="text-xl font-text text-gray-800 max-w-3xl mx-auto leading-relaxed">
+            Descubre la belleza de nuestros productos artesanales y los momentos únicos de transformación
+          </p>
+        </div>
+
+        <div className="container mx-auto max-w-7xl relative z-20">
+          {/* Enhanced Rolling Gallery Carousel */}
+          <div className="relative">
+            {/* Gallery Container with Infinite Scroll Effect */}
+            <div className="overflow-hidden rounded-2xl">
+              <div className="flex space-x-6 animate-marquee">
+                {/* First Set of Images */}
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={`set1-${i}`} className="flex-shrink-0 group">
+                    <div className="card-enhanced w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
+                      <div className="relative h-full">
+                        {/* Gallery Image */}
+                        <img
+                          src={`/images/gallery/gallery-${i}.jpg`}
+                          alt={`Galería DA LUZ ${i}`}
+                          className="w-full h-full object-cover"
+                        />
+
+                        {/* Fallback content when image is not available */}
+                        <div className="w-full h-full hidden items-center justify-center bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20" style={{ display: 'none' }}>
+                          <div className="text-center text-white">
+                            <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-60" />
+                            <div className="font-title text-xl mb-2">Imagen {i}</div>
+                            <div className="font-caption text-sm opacity-80">Próximamente</div>
+                          </div>
+                        </div>
+
+                        {/* Elegant Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                        {/* Content Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                          <h3 className="font-subtitle text-lg mb-2">Momento Alkimya</h3>
+                          <p className="font-caption text-sm opacity-90">Descubre la magia en cada detalle</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Duplicate Set for Seamless Loop */}
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={`set2-${i}`} className="flex-shrink-0 group">
+                    <div className="card-enhanced w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
+                      <div className="relative h-full">
+                        {/* Gallery Image */}
+                        <img
+                          src={`/images/gallery/gallery-${i}.jpg`}
+                          alt={`Galería DA LUZ ${i}`}
+                          className="w-full h-full object-cover"
+                        />
+
+                        {/* Fallback content when image is not available */}
+                        <div className="w-full h-full hidden items-center justify-center bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20" style={{ display: 'none' }}>
+                          <div className="text-center text-white">
+                            <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-60" />
+                            <div className="font-title text-xl mb-2">Imagen {i}</div>
+                            <div className="font-caption text-sm opacity-80">Próximamente</div>
+                          </div>
+                        </div>
+
+                        {/* Elegant Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+
+                        {/* Content Overlay */}
+                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                          <h3 className="font-subtitle text-lg mb-2">Momento Alkimya</h3>
+                          <p className="font-caption text-sm opacity-90">Descubre la magia en cada detalle</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Navigation Controls (Optional) */}
+            <div className="flex justify-center mt-8">
+              <div className="flex items-center space-x-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </Button>
+                <div className="flex space-x-2">
+                  {[1, 2, 3, 4, 5, 6].map((i) => (
+                    <div
+                      key={i}
+                      className="w-2 h-2 rounded-full bg-brand-primary/30 hover:bg-brand-primary transition-colors duration-300 cursor-pointer"
+                    />
+                  ))}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* Enhanced CTA */}
+          <div className="text-center mt-16">
+            <div className="space-y-4">
+              <h3 className="font-subtitle text-2xl text-brand-primary">
+                Vive la Experiencia DA LUZ
+              </h3>
+              <p className="font-text text-gray-600 max-w-2xl mx-auto">
+                Cada imagen cuenta una historia de transformación, belleza consciente y conexión con la naturaleza.
+              </p>
+              <Button className="group btn-enhanced px-8 py-4 text-lg text-white font-semibold rounded-full">
+                <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                Síguenos en Instagram
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-20 px-6 bg-cream">
-        <div className="container mx-auto max-w-6xl">
-          <h2 className="font-title text-4xl md:text-5xl text-brand-primary text-center mb-16">
-            PONTE EN CONTACTO
+
+
+      {/* ✨ ENHANCED CONTACTO Section */}
+      <section className="section-enhanced relative py-24 px-6 overflow-hidden">
+        {/* Custom SVG Background */}
+        <ContactoBackground
+          bgColor="#F0EACE"  // Cream background
+          waveColor="#AE0000"  // Brand red wave
+          className="opacity-95"
+        />
+
+        {/* Centered Title */}
+        <div className="container mx-auto max-w-7xl text-left mt-[-2rem] mb-[7rem] relative z-20">
+          {/* Top gradient divider */}
+          <div className="w-32 h-0.5 mx-10 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl mb-3 leading-tight" style={{ color: '#AE0000' }}>
+            CONTACTO
           </h2>
-          <div className="grid lg:grid-cols-2 gap-12">
-            <div className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Nombre</label>
-                <input type="text" className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary" />
+          {/* bottom gradient divider */}
+          <div className="w-32 h-0.5 mx-10" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+
+        </div>
+
+        <div className="container mx-auto max-w-7xl relative z-20">
+          <p className="text-xl font-text text-gray-800 max-w-3xl mx-auto leading-relaxed">
+            Estamos aquí para acompañarte en tu camino hacia el bienestar consciente
+          </p>
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Enhanced Contact Form */}
+            <div className="space-y-8">
+              <div className="card-enhanced p-8 rounded-2xl">
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
+                      Nombre Completo
+                    </label>
+                    <input
+                      type="text"
+                      className="form-enhanced w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text"
+                      placeholder="Tu nombre completo"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
+                      Correo Electrónico
+                    </label>
+                    <input
+                      type="email"
+                      className="form-enhanced w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text"
+                      placeholder="tu@email.com"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
+                      ¿En qué podemos ayudarte?
+                    </label>
+                    <textarea
+                      rows={5}
+                      className="form-enhanced w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text resize-none"
+                      placeholder="Cuéntanos sobre tu consulta, dudas sobre productos, servicios o cualquier otra pregunta..."
+                    />
+                  </div>
+                  <Button
+                    className="group btn-enhanced w-full py-4 text-lg text-white font-semibold rounded-xl"
+                  >
+                    <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                    Enviar Mensaje
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                  </Button>
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input type="email" className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mensaje</label>
-                <textarea rows={4} className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-primary"></textarea>
-              </div>
-              <Button 
-                className="w-full py-3 text-lg font-semibold"
-                style={{ backgroundColor: '#AE0000', color: 'white' }}
-              >
-                Enviar Mensaje
-              </Button>
             </div>
+
+            {/* Enhanced Visual Element with New Contact Image */}
             <div className="flex items-center justify-center">
-              <div 
-                className="w-full h-80 rounded-lg bg-cover bg-center shadow-lg"
-                style={{ 
-                  backgroundImage: "url('/images/hero-botanical-background.jpg')",
-                  filter: "brightness(0.9) saturate(1.1)"
-                }}
-              />
+              <div className="relative">
+                {/* Main Contact Image */}
+                <div className="card-enhanced w-full h-[500px] rounded-2xl shadow-2xl overflow-hidden relative">
+                  <img
+                    src="/images/contact-background.jpg"
+                    alt="Contacto DA LUZ CONSCIENTE"
+                    className="w-full h-full object-cover"
+                    style={{
+                      filter: "brightness(0.85) saturate(1.1) contrast(1.05)"
+                    }}
+                  />
+
+                  {/* Fallback content when contact image is not available */}
+                  <div className="absolute inset-0 w-full h-full hidden items-center justify-center bg-gradient-to-br from-brand-primary/30 to-brand-secondary/20" style={{ display: 'none' }}>
+                    <div className="text-center text-white">
+                      <div className="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <Heart className="w-12 h-12 opacity-80" />
+                      </div>
+                      <h3 className="font-title text-2xl mb-4">Imagen de Contacto</h3>
+                      <p className="font-caption opacity-80">
+                        Lugar para tu imagen<br />
+                        de contacto personalizada
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Decorative Elements */}
+                <div className="absolute -top-4 -right-4 w-16 h-16 bg-brand-primary/10 rounded-full animate-pulse" />
+                <div className="absolute -bottom-6 -left-6 w-12 h-12 bg-brand-secondary/10 rounded-full animate-pulse delay-1000" />
+                <div className="absolute top-1/2 -left-8 w-8 h-8 bg-accent/10 rounded-full animate-pulse delay-500" />
+              </div>
             </div>
           </div>
         </div>

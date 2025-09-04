@@ -246,6 +246,43 @@ Filter: brightness(0.8) for consistent lighting
 Position: bg-center bg-no-repeat for consistent placement
 ```
 
+#### **Custom SVG Section Backgrounds** ✅ NEW IMPLEMENTATION
+```typescript
+/* Dynamic SVG Background Pattern - CSS Variable Integration */
+File: /web/public/svg/sections/sobreNosotrosBG.svg
+Component: SobreNosotrosBackground (in SVGComponents.tsx)
+
+/* Implementation Strategy */
+- Custom SVG files for each major section
+- CSS variables for dynamic color theming
+- React component wrapper for easy integration
+- Responsive scaling and positioning
+- Color palette integration
+
+/* Usage Pattern */
+<SobreNosotrosBackground 
+  bgColor="#F0EACE"     // Base background color
+  waveColor="#AE0000"   // Wave/pattern color
+  className="opacity-95" // Additional styling
+/>
+
+/* Color Palette Variations */
+- Brand Default: bgColor="#F0EACE", waveColor="#AE0000"
+- Alma Terra: bgColor="#2D4A3A", waveColor="#4A6741" 
+- Ecos: bgColor="#1E3A4F", waveColor="#2B5A7A"
+- Jade: bgColor="#1A2F1A", waveColor="#2E4A2E"
+- Umbral: bgColor="#3D2817", waveColor="#5A3B23"
+- Utópica: bgColor="#4A3D1A", waveColor="#6B5A2A"
+
+/* Technical Benefits */
+✅ Dynamic theming with CSS variables
+✅ Seamless integration with existing design system
+✅ No wave divider conflicts or positioning issues
+✅ Scalable SVG graphics for all screen sizes
+✅ Easy color customization per product line
+✅ Professional wavy aesthetic matching reference design
+```
+
 ---
 
 ## 🧩 COMPONENT ARCHITECTURE
@@ -518,7 +555,78 @@ npm run supabase:start   # Local Supabase stack
 - Client collaboration interface
 ```
 
-### 2. Quality Assurance System
+### 2. SVG Background Creation Workflow ✅ NEW IMPLEMENTATION
+
+#### **SVG Background Design & Implementation Process**
+```typescript
+/* STEP 1: SVG Creation */
+1. Design SVG in Adobe Illustrator or similar tool
+2. Export with viewBox="0 0 1921.72 1080.1" (or similar 16:9 ratio)
+3. Use placeholder colors (#faf7ef for background, #920000 for patterns)
+4. Save to: /web/public/svg/sections/[sectionName]BG.svg
+
+/* STEP 2: CSS Variable Integration */
+// Replace hardcoded colors with CSS variables
+<path fill="#920000" />  →  <path class="wave-fill" />
+
+// Add CSS definitions
+<defs>
+  <style>
+    .background-fill { fill: var(--bg-color, #faf7ef); }
+    .wave-fill { fill: var(--wave-color, #920000); }
+  </style>
+</defs>
+
+/* STEP 3: React Component Creation */
+// Add to SVGComponents.tsx
+export const [SectionName]Background: React.FC<{
+  bgColor?: string;
+  waveColor?: string;
+  className?: string;
+}> = ({ bgColor, waveColor, className }) => {
+  // Implementation with CSS variable support
+}
+
+/* STEP 4: Section Implementation */
+// Import and use in page component
+<[SectionName]Background 
+  bgColor="#F0EACE"     // Brand or product line color
+  waveColor="#AE0000"   // Complementary pattern color
+  className="opacity-95" // Additional styling
+/>
+
+/* STEP 5: Testing & Validation */
+1. Test different color combinations
+2. Verify responsiveness across devices
+3. Check overlay interactions with content
+4. Validate accessibility contrast ratios
+5. Test performance impact
+```
+
+#### **SVG Background Best Practices**
+```css
+/* Design Guidelines */
+✅ Use 16:9 aspect ratio for optimal screen coverage
+✅ Design with transparent/overlaid content in mind
+✅ Maintain organic, flowing patterns matching brand aesthetic
+✅ Consider product line color integration from start
+
+/* Technical Guidelines */
+✅ Always use CSS variables for themeable colors
+✅ Provide fallback colors in CSS variable definitions
+✅ Keep SVG file sizes optimized (under 5KB recommended)
+✅ Use semantic CSS class names (.background-fill, .wave-fill, etc.)
+✅ Test with different section content heights
+
+/* Integration Guidelines */
+✅ Add overlay gradients for text readability when needed
+✅ Use opacity classes for subtle background integration
+✅ Maintain consistent component naming convention
+✅ Document color palette variations in component props
+✅ Test with all product line color schemes
+```
+
+### 3. Quality Assurance System
 
 #### **Testing & Validation**
 ```typescript

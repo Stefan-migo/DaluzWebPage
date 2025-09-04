@@ -102,7 +102,7 @@ const BlurText: React.FC<BlurTextProps> = ({
     stepCount === 1 ? 0 : i / (stepCount - 1)
   );
 
-  const Component = motion(as as any);
+  const Component = motion.create(as as any);
 
   return (
     <Component 

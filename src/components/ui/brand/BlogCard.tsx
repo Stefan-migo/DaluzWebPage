@@ -94,12 +94,20 @@ export default function BlogCard({
     return "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop&crop=center";
   };
 
+  const hasValidImage = () => {
+    return mainImage?.asset?.url && mainImage.asset.url.trim() !== '';
+  };
+
   const getAuthorImageUrl = () => {
     if (author?.image?.asset?.url) {
       return author.image.asset.url;
     }
     // Using a placeholder for author
     return "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face";
+  };
+
+  const hasValidAuthorImage = () => {
+    return author?.image?.asset?.url && author.image.asset.url.trim() !== '';
   };
 
   return (
@@ -112,12 +120,24 @@ export default function BlogCard({
         <div className="relative">
           {/* Blog Image */}
           <div className="relative aspect-[16/10] overflow-hidden bg-verde-suave/10">
-            <Image
-              src={getImageUrl()}
-              alt={mainImage?.alt || title}
-              fill
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
-            />
+            {hasValidImage() ? (
+              <Image
+                src={getImageUrl()}
+                alt={mainImage?.alt || title}
+                fill
+                className="object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  console.error('Error loading blog image:', mainImage?.asset?.url);
+                }}
+              />
+            ) : (
+              <div className="w-full h-full bg-gradient-to-br from-verde-suave/20 to-turquesa-claro/20 flex items-center justify-center">
+                <div className="text-center text-tierra-media/60">
+                  <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
+                  <span className="text-sm font-medium">Sin imagen</span>
+                </div>
+              </div>
+            )}
             
             {/* Featured Badge */}
             {featured && (
@@ -211,12 +231,21 @@ export default function BlogCard({
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="relative h-8 w-8 rounded-full overflow-hidden bg-verde-suave/20">
-                  <Image
-                    src={getAuthorImageUrl()}
-                    alt={author?.name || "Author"}
-                    fill
-                    className="object-cover"
-                  />
+                  {hasValidAuthorImage() ? (
+                    <Image
+                      src={getAuthorImageUrl()}
+                      alt={author?.name || "Author"}
+                      fill
+                      className="object-cover"
+                      onError={(e) => {
+                        console.error('Error loading author image:', author?.image?.asset?.url);
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-azul-profundo/20 to-verde-suave/20 flex items-center justify-center">
+                      <User className="w-4 h-4 text-tierra-media/60" />
+                    </div>
+                  )}
                 </div>
                 <div>
                   <div className="text-sm font-medium text-azul-profundo">

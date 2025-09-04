@@ -106,14 +106,27 @@ export default function Header() {
   useEffect(() => {
     const fetchLatestPosts = async () => {
       try {
-        const posts = await getAllPosts();
-        setLatestPosts(posts.slice(0, 2)); // Get latest 2 posts
+        const response = await fetch('/api/blog/latest?limit=2', {
+          cache: 'no-store', // Always fetch fresh data
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setLatestPosts(data.posts || []);
+          console.log('🔄 Header: Updated with latest posts', data.posts?.length || 0);
+        } else {
+          console.error('Error fetching latest posts:', response.statusText);
+        }
       } catch (error) {
         console.error("Error fetching latest posts:", error);
       }
     };
 
     fetchLatestPosts();
+    
+    // Set up interval to refresh posts every 60 seconds
+    const interval = setInterval(fetchLatestPosts, 60000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const handleSignOut = async () => {
@@ -136,6 +149,7 @@ export default function Header() {
                   width={32} 
                   height={32}
                   className="transition-transform duration-300 hover:scale-105"
+                  style={{ width: 'auto', height: 'auto' }}
                 />
               </div>
               

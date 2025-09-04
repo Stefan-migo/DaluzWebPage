@@ -72,7 +72,17 @@ interface Category {
 async function getAllPosts(): Promise<BlogPost[]> {
   try {
     console.log('Fetching posts from Sanity...');
-    const posts = await client.fetch(queries.allPosts);
+    const posts = await client.fetch(
+      queries.allPosts,
+      {},
+      {
+        cache: 'no-store', // Always fetch fresh data
+        next: { 
+          revalidate: 30, // Revalidate every 30 seconds
+          tags: ['blog-posts', 'sanity-content'] 
+        }
+      }
+    );
     console.log('Posts fetched:', posts?.length || 0);
     return posts || [];
   } catch (error) {
@@ -84,7 +94,17 @@ async function getAllPosts(): Promise<BlogPost[]> {
 async function getAllCategories(): Promise<Category[]> {
   try {
     console.log('Fetching categories from Sanity...');
-    const categories = await client.fetch(queries.allCategories);
+    const categories = await client.fetch(
+      queries.allCategories,
+      {},
+      {
+        cache: 'no-store', // Always fetch fresh data
+        next: { 
+          revalidate: 60, // Revalidate every minute
+          tags: ['blog-categories', 'sanity-content'] 
+        }
+      }
+    );
     console.log('Categories fetched:', categories?.length || 0);
     return categories || [];
   } catch (error) {

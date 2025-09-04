@@ -99,10 +99,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     isChecking: boolean;
     isAdmin: boolean;
     hasChecked: boolean;
+    checkedUserId: string | null; // Track which user ID was checked
   }>({
     isChecking: true,
     isAdmin: false,
-    hasChecked: false
+    hasChecked: false,
+    checkedUserId: null
   });
 
   // Add state to prevent multiple simultaneous admin checks
@@ -128,7 +130,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         setAdminState({
           isChecking: false,
           isAdmin: false,
-          hasChecked: true
+          hasChecked: true,
+          checkedUserId: null
         });
         return;
       }
@@ -139,8 +142,16 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         setAdminState({
           isChecking: false,
           isAdmin: false,
-          hasChecked: false // Don't mark as checked yet
+          hasChecked: false, // Don't mark as checked yet
+          checkedUserId: null
         });
+        return;
+      }
+
+      // 🚀 KEY FIX: Skip admin check if we already checked this exact user ID
+      // This prevents re-checking during token refresh events
+      if (adminState.hasChecked && adminState.checkedUserId === user.id && adminState.isAdmin) {
+        console.log('✅ Admin status already verified for user ID:', user.id, '- skipping re-check');
         return;
       }
 
@@ -162,7 +173,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         setAdminState({
           isChecking: false,
           isAdmin: true, // Force admin access in debug mode
-          hasChecked: true
+          hasChecked: true,
+          checkedUserId: user.id
         });
         setIsAdminCheckInProgress(false);
         return;
@@ -197,7 +209,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         setAdminState({
           isChecking: false,
           isAdmin: isAdminResult,
-          hasChecked: true
+          hasChecked: true,
+          checkedUserId: user.id // 🚀 KEY FIX: Store the user ID we checked
         });
         setIsAdminCheckInProgress(false);
 
@@ -214,14 +227,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         setAdminState({
           isChecking: false,
           isAdmin: false,
-          hasChecked: true
+          hasChecked: true,
+          checkedUserId: user.id
         });
         setIsAdminCheckInProgress(false);
       }
     };
 
     checkAdminStatus();
-  }, [user, loading]);
+  }, [user?.id, loading]); // 🚀 KEY FIX: Only depend on user.id instead of entire user object
 
   useEffect(() => {
     // Only redirect after both auth and admin checks are COMPLETELY finished

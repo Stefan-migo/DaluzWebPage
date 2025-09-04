@@ -21,6 +21,7 @@ import {
   XCircle
 } from 'lucide-react';
 import Link from 'next/link';
+import { AutoRefreshFixNotification } from '@/components/admin/AutoRefreshFixNotification';
 
 // Default fallback data structure
 const defaultDashboardData = {
@@ -238,6 +239,9 @@ export default function AdminDashboard() {
 
   return (
     <div className="space-y-6">
+      {/* Auto-refresh fix notification */}
+      <AutoRefreshFixNotification />
+      
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
