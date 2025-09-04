@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { client, queries } from '@/lib/sanity/client';
 
+// Force dynamic rendering for this route
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -8,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     console.log('🔄 Fetching latest blog posts for header...');
     
-    // Fetch latest posts with no caching for immediate updates
+    // Fetch latest posts with caching and revalidation
     const posts = await client.fetch(
       `*[_type == "post"] | order(publishedAt desc)[0...${limit}] {
         _id,
@@ -28,9 +31,8 @@ export async function GET(request: NextRequest) {
       }`,
       {},
       {
-        cache: 'no-store', // Always fetch fresh data
         next: { 
-          revalidate: 30, // Revalidate every 30 seconds
+          revalidate: 60, // Cache and revalidate every 60 seconds
           tags: ['blog-posts', 'latest-posts'] 
         }
       }

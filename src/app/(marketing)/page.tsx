@@ -58,9 +58,8 @@ async function getFeaturedPosts(): Promise<BlogPost[]> {
       queries.allPosts,
       {},
       {
-        cache: 'no-store', // Always fetch fresh data
         next: {
-          revalidate: 30, // Revalidate every 30 seconds
+          revalidate: 60, // Cache and revalidate every 60 seconds
           tags: ['blog-posts', 'homepage-posts']
         }
       }

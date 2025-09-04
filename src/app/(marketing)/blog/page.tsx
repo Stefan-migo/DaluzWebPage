@@ -76,9 +76,8 @@ async function getAllPosts(): Promise<BlogPost[]> {
       queries.allPosts,
       {},
       {
-        cache: 'no-store', // Always fetch fresh data
         next: { 
-          revalidate: 30, // Revalidate every 30 seconds
+          revalidate: 60, // Cache and revalidate every 60 seconds
           tags: ['blog-posts', 'sanity-content'] 
         }
       }
@@ -98,9 +97,8 @@ async function getAllCategories(): Promise<Category[]> {
       queries.allCategories,
       {},
       {
-        cache: 'no-store', // Always fetch fresh data
         next: { 
-          revalidate: 60, // Revalidate every minute
+          revalidate: 120, // Cache and revalidate every 2 minutes
           tags: ['blog-categories', 'sanity-content'] 
         }
       }
