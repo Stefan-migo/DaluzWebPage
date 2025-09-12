@@ -4,7 +4,7 @@ import { client, queries } from "@/lib/sanity/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BlurText from "@/components/ui/BlurText";
-import { ArrowRight, Sparkles, Leaf, Heart, Star, Users, Zap, ChevronLeft, ChevronRight, Clock, Calendar } from "lucide-react";
+import { ArrowRight, Sparkles, Leaf, Heart, Star, Zap, Calendar } from "lucide-react";
 import {
   AnimatedBackground,
   SobreNosotrosBackground,
@@ -20,6 +20,9 @@ import {
   SesionesIcon,
   CoachingIcon
 } from "@/components/svg/SVGComponents";
+import InteractiveGallery from "@/components/InteractiveGallery";
+import ProcesosImage from "@/components/ProcesosImage";
+import SesionesImage from "@/components/SesionesImage";
 
 // Blog post type
 interface BlogPost {
@@ -200,7 +203,7 @@ export default async function HomePage() {
 
               <Button
                 variant="ghost"
-                className="group px-8 py-4 text-lg font-medium text-white border-2 border-white/40 hover:bg-white/10 glass-card transition-all duration-500"
+                className="group px-8 py-4 text-lg font-medium text-white border-2 border-white/40 hover:bg-white glass-card transition-all duration-500"
                 style={{ borderRadius: '50px' }}
               >
                 <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
@@ -232,12 +235,58 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto max-w-7xl relative z-20">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              {/* Content Card with Transparency */}
-              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/20">
-                {/* Enhanced Content */}
-                <div className="space-y-6 text-lg leading-relaxed">
+          {/* Mobile-First Responsive Grid */}
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+
+            {/* Visual Element - Shows first on mobile for impact */}
+            <div className="flex justify-center lg:justify-end order-1 lg:order-2 w-full">
+              <div className="relative">
+                {/* Main circle with responsive sizing */}
+                <div className="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-full card-enhanced shadow-2xl flex items-center justify-center">
+                  {/* Inner circle with image placeholder */}
+                  <div className="w-60 h-60 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-white via-bg-cream to-bg-light shadow-inner flex items-center justify-center overflow-hidden">
+                    {/* Image placeholder - user will upload image here */}
+                    <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
+                      {/* Placeholder content until image is uploaded */}
+                      <div className="text-center space-y-3 lg:space-y-4 px-4">
+                        <div className="w-16 h-16 lg:w-20 lg:h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
+                          <Sparkles className="w-8 h-8 lg:w-10 lg:h-10 text-brand-primary animate-pulse" />
+                        </div>
+                        <div className="space-y-1 lg:space-y-2">
+                          <div className="font-title text-lg lg:text-2xl text-brand-primary drop-shadow-sm">Alkimya</div>
+                          <div className="font-title text-sm lg:text-lg text-brand-primary/80 drop-shadow-sm">Consciente</div>
+                          <div className="w-12 lg:w-16 h-0.5 bg-brand-primary/40 mx-auto my-2 lg:my-4" />
+                          <div className="text-xs lg:text-sm text-gray-800 space-y-1 drop-shadow-sm">
+                            <div>Alma • Cuerpo</div>
+                            <div>Transformación</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Upload hint - remove this when image is added */}
+                      <div className="absolute inset-0 bg-black/5 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                        <div className="text-center text-xs text-gray-600 px-4">
+                          <div className="font-medium">Imagen DA LUZ</div>
+                          <div className="text-xs">Placeholder</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating elements - responsive sizing */}
+                <div className="absolute -top-4 -right-4 lg:-top-6 lg:-right-6 w-8 h-8 lg:w-12 lg:h-12 bg-brand-primary/10 rounded-full animate-pulse" />
+                <div className="absolute -bottom-3 -left-3 lg:-bottom-4 lg:-left-4 w-6 h-6 lg:w-8 lg:h-8 bg-brand-secondary/10 rounded-full animate-pulse delay-1000" />
+                <div className="absolute top-1/2 -left-6 lg:-left-8 w-4 h-4 lg:w-6 lg:h-6 bg-accent/10 rounded-full animate-pulse delay-500" />
+              </div>
+            </div>
+
+            {/* Content - Shows second on mobile */}
+            <div className="order-2 lg:order-1 w-full">
+              {/* Content Card with mobile-optimized spacing */}
+              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-lg border border-white/20">
+                {/* Enhanced Content with mobile-friendly text sizing */}
+                <div className="space-y-4 lg:space-y-6 text-base lg:text-lg leading-relaxed">
                   <p className="font-text text-gray-800 leading-loose">
                     DA LUZ CONSCIENTE nace de la profunda conexión entre la sabiduría ancestral
                     y la ciencia moderna, creando puentes entre el alma y el cuerpo a través
@@ -255,46 +304,14 @@ export default async function HomePage() {
                   </p>
                 </div>
 
-                {/* Enhanced CTA */}
-                <div className="pt-6">
+                {/* Enhanced CTA with responsive sizing */}
+                <div className="pt-4 lg:pt-6">
                   <Button
-                    className="group btn-enhanced px-8 py-4 text-white font-semibold rounded-full"
+                    className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto"
                   >
-                    <Leaf className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                     Explora Nuestra Filosofía
-                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                   </Button>
                 </div>
-              </div>
-            </div>
-
-            {/* Enhanced Visual Element */}
-            <div className="flex justify-center lg:justify-end">
-              <div className="relative">
-                {/* Main circle with enhanced styling */}
-                <div className="w-96 h-96 rounded-full card-enhanced shadow-2xl flex items-center justify-center">
-                  {/* Inner circle */}
-                  <div className="w-80 h-80 rounded-full bg-gradient-to-br from-white via-bg-cream to-bg-light shadow-inner flex items-center justify-center">
-                    {/* Content */}
-                    <div className="text-center space-y-4">
-                      <Sparkles className="w-16 h-16 text-brand-primary mx-auto animate-pulse" />
-                      <div className="space-y-2">
-                        <div className="font-title text-2xl text-brand-primary drop-shadow-sm">Alkimya</div>
-                        <div className="font-title text-lg text-brand-primary/80 drop-shadow-sm">Consciente</div>
-                        <div className="w-16 h-0.5 bg-brand-primary/40 mx-auto my-4" />
-                        <div className="text-sm text-gray-800 space-y-1 drop-shadow-sm">
-                          <div>Alma • Cuerpo</div>
-                          <div>Transformación</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating elements around the circle */}
-                <div className="absolute -top-6 -right-6 w-12 h-12 bg-brand-primary/10 rounded-full animate-pulse" />
-                <div className="absolute -bottom-4 -left-4 w-8 h-8 bg-brand-secondary/10 rounded-full animate-pulse delay-1000" />
-                <div className="absolute top-1/2 -left-8 w-6 h-6 bg-accent/10 rounded-full animate-pulse delay-500" />
               </div>
             </div>
           </div>
@@ -537,7 +554,7 @@ export default async function HomePage() {
             </div>
 
             {/* Enhanced CTA */}
-            <div className="pt-8">
+            <div className="pt-8 text-center">
               <Button className="group btn-enhanced px-12 py-4 text-lg text-white font-semibold rounded-full">
                 <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
                 Explora Productos
@@ -551,8 +568,9 @@ export default async function HomePage() {
 
 
       {/* ✨ ENHANCED LÍNEA ECOS */}
+      <Link href="/categorias/linea-ecos" className="block group">
       <section
-        className="section-enhanced relative py-24 px-6 overflow-hidden"
+          className="section-enhanced relative py-24 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#12406F' }}
       >
         {/* Enhanced Background */}
@@ -590,15 +608,45 @@ export default async function HomePage() {
                 productos que honran la pureza y el movimiento constante de la vida.
               </p>
             </div>
+
+              {/* Product Image Circles */}
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                      <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                      <div className="text-white/80 text-sm font-medium">Producto 2</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                      <div className="text-white/80 text-sm font-medium">Producto 3</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
       </section>
+      </Link>
 
 
 
       {/* ✨ ENHANCED LÍNEA UMBRAL */}
+      <Link href="/categorias/linea-umbral" className="block group">
       <section
-        className="section-enhanced relative py-24 px-6 overflow-hidden"
+          className="section-enhanced relative py-24 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#EA4F12' }}
       >
         {/* Enhanced Background */}
@@ -630,14 +678,44 @@ export default async function HomePage() {
                 procesos profundos de cambio y renovación personal.
               </p>
             </div>
+
+              {/* Product Image Circles */}
+              <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                      <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                      <div className="text-white/80 text-sm font-medium">Producto 2</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                    <div className="text-center">
+                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                      <div className="text-white/80 text-sm font-medium">Producto 3</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
       </section>
+      </Link>
 
 
       {/* LÍNEA JADE RITUAL */}
+      <Link href="/categorias/linea-jade-ritual" className="block group">
       <section
-        className="relative py-20 px-6 overflow-hidden"
+          className="relative py-20 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#04412D' }}
       >
         {/* Background Texture */}
@@ -660,14 +738,44 @@ export default async function HomePage() {
             Ceremonias sagradas que conectan con la sabiduría ancestral de la tierra,
             tinturas madre y flores de Bach para el equilibrio orgánico.
           </p>
+
+            {/* Product Image Circles */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 2</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </section>
+      </Link>
 
 
 
       {/* LÍNEA UTÓPICA */}
+      <Link href="/categorias/linea-utopica" className="block group">
       <section
-        className="relative py-20 px-6 overflow-hidden"
+          className="relative py-20 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#392E13' }}
       >
         {/* Background Texture */}
@@ -690,14 +798,44 @@ export default async function HomePage() {
             Visión elevada que trasciende lo cotidiano, cosméticos naturales que
             realzan la belleza auténtica del ser.
           </p>
+
+            {/* Product Image Circles */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 2</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </section>
+      </Link>
 
 
 
       {/* LÍNEA ALMA TERRA */}
+      <Link href="/categorias/linea-alma-terra" className="block group">
       <section
-        className="relative py-20 px-6 overflow-hidden"
+          className="relative py-20 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#9B201A' }}
       >
         {/* Background Texture */}
@@ -720,8 +858,37 @@ export default async function HomePage() {
             Conexión profunda con la tierra madre, brumas aromáticas y pociones
             de aromaterapia que nutren el alma.
           </p>
+
+            {/* Product Image Circles */}
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 2</div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
+                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
+                  <div className="text-center">
+                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
+                    <div className="text-white/80 text-sm font-medium">Producto 3</div>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
       </section>
+      </Link>
 
 
 
@@ -734,20 +901,20 @@ export default async function HomePage() {
           className="opacity-95"
         />
         {/* Centered Title */}
-        <div className="container mx-auto max-w-6xl text-left mt-[-2rem] mb-[7rem] relative z-20">
+        <div className="container mx-auto max-w-6xl text-left mt-[0rem] mb-[0rem] relative z-20">
           {/* Top gradient divider */}
           <div className="w-32 h-0.5 mx-10 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
           <h2 className="font-title text-gray-400xl md:text-5xl leading-tight" style={{ color: '#AE0000' }}>
-            PROCESOS
-          </h2>
+                PROCESOS
+              </h2>
           {/* bottom gradient divider */}
           <div className="w-32 h-0.5 mx-10 mt-2 mb-10" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
         </div>
 
         <div className="container mx-auto max-w-6xl relative z-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="space-y-3 text-lg mt-14 leading-relaxed" style={{ color: '#F0EACE' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="px-4 lg:px-0">
+              <div className="space-y-4 text-base lg:text-lg mt-8 lg:mt-14 leading-relaxed" style={{ color: '#F0EACE' }}>
                 <p>
                   Nuestros procesos integrales están diseñados para acompañarte en
                   cada etapa de tu transformación personal. Combinamos técnicas ancestrales
@@ -765,20 +932,32 @@ export default async function HomePage() {
                 </p>
               </div>
             </div>
-            <div className="flex justify-center">
-              {/* Large white circle for process visualization */}
-              <div className="w-80 h-80 rounded-full bg-gradient-to-br from-white to-bg-cream border-4 border-brand-primary/20 shadow-2xl flex items-center justify-center">
-                <div className="w-60 h-60 rounded-full bg-gradient-to-br from-brand-primary/10 to-brand-secondary/10 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="font-title text-2xl text-brand-primary mb-2">Proceso</div>
-                    <div className="font-title text-lg text-brand-primary/70">Integral</div>
-                    <div className="w-16 h-0.5 bg-brand-primary/50 mx-auto my-4"></div>
-                    <div className="text-sm text-gray-600">Transformación</div>
-                    <div className="text-sm text-gray-600">Consciente</div>
-                  </div>
-                </div>
-              </div>
+            <div className="flex justify-center mt-8 lg:mt-0">
+              <ProcesosImage />
             </div>
+          </div>
+
+          {/* Horizontally centered button relative to screen width */}
+          <div className="flex justify-center mt-[5rem] pt-8 lg:pt-12">
+            <Button
+              className="group relative overflow-hidden px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
+              style={{
+                backgroundColor: '#F0EACE',
+                color: '#AE0000',
+                border: '2px solid #AE0000',
+                borderRadius: '0px 15px'
+              }}
+            >
+              <span className="relative z-10">Ver más</span>
+              {/* Hover effect overlay */}
+              <div
+                className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
+                style={{ backgroundColor: '#AE0000' }}
+              ></div>
+              <span className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 text-white font-semibold">
+                Ver más
+              </span>
+            </Button>
           </div>
         </div>
       </section>
@@ -786,7 +965,7 @@ export default async function HomePage() {
 
 
       {/* SESIONES Section */}
-      <section className="section-enhanced relative py-20 px-6 overflow-hidden">
+      <section className="section-enhanced relative pt-[3rem] pb-[5rem] px-6 overflow-hidden">
         {/* Custom SVG Background */}
         <SesionesBackground
           bgColor="#F0EACE"  // Cream background
@@ -794,7 +973,7 @@ export default async function HomePage() {
           className="opacity-95"
         />
         {/* Centered Title */}
-        <div className="text-center pb-5 mt-[-2rem] mb-[6rem] mr-[7rem] relative z-20">
+        <div className="text-center pb-[2rem] mt-[0rem] mr-[10rem] relative z-20">
           {/* Top gradient divider */}
           <div className="w-32 h-0.5 ml-auto mb-2 mr-[2rem]" style={{ background: 'linear-gradient(to right, transparent, #F0EACE, transparent)' }} />
           <h2 className="font-title text-right md:text-5xl leading-tight" style={{ color: '#F0EACE' }}>
@@ -804,43 +983,59 @@ export default async function HomePage() {
           <div className="w-32 h-0.5 ml-auto mt-2 mb-2 mr-[2rem]" style={{ background: 'linear-gradient(to right, transparent, #F0EACE, transparent)' }} />
         </div>
 
-        <div className="container mx-auto max-w-6xl relative z-20">
-          {/* Enhanced Content */}
-          <div className="max-w-4xl mx-auto mt-16 space-y-8">
-            <p className="text-xl leading-relaxed text-gray-700">
+        <div className="container mb-[0rem] mt-[0rem] mx-auto max-w-6xl relative z-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            <div className="flex justify-center order-2 lg:order-1 mt-8 lg:mt-0">
+              <SesionesImage />
+            </div>
+            <div className="px-4 lg:px-0 order-1 lg:order-2">
+              <div className="space-y-4 text-base lg:text-lg mt-8 lg:mt-14 leading-relaxed" style={{ color: '#AE0000' }}>
+                <p>
               Nuestras sesiones individuales están diseñadas para crear un espacio sagrado
               de encuentro contigo mismo, donde puedas explorar, sanar y expandir tu consciencia
               en un ambiente de total confianza y respeto.
             </p>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <h3 className="font-velista text-2xl text-brand-primary mb-4">
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-velista text-xl text-brand-primary mb-2">
                   Sesiones de Reiki
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed">
                   Equilibrio energético a través de la canalización de energía universal,
                   promoviendo la auto-sanación natural del cuerpo.
                 </p>
               </div>
-              <div className="text-center">
-                <h3 className="font-velista text-2xl text-brand-primary mb-4">
+                  <div>
+                    <h3 className="font-velista text-xl text-brand-primary mb-2">
                   Armonización con Cuencos
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed">
                   Terapia sonora que utiliza las frecuencias sagradas para armonizar
                   los chakras y liberar bloqueos energéticos.
                 </p>
               </div>
-              <div className="text-center">
-                <h3 className="font-velista text-2xl text-brand-primary mb-4">
+                  <div>
+                    <h3 className="font-velista text-xl text-brand-primary mb-2">
                   Lectura de Aura
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
+                    <p className="text-gray-700 leading-relaxed">
                   Exploración del campo energético personal para comprender patrones,
                   potenciales y áreas de crecimiento espiritual.
                 </p>
               </div>
             </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Horizontally centered button relative to screen width */}
+          <div className="flex justify-center pt-8 lg:pt-12">
+            <Button
+              className="group btn-enhanced pb-[0rem] px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base text-white"
+              style={{ backgroundColor: '#AE0000' }}
+            >
+              Ver más
+            </Button>
           </div>
         </div>
       </section>
@@ -848,7 +1043,7 @@ export default async function HomePage() {
 
 
       {/* ✨ ENHANCED BLOG DE LA COMUNIDAD Section - Bento Grid Design */}
-      <section className=" relative py-24 px-6 overflow-hidden">
+      <section className=" relative pt-[3rem] pb-[5rem] px-6 overflow-hidden">
         {/* Custom SVG Background */}
         <BlogComunidadBackground
           bgColor="#F0EACE"  // Brand red background
@@ -856,143 +1051,269 @@ export default async function HomePage() {
           className="opacity-95"
         />
 
-        {/* Centered Title */}
-        <div className="text-center pb-5 mt-[-2rem] mb-[8rem] relative z-20">
+        {/* Left-aligned Title */}
+        <div className="container mx-auto max-w-7xl text-center pb-[5rem] mt-[0rem] mb-[0rem] relative z-20">
           {/* Top gradient divider */}
-          <div className="w-32 h-0.5 mx-auto mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
-          <h2 className="font-title text-5xl md:text-6xl mb-6 leading-tight" style={{ color: '#AE0000' }}>
+          <div className="w-32 h-0.5 mx-auto mb-2" style={{ background: 'linear-gradient(to right, #AE0000, transparent)' }} />
+          <h2 className="font-title text-5xl md:text-6xl  leading-tight" style={{ color: '#AE0000' }}>
             BLOG DE LA COMUNIDAD
           </h2>
           {/* bottom gradient divider */}
-          <div className="w-32 h-0.5 mx-auto mt-5 mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
-          <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            Descubre nuestros artículos sobre alkimyas, transformación personal y bienestar consciente
-          </p>
-        </div>
+          <div className="w-32 h-0.5 mx-auto mt-2" style={{ background: 'linear-gradient(to right, #AE0000, transparent)' }} />
+              </div>
 
         <div className="container mx-auto max-w-7xl relative z-20">
 
-          {/* Enhanced Bento Grid Layout for Blog Posts */}
-          {featuredPosts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {/* Featured Main Post (Takes 2 columns) */}
-              {featuredPosts[0] && (
-                <Link
-                  href={`/blog/${featuredPosts[0].slug.current}`}
-                  className="group lg:col-span-2 lg:row-span-2"
-                >
-                  <div className="glass-card h-full p-8 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
-                    {/* Featured Badge */}
-                    <div className="flex items-center justify-between mb-4">
-                      <Badge className="bg-white/20 text-white border-white/30">
-                        Destacado
-                      </Badge>
-                      <div className="flex items-center text-white/70 text-sm">
-                        <Calendar className="w-4 h-4 mr-1" />
-                        {new Date(featuredPosts[0].publishedAt).toLocaleDateString('es-ES', {
-                          month: 'short',
-                          day: 'numeric'
-                        })}
-                      </div>
-                    </div>
-
-                    {/* Main Image Placeholder */}
-                    <div className="bg-white/10 rounded-lg h-48 lg:h-64 mb-6 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden">
-                      {featuredPosts[0].mainImage?.asset?.url ? (
-                        <Image
-                          src={featuredPosts[0].mainImage.asset.url}
-                          alt={featuredPosts[0].mainImage.alt || featuredPosts[0].title}
-                          fill
-                          className="object-cover rounded-lg"
-                        />
-                      ) : (
-                        <div className="text-center">
-                          <Sparkles className="w-12 h-12 text-white/50 mx-auto mb-2" />
-                          <span className="text-white/40 text-sm">Sin imagen</span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="space-y-4">
-                      <h3 className="font-subtitle text-xl lg:text-2xl text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                        {featuredPosts[0].title}
-                      </h3>
-                      <p className="font-text text-white/80 text-sm lg:text-base leading-relaxed group-hover:text-white/90 transition-colors duration-300 line-clamp-3">
-                        {featuredPosts[0].excerpt || "Descubre más sobre este fascinante tema en nuestro artículo completo..."}
-                      </p>
-
-                      {/* Author and Reading Time */}
-                      <div className="flex items-center justify-between pt-4">
-                        <div className="flex items-center text-white/60 text-sm">
-                          <span>{featuredPosts[0].author?.name || "DA LUZ Team"}</span>
-                        </div>
-                        {featuredPosts[0].estimatedReadingTime && (
-                          <div className="flex items-center text-white/60 text-sm">
-                            <Clock className="w-4 h-4 mr-1" />
-                            {featuredPosts[0].estimatedReadingTime} min
+          {/* Enhanced Bento Grid Layout for Blog Posts - Left/Right Mirror Design */}
+              {featuredPosts.length > 0 ? (
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* LEFT SIDE */}
+              <div className="space-y-6">
+                {/* Section Title */}
+                <div className="text-center mb-6 pb-[3rem] pt-[1rem]">
+                  <h3 className="font-title text-3xl md:text-4xl leading-tight" style={{ color: '#AE0000' }}>
+                    NEUROCOSMETICA
+                  </h3>
+                  <div className="w-24 h-0.5 mx-auto mt-2" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+                </div>
+                <div className="grid grid-cols-2 grid-rows-2 gap-4">
+                  {/* Big Post 1 - Top (2x1 spanning 2 columns) */}
+                  {featuredPosts[0] && (
+                    <Link
+                      href={`/blog/${featuredPosts[0].slug.current}`}
+                      className="group col-span-2 row-span-1"
+                    >
+                      <div className="glass-card h-full p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                        <div className="grid grid-cols-2 gap-4 h-full">
+                          {/* Image Section */}
+                          <div className="bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                            {featuredPosts[0].mainImage?.asset?.url ? (
+                              <Image
+                                src={featuredPosts[0].mainImage.asset.url}
+                                alt={featuredPosts[0].mainImage.alt || featuredPosts[0].title}
+                                fill
+                                className="object-cover rounded-lg"
+                              />
+                            ) : (
+                              <Sparkles className="w-12 h-12 text-white/50" />
+                            )}
                           </div>
-                        )}
+
+                          {/* Content Section */}
+                          <div className="flex flex-col justify-between">
+                            <div>
+                              <Badge className="bg-white/20 border-white/30 mb-2 text-[#AE0000] hover:bg-[#AE0000] hover:text-[#F0EACE]" variant="default">Post</Badge>
+                              <h3 className="font-subtitle text-lg text-[#AE0000] group-hover:text-[#AE0000]/75 transition-colors duration-300 line-clamp-3 mb-2">
+                                {featuredPosts[0].title}
+                              </h3>
+                              <p className="font-text text-[#AE0000]/80 text-sm leading-relaxed group-hover:text-[#AE0000]/90 transition-colors duration-300 line-clamp-2">
+                                {featuredPosts[0].excerpt || "Descubre más sobre este fascinante tema..."}
+                        </p>
                       </div>
-                    </div>
+                            <div className="flex items-center text-[#AE0000]/60 text-xs">
+                              <Calendar className="w-3 h-3 mr-1" />
+                              {new Date(featuredPosts[0].publishedAt).toLocaleDateString('es-ES', {
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  )}
+
+                  {/* Small Post 3 - Bottom Left */}
+                  {featuredPosts[2] && (
+                    <Link
+                      href={`/blog/${featuredPosts[2].slug.current}`}
+                      className="group col-span-1 row-span-1"
+                    >
+                      <div className="glass-card h-full p-4 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                        <div className="bg-white/10 rounded-lg h-20 mb-3 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                          {featuredPosts[2].mainImage?.asset?.url ? (
+                            <Image
+                              src={featuredPosts[2].mainImage.asset.url}
+                              alt={featuredPosts[2].mainImage.alt || featuredPosts[2].title}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                          ) : (
+                            <Leaf className="w-6 h-6 text-white/50" />
+                          )}
                   </div>
-                </Link>
+                        <h4 className="font-subtitle text-sm text-[#AE0000] group-hover:text-[#AE0000]/75 transition-colors duration-300 line-clamp-2 mb-2">
+                          {featuredPosts[2].title}
+                        </h4>
+                        <div className="flex items-center text-[#AE0000]/60 text-xs">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {new Date(featuredPosts[2].publishedAt).toLocaleDateString('es-ES', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                  </div>
+                </div>
+                    </Link>
               )}
 
-              {/* Secondary Posts (Smaller cards) */}
-              {featuredPosts.slice(1, 4).map((post, index) => (
+                  {/* Small Post 4 - Bottom Right */}
+                  {featuredPosts[3] && (
                 <Link
-                  key={post._id}
-                  href={`/blog/${post.slug.current}`}
-                  className="group"
-                >
-                  <div className="glass-card h-full p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
-                    {/* Small Image */}
-                    <div className="bg-white/10 rounded-lg h-32 mb-4 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
-                      {post.mainImage?.asset?.url ? (
-                        <Image
-                          src={post.mainImage.asset.url}
-                          alt={post.mainImage.alt || post.title}
-                          fill
-                          className="object-cover rounded-lg"
-                        />
-                      ) : (
-                        <div className="text-center">
-                          <Leaf className="w-8 h-8 text-white/50 mx-auto mb-1" />
-                          <span className="text-white/30 text-xs">Sin imagen</span>
+                      href={`/blog/${featuredPosts[3].slug.current}`}
+                      className="group col-span-1 row-span-1"
+                    >
+                      <div className="glass-card h-full p-4 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                        <div className="bg-white/10 rounded-lg h-20 mb-3 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                          {featuredPosts[3].mainImage?.asset?.url ? (
+                            <Image
+                              src={featuredPosts[3].mainImage.asset.url}
+                              alt={featuredPosts[3].mainImage.alt || featuredPosts[3].title}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                          ) : (
+                            <Leaf className="w-6 h-6 text-white/50" />
+                          )}
                         </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="space-y-3">
-                      <h4 className="font-subtitle text-lg text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                        {post.title}
-                      </h4>
-                      <p className="font-text text-white/80 text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
-                        {post.excerpt || "Explora este contenido único..."}
-                      </p>
-
-                      {/* Meta */}
-                      <div className="flex items-center justify-between pt-2">
-                        <div className="flex items-center text-white/60 text-xs">
+                        <h4 className="font-subtitle text-sm text-[#AE0000] group-hover:text-[#AE0000]/75 transition-colors duration-300 line-clamp-2 mb-2">
+                          {featuredPosts[3].title}
+                        </h4>
+                        <div className="flex items-center text-[#AE0000]/60 text-xs">
                           <Calendar className="w-3 h-3 mr-1" />
-                          {new Date(post.publishedAt).toLocaleDateString('es-ES', {
+                          {new Date(featuredPosts[3].publishedAt).toLocaleDateString('es-ES', {
                             month: 'short',
                             day: 'numeric'
                           })}
                         </div>
-                        {post.estimatedReadingTime && (
-                          <div className="flex items-center text-white/60 text-xs">
-                            <Clock className="w-3 h-3 mr-1" />
-                            {post.estimatedReadingTime} min
-                          </div>
-                        )}
                       </div>
-                    </div>
-                  </div>
                 </Link>
-              ))}
+                  )}
+              </div>
+            </div>
+
+              {/* RIGHT SIDE - Mirror of Left */}
+              <div className="space-y-6">
+                {/* Section Title */}
+                <div className="text-center mb-6 pb-[3rem] pt-[1rem]">
+                  <h3 className="font-title text-3xl md:text-4xl leading-tight" style={{ color: '#F0EACE' }}>
+                    SER INTEGRAL
+                  </h3>
+                  <div className="w-24 h-0.5 mx-auto mt-2" style={{ background: 'linear-gradient(to right, transparent, #F0EACE, transparent)' }} />
+              </div>
+                <div className="grid grid-cols-2 grid-rows-2 gap-4">
+                  {/* Small Post 1 - Top Left */}
+                  {featuredPosts[0] && (
+                    <Link
+                      href={`/blog/${featuredPosts[0].slug.current}`}
+                      className="group col-span-1 row-span-1"
+                    >
+                      <div className="glass-card h-full p-4 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                        <div className="bg-white/10 rounded-lg h-20 mb-3 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                          {featuredPosts[0].mainImage?.asset?.url ? (
+                            <Image
+                              src={featuredPosts[0].mainImage.asset.url}
+                              alt={featuredPosts[0].mainImage.alt || featuredPosts[0].title}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                          ) : (
+                            <Leaf className="w-6 h-6 text-white/50" />
+                          )}
+                      </div>
+                        <h4 className="font-subtitle text-sm text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-2 mb-2">
+                          {featuredPosts[0].title}
+                        </h4>
+                        <div className="flex items-center text-white/60 text-xs">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {new Date(featuredPosts[0].publishedAt).toLocaleDateString('es-ES', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                </div>
+                      </div>
+                    </Link>
+                  )}
+
+                  {/* Small Post 2 - Top Right */}
+                  {featuredPosts[1] && (
+                    <Link
+                      href={`/blog/${featuredPosts[1].slug.current}`}
+                      className="group col-span-1 row-span-1"
+                    >
+                      <div className="glass-card h-full p-4 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                        <div className="bg-white/10 rounded-lg h-20 mb-3 flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                          {featuredPosts[1].mainImage?.asset?.url ? (
+                            <Image
+                              src={featuredPosts[1].mainImage.asset.url}
+                              alt={featuredPosts[1].mainImage.alt || featuredPosts[1].title}
+                              fill
+                              className="object-cover rounded-lg"
+                            />
+                          ) : (
+                            <Leaf className="w-6 h-6 text-white/50" />
+                          )}
+                  </div>
+                        <h4 className="font-subtitle text-sm text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-2 mb-2">
+                          {featuredPosts[1].title}
+                        </h4>
+                        <div className="flex items-center text-white/60 text-xs">
+                          <Calendar className="w-3 h-3 mr-1" />
+                          {new Date(featuredPosts[1].publishedAt).toLocaleDateString('es-ES', {
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                  </div>
+                </div>
+                    </Link>
+              )}
+
+                  {/* Big Post 2 - Bottom (2x1 spanning 2 columns) */}
+                  {featuredPosts[1] && (
+                <Link
+                      href={`/blog/${featuredPosts[1].slug.current}`}
+                      className="group col-span-2 row-span-1"
+                    >
+                      <div className="glass-card h-full p-6 rounded-2xl border border-white/20 hover:bg-white/20 transition-all duration-500 transform hover:-translate-y-2">
+                        <div className="grid grid-cols-2 gap-4 h-full">
+                          {/* Content Section */}
+                          <div className="flex flex-col justify-between">
+                            <div>
+                              <Badge className="bg-white/20 text-white border-white/30 mb-2">Post</Badge>
+                              <h3 className="font-subtitle text-lg text-white group-hover:text-white/90 transition-colors duration-300 line-clamp-3 mb-2">
+                                {featuredPosts[1].title}
+                              </h3>
+                              <p className="font-text text-white/80 text-sm leading-relaxed group-hover:text-white/90 transition-colors duration-300 line-clamp-2">
+                                {featuredPosts[1].excerpt || "Explora este contenido fascinante..."}
+                              </p>
+                            </div>
+                            <div className="flex items-center text-white/60 text-xs">
+                              <Calendar className="w-3 h-3 mr-1" />
+                              {new Date(featuredPosts[1].publishedAt).toLocaleDateString('es-ES', {
+                                month: 'short',
+                                day: 'numeric'
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Image Section */}
+                          <div className="bg-white/10 rounded-lg flex items-center justify-center group-hover:bg-white/20 transition-colors duration-300 overflow-hidden relative">
+                            {featuredPosts[1].mainImage?.asset?.url ? (
+                              <Image
+                                src={featuredPosts[1].mainImage.asset.url}
+                                alt={featuredPosts[1].mainImage.alt || featuredPosts[1].title}
+                                fill
+                                className="object-cover rounded-lg"
+                              />
+                            ) : (
+                              <Sparkles className="w-12 h-12 text-white/50" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                </Link>
+                  )}
+              </div>
+            </div>
             </div>
           ) : (
             /* Fallback Bento Grid with Placeholder Content */
@@ -1066,124 +1387,22 @@ export default async function HomePage() {
         />
 
         {/* Centered Title */}
-        <div className="text-center pb-5 mt-[-2rem] mb-[3rem] relative z-20">
+        <div className="text-center pb-5 mt-[-2rem] mb-[3rem] relative z-20 px-4">
           {/* Top gradient divider */}
-          <div className="w-32 h-0.5 mx-auto mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
-          <h2 className="font-title text-5xl md:text-6xl mb-3 leading-tight" style={{ color: '#AE0000' }}>
+          <div className="w-24 sm:w-32 h-0.5 mx-auto mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-3 leading-tight" style={{ color: '#AE0000' }}>
             GALERÍA
           </h2>
           {/* bottom gradient divider */}
-          <div className="w-32 h-0.5 mx-auto mt-3 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
-          <p className="text-xl font-text text-gray-800 max-w-3xl mx-auto leading-relaxed">
+          <div className="w-24 sm:w-32 h-0.5 mx-auto mt-3 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <p className="text-base sm:text-lg lg:text-xl font-text text-gray-800 max-w-3xl mx-auto leading-relaxed">
             Descubre la belleza de nuestros productos artesanales y los momentos únicos de transformación
           </p>
-        </div>
+                </div>
 
         <div className="container mx-auto max-w-7xl relative z-20">
-          {/* Enhanced Rolling Gallery Carousel */}
-          <div className="relative">
-            {/* Gallery Container with Infinite Scroll Effect */}
-            <div className="overflow-hidden rounded-2xl">
-              <div className="flex space-x-6 animate-marquee">
-                {/* First Set of Images */}
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={`set1-${i}`} className="flex-shrink-0 group">
-                    <div className="card-enhanced w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
-                      <div className="relative h-full">
-                        {/* Gallery Image */}
-                        <img
-                          src={`/images/gallery/gallery-${i}.jpg`}
-                          alt={`Galería DA LUZ ${i}`}
-                          className="w-full h-full object-cover"
-                        />
-
-                        {/* Fallback content when image is not available */}
-                        <div className="w-full h-full hidden items-center justify-center bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20" style={{ display: 'none' }}>
-                          <div className="text-center text-white">
-                            <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-60" />
-                            <div className="font-title text-xl mb-2">Imagen {i}</div>
-                            <div className="font-caption text-sm opacity-80">Próximamente</div>
-                          </div>
-                        </div>
-
-                        {/* Elegant Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                        {/* Content Overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                          <h3 className="font-subtitle text-lg mb-2">Momento Alkimya</h3>
-                          <p className="font-caption text-sm opacity-90">Descubre la magia en cada detalle</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-
-                {/* Duplicate Set for Seamless Loop */}
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={`set2-${i}`} className="flex-shrink-0 group">
-                    <div className="card-enhanced w-80 h-96 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
-                      <div className="relative h-full">
-                        {/* Gallery Image */}
-                        <img
-                          src={`/images/gallery/gallery-${i}.jpg`}
-                          alt={`Galería DA LUZ ${i}`}
-                          className="w-full h-full object-cover"
-                        />
-
-                        {/* Fallback content when image is not available */}
-                        <div className="w-full h-full hidden items-center justify-center bg-gradient-to-br from-brand-primary/20 to-brand-secondary/20" style={{ display: 'none' }}>
-                          <div className="text-center text-white">
-                            <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-60" />
-                            <div className="font-title text-xl mb-2">Imagen {i}</div>
-                            <div className="font-caption text-sm opacity-80">Próximamente</div>
-                          </div>
-                        </div>
-
-                        {/* Elegant Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                        {/* Content Overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                          <h3 className="font-subtitle text-lg mb-2">Momento Alkimya</h3>
-                          <p className="font-caption text-sm opacity-90">Descubre la magia en cada detalle</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Navigation Controls (Optional) */}
-            <div className="flex justify-center mt-8">
-              <div className="flex items-center space-x-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </Button>
-                <div className="flex space-x-2">
-                  {[1, 2, 3, 4, 5, 6].map((i) => (
-                    <div
-                      key={i}
-                      className="w-2 h-2 rounded-full bg-brand-primary/30 hover:bg-brand-primary transition-colors duration-300 cursor-pointer"
-                    />
-                  ))}
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </Button>
-              </div>
-            </div>
-          </div>
-
+          {/* Enhanced Interactive Gallery Carousel */}
+          <InteractiveGallery />
           {/* Enhanced CTA */}
           <div className="text-center mt-16">
             <div className="space-y-4">
@@ -1198,7 +1417,7 @@ export default async function HomePage() {
                 Síguenos en Instagram
                 <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
               </Button>
-            </div>
+              </div>
           </div>
         </div>
       </section>
@@ -1215,27 +1434,27 @@ export default async function HomePage() {
         />
 
         {/* Centered Title */}
-        <div className="container mx-auto max-w-7xl text-left mt-[-2rem] mb-[7rem] relative z-20">
+        <div className="container mx-auto max-w-7xl text-left pb-[3rem] sm:pb-[5rem] mt-[0rem] mb-[0rem] relative z-20 px-4">
           {/* Top gradient divider */}
-          <div className="w-32 h-0.5 mx-10 mb-3" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
-          <h2 className="font-title text-5xl md:text-6xl mb-3 leading-tight" style={{ color: '#AE0000' }}>
+          <div className="w-24 sm:w-32 h-0.5 mx-4 sm:mx-10 mb-2" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <h2 className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight" style={{ color: '#AE0000' }}>
             CONTACTO
           </h2>
           {/* bottom gradient divider */}
-          <div className="w-32 h-0.5 mx-10" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+          <div className="w-24 sm:w-32 h-0.5 mx-4 sm:mx-10 mt-2" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
 
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-20">
-          <p className="text-xl font-text text-gray-800 max-w-3xl mx-auto leading-relaxed">
+        <div className="container mx-auto max-w-7xl relative z-20 px-4">
+          <p className="text-base sm:text-lg lg:text-xl font-text max-w-3xl mx-auto leading-relaxed" style={{ color: '#F0EACE' }}>
             Estamos aquí para acompañarte en tu camino hacia el bienestar consciente
           </p>
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 pt-[3rem] lg:pt-[5rem] gap-8 lg:gap-16 items-center">
             {/* Enhanced Contact Form */}
-            <div className="space-y-8">
-              <div className="card-enhanced p-8 rounded-2xl">
-                <div className="space-y-6">
-                  <div>
+            <div className="space-y-8 order-2 lg:order-1">
+              <div className="card-enhanced p-4 sm:p-6 lg:p-8 rounded-2xl">
+            <div className="space-y-6">
+              <div>
                     <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
                       Nombre Completo
                     </label>
@@ -1244,8 +1463,8 @@ export default async function HomePage() {
                       className="form-enhanced w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text"
                       placeholder="Tu nombre completo"
                     />
-                  </div>
-                  <div>
+              </div>
+              <div>
                     <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
                       Correo Electrónico
                     </label>
@@ -1254,8 +1473,8 @@ export default async function HomePage() {
                       className="form-enhanced w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text"
                       placeholder="tu@email.com"
                     />
-                  </div>
-                  <div>
+              </div>
+              <div>
                     <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
                       ¿En qué podemos ayudarte?
                     </label>
@@ -1264,29 +1483,53 @@ export default async function HomePage() {
                       className="form-enhanced w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text resize-none"
                       placeholder="Cuéntanos sobre tu consulta, dudas sobre productos, servicios o cualquier otra pregunta..."
                     />
-                  </div>
-                  <Button
+              </div>
+              <Button
                     className="group btn-enhanced w-full py-4 text-lg text-white font-semibold rounded-xl"
-                  >
+              >
                     <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                    Enviar Mensaje
+                Enviar Mensaje
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-                  </Button>
-                </div>
+              </Button>
+            </div>
               </div>
             </div>
 
-            {/* Enhanced Visual Element with New Contact Image */}
-            <div className="flex items-center justify-center">
-              <div className="relative">
-                {/* Main Contact Image */}
-                <div className="card-enhanced w-full h-[500px] rounded-2xl shadow-2xl overflow-hidden relative">
+            {/* Enhanced Visual Element with Custom Shaped Contact Image */}
+            <div className="flex items-center justify-center lg:justify-end order-1 lg:order-2 mb-8 lg:mb-0">
+              <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg h-[300px] sm:h-[400px] lg:h-[500px] lg:mr-[-5rem]">
+                {/* Custom Shaped Image Container */}
+                <div
+                  className="w-full h-full shadow-2xl relative"
+                style={{
+                    clipPath: `polygon(
+                      100% 0%, 
+                      52% 0%, 
+                      18% 0.4%, 
+                      1.5% 47.5%, 
+                      0% 94%, 
+                      47% 100%, 
+                      100% 100%
+                    )`,
+                    background: 'linear-gradient(135deg, rgba(174, 0, 0, 0.1) 0%, rgba(240, 234, 206, 0.1) 100%)',
+                    border: '2px solid rgba(174, 0, 0, 0.2)'
+                  }}
+                >
                   <img
                     src="/images/contact-background.jpg"
                     alt="Contacto DA LUZ CONSCIENTE"
                     className="w-full h-full object-cover"
                     style={{
-                      filter: "brightness(0.85) saturate(1.1) contrast(1.05)"
+                      filter: "brightness(0.85) saturate(1.1) contrast(1.05)",
+                      clipPath: `polygon(
+                        100% 0%, 
+                        52% 0%, 
+                        18% 0.4%, 
+                        1.5% 47.5%, 
+                        0% 94%, 
+                        47% 100%, 
+                        100% 100%
+                      )`
                     }}
                   />
 

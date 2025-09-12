@@ -651,6 +651,10 @@
   background-size: 200% 200%;
   animation: gradient-shift 3s ease infinite;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* DA LUZ Custom Border Radius from Illustrator */
+  border-radius: 0px 15px;
+  /* -webkit-border-radius: 0px 25px;
+  -moz-border-radius: 0px 25px; */
 }
 
 .btn-enhanced::before {
@@ -678,6 +682,25 @@
   box-shadow: 
     0 10px 25px rgba(174, 0, 0, 0.4),
     0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* DA LUZ Default Button Style - Applied to all buttons */
+.btn-daluz {
+  border-radius: 0px 25px;
+  -webkit-border-radius: 0px 25px;
+  -moz-border-radius: 0px 25px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global button styling - applies the DA LUZ border radius to all buttons */
+button:not(.btn-no-radius), 
+.btn, 
+[role="button"]:not(.btn-no-radius),
+input[type="button"]:not(.btn-no-radius),
+input[type="submit"]:not(.btn-no-radius) {
+  border-radius: 0px 15px !important;
+  /* -webkit-border-radius: 0px 25px !important;
+  -moz-border-radius: 0px 25px !important; */
 }
 
 /* Enhanced Cards */
@@ -953,12 +976,30 @@
 
 /* Mobile-specific SVG optimizations */
 @media (max-width: 768px) {
-  /* Ensure SVG backgrounds scale properly on mobile */
-  svg[viewBox] {
+  /* Ensure SVG backgrounds scale properly on mobile - EXCLUDE small icons */
+  svg[viewBox]:not(.lucide):not([width]):not([height]) {
     min-width: 100%;
     min-height: 100%;
     object-fit: cover;
     object-position: center;
+  }
+  
+  /* Ensure large background SVGs scale properly */
+  .section-enhanced svg[viewBox],
+  section svg[viewBox]:not(.lucide) {
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  
+  /* Ensure icon SVGs stay properly sized */
+  .lucide,
+  svg[width][height] {
+    min-width: auto !important;
+    min-height: auto !important;
+    width: auto;
+    height: auto;
   }
   
   /* Performance optimizations for mobile */
@@ -1019,6 +1060,39 @@
     transform: scale(1.2) translateZ(0);
     transform-origin: center center;
     min-height: 130%;
+  }
+
+  /* Gallery Carousel Scrollbar Hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    scrollbar-width: none;  /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+
+  /* Enhanced Oval Shape Support for Procesos & Sesiones */
+  .oval-shape-mobile-fix {
+    /* Ensure 3D transforms render properly on mobile */
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
+    /* Force hardware acceleration */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+
+  /* Mobile optimization for rotated oval shapes */
+  @media (max-width: 768px) {
+    .oval-shape-mobile-fix {
+      /* Ensure rotations are preserved and centered properly */
+      -webkit-backface-visibility: hidden;
+      -webkit-transform-style: preserve-3d;
+      /* Improve rendering performance */
+      -webkit-perspective: 1000px;
+      perspective: 1000px;
+    }
   }
 }
 

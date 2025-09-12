@@ -318,10 +318,10 @@ export const SesionesBackground: React.FC<{
         <g id="Layer_2" data-name="Layer 2">
           <g id="Capa_1" data-name="Capa 1">
             {/* Background from your updated sesionesBG.svg */}
-            <rect y="149.66" width="1920" height="1080.21" className="sesiones-bg-fill"/>
+            <rect x="0.15" y="0.2" width="1919.85" height="1085.55" className="sesiones-bg-fill"/>
             {/* Wave Pattern from your updated sesionesBG.svg */}
             <path 
-              d="M1920.2,449.85c-319-31.77-643.16-52.86-960-153.31-42-13.3-106.66-55.09-327.46-113.24C487.25,145,0,149.66,0,149.66V0H1920Z" 
+              d="M1919.67,277C1600.81,256.08,1276.76,242.22,960,176.22,627.15,106.86.8,58.88.8,12.65L0,0H1920l-.33,12.65Z" 
               className="sesiones-wave-fill"
             />
           </g>
@@ -413,10 +413,10 @@ export const BlogComunidadBackground: React.FC<{
         <g id="Layer_2" data-name="Layer 2">
           <g id="Capa_1" data-name="Capa 1">
             {/* Background */}
-            <rect width="1920" height="1080.21" className="blog-bg-fill"/>
+            <rect x="0.07" width="1919.85" height="1079.42" className="blog-bg-fill"/>
             {/* Wave Pattern from your blogBG.svg */}
             <path 
-              d="M0,1079.91l1920,.3V108.37H1331c-176.94,14.08-348.21,69.48-395.39,246.12S1007.41,763,902.09,893.73s-327.44,138.89-327.44,138.89" 
+              d="M0,1078.78l1920,.29V202.8c-218.21-17.92-840.69-1-878.37,11.45s-134.6,47.2-106,206.52c37.44,208.62,27.15,313.71,15.93,400.34C917.17,1086.7,0,1078.78,0,1078.78Z" 
               className="blog-wave-fill"
             />
           </g>
@@ -587,5 +587,44 @@ export const AnimatedBackground: React.FC = () => {
         />
       ))}
     </div>
+  );
+};
+
+// Gallery Navigation Arrows with Theme Color Support
+export const ArrowLeftSVG = ({ className = "w-6 h-6", color = "currentColor" }: { className?: string; color?: string }) => {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 85.24 105.19" 
+      className={className}
+    >
+      <g>
+        <g>
+          <path 
+            d="M83.93,0C66,16.18,46.83,30.93,27.42,45.22c-6.47,4.75-13,9.4-19.58,14L7.63,50.9C30.94,65.48,54.19,80.94,76,97.75c2.67,2.08,6.72,5.26,9.29,7.44-3.11-1.3-7.66-3.6-10.77-5.07C49.81,88,25.69,73.89,2.34,59.38A5,5,0,0,1,2.12,51C8.71,46.47,15.33,41.93,22,37.49,42.12,24.18,62.57,11.24,83.93,0Z" 
+            fill={color}
+          />
+        </g>
+      </g>
+    </svg>
+  );
+};
+
+export const ArrowRightSVG = ({ className = "w-6 h-6", color = "currentColor" }: { className?: string; color?: string }) => {
+  return (
+    <svg 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="0 0 85.24 105.19" 
+      className={className}
+    >
+      <g>
+        <g>
+          <path 
+            d="M1.32,105.19C19.22,89,38.41,74.26,57.82,60c6.47-4.75,13-9.4,19.58-14l.21,8.33C54.3,39.71,31.05,24.25,9.29,7.44,6.62,5.37,2.57,2.18,0,0,3.11,1.3,7.67,3.6,10.77,5.07,35.43,17.2,59.55,31.3,82.9,45.81a5,5,0,0,1,.22,8.34c-6.59,4.57-13.21,9.11-19.9,13.55C43.12,81,22.67,94,1.32,105.19Z" 
+            fill={color}
+          />
+        </g>
+      </g>
+    </svg>
   );
 };

@@ -24,6 +24,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  NavigationMenuButton,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
@@ -141,8 +142,8 @@ export default function Header() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
-              {/* SVG Logo */}
-              <div className="flex-shrink-0">
+              {/* SVG Logo - Hidden on mobile */}
+              <div className="flex-shrink-0 hidden md:block">
                 <Image 
                   src="/svg/logo.svg" 
                   alt="DA LUZ Logo" 
@@ -164,7 +165,7 @@ export default function Header() {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - REORDERED: Tienda, Alkimya, Nosotros, Servicios, Blog, Membresia */}
             <NavigationMenu className="hidden md:flex">
               <NavigationMenuList>
                 <NavigationMenuItem>
@@ -210,46 +211,15 @@ export default function Header() {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
+                {/* NEW ALKIMYA MENU ITEM */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
-                    Membresía
-                  </NavigationMenuTrigger>
-                  <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#F6FBD6' }}>
-                    <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-                      <div className="row-span-3">
-                        <NavigationMenuLink asChild>
-                          <Link
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all"
-                            href="/programa-transformacion"
-                          >
-                            <Users className="h-6 w-6 text-brand-primary" />
-                            <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                              Programa de 7 Meses
-                            </div>
-                            <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                              Transformación integral para alma y cuerpo
-                            </p>
-                          </Link>
-                        </NavigationMenuLink>
-                      </div>
-                      <NavigationMenuLink asChild>
-                        <Link href="/programa-transformacion" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
-                          <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Conocé el Programa</div>
-                          <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                            Detalles del programa de transformación
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                      <NavigationMenuLink asChild>
-                        <Link href="/mi-membresia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
-                          <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Mi Membresía</div>
-                          <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                            Accede a tu progreso y contenido
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
-                    </div>
-                  </NavigationMenuContent>
+                  <NavigationMenuButton
+                    className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium cursor-pointer"
+                    style={{ color: '#FFF4B3' }}
+                    onClick={() => window.location.href = '/alkimya'}
+                  >
+                    Alkimya
+                  </NavigationMenuButton>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
@@ -257,8 +227,8 @@ export default function Header() {
                     Nosotros
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#F6FBD6' }}>
-                    <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                      <li className="row-span-2">
+                    <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-1">
+                      <li>
                         <NavigationMenuLink asChild>
                           <Link
                             className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all"
@@ -274,14 +244,6 @@ export default function Header() {
                           </Link>
                         </NavigationMenuLink>
                       </li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/alkimya" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
-                          <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>ALKIMYA</div>
-                          <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                            Descubre el corazón de nuestros productos.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
                       <NavigationMenuLink asChild>
                         <Link href="/nuestra-historia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
                           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Nuestra Historia</div>
@@ -378,11 +340,53 @@ export default function Header() {
                       </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                    Membresía
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#F6FBD6' }}>
+                    <div className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      <div className="row-span-3">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all"
+                            href="/programa-transformacion"
+                          >
+                            <Users className="h-6 w-6 text-brand-primary" />
+                            <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                              Programa de 7 Meses
+                            </div>
+                            <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                              Transformación integral para alma y cuerpo
+                            </p>
+                          </Link>
+                        </NavigationMenuLink>
+                      </div>
+                      <NavigationMenuLink asChild>
+                        <Link href="/programa-transformacion" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
+                          <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Conocé el Programa</div>
+                          <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                            Detalles del programa de transformación
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                      <NavigationMenuLink asChild>
+                        <Link href="/mi-membresia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
+                          <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Mi Membresía</div>
+                          <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                            Accede a tu progreso y contenido
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </div>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
               </NavigationMenuList>
             </NavigationMenu>
 
-            {/* User Menu / Auth Buttons */}
-            <div className="flex items-center space-x-4">
+            {/* User Menu / Auth Buttons - DESKTOP ONLY */}
+            <div className="hidden md:flex items-center space-x-4">
               {/* Shopping Cart - Available for all users */}
               <Button 
                 variant="ghost" 
@@ -492,71 +496,255 @@ export default function Header() {
                   </Button>
                 </div>
               )}
+            </div>
 
-              {/* Mobile Menu */}
+            {/* MOBILE MENU - Enhanced with Cart and User Auth at bottom */}
+            <div className="flex md:hidden items-center space-x-3">
+              {/* Mobile Shopping Cart */}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="relative hover:bg-white/10"
+                style={{ color: '#FFF4B3' }}
+                onClick={toggleCart}
+              >
+                <ShoppingBag className="h-5 w-5" />
+                {itemCount > 0 && (
+                  <Badge 
+                    variant="secondary" 
+                    className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white text-brand-primary text-xs font-bold"
+                  >
+                    {itemCount}
+                  </Badge>
+                )}
+              </Button>
+
+              {/* Mobile Menu Trigger */}
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" className="md:hidden hover:bg-white/10" style={{ color: '#FFF4B3' }} size="sm">
+                  <Button variant="ghost" className="hover:bg-white/10" style={{ color: '#FFF4B3' }} size="sm">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] sm:w-[400px]">
-                  <SheetHeader>
-                    <SheetTitle className="font-title">Menú</SheetTitle>
+                <SheetContent side="right" className="w-[320px] sm:w-[400px] flex flex-col h-full" style={{ backgroundColor: '#F6FBD6' }}>
+                  <SheetHeader className="border-b border-brand-primary/20 pb-4">
+                    <SheetTitle className="font-title text-left" style={{ color: '#1C1B1A' }}>Menú de Navegación</SheetTitle>
                   </SheetHeader>
-                  <nav className="flex flex-col space-y-4 mt-4">
+                  
+                  {/* Main Navigation - Scrollable */}
+                  <div className="flex-1 overflow-y-auto">
+                    <nav className="flex flex-col space-y-1 mt-6">
+                      
+                      {/* Tienda Section */}
+                      <div className="mb-4">
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Tienda</div>
+                        <div className="ml-4 space-y-2">
                     <Link
                       href="/productos"
-                      className="text-lg font-text hover:text-brand-primary transition-colors"
+                            className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Todos los Productos
+                          </Link>
+                          <Link
+                            href="/categorias/linea-umbral"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Línea Umbral
+                          </Link>
+                          <Link
+                            href="/categorias/linea-ecos"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Línea Ecos
+                          </Link>
+                          <Link
+                            href="/categorias/linea-alma-terra"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Línea Alma Terra
+                          </Link>
+                          <Link
+                            href="/categorias/linea-jade-ritual"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Productos
+                            Línea Jade Ritual
                     </Link>
                     <Link
-                      href="/programa-transformacion"
-                      className="text-lg font-text hover:text-brand-primary transition-colors"
+                            href="/categorias/linea-utopica"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Línea Utópica
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Alkimya */}
+                      <Link
+                        href="/alkimya"
+                        className="py-3 text-lg font-title font-medium hover:text-brand-primary transition-colors"
+                        style={{ color: '#AE0000' }}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Alkimya
+                      </Link>
+
+                      {/* Nosotros Section */}
+                      <div className="mb-4">
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Nosotros</div>
+                        <div className="ml-4 space-y-2">
+                          <Link
+                            href="/nuestra-filosofia"
+                            className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
+                            style={{ color: '#1C1B1A' }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Membresía
+                            Nuestra Filosofía
                     </Link>
+                          <Link
+                            href="/nuestra-historia"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Nuestra Historia
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Servicios Section */}
+                      <div className="mb-4">
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Servicios</div>
+                        <div className="ml-4 space-y-2">
                     <Link
                       href="/servicios"
-                      className="text-lg font-text hover:text-brand-primary transition-colors"
+                            className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Servicios Holísticos
+                          </Link>
+                          <Link
+                            href="/servicios/sesiones-individuales"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Sesiones Individuales
+                          </Link>
+                          <Link
+                            href="/servicios/procesos-integrales"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      Servicios
+                            Procesos Integrales
                     </Link>
+                          <Link
+                            href="/servicios/programas-ciclicos"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Programas Cíclicos
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Blog */}
                     <Link
                       href="/blog"
-                      className="text-lg font-text hover:text-brand-primary transition-colors"
+                        className="py-3 text-lg font-title font-medium hover:text-brand-primary transition-colors"
+                        style={{ color: '#AE0000' }}
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Blog
                     </Link>
-                    {user && (
-                      <>
-                        <div className="border-t pt-4">
+
+                      {/* Membresía Section */}
+                      <div className="mb-4">
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Membresía</div>
+                        <div className="ml-4 space-y-2">
                           <Link
-                            href="/perfil"
-                            className="text-lg font-text hover:text-brand-primary transition-colors"
+                            href="/programa-transformacion"
+                            className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
+                            style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Mi Perfil
+                            Programa de 7 Meses
+                          </Link>
+                          <Link
+                            href="/mi-membresia"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Mi Membresía
                           </Link>
                         </div>
+                      </div>
+
+                    </nav>
+                  </div>
+
+                  {/* User Section at Bottom */}
+                  <div className="border-t border-brand-primary/20 pt-4 mt-4">
+                    {user ? (
+                      <div className="space-y-3">
+                        {/* User Info */}
+                        <div className="flex items-center space-x-3 p-3 rounded-lg bg-white/50">
+                          <Avatar className="h-10 w-10">
+                            <AvatarImage src={profile?.avatar_url || ""} alt="Avatar" />
+                            <AvatarFallback className="text-brand-primary bg-white">
+                              {profile?.first_name?.charAt(0) || user.email?.charAt(0) || "U"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="text-sm font-subtitle font-medium" style={{ color: '#1C1B1A' }}>
+                              {profile?.first_name || "Usuario"}
+                            </p>
+                            <p className="text-xs font-caption opacity-70" style={{ color: '#1C1B1A' }}>
+                              {user.email}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* User Menu Links */}
+                        <div className="space-y-1">
+                          <Link
+                            href="/perfil"
+                            className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            <User className="h-4 w-4" style={{ color: '#AE0000' }} />
+                            <span className="font-text" style={{ color: '#1C1B1A' }}>Mi Perfil</span>
+                          </Link>
                         <Link
                           href="/mis-pedidos"
-                          className="text-lg font-text hover:text-brand-primary transition-colors"
+                            className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          Mis Pedidos
+                            <Package className="h-4 w-4" style={{ color: '#AE0000' }} />
+                            <span className="font-text" style={{ color: '#1C1B1A' }}>Mis Pedidos</span>
                         </Link>
                         <Link
-                          href="/mi-membresia"
-                          className="text-lg font-text hover:text-brand-primary transition-colors"
+                            href="/configuracion"
+                            className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          Mi Membresía
+                            <Settings className="h-4 w-4" style={{ color: '#AE0000' }} />
+                            <span className="font-text" style={{ color: '#1C1B1A' }}>Configuración</span>
                         </Link>
                         <Button
                           variant="ghost"
@@ -564,13 +752,43 @@ export default function Header() {
                             handleSignOut();
                             setMobileMenuOpen(false);
                           }}
-                          className="justify-start text-lg font-text hover:text-brand-primary transition-colors"
-                        >
-                          Cerrar Sesión
+                            className="w-full justify-start px-3 py-2 hover:bg-white/30 transition-colors"
+                          >
+                            <LogOut className="h-4 w-4 mr-3" style={{ color: '#AE0000' }} />
+                            <span className="font-text" style={{ color: '#1C1B1A' }}>Cerrar Sesión</span>
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        <div className="text-sm font-subtitle" style={{ color: '#1C1B1A' }}>
+                          Accede a tu cuenta
+                        </div>
+                        <div className="space-y-2">
+                          <Button
+                            variant="default"
+                            onClick={() => {
+                              router.push('/login');
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full bg-brand-primary hover:bg-brand-secondary text-white font-text"
+                          >
+                            Iniciar Sesión
+                          </Button>
+                          <Button
+                            variant="outline"
+                            onClick={() => {
+                              router.push('/signup');
+                              setMobileMenuOpen(false);
+                            }}
+                            className="w-full border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-text"
+                          >
+                            Crear Cuenta
                         </Button>
-                      </>
+                        </div>
+                      </div>
                     )}
-                  </nav>
+                  </div>
                 </SheetContent>
               </Sheet>
             </div>

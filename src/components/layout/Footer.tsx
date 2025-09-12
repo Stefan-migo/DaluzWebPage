@@ -73,7 +73,140 @@ export default function Footer() {
         borderTopStyle: 'solid'
       }}
     >
-      {/* Main Footer Content */}
+      {/* 📱 MOBILE FOOTER - Simplified Design */}
+      <div className="block lg:hidden">
+        <div className="container mx-auto px-6 py-8 min-w-0">
+          {/* Brand Section - Mobile */}
+          <div className="text-center space-y-4 mb-8">
+            <h3 className="text-xl font-display font-normal" style={{ color: '#FFF4B3' }}>
+              DA LUZ CONSCIENTE
+            </h3>
+            <div className="text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+              Alkimyas para alma y cuerpo
+            </div>
+          </div>
+
+          {/* Contact Info - Mobile Optimized */}
+          <div className="space-y-4 mb-8">
+            <h4 className="font-title font-medium text-center text-lg" style={{ color: '#FFF4B3' }}>
+              Contacto
+            </h4>
+            <div className="space-y-4 font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+              {/* Email */}
+              <div className="flex items-center justify-center space-x-3 px-4">
+                <Mail className="h-4 w-4 flex-shrink-0 lucide" style={{ color: '#F8D794' }} />
+                <a 
+                  href="mailto:contacto@daluzconsciente.com" 
+                  className="text-sm hover:text-white transition-colors duration-300 flex-1 text-center"
+                  style={{ wordBreak: 'normal', overflowWrap: 'break-word' }}
+                >
+                  contacto@daluzconsciente.com
+                </a>
+              </div>
+              {/* Phone */}
+              <div className="flex items-center justify-center space-x-3 px-4">
+                <Phone className="h-4 w-4 flex-shrink-0 lucide" style={{ color: '#F8D794' }} />
+                <a 
+                  href="tel:+5491112345678" 
+                  className="text-sm hover:text-white transition-colors duration-300 flex-1 text-center"
+                >
+                  +54 9 11 1234-5678
+                </a>
+              </div>
+              {/* Address */}
+              <div className="flex items-center justify-center space-x-3 px-4">
+                <MapPin className="h-4 w-4 flex-shrink-0 lucide" style={{ color: '#F8D794' }} />
+                <span className="text-sm flex-1 text-center">Córdoba, Argentina</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Media - Mobile */}
+          <div className="flex justify-center space-x-6 mb-8">
+                          <a 
+                href="https://instagram.com/daluzconsciente" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                style={{ color: '#FFF4B3' }}
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5 lucide" />
+              </a>
+              <a 
+                href="https://facebook.com/daluzconsciente" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                style={{ color: '#FFF4B3' }}
+                aria-label="Facebook"
+              >
+                <Facebook className="h-5 w-5 lucide" />
+              </a>
+              <a 
+                href="https://wa.me/5493511234567" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                style={{ color: '#FFF4B3' }}
+                aria-label="WhatsApp"
+              >
+                <MessageCircle className="h-5 w-5 lucide" />
+              </a>
+          </div>
+
+          {/* Quick Links - Mobile Simplified */}
+          <div className="grid grid-cols-2 gap-6 mb-8 text-center">
+            <div>
+              <h4 className="font-title font-medium mb-3 text-sm" style={{ color: '#FFF4B3' }}>Productos</h4>
+              <div className="space-y-2">
+                <Link href="/productos" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                  Ver Todo
+                </Link>
+                <Link href="/productos/kits" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                  Kits Especiales
+                </Link>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-title font-medium mb-3 text-sm" style={{ color: '#FFF4B3' }}>Membresía</h4>
+              <div className="space-y-2">
+                <Link href="/membresia" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                  Programa
+                </Link>
+                <Link href="/membresia/comunidad" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                  Comunidad
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Values - Mobile */}
+          <div className="flex justify-center space-x-4 mb-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+            <div className="flex items-center space-x-1">
+              <Leaf className="h-3 w-3 lucide" style={{ color: '#F8D794' }} />
+              <span className="text-xs">Natural</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Heart className="h-3 w-3 lucide" style={{ color: '#F8D794' }} />
+              <span className="text-xs">Cruelty Free</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Sparkles className="h-3 w-3 lucide" style={{ color: '#F8D794' }} />
+              <span className="text-xs">Artesanal</span>
+            </div>
+          </div>
+
+          {/* Copyright - Mobile */}
+          <div className="text-center text-xs font-text pt-4 border-t border-white/20" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+            <div>© {currentYear} DA LUZ CONSCIENTE</div>
+            <div className="mt-1">Todos los derechos reservados</div>
+          </div>
+        </div>
+      </div>
+
+      {/* 💻 DESKTOP FOOTER - Full Design */}
+      <div className="hidden lg:block">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Section */}
@@ -96,19 +229,19 @@ export default function Footer() {
             {/* Contact Info */}
             <div className="space-y-2 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
               <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" style={{ color: '#F8D794' }} />
+                  <Mail className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
                 <a href="mailto:contacto@daluzconsciente.com" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
                   contacto@daluzconsciente.com
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <Phone className="h-4 w-4" style={{ color: '#F8D794' }} />
+                  <Phone className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
                 <a href="tel:+5491112345678" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
                   +54 9 11 1234-5678
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4" style={{ color: '#F8D794' }} />
+                  <MapPin className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
                 <span>Córdoba, Argentina</span>
               </div>
             </div>
@@ -123,7 +256,7 @@ export default function Footer() {
                 style={{ color: '#FFF4B3' }}
                 aria-label="Instagram"
               >
-                <Instagram className="h-5 w-5" />
+                  <Instagram className="h-5 w-5 lucide" />
               </a>
               <a 
                 href="https://facebook.com/daluzconsciente" 
@@ -133,7 +266,7 @@ export default function Footer() {
                 style={{ color: '#FFF4B3' }}
                 aria-label="Facebook"
               >
-                <Facebook className="h-5 w-5" />
+                  <Facebook className="h-5 w-5 lucide" />
               </a>
               <a 
                 href="https://wa.me/5493511234567" 
@@ -143,7 +276,7 @@ export default function Footer() {
                 style={{ color: '#FFF4B3' }}
                 aria-label="WhatsApp"
               >
-                <MessageCircle className="h-5 w-5" />
+                  <MessageCircle className="h-5 w-5 lucide" />
               </a>
             </div>
           </div>
@@ -184,15 +317,15 @@ export default function Footer() {
           {/* Values Icons */}
           <div className="flex items-center space-x-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
             <div className="flex items-center space-x-1 text-xs">
-              <Leaf className="h-4 w-4" style={{ color: '#F8D794' }} />
+                <Leaf className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
               <span>100% Natural</span>
             </div>
             <div className="flex items-center space-x-1 text-xs">
-              <Heart className="h-4 w-4" style={{ color: '#F8D794' }} />
+                <Heart className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
               <span>Cruelty Free</span>
             </div>
             <div className="flex items-center space-x-1 text-xs">
-              <Sparkles className="h-4 w-4" style={{ color: '#F8D794' }} />
+                <Sparkles className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
               <span>Artesanal</span>
             </div>
           </div>
@@ -206,6 +339,7 @@ export default function Footer() {
             <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
               Transferencia
             </Badge>
+            </div>
           </div>
         </div>
       </div>
