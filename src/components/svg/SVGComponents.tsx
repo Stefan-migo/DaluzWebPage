@@ -336,7 +336,7 @@ export const BiologiaLuzIcon: React.FC<SVGProps> = ({ size = 64, className = "" 
   return (
     <div className={`service-icon ${className}`}>
       <img 
-        src="/svg/icons/biologia-luz.svg" 
+        src="/images/servicios/biologia-luz.svg" 
         alt="Biología De Luz" 
         width={size} 
         height={size}
@@ -350,11 +350,11 @@ export const SesionesIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) 
   return (
     <div className={`service-icon ${className}`}>
       <img 
-        src="/svg/icons/sesiones.svg" 
+        src="/images/servicios/sesiones.svg" 
         alt="Sesiones" 
         width={size} 
         height={size}
-        className="transition-transform duration-300 group-hover:scale-110"
+        className="transition-transform duration-300 group-hover:scale-110 color-[#F0EACE]"
       />
     </div>
   );
@@ -364,7 +364,7 @@ export const CoachingIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) 
   return (
     <div className={`service-icon ${className}`}>
       <img 
-        src="/svg/icons/coaching.svg" 
+        src="/images/servicios/coaching.svg" 
         alt="Coaching" 
         width={size} 
         height={size}

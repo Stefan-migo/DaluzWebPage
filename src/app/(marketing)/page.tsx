@@ -241,13 +241,21 @@ export default async function HomePage() {
             {/* Visual Element - Shows first on mobile for impact */}
             <div className="flex justify-center lg:justify-end order-1 lg:order-2 w-full">
               <div className="relative">
-                {/* Main circle with responsive sizing */}
-                <div className="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-full card-enhanced shadow-2xl flex items-center justify-center">
-                  {/* Inner circle with image placeholder */}
-                  <div className="w-60 h-60 sm:w-64 sm:h-64 lg:w-80 lg:h-80 rounded-full bg-gradient-to-br from-white via-bg-cream to-bg-light shadow-inner flex items-center justify-center overflow-hidden">
-                    {/* Image placeholder - user will upload image here */}
-                    <div className="w-full h-full rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center relative">
-                      {/* Placeholder content until image is uploaded */}
+                {/* Main image container with custom border radius */}
+                <div className="w-72 h-72 sm:w-80 sm:h-80 lg:w-96 lg:h-96 card-enhanced shadow-2xl overflow-hidden" style={{ borderRadius: '0px 100px', border: '2px solid #AE0000' }}>
+                  {/* Image container */}
+                  <div className="w-full h-full bg-gradient-to-br from-white via-bg-cream to-bg-light shadow-inner flex items-center justify-center overflow-hidden relative">
+                    {/* DA LUZ Main Image */}
+                    <Image
+                      src="/images/sobre-daluz/sobre-daluz-main.jpg"
+                      alt="DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo"
+                      fill
+                      className="object-cover"
+                      style={{ borderRadius: '0px 100px' }}
+                    />
+                    
+                    {/* Fallback content when image is not available */}
+                    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center" style={{ display: 'none' }}>
                       <div className="text-center space-y-3 lg:space-y-4 px-4">
                         <div className="w-16 h-16 lg:w-20 lg:h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-2">
                           <Sparkles className="w-8 h-8 lg:w-10 lg:h-10 text-brand-primary animate-pulse" />
@@ -260,14 +268,6 @@ export default async function HomePage() {
                             <div>Alma • Cuerpo</div>
                             <div>Transformación</div>
                           </div>
-                        </div>
-                      </div>
-
-                      {/* Upload hint - remove this when image is added */}
-                      <div className="absolute inset-0 bg-black/5 rounded-full flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
-                        <div className="text-center text-xs text-gray-600 px-4">
-                          <div className="font-medium">Imagen DA LUZ</div>
-                          <div className="text-xs">Placeholder</div>
                         </div>
                       </div>
                     </div>
@@ -348,6 +348,8 @@ export default async function HomePage() {
             {/* Biología De Luz */}
             <div className="group card-enhanced p-8 text-center">
               <div className="relative z-10 space-y-6">
+
+
                 {/* Your Custom SVG Icon */}
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
                   <BiologiaLuzIcon size={48} />
@@ -378,9 +380,12 @@ export default async function HomePage() {
             {/* Sesiones */}
             <div className="group card-enhanced p-8 text-center">
               <div className="relative z-10 space-y-6">
+
                 {/* Your Custom SVG Icon */}
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
-                  <SesionesIcon size={48} />
+                  <SesionesIcon size={48} 
+                  className="group-hover:color-[#F0EACE]"
+                  />
                 </div>
 
                 {/* Title */}
@@ -408,6 +413,7 @@ export default async function HomePage() {
             {/* Coaching */}
             <div className="group card-enhanced p-8 text-center">
               <div className="relative z-10 space-y-6">
+
                 {/* Your Custom SVG Icon */}
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
                   <CoachingIcon size={48} />
@@ -609,31 +615,37 @@ export default async function HomePage() {
               </p>
             </div>
 
-              {/* Product Image Circles */}
+              {/* Product Image Containers */}
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                      <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                  <Image
+                    src="/images/lineas/ecos/ecos-producto-1.jpg"
+                    alt="Línea ECOS - Producto 1"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0px 15px' }}
+                  />
                     </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                  <Image
+                    src="/images/lineas/ecos/ecos-producto-2.jpg"
+                    alt="Línea ECOS - Producto 2"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0px 15px' }}
+                  />
                   </div>
-                </div>
-                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                      <div className="text-white/80 text-sm font-medium">Producto 2</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                      <div className="text-white/80 text-sm font-medium">Producto 3</div>
-                    </div>
-                  </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                  <Image
+                    src="/images/lineas/ecos/ecos-producto-3.jpg"
+                    alt="Línea ECOS - Producto 3"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0px 15px' }}
+                  />
                 </div>
               </div>
           </div>
@@ -679,31 +691,37 @@ export default async function HomePage() {
               </p>
             </div>
 
-              {/* Product Image Circles */}
+              {/* Product Image Containers */}
               <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
-                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                      <div className="text-white/80 text-sm font-medium">Producto 1</div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                  <Image
+                    src="/images/lineas/umbral/umbral-producto-1.jpg"
+                    alt="Línea UMBRAL - Producto 1"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0px 15px' }}
+                  />
                     </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                  <Image
+                    src="/images/lineas/umbral/umbral-producto-2.jpg"
+                    alt="Línea UMBRAL - Producto 2"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0px 15px' }}
+                  />
                   </div>
-                </div>
-                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                      <div className="text-white/80 text-sm font-medium">Producto 2</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                  <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                    <div className="text-center">
-                      <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                      <div className="text-white/80 text-sm font-medium">Producto 3</div>
-                    </div>
-                  </div>
+                <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                  <Image
+                    src="/images/lineas/umbral/umbral-producto-3.jpg"
+                    alt="Línea UMBRAL - Producto 3"
+                    width={160}
+                    height={160}
+                    className="w-full h-full object-cover"
+                    style={{ borderRadius: '0px 15px' }}
+                  />
                 </div>
               </div>
           </div>
@@ -739,31 +757,37 @@ export default async function HomePage() {
             tinturas madre y flores de Bach para el equilibrio orgánico.
           </p>
 
-            {/* Product Image Circles */}
+            {/* Product Image Containers */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 1</div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/jade-ritual/jade-producto-1.jpg"
+                  alt="Línea JADE RITUAL - Producto 1"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
                   </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/jade-ritual/jade-producto-2.jpg"
+                  alt="Línea JADE RITUAL - Producto 2"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
                 </div>
-              </div>
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 2</div>
-                  </div>
-                </div>
-              </div>
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 3</div>
-                  </div>
-                </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/jade-ritual/jade-producto-3.jpg"
+                  alt="Línea JADE RITUAL - Producto 3"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
               </div>
             </div>
         </div>
@@ -799,31 +823,37 @@ export default async function HomePage() {
             realzan la belleza auténtica del ser.
           </p>
 
-            {/* Product Image Circles */}
+            {/* Product Image Containers */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 1</div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/utopica/utopica-producto-1.jpg"
+                  alt="Línea UTÓPICA - Producto 1"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
                   </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/utopica/utopica-producto-2.jpg"
+                  alt="Línea UTÓPICA - Producto 2"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
                 </div>
-              </div>
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 2</div>
-                  </div>
-                </div>
-              </div>
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 3</div>
-                  </div>
-                </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/utopica/utopica-producto-3.jpg"
+                  alt="Línea UTÓPICA - Producto 3"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
               </div>
             </div>
         </div>
@@ -859,31 +889,37 @@ export default async function HomePage() {
             de aromaterapia que nutren el alma.
           </p>
 
-            {/* Product Image Circles */}
+            {/* Product Image Containers */}
             <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-8 mt-16">
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 1</div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/alma-terra/alma-terra-producto-1.jpg"
+                  alt="Línea ALMA TERRA - Producto 1"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
                   </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/alma-terra/alma-terra-producto-2.jpg"
+                  alt="Línea ALMA TERRA - Producto 2"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
                 </div>
-              </div>
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 2</div>
-                  </div>
-                </div>
-              </div>
-              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300">
-                <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/10 flex items-center justify-center relative">
-                  <div className="text-center">
-                    <Sparkles className="w-8 h-8 text-white/70 mx-auto mb-2" />
-                    <div className="text-white/80 text-sm font-medium">Producto 3</div>
-                  </div>
-                </div>
+              <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300" style={{ borderRadius: '0px 15px' }}>
+                <Image
+                  src="/images/lineas/alma-terra/alma-terra-producto-3.jpg"
+                  alt="Línea ALMA TERRA - Producto 3"
+                  width={160}
+                  height={160}
+                  className="w-full h-full object-cover"
+                  style={{ borderRadius: '0px 15px' }}
+                />
               </div>
             </div>
         </div>
@@ -1029,7 +1065,7 @@ export default async function HomePage() {
           </div>
 
           {/* Horizontally centered button relative to screen width */}
-          <div className="flex justify-center pt-8 lg:pt-12">
+          <div className="flex justify-center pt-[4rem] lg:pt-12">
             <Button
               className="group btn-enhanced pb-[0rem] px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base text-white"
               style={{ backgroundColor: '#AE0000' }}
@@ -1368,10 +1404,8 @@ export default async function HomePage() {
 
           {/* Enhanced CTA */}
           <div className="text-center mt-12">
-            <Button className="group btn-enhanced px-8 py-4 text-lg text-white font-semibold rounded-full">
-              <ArrowRight className="w-5 h-5 mr-2 group-hover:translate-x-1 transition-transform duration-300" />
+            <Button className="group btn-enhanced py-4 text-lg text-white font-semibold rounded-full">
               Ver Todos los Artículos
-              <Sparkles className="w-5 h-5 ml-2 group-hover:rotate-12 transition-transform duration-300" />
             </Button>
           </div>
         </div>
@@ -1495,41 +1529,26 @@ export default async function HomePage() {
               </div>
             </div>
 
-            {/* Enhanced Visual Element with Custom Shaped Contact Image */}
+            {/* Enhanced Visual Element with Custom Border Radius Contact Image */}
             <div className="flex items-center justify-center lg:justify-end order-1 lg:order-2 mb-8 lg:mb-0">
               <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg h-[300px] sm:h-[400px] lg:h-[500px] lg:mr-[-5rem]">
-                {/* Custom Shaped Image Container */}
+                {/* Custom Border Radius Image Container */}
                 <div
-                  className="w-full h-full shadow-2xl relative"
+                  className="w-full h-full shadow-2xl relative overflow-hidden"
                 style={{
-                    clipPath: `polygon(
-                      100% 0%, 
-                      52% 0%, 
-                      18% 0.4%, 
-                      1.5% 47.5%, 
-                      0% 94%, 
-                      47% 100%, 
-                      100% 100%
-                    )`,
+                    borderRadius: '0px 100px',
                     background: 'linear-gradient(135deg, rgba(174, 0, 0, 0.1) 0%, rgba(240, 234, 206, 0.1) 100%)',
-                    border: '2px solid rgba(174, 0, 0, 0.2)'
+                    border: '2px solid #F0EACE'
                   }}
                 >
-                  <img
+                  <Image
                     src="/images/contact-background.jpg"
                     alt="Contacto DA LUZ CONSCIENTE"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     style={{
                       filter: "brightness(0.85) saturate(1.1) contrast(1.05)",
-                      clipPath: `polygon(
-                        100% 0%, 
-                        52% 0%, 
-                        18% 0.4%, 
-                        1.5% 47.5%, 
-                        0% 94%, 
-                        47% 100%, 
-                        100% 100%
-                      )`
+                      borderRadius: '0px 100px'
                     }}
                   />
 
