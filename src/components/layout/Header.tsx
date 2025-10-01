@@ -147,10 +147,10 @@ export default function Header() {
                 <Image 
                   src="/svg/logo.svg" 
                   alt="DA LUZ Logo" 
-                  width={32} 
-                  height={32}
+                  width={40} 
+                  height={40}
                   className="transition-transform duration-300 hover:scale-105"
-                  style={{ width: 'auto', height: 'auto' }}
+                  style={{  }}
                 />
               </div>
               

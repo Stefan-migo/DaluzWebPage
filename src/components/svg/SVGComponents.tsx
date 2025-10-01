@@ -332,15 +332,32 @@ export const SesionesBackground: React.FC<{
 };
 
 // Enhanced Service Icons
-export const BiologiaLuzIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) => {
+export const AlkimyaDaLuzIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) => {
   return (
     <div className={`service-icon ${className}`}>
       <img 
-        src="/images/servicios/biologia-luz.svg" 
+        src="/images/servicios/AlkimyaDaLuz.svg" 
         alt="Biología De Luz" 
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
+      />
+    </div>
+  );
+};
+
+// Enhanced Service Icons
+export const ProcesosIntegrativosIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) => {
+  return (
+    <div className={`service-icon ${className}`}>
+      <img 
+        src="/images/servicios/procesos.svg" 
+        alt="Biología De Luz" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
       />
     </div>
   );
@@ -354,21 +371,23 @@ export const SesionesIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) 
         alt="Sesiones" 
         width={size} 
         height={size}
-        className="transition-transform duration-300 group-hover:scale-110 color-[#F0EACE]"
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
       />
     </div>
   );
 };
 
-export const CoachingIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) => {
+export const MembresiaIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) => {
   return (
     <div className={`service-icon ${className}`}>
       <img 
-        src="/images/servicios/coaching.svg" 
-        alt="Coaching" 
+        src="/images/servicios/membresia.svg" 
+        alt="Membresía" 
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
       />
     </div>
   );
@@ -574,18 +593,40 @@ export const AnimatedBackground: React.FC = () => {
       />
       
       {/* Additional Floating Particles */}
-      {Array.from({length: 15}).map((_, i) => (
-        <div
-          key={i}
-          className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 3}s`,
-            animationDuration: `${3 + Math.random() * 2}s`
-          }}
-        />
-      ))}
+      {Array.from({length: 15}).map((_, i) => {
+        // Use deterministic values based on index to avoid hydration mismatch
+        const positions = [
+          { left: 8.6, top: 24.9, delay: 2.5, duration: 3.8 },
+          { left: 87.7, top: 38.1, delay: 1.6, duration: 4.2 },
+          { left: 15.3, top: 67.2, delay: 0.8, duration: 3.5 },
+          { left: 92.1, top: 12.4, delay: 2.1, duration: 4.0 },
+          { left: 23.7, top: 45.8, delay: 1.3, duration: 3.7 },
+          { left: 78.9, top: 56.3, delay: 2.8, duration: 4.1 },
+          { left: 34.2, top: 18.6, delay: 0.5, duration: 3.9 },
+          { left: 65.4, top: 73.1, delay: 1.9, duration: 3.6 },
+          { left: 41.8, top: 29.7, delay: 2.3, duration: 4.3 },
+          { left: 56.2, top: 81.4, delay: 0.7, duration: 3.4 },
+          { left: 19.5, top: 52.6, delay: 1.8, duration: 4.5 },
+          { left: 83.7, top: 35.9, delay: 2.6, duration: 3.2 },
+          { left: 27.1, top: 14.3, delay: 1.1, duration: 3.8 },
+          { left: 71.3, top: 68.7, delay: 2.4, duration: 4.0 },
+          { left: 48.6, top: 42.1, delay: 0.9, duration: 3.6 }
+        ];
+        const pos = positions[i] || positions[0];
+        
+        return (
+          <div
+            key={i}
+            className="absolute w-2 h-2 bg-white/20 rounded-full animate-pulse"
+            style={{
+              left: `${pos.left}%`,
+              top: `${pos.top}%`,
+              animationDelay: `${pos.delay}s`,
+              animationDuration: `${pos.duration}s`
+            }}
+          />
+        );
+      })}
     </div>
   );
 };
@@ -626,5 +667,159 @@ export const ArrowRightSVG = ({ className = "w-6 h-6", color = "currentColor" }:
         </g>
       </g>
     </svg>
+  );
+};
+
+// ✨ PHILOSOPHY SECTION CUSTOM ICONS
+export const AncestralidadNaturalezaIcon: React.FC<SVGProps> = ({ 
+  size = 50, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`philosophy-icon ${className}`}>
+      <img 
+        src="/svg/filosofia/Ancestralidad-y-naturaleza.svg" 
+        alt="Naturaleza y Ancestralidad" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%) invert(100%)` }}
+      />
+    </div>
+  );
+};
+
+export const VisionIntegralIcon: React.FC<SVGProps> = ({ 
+  size = 50, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`philosophy-icon ${className}`}>
+      <img 
+        src="/svg/filosofia/vision-integral-y-autogestion.svg" 
+        alt="Visión Integral y Autogestión" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%) invert(100%)` }}
+      />
+    </div>
+  );
+};
+
+export const CeremoniaPresenciaIcon: React.FC<SVGProps> = ({ 
+  size = 50, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`philosophy-icon ${className}`}>
+      <img 
+        src="/svg/filosofia/ceremoniaypresencia.svg" 
+        alt="Ceremonia y Presencia" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%) invert(100%)` }}
+      />
+    </div>
+  );
+};
+
+export const PlacerCreatividadIcon: React.FC<SVGProps> = ({ 
+  size = 50, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`philosophy-icon ${className}`}>
+      <img 
+        src="/svg/filosofia/placerycreatividad.svg" 
+        alt="Placer y Creatividad Consciente" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%) invert(100%)` }}
+      />
+    </div>
+  );
+};
+
+// ✨ ALKIMYA DA LUZ SECTION CUSTOM ICONS
+export const EcologicaVeganaIcon: React.FC<SVGProps> = ({ 
+  size = 48, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`alkimia-icon flex items-center justify-center ${className}`}>
+      <img 
+        src="/svg/alkimia/ecologicasyveganas.svg" 
+        alt="Ecológica y Vegana" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
+      />
+    </div>
+  );
+};
+
+export const PoderBotanicoIcon: React.FC<SVGProps> = ({ 
+  size = 48, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`alkimia-icon flex items-center justify-center ${className}`}>
+      <img 
+        src="/svg/alkimia/poderbotanicoynatural.svg" 
+        alt="Poder botánico y Natural" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
+      />
+    </div>
+  );
+};
+
+export const TransmutacionCoherenciaIcon: React.FC<SVGProps> = ({ 
+  size = 48, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`alkimia-icon flex items-center justify-center ${className}`}>
+      <img 
+        src="/svg/alkimia/transmutaciónycoherencia.svg" 
+        alt="Transmutación y coherencia" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
+      />
+    </div>
+  );
+};
+
+export const NeurocosmeticaIcon: React.FC<SVGProps> = ({ 
+  size = 48, 
+  className = "",
+  color = "currentColor" 
+}) => {
+  return (
+    <div className={`alkimia-icon flex items-center justify-center ${className}`}>
+      <img 
+        src="/svg/alkimia/neurocosmetica.svg" 
+        alt="Neurocosmética Vibracional" 
+        width={size} 
+        height={size}
+        className="transition-transform duration-300 group-hover:scale-110"
+        style={{ filter: `brightness(0) saturate(100%)` }}
+      />
+    </div>
   );
 };

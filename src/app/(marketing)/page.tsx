@@ -16,9 +16,18 @@ import {
   BlogComunidadBackground,
   GaleriaBackground,
   ContactoBackground,
-  BiologiaLuzIcon,
+  AlkimyaDaLuzIcon,
   SesionesIcon,
-  CoachingIcon
+  ProcesosIntegrativosIcon,
+  MembresiaIcon,
+  AncestralidadNaturalezaIcon,
+  VisionIntegralIcon,
+  CeremoniaPresenciaIcon,
+  PlacerCreatividadIcon,
+  EcologicaVeganaIcon,
+  PoderBotanicoIcon,
+  TransmutacionCoherenciaIcon,
+  NeurocosmeticaIcon
 } from "@/components/svg/SVGComponents";
 import InteractiveGallery from "@/components/InteractiveGallery";
 import ProcesosImage from "@/components/ProcesosImage";
@@ -228,7 +237,7 @@ export default async function HomePage() {
           {/* Top gradient divider */}
           <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mb-5" />
           <h2 className="font-title text-5xl md:text-6xl leading-tight drop-shadow-lg" style={{ color: '#FFF4B3' }}>
-            SOBRE DA LUZ
+            MANIFIESTO DA LUZ
           </h2>
           {/* Bottom gradient divider */}
           <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mt-4 mb-5" />
@@ -250,6 +259,7 @@ export default async function HomePage() {
                       src="/images/sobre-daluz/sobre-daluz-main.jpg"
                       alt="DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo"
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                       className="object-cover"
                       style={{ borderRadius: '0px 100px' }}
                     />
@@ -284,23 +294,22 @@ export default async function HomePage() {
             {/* Content - Shows second on mobile */}
             <div className="order-2 lg:order-1 w-full">
               {/* Content Card with mobile-optimized spacing */}
-              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-lg border border-white/20">
+              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-6 lg:p-8 text-center shadow-lg border border-white/20">
                 {/* Enhanced Content with mobile-friendly text sizing */}
                 <div className="space-y-4 lg:space-y-6 text-base lg:text-lg leading-relaxed">
-                  <p className="font-text text-gray-800 leading-loose">
-                    DA LUZ CONSCIENTE nace de la profunda conexión entre la sabiduría ancestral
-                    y la ciencia moderna, creando puentes entre el alma y el cuerpo a través
-                    de alkimyas transformadoras.
+                  <p className="font-text text-gray-800">
+                    Te damos la bienvenida a Da Luz, 
                   </p>
-                  <p className="font-text leading-loose text-gray-800">
-                    Trabajamos con productores cuidadosamente seleccionados, honrando los
-                    ciclos naturales y presentando nuestros productos en recipientes
-                    personalizados de cerámica y vidrio que celebran la belleza de lo artesanal.
+                  <p className="font-text text-gray-800">
+                    <u>Un espacio dedicado a la alquimia de nuestra naturaleza y al despertar de la profunda conexión con tu Ser auténtico.</u>
+                    <br/>
+                    <br/>
+                    <strong>Nuestra intención es facilitarte una nueva forma de habitarte. Te invitamos a sumergirte en un viaje alquímico hacia tu interior, donde tu cuerpo es tratado como un templo.</strong>
+                    <br/><strong>Deseamos que tomarte momentos de pausa para percibir y nutrir tu Ser se convierta en un ritual diario 
+                    donde la atención plena, la gratitud y la presencia te acompañen en tu sendero.</strong>  
                   </p>
-                  <p className="font-text leading-loose text-gray-800">
-                    Cada línea de productos representa un viaje único hacia el bienestar
-                    integral, acompañado de servicios holísticos y programas de transformación
-                    personal que nutren tanto el cuerpo como el espíritu.
+                  <p className="font-text text-gray-800">
+                  Nuestro propósito fundamental es acompañarte en la construcción de <u>un equilibrio más completo</u>, donde <strong>el amor por vos misma y por la Tierra sean las raíces de cada elección que realices.</strong>
                   </p>
                 </div>
 
@@ -333,7 +342,7 @@ export default async function HomePage() {
           {/* Top gradient divider */}
           <div className="w-32 h-0.5 mx-auto mb-2 " style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
           <h2 className="font-title text-5xl md:text-6xl mb-3 leading-tight" style={{ color: '#FFF4B3' }}>
-            NUESTROS SERVICIOS
+          Nuestras Propuestas
           </h2>
           {/* Bottom gradient divider */}
           <div className="w-32 h-0.5 mx-auto mt-2 mb-3" style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
@@ -344,34 +353,35 @@ export default async function HomePage() {
 
         <div className="container mx-auto max-w-7xl relative z-20">
           {/* Enhanced Service Cards with Your Custom SVG Icons */}
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-4 gap-4">
             {/* Biología De Luz */}
             <div className="group card-enhanced p-8 text-center">
               <div className="relative z-10 space-y-6">
 
 
                 {/* Your Custom SVG Icon */}
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
-                  <BiologiaLuzIcon size={48} />
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F0EACE] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300">
+                  <AlkimyaDaLuzIcon size={64} />
                 </div>
 
                 {/* Title */}
-                <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
-                  Biología De Luz
+                <h3 className="font-subtitle text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                ALKIMYA DA LUZ 
                 </h3>
 
                 {/* Description */}
-                <p className="font-text text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                  Terapias energéticas que trabajan con la luz interior de cada ser,
-                  activando procesos naturales de sanación y equilibrio.
-                </p>
+                <ul className="font-text text-gray-600 text-[1rem] text-left leading-relaxed group-hover:text-gray-700 transition-colors duration-300 space-y-1">
+                  <li>5 líneas de productos creados para nutrir tu cuerpo y tu alma.</li>
+                  <li>Fórmulas con aceites esenciales que despiertan tus sentidos.</li>
+                  <li>Rituales de uso que te invitan a conectar con tu presencia y con tu cuerpo.</li>
+                </ul>
 
                 {/* CTA */}
                 <Button
                   variant="ghost"
                   className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
                 >
-                  Conoce Más
+                  Descubrí nuestras Alkimyas.
                   <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                 </Button>
               </div>
@@ -382,60 +392,94 @@ export default async function HomePage() {
               <div className="relative z-10 space-y-6">
 
                 {/* Your Custom SVG Icon */}
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
-                  <SesionesIcon size={48} 
-                  className="group-hover:color-[#F0EACE]"
-                  />
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F0EACE] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300">
+                  <SesionesIcon size={64} />
                 </div>
 
                 {/* Title */}
-                <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
-                  Sesiones
+                <h3 className="font-subtitle text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                SESIONES HOLÍSTICAS
                 </h3>
 
                 {/* Description */}
-                <p className="font-text text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                  Acompañamiento personalizado en procesos de transformación,
-                  integrando técnicas ancestrales y enfoques contemporáneos.
-                </p>
+                <ul className="font-text text-gray-600 text-[0.95rem] text-left leading-relaxed group-hover:text-gray-700 transition-colors duration-300 space-y-1">
+                  <li>3 propuestas para potenciar tu claridad y armonía.</li>
+                  <li>Conecta con el aquí y ahora.</li>
+                  <li>Utilizamos herramientas ancestrales como Reiki Usui y Karuna, sonidos curativos con cuencos, aromaterapia, Flores de Bach y más.</li>
+                </ul>
 
                 {/* CTA */}
                 <Button
                   variant="ghost"
                   className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
                 >
-                  Conoce Más
+                  ¡Conoce nuestras propuestas!
                   <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                 </Button>
               </div>
             </div>
 
-            {/* Coaching */}
-            <div className="group card-enhanced p-8 text-center">
+              {/* procesos integrativos */}
+              <div className="group card-enhanced p-8 text-center">
               <div className="relative z-10 space-y-6">
 
                 {/* Your Custom SVG Icon */}
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-all duration-300">
-                  <CoachingIcon size={48} />
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F0EACE] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300">
+                  <ProcesosIntegrativosIcon size={64} />
                 </div>
 
                 {/* Title */}
-                <h3 className="font-subtitle text-2xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
-                  Coaching
+                <h3 className="font-subtitle text-[1.15rem] text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                PROCESOS INTEGRATIVOS
                 </h3>
 
                 {/* Description */}
-                <p className="text-gray-600 leading-relaxed group-hover:text-gray-700 transition-colors duration-300">
-                  Programa de 7 meses de transformación consciente, diseñado para
-                  el desarrollo integral del ser humano.
-                </p>
+                <ul className="font-text text-gray-600 leading-relaxed text-[0.9rem] text-left group-hover:text-gray-700 transition-colors duration-300 space-y-1">
+                  <li>Procesos de Transformación Profunda</li>
+                  <li>3 programas cíclicos para que te reconectes con tu naturaleza.</li>
+                  <li>Aprende a escuchar tu cuerpo y a crear mayor consciencia sobre tus acciones.</li>
+                  <li>Explora ejercicios reflexivos, corporales y energéticos para reprogramarte y sentir tu poder creador.</li>
+                </ul>
 
                 {/* CTA */}
                 <Button
                   variant="ghost"
                   className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
                 >
-                  Conoce Más
+                  Descubrí nuestros procesos 
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Membresía */}
+            <div className="group card-enhanced p-8 text-center">
+              <div className="relative z-10 space-y-6">
+
+                {/* Your Custom SVG Icon */}
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F0EACE] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300">
+                  <MembresiaIcon size={64} />
+                </div>
+
+                {/* Title */}
+                <h3 className="font-subtitle text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                MEMBRESÍAS
+                </h3>
+
+                {/* Description */}
+                <ul className="text-gray-600 leading-relaxed text-[0.9rem] text-left group-hover:text-gray-700 transition-colors duration-300 space-y-1">
+                  <li>Un espacio para introducirte en el mundo de Da Luz.</li>
+                  <li>Nutre tu alma y aprende a usar herramientas que potenciarán tu bienestar.</li>
+                  <li>Encuentra videos, meditaciones guiadas, ejercicios y una biblioteca virtual.</li>
+                  <li>Accede a descuentos exclusivos.</li>
+                </ul>
+
+                {/* CTA */}
+                <Button
+                  variant="ghost"
+                  className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                >
+                  Sé parte del Ritual
                   <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
                 </Button>
               </div>
@@ -463,7 +507,7 @@ export default async function HomePage() {
           <div className="w-32 h-0.5 mx-auto mt-5 mb-5" style={{ background: 'linear-gradient(to right, transparent, #FFF4B3, transparent)' }} />
 
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
-            Los valores fundamentales que guían cada aspecto de nuestro trabajo consciente
+          Los valores que nos impulsan a crear y que deseamos que sientas.
           </p>
         </div>
 
@@ -472,24 +516,40 @@ export default async function HomePage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mt-[-2rem]">
             {[
               {
-                title: "Consciencia",
-                description: "Vivir con plena consciencia de nuestros actos y su impacto en el mundo.",
-                icon: <Star className="w-8 h-8" />
+                title: "Naturaleza y Ancestralidad",
+                description: (
+                  <>
+                  Vivimos y creamos en <strong>armoníacon la Madre Tierra.</strong> Honramos nuestras raíces y respetamos toda forma de vida. Este es nuestro compromiso universal.
+                  </>
+                ),
+                icon: <AncestralidadNaturalezaIcon size={50} className="" />
               },
               {
-                title: "Naturaleza",
-                description: "Honrar y trabajar en armonía con los ciclos y sabiduría de la naturaleza.",
-                icon: <Leaf className="w-8 h-8" />
+                title: "Visión Integral y Autogestión",
+                description: (
+                <>
+                El equilibrio es <strong>integral:</strong> no solo atendemos al cuerpo físico, sino también a tus emociones, pensamientos y energía. Te ofrecemos un sendero para que aprendas a <strong>autogestionar tu Ser</strong> a través de elecciones conscientes.
+                </>
+                ),  
+                icon: <VisionIntegralIcon size={50} className="" />
               },
               {
-                title: "Transformación",
-                description: "Facilitar procesos profundos de cambio y crecimiento personal.",
-                icon: <Zap className="w-8 h-8" />
+                title: "Ceremonia y Presencia",
+                description: (
+                  <>
+                Te invitamos a vivir la vida como una <strong>ceremonia diaria.</strong> Date tiempo para <strong>conectar con tus sentires</strong>, tu cuerpo, las sensaciones y cada parte de tu Ser en <strong>plena presencia.</strong>
+                  </>
+                ),
+                icon: <CeremoniaPresenciaIcon size={50} className="" />
               },
               {
-                title: "Integridad",
-                description: "Mantener coherencia entre nuestros valores, palabras y acciones.",
-                icon: <Heart className="w-8 h-8" />
+                title: "Placer y Creatividad Consciente",
+                description: (
+                <> 
+                <strong>Crear desde el placer es nuestro mantra.</strong> Exploramos nuevas formas de vincularnos con nuestros cuerpos, con el acto de <strong>Crear</strong> y con el Universo entero desde el goce.
+                </>
+                ),
+                icon: <PlacerCreatividadIcon size={50} className="" />
               }
             ].map((item, index) => (
               <div
@@ -530,32 +590,73 @@ export default async function HomePage() {
             ALKIMYA DA LUZ
           </h2>
           {/* bottom gradient divider */}
-          <div className="w-32 h-0.5 mx-auto mt-4 mb-5" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
-          <p className="text-2xl font-text text-gray-800 max-w-4xl mx-auto leading-relaxed font-light">
-            Cosméticos botánicos artesanales presentados en recipientes personalizados
-            de cerámica y vidrio, con productores cuidadosamente seleccionados.
-          </p>
+          <div className="w-32 h-0.5 mx-auto mt-4 mb-8" style={{ background: 'linear-gradient(to right, transparent, #AE0000, transparent)' }} />
+        
+          {/* Main Description */}
+          <div className="max-w-4xl mx-auto text-center mb-8">
+            <p className="text-2xl font-text text-gray-800 leading-relaxed font-light mb-6">
+              <strong>Neurocosmética que Transforma:</strong> una fusión entre los saberes ancestrales y la química moderna.
+            </p>
+            <p className="text-xl font-text text-gray-800 leading-relaxed font-light">
+              Creada para quienes buscan ir más allá de la cosmética, deseando una experiencia de transformación genuina. En nuestra sección de Alkimya, encontrarás todo lo que necesitas para tu ceremonia diaria:
+            </p>
+          </div>
+
+          {/* Features List */}
+          <div className="max-w-3xl mx-auto">
+            <ul className="space-y-4 text-left">
+              <li className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-brand-primary rounded-full mt-3 flex-shrink-0"></div>
+                <span className="text-lg font-text text-gray-800 leading-relaxed">
+                  <strong>Bio-tipos de piel:</strong> Conocé mejor tu piel para elegir los productos ideales.
+                </span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-brand-primary rounded-full mt-3 flex-shrink-0"></div>
+                <span className="text-lg font-text text-gray-800 leading-relaxed">
+                  <strong>Ceremonia Ideal:</strong> Tips para tu cuidado en el día a día.
+                </span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-brand-primary rounded-full mt-3 flex-shrink-0"></div>
+                <span className="text-lg font-text text-gray-800 leading-relaxed">
+                  <strong>Tesoros Da Luz:</strong> Descubrí los regalos a los que accederás con tu compra Alkimya!
+                </span>
+              </li>
+              <li className="flex items-start space-x-3">
+                <div className="w-2 h-2 bg-brand-primary rounded-full mt-3 flex-shrink-0"></div>
+                <span className="text-lg font-text text-gray-800 leading-relaxed">
+                  <strong>Transparencia:</strong> El listado completo de la materia prima que usamos. Porque saber lo que nutre tu piel es un acto de amor y confianza.
+                </span>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <div className="container mx-auto max-w-7xl relative z-20">
           {/* Enhanced Content */}
           <div className="space-y-8">
             {/* Features Grid */}
-            <div className="grid md:grid-cols-3 gap-6 mt-12 mb-12">
+            <div className="grid md:grid-cols-4 gap-6 mt-12 mb-12">
               <div className="card-enhanced p-6 text-center">
-                <Leaf className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ingredientes Naturales</h3>
-                <p className="font-caption text-gray-600 text-sm">Cuidadosamente seleccionados</p>
+                <EcologicaVeganaIcon size={48} className="mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ecológica y Vegana</h3>
+                <p className="font-caption text-gray-600 text-sm"> <strong>Un Compromiso con el Planeta.</strong> Respetamos toda forma de vida. Por eso, elegimos ingredientes <strong>sostenibles</strong> y envases <strong>conscientes</strong> en cada paso, asegurando la protección de la Madre Tierra.</p>
               </div>
               <div className="card-enhanced p-6 text-center">
-                <Sparkles className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Proceso Artesanal</h3>
-                <p className="font-caption text-gray-600 text-sm">Elaborado con dedicación</p>
+                <PoderBotanicoIcon size={48} className="mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Poder botánico y Natural</h3>
+                <p className="font-caption text-gray-600 text-sm"><strong>La Naturaleza a tu favor.</strong> Nuestras <strong>alquimias</strong> aprovechan el poder concentrado de las plantas para nutrir y promover tu <strong>bienestar integral</strong> de manera profunda.</p>
               </div>
               <div className="card-enhanced p-6 text-center">
-                <Heart className="w-12 h-12 text-brand-primary mx-auto mb-4" />
-                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Recipientes Únicos</h3>
-                <p className="font-caption text-gray-600 text-sm">Cerámica personalizada</p>
+                <TransmutacionCoherenciaIcon size={48} className="mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Transmutación y coherencia</h3>
+                <p className="font-caption text-gray-600 text-sm"><strong>Fórmulas para tu Bioequilibrio.</strong> Cada producto tiene una intención clara, combinando la sabiduría de las hierbas medicinales con activos vegetales. Creamos para catalizar la transformación que tu equilibrio necesita.</p>
+              </div>
+              <div className="card-enhanced p-6 text-center">
+                <NeurocosmeticaIcon size={48} className="mx-auto mb-4" />
+                <h3 className="font-subtitle text-lg text-brand-primary mb-2">Neurocosmética Vibracional</h3>
+                <p className="font-caption text-gray-600 text-sm">La cosmética es lo que sentís, <strong>porque tu piel es un canal que afecta tu cuerpo y mente.</strong> Nuestras alquimias son una invitación a una <strong>ceremonia de conexión diaria</strong>, protegiendo tu equilibrio hormonal y emocional.</p>
               </div>
             </div>
 
@@ -609,9 +710,8 @@ export default async function HomePage() {
 
             {/* Enhanced Content */}
             <div className="space-y-8">
-              <p className="text-2xl font-text text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
-                Ritmos naturales que conectan con la fluidez del agua y los ciclos oceánicos,
-                productos que honran la pureza y el movimiento constante de la vida.
+              <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+              <strong>Limpieza Consciente:</strong> Alquimias que activan el chakra laríngeo y te invitan a relajar el sistema nervioso con el sonido del agua.
               </p>
             </div>
 
@@ -678,16 +778,15 @@ export default async function HomePage() {
             {/* Enhanced Header */}
             <div className="space-y-6 mb-16">
               <h2 className="font-title text-5xl md:text-6xl text-white leading-tight drop-shadow-2xl">
-                LÍNEA UMBRAL
+                LÍNEA UMBRAL SENS
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
             </div>
 
             {/* Enhanced Content */}
             <div className="space-y-8">
-              <p className="text-2xl font-text text-white/90 max-w-4xl mx-auto leading-relaxed font-light drop-shadow-lg">
-                Transformación interior a través del fuego sagrado, productos que facilitan
-                procesos profundos de cambio y renovación personal.
+              <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
+              <strong>Nutrición y Placer:</strong> Alquimias que activan el chakra sacro, diseñadas para que mimes tu cuerpo y disfrutes del placer de sentirte.
               </p>
             </div>
 
@@ -753,8 +852,7 @@ export default async function HomePage() {
             <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
           </div>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Ceremonias sagradas que conectan con la sabiduría ancestral de la tierra,
-            tinturas madre y flores de Bach para el equilibrio orgánico.
+          <strong>Sanación Integral:</strong> Alquimias que activan los chakras cardíaco y Ajna. Te ayudan a transformar de forma consciente dolencias y desequilbrios del Ser.
           </p>
 
             {/* Product Image Containers */}
@@ -819,8 +917,7 @@ export default async function HomePage() {
             <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
           </div>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Visión elevada que trasciende lo cotidiano, cosméticos naturales que
-            realzan la belleza auténtica del ser.
+          <strong>Maquillaje Intencionado:</strong> Colores y brillos de origen vegetal y mineral que respetan y cuidan la salud de tu piel.
           </p>
 
             {/* Product Image Containers */}
@@ -885,8 +982,7 @@ export default async function HomePage() {
             <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
           </div>
           <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Conexión profunda con la tierra madre, brumas aromáticas y pociones
-            de aromaterapia que nutren el alma.
+          <strong>Aromaterapia y Conexión:</strong> Aromas que activan el chakra raíz, invitándote a habitar el presente y a conectar con tu materia desde la calma.
           </p>
 
             {/* Product Image Containers */}
@@ -950,22 +1046,76 @@ export default async function HomePage() {
         <div className="container mx-auto max-w-6xl relative z-20">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="px-4 lg:px-0">
-              <div className="space-y-4 text-base lg:text-lg mt-8 lg:mt-14 leading-relaxed" style={{ color: '#F0EACE' }}>
-                <p>
-                  Nuestros procesos integrales están diseñados para acompañarte en
-                  cada etapa de tu transformación personal. Combinamos técnicas ancestrales
-                  con enfoques contemporáneos para crear un camino único hacia el bienestar.
-                </p>
-                <p>
-                  Cada proceso es personalizado según tus necesidades específicas,
-                  honrando tu ritmo natural y respetando los ciclos de transformación
-                  que requiere todo crecimiento auténtico.
-                </p>
-                <p>
-                  Desde la primera consulta hasta el seguimiento posterior,
-                  te acompañamos con presencia consciente y herramientas efectivas
-                  para que puedas integrar los cambios de manera sostenible.
-                </p>
+              <div className="space-y-8 mt-8 lg:mt-14">
+                {/* Introduction */}
+                <div className="text-base lg:text-lg leading-relaxed" style={{ color: '#F0EACE' }}>
+                  <p>
+                    Nuestros procesos integrales están diseñados para acompañarte en
+                    cada etapa de tu transformación personal. Combinamos técnicas ancestrales
+                    con enfoques contemporáneos para crear un camino único hacia el bienestar.
+                  </p>
+                </div>
+
+                {/* Processes Grid */}
+                <div className="space-y-6">
+                  {/* GENESIS */}
+                  
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                          <span className="text-brand-primary font-bold text-lg" style={{ color: '#F0EACE' }}>•</span>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-subtitle text-xl text-brand-primary mb-2" style={{ color: '#F0EACE' }}>
+                          GENESIS <span className="text-sm font-normal text-white/80">(Personalizado)</span>
+                        </h3>
+                        <p className="text-white/90 leading-relaxed">
+                          <strong>¿Qué es?</strong> Un proceso 100% personalizado, asistido con Flores de Bach, 
+                          Péndulo y otras herramientas según tus necesidades.
+                        </p>
+                      </div>
+                    </div>
+
+                  {/* OASIS */}
+                
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                          <span className="text-brand-primary font-bold text-lg" style={{ color: '#F0EACE' }}>•</span>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-subtitle text-xl text-brand-primary mb-2" style={{ color: '#F0EACE' }}>
+                          OASIS <span className="text-sm font-normal text-white/80">(4 meses)</span>
+                        </h3>
+                        <p className="text-white/90 leading-relaxed">
+                          <strong>¿Qué es?</strong> Un proceso Individual en grupo, de Depuración Integral con 
+                          hierbas medicinales. Incluye archivos descargables para cada ciclo.
+                        </p>
+                      </div>
+                    </div>
+
+                  {/* METAMORFOSIS */}
+                
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0">
+                        <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                          <span className="text-brand-primary font-bold text-lg" style={{ color: '#F0EACE' }}>•</span>
+                        </div>
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="font-subtitle text-xl text-brand-primary mb-2" style={{ color: '#F0EACE' }}>
+                          METAMORFOSIS <span className="text-sm font-normal text-white/80">(6 meses)</span>
+                        </h3>
+                        <p className="text-white/90 leading-relaxed">
+                          <strong>¿Qué es?</strong> Depuración integral con hierbas medicinales. Incluye archivos 
+                          descargables semanales y una sesión mensual uno a uno.
+                        </p>
+                      </div>
+                    </div>
+
+                </div>
               </div>
             </div>
             <div className="flex justify-center mt-8 lg:mt-0">
@@ -990,9 +1140,7 @@ export default async function HomePage() {
                 className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
                 style={{ backgroundColor: '#AE0000' }}
               ></div>
-              <span className="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 text-white font-semibold">
-                Ver más
-              </span>
+                Inicia el Proceso que pide tu Alma
             </Button>
           </div>
         </div>
@@ -1025,41 +1173,75 @@ export default async function HomePage() {
               <SesionesImage />
             </div>
             <div className="px-4 lg:px-0 order-1 lg:order-2">
-              <div className="space-y-4 text-base lg:text-lg mt-8 lg:mt-14 leading-relaxed" style={{ color: '#AE0000' }}>
-                <p>
-              Nuestras sesiones individuales están diseñadas para crear un espacio sagrado
-              de encuentro contigo mismo, donde puedas explorar, sanar y expandir tu consciencia
-              en un ambiente de total confianza y respeto.
-            </p>
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-velista text-xl text-brand-primary mb-2">
-                  Sesiones de Reiki
-                </h3>
-                    <p className="text-gray-700 leading-relaxed">
-                  Equilibrio energético a través de la canalización de energía universal,
-                  promoviendo la auto-sanación natural del cuerpo.
-                </p>
-              </div>
-                  <div>
-                    <h3 className="font-velista text-xl text-brand-primary mb-2">
-                  Armonización con Cuencos
-                </h3>
-                    <p className="text-gray-700 leading-relaxed">
-                  Terapia sonora que utiliza las frecuencias sagradas para armonizar
-                  los chakras y liberar bloqueos energéticos.
-                </p>
-              </div>
-                  <div>
-                    <h3 className="font-velista text-xl text-brand-primary mb-2">
-                  Lectura de Aura
-                </h3>
-                    <p className="text-gray-700 leading-relaxed">
-                  Exploración del campo energético personal para comprender patrones,
-                  potenciales y áreas de crecimiento espiritual.
-                </p>
-              </div>
-            </div>
+              <div className="space-y-8 mt-8 lg:mt-[6rem]">
+                {/* Introduction */}
+                <div className="text-base lg:text-lg leading-relaxed" style={{ color: '#AE0000' }}>
+                  <p>
+                    Nuestras sesiones individuales están diseñadas para crear un espacio sagrado
+                    de encuentro contigo mismo, donde puedas explorar, sanar y expandir tu consciencia
+                    en un ambiente de total confianza y respeto.
+                  </p>
+                </div>
+
+                {/* Sessions Grid */}
+                <div className="space-y-6">
+                  {/* Sesión Armonía/Pacifica */}
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                        <span className="text-brand-primary font-bold text-lg" style={{ color: '#AE0000' }}>•</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-subtitle text-xl text-brand-primary mb-2" style={{ color: '#AE0000' }}>
+                        Sesión Armonía/Pacifica: Reiki Usui y Karuna
+                      </h3>
+                      <div className="text-gray-700 leading-relaxed">
+                        <p><strong>Duración:</strong> 60 min.</p>
+                        <p><strong>Ideal para:</strong> Relajación, calma, insomnio, ansiedad y nerviosismo.</p>
+                        <p><strong>Beneficio:</strong> Equilibra chakras y aura para activar tu capacidad de autosanación.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sesión Reprogramación Integral */}
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                        <span className="text-brand-primary font-bold text-lg" style={{ color: '#AE0000' }}>•</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-subtitle text-xl text-brand-primary mb-2" style={{ color: '#AE0000' }}>
+                        Sesión Reprogramación Integral: Chamanismo y Péndulo
+                      </h3>
+                      <div className="text-gray-700 leading-relaxed">
+                        <p><strong>Duración:</strong> 75 min.</p>
+                        <p><strong>Beneficio:</strong> Descifra tu subconsciente con el péndulo y reprograma tu energía a través de diversas técnicas Ancestrales.</p>
+                        <p><strong>Incluye:</strong> Mapa pendular y ejercicios para potenciar nuevas conexiones neuronales.</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Sesión Bioequilibrio Integral */}
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center">
+                        <span className="text-brand-primary font-bold text-lg" style={{ color: '#AE0000' }}>•</span>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-subtitle text-xl text-brand-primary mb-2" style={{ color: '#AE0000' }}>
+                        Sesión Bioequilibrio Integral: Reiki y Chamanismo
+                      </h3>
+                      <div className="text-gray-700 leading-relaxed">
+                        <p><strong>Duración:</strong> 90 min.</p>
+                        <p><strong>Beneficio:</strong> Armoniza y equilibra tu energía con Reiki Usui y técnicas chamánicas.</p>
+                        <p><strong>Incluye:</strong> Elixir floral o aromático para mantener el equilibrio.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1070,7 +1252,7 @@ export default async function HomePage() {
               className="group btn-enhanced pb-[0rem] px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base text-white"
               style={{ backgroundColor: '#AE0000' }}
             >
-              Ver más
+              Reserva la sesión que necesita tu cuerpo
             </Button>
           </div>
         </div>
@@ -1128,6 +1310,7 @@ export default async function HomePage() {
                                 src={featuredPosts[0].mainImage.asset.url}
                                 alt={featuredPosts[0].mainImage.alt || featuredPosts[0].title}
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover rounded-lg"
                               />
                             ) : (
@@ -1172,6 +1355,7 @@ export default async function HomePage() {
                               src={featuredPosts[2].mainImage.asset.url}
                               alt={featuredPosts[2].mainImage.alt || featuredPosts[2].title}
                               fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
                               className="object-cover rounded-lg"
                             />
                           ) : (
@@ -1205,6 +1389,7 @@ export default async function HomePage() {
                               src={featuredPosts[3].mainImage.asset.url}
                               alt={featuredPosts[3].mainImage.alt || featuredPosts[3].title}
                               fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
                               className="object-cover rounded-lg"
                             />
                           ) : (
@@ -1250,6 +1435,7 @@ export default async function HomePage() {
                               src={featuredPosts[0].mainImage.asset.url}
                               alt={featuredPosts[0].mainImage.alt || featuredPosts[0].title}
                               fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
                               className="object-cover rounded-lg"
                             />
                           ) : (
@@ -1283,6 +1469,7 @@ export default async function HomePage() {
                               src={featuredPosts[1].mainImage.asset.url}
                               alt={featuredPosts[1].mainImage.alt || featuredPosts[1].title}
                               fill
+                              sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 16vw"
                               className="object-cover rounded-lg"
                             />
                           ) : (
@@ -1338,6 +1525,7 @@ export default async function HomePage() {
                                 src={featuredPosts[1].mainImage.asset.url}
                                 alt={featuredPosts[1].mainImage.alt || featuredPosts[1].title}
                                 fill
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                 className="object-cover rounded-lg"
                               />
                             ) : (
@@ -1545,6 +1733,7 @@ export default async function HomePage() {
                     src="/images/contact-background.jpg"
                     alt="Contacto DA LUZ CONSCIENTE"
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
                     className="object-cover"
                     style={{
                       filter: "brightness(0.85) saturate(1.1) contrast(1.05)",
