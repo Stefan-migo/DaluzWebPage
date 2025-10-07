@@ -65,7 +65,7 @@ export default function Footer() {
 
   return (
     <footer 
-      className="border-t transition-all duration-300"
+      className="border-t transition-all duration-300 z-30"
       style={{
         backgroundColor: '#AE0000',
         borderTopColor: '#C70000',
@@ -75,7 +75,7 @@ export default function Footer() {
     >
       {/* 📱 MOBILE FOOTER - Simplified Design */}
       <div className="block lg:hidden">
-        <div className="container mx-auto px-6 py-8 min-w-0">
+        <div className="container mx-auto px-6 py-8 min-w-0 z-30">
           {/* Brand Section - Mobile */}
           <div className="text-center space-y-4 mb-8">
             <h3 className="text-xl font-display font-normal" style={{ color: '#FFF4B3' }}>

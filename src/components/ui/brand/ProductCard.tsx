@@ -17,6 +17,8 @@ import {
   Minus 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLike } from "@/contexts/LikeContext";
+import RichTextDisplay from "@/components/ui/RichTextDisplay";
 
 interface ProductCardProps {
   id: string;
@@ -37,13 +39,11 @@ interface ProductCardProps {
   variant?: 'default' | 'elegant' | 'artisanal' | 'glass';
   lineTheme?: 'alma-terra' | 'ecos' | 'jade-ritual' | 'umbral' | 'utopica' | 'default';
   onAddToCart?: (productId: string, quantity: number) => void;
-  onToggleFavorite?: (productId: string) => void;
-  isFavorite?: boolean;
 }
 
 const cardVariants = {
   default: "bg-white border-border",
-  elegant: "bg-gradient-to-br from-white to-gray-50 border-gold-200 shadow-elegant",
+  elegant: "bg-gradient-to-br from-[#f6fbd6] to-[white] border-gold-200 shadow-elegant",
   artisanal: "bg-cream border-earth-200 shadow-artisanal",
   glass: "bg-white/80 backdrop-blur-md border-white/20 shadow-glass"
 };
@@ -106,25 +106,29 @@ export default function ProductCard({
   variant = 'default',
   lineTheme = 'default',
   onAddToCart,
-  onToggleFavorite,
-  isFavorite = false,
 }: ProductCardProps) {
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  
+  // Use LikeContext for like functionality
+  const { toggleLike, isLiked, isLoading: likeLoading } = useLike();
+  const isFavorite = isLiked(id);
 
   const theme = lineThemeClasses[lineTheme];
 
   const handleAddToCart = () => {
+    console.log('Add to cart clicked for product:', id, 'quantity:', quantity);
     if (onAddToCart && stock > 0) {
       onAddToCart(id, quantity);
+      // Reset quantity to 1 after adding to cart
+      setQuantity(1);
     }
   };
 
-  const handleToggleFavorite = () => {
-    if (onToggleFavorite) {
-      onToggleFavorite(id);
-    }
+  const handleToggleFavorite = async () => {
+    console.log('Toggle favorite clicked for product:', id);
+    await toggleLike(id);
   };
 
   const formatPrice = (amount: number) => {
@@ -151,14 +155,17 @@ export default function ProductCard({
     <Card 
       className={cn(
         "group relative overflow-hidden transition-all duration-500",
-        "hover:shadow-xl hover:-translate-y-2 hover:scale-[1.02]",
+        "hover:shadow-xl",
+        // "hover:-translate-y-2 hover:scale-[1.02]", // Temporarily disabled for debugging
         cardVariants[variant],
-        // Add shimmer effect for elegant variant
-        variant === 'elegant' && "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:animate-shimmer before:z-10",
+        // Add shimmer effect for elegant variant - temporarily disabled for debugging
+        // variant === 'elegant' && "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:animate-shimmer before:pointer-events-none",
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      onClick={() => console.log('Card clicked for product:', id)}
+      style={{ pointerEvents: 'auto' }}
     >
       <div className="relative">
         {/* Product Image */}
@@ -167,7 +174,7 @@ export default function ProductCard({
             <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
           )}
           <Image
-            src={imageUrl}
+            src={imageUrl && !imageUrl.startsWith('file://') ? imageUrl : '/images/placeholder-product.jpg'}
             alt={name}
             fill
             className={cn(
@@ -176,10 +183,11 @@ export default function ProductCard({
               imageLoaded ? "opacity-100" : "opacity-0"
             )}
             onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoaded(true)}
           />
           
           {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
           
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
@@ -202,34 +210,35 @@ export default function ProductCard({
             )}
           </div>
 
-          {/* Quick Actions */}
-          <div className={cn(
-            "absolute top-3 right-3 flex flex-col gap-2 transition-all duration-500",
-            isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-4"
-          )}>
+          {/* Like Button - Always visible in top-right */}
+          <div className="absolute top-3 right-3 z-20">
             <Button
               variant="secondary"
               size="sm"
               className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg backdrop-blur-sm border-white/20 transition-all duration-300 hover:scale-110"
               onClick={handleToggleFavorite}
+              disabled={likeLoading}
             >
               <Heart 
                 className={cn(
                   "h-4 w-4 transition-colors",
-                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500"
+                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500",
+                  likeLoading && "opacity-50"
                 )}
               />
             </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg backdrop-blur-sm border-white/20 transition-all duration-300 hover:scale-110"
-              asChild
-            >
-              <Link href={`/productos/${id}`}>
-                <Eye className="h-4 w-4 text-gray-600 hover:text-gray-800" />
-              </Link>
-            </Button>
+          </div>
+
+          {/* Hover Overlay - Ver Producto */}
+          <div className={cn(
+            "absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 z-10",
+            isHovered ? "opacity-100" : "opacity-0"
+          )}>
+            <Link href={`/productos/${id}`} className="block">
+              <div className="bg-white/90 text-gray-800 px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-white hover:scale-105 transition-all duration-300">
+                Ver producto
+              </div>
+            </Link>
           </div>
 
           {/* Stock Warning */}
@@ -242,7 +251,7 @@ export default function ProductCard({
           )}
 
           {stock === 0 && (
-            <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm">
+            <div className="absolute inset-0 bg-black/60 flex items-center justify-center backdrop-blur-sm pointer-events-none">
               <Badge variant="secondary" className="bg-white text-gray-800 shadow-xl px-4 py-2 text-base">
                 Sin Stock
               </Badge>
@@ -258,16 +267,28 @@ export default function ProductCard({
           </div>
 
           {/* Name */}
-          <Link href={`/productos/${id}`} className="block group/link">
-            <h3 className="font-bold text-lg text-text-primary line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight">
-              {name}
-            </h3>
-          </Link>
+          <div className="space-y-3">
+            <Link href={`/productos/${id}`} className="block group/link">
+              <h3 
+                className="font-normal text-lg text-text-primary line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight"
+                style={{
+                  fontFamily: 'VELISTA, var(--font-velista), serif',
+                  fontWeight: 'normal',
+                  fontStyle: 'normal'
+                }}
+              >
+                {name}
+              </h3>
+            </Link>
+          </div>
 
           {/* Description */}
-          <p className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
-            {description}
-          </p>
+          <div className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
+            <RichTextDisplay 
+              content={description} 
+              className="text-sm text-text-secondary line-clamp-2 leading-relaxed [&_strong]:font-semibold [&_em]:italic [&_u]:underline [&_p]:m-0 [&_p]:p-0"
+            />
+          </div>
 
           {/* Size */}
           {size && (
@@ -314,8 +335,12 @@ export default function ProductCard({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-9 w-9 p-0 hover:bg-gray-50 rounded-l-lg"
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="h-9 w-9 p-0 hover:bg-gray-50 rounded-l-lg disabled:opacity-50"
+                    onClick={() => {
+                      console.log('Minus clicked, current quantity:', quantity);
+                      setQuantity(Math.max(1, quantity - 1));
+                    }}
+                    disabled={quantity <= 1}
                   >
                     <Minus className="h-4 w-4" />
                   </Button>
@@ -325,23 +350,29 @@ export default function ProductCard({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-9 w-9 p-0 hover:bg-gray-50 rounded-r-lg"
-                    onClick={() => setQuantity(Math.min(stock, quantity + 1))}
+                    className="h-9 w-9 p-0 hover:bg-gray-50 rounded-r-lg disabled:opacity-50"
+                    onClick={() => {
+                      console.log('Plus clicked, current quantity:', quantity, 'stock:', stock);
+                      setQuantity(Math.min(stock, quantity + 1));
+                    }}
+                    disabled={quantity >= stock}
                   >
                     <Plus className="h-4 w-4" />
                   </Button>
                 </div>
                 <Button
                   onClick={handleAddToCart}
+                  disabled={stock === 0}
                   className={cn(
                     "flex-1 font-semibold shadow-md transition-all duration-300",
                     "hover:shadow-lg hover:scale-105 active:scale-95",
+                    "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100",
                     theme.button
                   )}
                   size="sm"
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
-                  Agregar
+                  {stock > 0 ? 'Agregar' : 'Sin Stock'}
                 </Button>
               </div>
             )}
@@ -356,6 +387,7 @@ export default function ProductCard({
                 Sin Stock
               </Button>
             )}
+            
           </div>
         </CardContent>
       </div>

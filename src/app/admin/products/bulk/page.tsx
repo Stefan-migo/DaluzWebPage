@@ -110,6 +110,7 @@ export default function BulkOperationsPage() {
   const [showImportDialog, setShowImportDialog] = useState(false);
   const [importMode, setImportMode] = useState('create');
   const [importResults, setImportResults] = useState<ImportResult | null>(null);
+  const [isDeleteDialog, setIsDeleteDialog] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -200,6 +201,7 @@ export default function BulkOperationsPage() {
       
       toast.success(`Operación completada: ${result.affected_count} productos afectados`);
       setShowBulkDialog(false);
+      setIsDeleteDialog(false);
       setSelectedProducts([]);
       setBulkOperation('');
       setBulkUpdates({});
@@ -397,6 +399,46 @@ export default function BulkOperationsPage() {
           </div>
         );
 
+      case 'delete':
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <AlertTriangle className="h-5 w-5 text-red-600" />
+              <div>
+                <p className="font-medium text-red-800">Confirmar eliminación suave</p>
+                <p className="text-sm text-red-600">
+                  Los {selectedProducts.length} productos seleccionados serán archivados (eliminación suave).
+                  Esta acción se puede deshacer cambiando el estado a "Activo".
+                </p>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'hard_delete':
+        return (
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2 p-4 bg-red-100 border border-red-300 rounded-lg">
+              <AlertTriangle className="h-5 w-5 text-red-700" />
+              <div>
+                <p className="font-medium text-red-900">⚠️ ELIMINACIÓN PERMANENTE</p>
+                <p className="text-sm text-red-700 font-medium">
+                  Los {selectedProducts.length} productos seleccionados serán ELIMINADOS PERMANENTEMENTE de la base de datos.
+                </p>
+                <p className="text-sm text-red-600 mt-2">
+                  ⚠️ Esta acción NO se puede deshacer. Todos los datos del producto se perderán para siempre.
+                </p>
+              </div>
+            </div>
+            <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+              <p className="text-sm text-yellow-800">
+                <strong>Recomendación:</strong> Considera usar "Eliminación suave" (archivar) en su lugar, 
+                que permite recuperar los productos si es necesario.
+              </p>
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
@@ -545,56 +587,101 @@ export default function BulkOperationsPage() {
                 </Button>
               </div>
               
-              <Dialog open={showBulkDialog} onOpenChange={setShowBulkDialog}>
-                <DialogTrigger asChild>
-                  <Button>
-                    <Edit className="h-4 w-4 mr-2" />
-                    Operaciones Masivas
-                  </Button>
-                </DialogTrigger>
+              <div className="flex space-x-2">
+                <Button
+                  variant="destructive"
+                  onClick={() => {
+                    setBulkOperation('delete');
+                    setIsDeleteDialog(true);
+                    setShowBulkDialog(true);
+                  }}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Eliminar
+                </Button>
+                
+                <Dialog open={showBulkDialog} onOpenChange={(open) => {
+                  setShowBulkDialog(open);
+                  if (!open) {
+                    setIsDeleteDialog(false);
+                    setBulkOperation('');
+                    setBulkUpdates({});
+                  }
+                }}>
+                  <DialogTrigger asChild>
+                    <Button onClick={() => {
+                      setIsDeleteDialog(false);
+                      setBulkOperation('');
+                      setBulkUpdates({});
+                    }}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Operaciones Masivas
+                    </Button>
+                  </DialogTrigger>
                 <DialogContent>
                   <DialogHeader>
-                    <DialogTitle>Operación Masiva</DialogTitle>
+                    <DialogTitle>
+                      {bulkOperation === 'delete' ? 'Archivar Productos' : 
+                       bulkOperation === 'hard_delete' ? '⚠️ Eliminar Permanentemente' : 
+                       'Operación Masiva'}
+                    </DialogTitle>
                     <DialogDescription>
-                      Aplicar cambios a {selectedProducts.length} productos seleccionados
+                      {bulkOperation === 'delete' 
+                        ? `Archivar ${selectedProducts.length} productos seleccionados`
+                        : bulkOperation === 'hard_delete'
+                        ? `ELIMINAR PERMANENTEMENTE ${selectedProducts.length} productos seleccionados`
+                        : `Aplicar cambios a ${selectedProducts.length} productos seleccionados`
+                      }
                     </DialogDescription>
                   </DialogHeader>
                   
                   <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="operation">Operación</Label>
-                      <Select value={bulkOperation} onValueChange={setBulkOperation}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar operación" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="update_status">Cambiar Estado</SelectItem>
-                          <SelectItem value="update_category">Cambiar Categoría</SelectItem>
-                          <SelectItem value="update_pricing">Ajustar Precios</SelectItem>
-                          <SelectItem value="update_inventory">Ajustar Inventario</SelectItem>
-                          <SelectItem value="duplicate">Duplicar Productos</SelectItem>
-                          <SelectItem value="delete">Archivar Productos</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+                    {!isDeleteDialog && (
+                      <div>
+                        <Label htmlFor="operation">Operación</Label>
+                        <Select value={bulkOperation} onValueChange={setBulkOperation}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Seleccionar operación" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="update_status">Cambiar Estado</SelectItem>
+                            <SelectItem value="update_category">Cambiar Categoría</SelectItem>
+                            <SelectItem value="update_pricing">Ajustar Precios</SelectItem>
+                            <SelectItem value="update_inventory">Ajustar Inventario</SelectItem>
+                            <SelectItem value="duplicate">Duplicar Productos</SelectItem>
+                            <SelectItem value="delete">Archivar Productos (Eliminación Suave)</SelectItem>
+                            <SelectItem value="hard_delete" className="text-red-600 font-medium">⚠️ Eliminar Permanentemente</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    )}
                     
                     {bulkOperation && renderBulkOperationForm()}
                   </div>
                   
                   <DialogFooter>
-                    <Button variant="outline" onClick={() => setShowBulkDialog(false)}>
+                    <Button variant="outline" onClick={() => {
+                      setShowBulkDialog(false);
+                      setIsDeleteDialog(false);
+                      setBulkOperation('');
+                      setBulkUpdates({});
+                    }}>
                       Cancelar
                     </Button>
                     <Button 
                       onClick={handleBulkOperation} 
                       disabled={processing || !bulkOperation}
+                      variant={bulkOperation === 'delete' || bulkOperation === 'hard_delete' ? 'destructive' : 'default'}
                     >
                       {processing && <RefreshCw className="h-4 w-4 mr-2 animate-spin" />}
-                      Aplicar Cambios
+                      {bulkOperation === 'delete' ? 'Archivar Productos' : 
+                       bulkOperation === 'hard_delete' ? '⚠️ ELIMINAR PERMANENTEMENTE' : 
+                       'Aplicar Cambios'}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
               </Dialog>
+              </div>
             </div>
           </CardContent>
         </Card>

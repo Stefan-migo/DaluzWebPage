@@ -275,14 +275,11 @@ export default function Header() {
                             </Link>
                           </NavigationMenuLink>
                        </li>
-                       <ListItem href="/servicios/sesiones-individuales" title="Sesiones Individuales">
+                       <ListItem href="/servicios/sesiones-holisticas" title="Sesiones Holísticas">
                            3 sesiones diferentes
                        </ListItem>
-                       <ListItem href="/servicios/procesos-integrales" title="Procesos integrales">
+                       <ListItem href="/servicios/procesos-integrativos" title="Procesos integrativos">
                            2 procesos diferentes
-                       </ListItem>
-                       <ListItem href="/servicios/programas-ciclicos" title="Programas cíclicos">
-                           7 programas
                        </ListItem>
                       </ul>
                   </NavigationMenuContent>
@@ -636,28 +633,20 @@ export default function Header() {
                             Servicios Holísticos
                           </Link>
                           <Link
-                            href="/servicios/sesiones-individuales"
+                            href="/servicios/sesiones-holisticas"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Sesiones Individuales
+                            Sesiones Holísticas
                           </Link>
                           <Link
-                            href="/servicios/procesos-integrales"
-                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
-                            style={{ color: '#1C1B1A' }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                            Procesos Integrales
-                    </Link>
-                          <Link
-                            href="/servicios/programas-ciclicos"
+                            href="/servicios/procesos-integrativos"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Programas Cíclicos
+                            Procesos Integrativos
                           </Link>
                         </div>
                       </div>

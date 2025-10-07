@@ -201,23 +201,27 @@ export default async function HomePage() {
           {/* Enhanced CTA Section */}
           <div className="space-y-8">
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Button
-                className="group relative px-10 py-4 text-lg font-semibold glass-card text-white hover:bg-white hover:text-gray-900 transition-all duration-500 transform hover:scale-105"
-                style={{ borderRadius: '50px' }}
-              >
-                <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                Descubre Nuestras Alkimyas
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-              </Button>
+              <Link href="/productos">
+                <Button
+                  className="group relative px-10 py-4 text-lg font-semibold glass-card text-white hover:bg-white hover:text-gray-900 transition-all duration-500 transform hover:scale-105"
+                  style={{ borderRadius: '50px' }}
+                >
+                  <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                  Descubre Nuestras Alkimyas
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </Link>
 
-              <Button
-                variant="ghost"
-                className="group px-8 py-4 text-lg font-medium text-white border-2 border-white/40 hover:bg-white glass-card transition-all duration-500"
-                style={{ borderRadius: '50px' }}
-              >
-                <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                Conoce Nuestra Historia
-              </Button>
+              <Link href="/nuestra-historia">
+                <Button
+                  variant="ghost"
+                  className="group px-8 py-4 text-lg font-medium text-white border-2 border-white/40 hover:bg-white glass-card transition-all duration-500"
+                  style={{ borderRadius: '50px' }}
+                >
+                  <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                  Conoce Nuestra Historia
+                </Button>
+              </Link>
             </div>
 
           </div>
@@ -315,11 +319,13 @@ export default async function HomePage() {
 
                 {/* Enhanced CTA with responsive sizing */}
                 <div className="pt-4 lg:pt-6">
-                  <Button
-                    className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto"
-                  >
-                    Explora Nuestra Filosofía
-                  </Button>
+                  <Link href="/nuestra-filosofia">
+                    <Button
+                      className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto"
+                    >
+                      Explora Nuestra Filosofía
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -377,13 +383,17 @@ export default async function HomePage() {
                 </ul>
 
                 {/* CTA */}
-                <Button
-                  variant="ghost"
-                  className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
-                >
-                  Descubrí nuestras Alkimyas.
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                </Button>
+                <div className="flex justify-center mt-6">
+                  <Link href="/productos">
+                    <Button
+                      variant="ghost"
+                      className="group/btn text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                    >
+                      Descubrí nuestras Alkimyas.
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -409,13 +419,17 @@ export default async function HomePage() {
                 </ul>
 
                 {/* CTA */}
-                <Button
-                  variant="ghost"
-                  className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
-                >
-                  ¡Conoce nuestras propuestas!
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                </Button>
+                <div className="flex justify-center mt-6">
+                  <Link href="/servicios/sesiones-holisticas">
+                    <Button
+                      variant="ghost"
+                      className="group/btn text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                    >
+                      ¡Conoce nuestras propuestas!
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -442,13 +456,17 @@ export default async function HomePage() {
                 </ul>
 
                 {/* CTA */}
-                <Button
-                  variant="ghost"
-                  className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
-                >
-                  Descubrí nuestros procesos 
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                </Button>
+                <div className="flex justify-center mt-6">
+                  <Link href="/servicios/procesos-integrativos">
+                    <Button
+                      variant="ghost"
+                      className="group/btn text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                    >
+                      Descubrí nuestros procesos 
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
 
@@ -475,13 +493,17 @@ export default async function HomePage() {
                 </ul>
 
                 {/* CTA */}
-                <Button
-                  variant="ghost"
-                  className="group/btn mt-6 text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
-                >
-                  Sé parte del Ritual
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                </Button>
+                <div className="flex justify-center mt-6">
+                  <Link href="/membresia">
+                    <Button
+                      variant="ghost"
+                      className="group/btn text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300"
+                    >
+                      Sé parte del Ritual
+                      <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -662,11 +684,13 @@ export default async function HomePage() {
 
             {/* Enhanced CTA */}
             <div className="pt-8 text-center">
-              <Button className="group btn-enhanced px-12 py-4 text-lg text-white font-semibold rounded-full">
-                <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
-                Explora Productos
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-              </Button>
+              <Link href="/alkimya">
+                <Button className="group btn-enhanced px-12 py-4 text-lg text-white font-semibold rounded-full">
+                  <Sparkles className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform duration-300" />
+                  Conocé Alkimya
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -837,7 +861,7 @@ export default async function HomePage() {
       >
         {/* Background Texture */}
         <div
-          className="absolute inset-0 bg-fit bg-center bg-no-repeat opacity-30"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           style={{
             backgroundImage: "url('/images/textures/texture-jade-forest.jpg')",
             filter: "brightness(0.8)"
@@ -902,7 +926,7 @@ export default async function HomePage() {
       >
         {/* Background Texture */}
         <div
-          className="absolute inset-0 bg-fit bg-center bg-no-repeat opacity-30"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           style={{
             backgroundImage: "url('/images/textures/texture-utopica-golden.jpg')",
             filter: "brightness(0.8)"
@@ -967,7 +991,7 @@ export default async function HomePage() {
       >
         {/* Background Texture */}
         <div
-          className="absolute inset-0 bg-fit bg-center bg-no-repeat opacity-30"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-30"
           style={{
             backgroundImage: "url('/images/textures/texture-alma-terra-earth.jpg')",
             filter: "brightness(0.8)"
@@ -1125,23 +1149,24 @@ export default async function HomePage() {
 
           {/* Horizontally centered button relative to screen width */}
           <div className="flex justify-center mt-[5rem] pt-8 lg:pt-12">
-            <Button
-              className="group relative overflow-hidden px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
-              style={{
-                backgroundColor: '#F0EACE',
-                color: '#AE0000',
-                border: '2px solid #AE0000',
-                borderRadius: '0px 15px'
-              }}
-            >
-              <span className="relative z-10">Ver más</span>
-              {/* Hover effect overlay */}
-              <div
-                className="absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
-                style={{ backgroundColor: '#AE0000' }}
-              ></div>
-                Inicia el Proceso que pide tu Alma
-            </Button>
+            <Link href="/servicios/procesos-integrativos">
+              <Button
+                className="group relative overflow-hidden px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                style={{
+                  backgroundColor: '#F0EACE',
+                  color: '#AE0000',
+                  border: '2px solid #AE0000',
+                  borderRadius: '0px 15px'
+                }}
+              >
+                <span className="relative z-10 group-hover:text-white transition-colors duration-300">Inicia el Proceso que pide tu Alma</span>
+                {/* Hover effect overlay */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ backgroundColor: '#AE0000' }}
+                ></div>
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -1248,12 +1273,14 @@ export default async function HomePage() {
 
           {/* Horizontally centered button relative to screen width */}
           <div className="flex justify-center pt-[4rem] lg:pt-12">
-            <Button
-              className="group btn-enhanced pb-[0rem] px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base text-white"
-              style={{ backgroundColor: '#AE0000' }}
-            >
-              Reserva la sesión que necesita tu cuerpo
-            </Button>
+            <Link href="/servicios/sesiones-holisticas">
+              <Button
+                className="group btn-enhanced pb-[0rem] px-6 py-3 lg:px-8 lg:py-4 font-semibold text-sm lg:text-base text-white"
+                style={{ backgroundColor: '#AE0000' }}
+              >
+                Reserva la sesión que necesita tu cuerpo
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -1592,9 +1619,11 @@ export default async function HomePage() {
 
           {/* Enhanced CTA */}
           <div className="text-center mt-12">
-            <Button className="group btn-enhanced py-4 text-lg text-white font-semibold rounded-full">
-              Ver Todos los Artículos
-            </Button>
+            <Link href="/blog">
+              <Button className="group btn-enhanced py-4 text-lg text-white font-semibold rounded-full">
+                Ver Todos los Artículos
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -1634,11 +1663,13 @@ export default async function HomePage() {
               <p className="font-text text-gray-600 max-w-2xl mx-auto">
                 Cada imagen cuenta una historia de transformación, belleza consciente y conexión con la naturaleza.
               </p>
-              <Button className="group btn-enhanced px-8 py-4 text-lg text-white font-semibold rounded-full">
-                <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                Síguenos en Instagram
-                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
-              </Button>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <Button className="group btn-enhanced px-8 py-4 text-lg text-white font-semibold rounded-full">
+                  <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
+                  Síguenos en Instagram
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
+                </Button>
+              </a>
               </div>
           </div>
         </div>

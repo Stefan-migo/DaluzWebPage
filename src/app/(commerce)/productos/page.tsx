@@ -3,20 +3,13 @@
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "@/components/ui/brand/ProductCard";
+import TiendaHero from "@/components/commerce/TiendaHero";
+import TiendaSidebar from "@/components/commerce/TiendaSidebar";
+import FeaturedLineSection from "@/components/commerce/FeaturedLineSection";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useCart } from "@/contexts/CartContext";
-import { Search, SlidersHorizontal, Grid3X3, Grid2X2, Filter, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface Product {
@@ -119,7 +112,7 @@ function ProductsContent() {
         
         if (searchTerm) params.append('search', searchTerm);
         if (selectedCategory) params.append('category', selectedCategory);
-        if (selectedSkinType) params.append('skin_type', selectedSkinType);
+        if (selectedSkinType && selectedSkinType !== 'all') params.append('skin_type', selectedSkinType);
         if (priceRange.min) params.append('min_price', priceRange.min);
         if (priceRange.max) params.append('max_price', priceRange.max);
         if (sortBy) params.append('sort_by', getSortField(sortBy));
@@ -201,277 +194,162 @@ function ProductsContent() {
     setCurrentPage(1);
   };
 
-  const hasActiveFilters = searchTerm || selectedCategory || selectedSkinType || priceRange.min || priceRange.max;
+  const hasActiveFilters = Boolean(searchTerm || selectedCategory || (selectedSkinType && selectedSkinType !== 'all') || priceRange.min || priceRange.max);
 
-  const skinTypes = ['dry', 'oily', 'combination', 'sensitive', 'normal'];
+  const skinTypes = ['seca', 'grasa', 'mixta', 'sensible', 'normal'];
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-azul-profundo mb-2">
-          Nuestros Productos
-        </h1>
-        <p className="text-gray-600">
-          Descubre nuestra línea completa de biocosmética artesanal
-        </p>
-      </div>
+    <div className="min-h-screen overflow-hidden">
+      {/* SVG Background */}
+      <div 
+        className="fixed inset-0 w-full h-full opacity-100 pointer-events-none z-0"
+        style={{
+          backgroundImage: "url('/svg/backgrounds/tienda-background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        }}
+      />
+      {/* Hero Section */}
+      <TiendaHero />
 
-      {/* Search and Controls */}
-      <div className="mb-6 space-y-4">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-            <Input
-              placeholder="Buscar productos..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8 bg-transparent">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar */}
+          <div className="lg:w-80 flex-shrink-0 order-2 lg:order-1">
+            <TiendaSidebar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+              selectedSkinType={selectedSkinType}
+              setSelectedSkinType={setSelectedSkinType}
+              priceRange={priceRange}
+              setPriceRange={setPriceRange}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              gridCols={gridCols}
+              setGridCols={setGridCols}
+              categories={categories}
+              onClearFilters={clearFilters}
+              hasActiveFilters={hasActiveFilters}
             />
           </div>
 
-          {/* Controls */}
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2"
-            >
-              <SlidersHorizontal className="h-4 w-4" />
-              Filtros
-            </Button>
-
-            <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-48">
-                <SelectValue placeholder="Ordenar por" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="featured">Destacados</SelectItem>
-                <SelectItem value="newest">Más recientes</SelectItem>
-                <SelectItem value="price_asc">Precio: menor a mayor</SelectItem>
-                <SelectItem value="price_desc">Precio: mayor a menor</SelectItem>
-                <SelectItem value="name">Nombre A-Z</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="flex border rounded-md">
-              <Button
-                variant={gridCols === 2 ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setGridCols(2)}
-                className="rounded-r-none"
-              >
-                <Grid2X2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={gridCols === 3 ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setGridCols(3)}
-                className="rounded-l-none"
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
+          {/* Main Content Area */}
+          <div className="flex-1 order-1 lg:order-2">
+            {/* Results Info */}
+            <div className="mb-6 flex justify-between items-center">
+              <p className="text-tierra-media">
+                {loading ? 'Cargando...' : pagination.total > 0 ? `${pagination.total} productos encontrados` : ''}
+              </p>
             </div>
-          </div>
-        </div>
 
-        {/* Filters Panel */}
-        {showFilters && (
-          <Card>
-            <CardContent className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {/* Category Filter */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Categoría</label>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Todas las categorías" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Todas las categorías</SelectItem>
-                      {categories.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Skin Type Filter */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Tipo de Piel</label>
-                  <Select value={selectedSkinType} onValueChange={setSelectedSkinType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Todos los tipos" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="">Todos los tipos</SelectItem>
-                      {skinTypes.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type.charAt(0).toUpperCase() + type.slice(1)}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Price Range */}
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Precio mínimo</label>
-                  <Input
-                    type="number"
-                    placeholder="0"
-                    value={priceRange.min}
-                    onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Precio máximo</label>
-                  <Input
-                    type="number"
-                    placeholder="Sin límite"
-                    value={priceRange.max}
-                    onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
-                  />
-                </div>
+            {/* Products Grid */}
+            {loading ? (
+              <div className={`grid gap-6 ${
+                gridCols === 2 
+                  ? 'grid-cols-1 md:grid-cols-2' 
+                  : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+              }`}>
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="h-96 bg-gray-200 animate-pulse rounded-lg" />
+                ))}
               </div>
-
-              {hasActiveFilters && (
-                <div className="mt-4 pt-4 border-t">
-                  <Button variant="outline" onClick={clearFilters} className="flex items-center gap-2">
-                    <X className="h-4 w-4" />
+            ) : products.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-tierra-media mb-4">No se encontraron productos</p>
+                {hasActiveFilters && (
+                  <Button variant="outline" onClick={clearFilters}>
                     Limpiar filtros
                   </Button>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        )}
+                )}
+              </div>
+            ) : (
+              <div className={`grid gap-6 ${
+                gridCols === 2 
+                  ? 'grid-cols-1 md:grid-cols-2' 
+                  : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
+              }`}>
+                {products.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    id={product.id}
+                    name={product.name}
+                    description={product.short_description || product.description}
+                    price={product.price}
+                    originalPrice={product.compare_at_price}
+                    category={product.categories?.name || ''}
+                    imageUrl={product.featured_image}
+                    rating={4.5} // TODO: Implement actual ratings
+                    reviewCount={23} // TODO: Implement actual review counts
+                    isNatural={true}
+                    isNew={false}
+                    isOnSale={!!product.compare_at_price}
+                    stock={product.inventory_quantity}
+                    size={product.product_variants?.find(v => v.is_default)?.option1}
+                    onAddToCart={handleAddToCart}
+                    variant="elegant"
+                  />
+                ))}
+              </div>
+            )}
 
-        {/* Active Filters */}
-        {hasActiveFilters && (
-          <div className="flex flex-wrap gap-2">
-            {searchTerm && (
-              <Badge variant="secondary">
-                Búsqueda: {searchTerm}
-                <button onClick={() => setSearchTerm('')} className="ml-1">×</button>
-              </Badge>
-            )}
-            {selectedCategory && (
-              <Badge variant="secondary">
-                Categoría: {categories.find(c => c.id === selectedCategory)?.name}
-                <button onClick={() => setSelectedCategory('')} className="ml-1">×</button>
-              </Badge>
-            )}
-            {selectedSkinType && (
-              <Badge variant="secondary">
-                Tipo de piel: {selectedSkinType}
-                <button onClick={() => setSelectedSkinType('')} className="ml-1">×</button>
-              </Badge>
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="mt-12 flex justify-center gap-2">
+                <Button
+                  variant="outline"
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage(currentPage - 1)}
+                >
+                  Anterior
+                </Button>
+                
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  let page;
+                  if (pagination.totalPages <= 5) {
+                    page = i + 1;
+                  } else if (currentPage <= 3) {
+                    page = i + 1;
+                  } else if (currentPage >= pagination.totalPages - 2) {
+                    page = pagination.totalPages - 4 + i;
+                  } else {
+                    page = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  );
+                })}
+
+                <Button
+                  variant="outline"
+                  disabled={currentPage === pagination.totalPages}
+                  onClick={() => setCurrentPage(currentPage + 1)}
+                >
+                  Siguiente
+                </Button>
+              </div>
             )}
           </div>
-        )}
+        </div>
       </div>
 
-      {/* Results Info */}
-      <div className="mb-6 flex justify-between items-center">
-        <p className="text-gray-600">
-          {loading ? 'Cargando...' : `${pagination.total} productos encontrados`}
-        </p>
-      </div>
+      {/* Divider */}
+      <Separator className="my-8" />
 
-      {/* Products Grid */}
-      {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-96 bg-gray-200 animate-pulse rounded-lg" />
-          ))}
-        </div>
-      ) : products.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">No se encontraron productos</p>
-          {hasActiveFilters && (
-            <Button variant="outline" onClick={clearFilters}>
-              Limpiar filtros
-            </Button>
-          )}
-        </div>
-      ) : (
-        <div className={`grid gap-6 ${
-          gridCols === 2 
-            ? 'grid-cols-1 md:grid-cols-2' 
-            : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-        }`}>
-          {products.map((product) => (
-            <ProductCard
-              key={product.id}
-              id={product.id}
-              name={product.name}
-              description={product.short_description || product.description}
-              price={product.price}
-              originalPrice={product.compare_at_price}
-              category={product.categories?.name || ''}
-              imageUrl={product.featured_image}
-              rating={4.5} // TODO: Implement actual ratings
-              reviewCount={23} // TODO: Implement actual review counts
-              isNatural={true}
-              isNew={false}
-              isOnSale={!!product.compare_at_price}
-              stock={product.inventory_quantity}
-              size={product.product_variants?.find(v => v.is_default)?.option1}
-              onAddToCart={handleAddToCart}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* Pagination */}
-      {pagination.totalPages > 1 && (
-        <div className="mt-12 flex justify-center gap-2">
-          <Button
-            variant="outline"
-            disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-          >
-            Anterior
-          </Button>
-          
-          {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-            let page;
-            if (pagination.totalPages <= 5) {
-              page = i + 1;
-            } else if (currentPage <= 3) {
-              page = i + 1;
-            } else if (currentPage >= pagination.totalPages - 2) {
-              page = pagination.totalPages - 4 + i;
-            } else {
-              page = currentPage - 2 + i;
-            }
-
-            return (
-              <Button
-                key={page}
-                variant={currentPage === page ? "default" : "outline"}
-                onClick={() => setCurrentPage(page)}
-              >
-                {page}
-              </Button>
-            );
-          })}
-
-          <Button
-            variant="outline"
-            disabled={currentPage === pagination.totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-          >
-            Siguiente
-          </Button>
-        </div>
-      )}
+      {/* Featured Line Section */}
+      <FeaturedLineSection />
     </div>
+
   );
 }
 

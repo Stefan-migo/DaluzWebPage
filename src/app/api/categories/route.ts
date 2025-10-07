@@ -1,50 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase';
 
-export async function GET(request: NextRequest) {
+// GET - Fetch all categories
+export async function GET() {
   try {
-    const supabase = await createClient();
-    const { searchParams } = new URL(request.url);
+    const supabase = createServiceRoleClient();
     
-    const includeProducts = searchParams.get('include_products') === 'true';
-    const parentId = searchParams.get('parent_id');
-
-    let query = supabase
+    const { data: categories, error } = await supabase
       .from('categories')
-      .select(includeProducts ? `
-        *,
-        products!inner (
-          id,
-          name,
-          slug,
-          price,
-          featured_image,
-          is_featured
-        )
-      ` : '*')
-      .eq('is_active', true)
-      .order('sort_order');
-
-    // Filter by parent category if specified
-    if (parentId) {
-      query = query.eq('parent_id', parentId);
-    } else if (parentId === null) {
-      query = query.is('parent_id', null);
-    }
-
-    const { data: categories, error } = await query;
+      .select('*')
+      .order('name', { ascending: true });
 
     if (error) {
-      console.error('Error fetching categories:', error);
+      console.error('Database error:', error);
       return NextResponse.json(
         { error: 'Failed to fetch categories' },
         { status: 500 }
       );
     }
 
-    return NextResponse.json({ categories: categories || [] });
+    return NextResponse.json({ categories });
   } catch (error) {
-    console.error('Unexpected error:', error);
+    console.error('API error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -52,10 +29,10 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST method for creating categories
+// POST - Create new category
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const categoryData = await request.json();
 
     // Validate required fields
@@ -82,11 +59,9 @@ export async function POST(request: NextRequest) {
     const category = {
       name: categoryData.name,
       slug: categoryData.slug,
-      description: categoryData.description || '',
-      image_url: categoryData.image_url || '',
-      parent_id: categoryData.parent_id || null,
-      sort_order: categoryData.sort_order || 0,
-      is_active: categoryData.is_active !== false,
+      description: categoryData.description || null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     };
 
     // Insert category
@@ -101,8 +76,14 @@ export async function POST(request: NextRequest) {
       
       // Handle unique constraint violations
       if (error.code === '23505') {
+        if (error.message.includes('slug')) {
+          return NextResponse.json(
+            { error: 'A category with this slug already exists' },
+            { status: 400 }
+          );
+        }
         return NextResponse.json(
-          { error: 'A category with this URL already exists' },
+          { error: 'Category already exists' },
           { status: 400 }
         );
       }
@@ -125,4 +106,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     );
   }
-} 
+}

@@ -16,7 +16,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { X, Plus, Save, ArrowLeft } from "lucide-react";
+import RichTextEditor from "@/components/ui/RichTextEditor";
+import ImageUpload from "@/components/ui/ImageUpload";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { X, Plus, Save, ArrowLeft, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
 interface Category {
@@ -29,6 +39,7 @@ export default function AddProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [showPublishAlert, setShowPublishAlert] = useState(false);
   
   // 🚀 Protected form state with auto data-loss prevention
   const {
@@ -47,6 +58,7 @@ export default function AddProductPage() {
     compare_at_price: '',
     category_id: '',
     featured_image: '',
+    gallery: [] as string[],
     inventory_quantity: '0',
     is_featured: false,
     status: 'active',
@@ -55,12 +67,29 @@ export default function AddProductPage() {
     certifications: [] as string[],
     usage_instructions: '',
     precautions: '',
+    ingredients: [] as Array<{name: string, percentage?: number}>,
+    weight: '',
+    dimensions: '',
+    package_characteristics: '',
   });
 
   // Available options
-  const skinTypes = ['dry', 'oily', 'combination', 'sensitive', 'normal', 'mature'];
+  const skinTypes = [
+    { value: 'dry', label: 'Seco' },
+    { value: 'oily', label: 'Graso' },
+    { value: 'combination', label: 'Mixto' },
+    { value: 'sensitive', label: 'Sensible' },
+    { value: 'normal', label: 'Normal' },
+    { value: 'mature', label: 'Maduro' }
+  ];
   const benefitOptions = ['Hidratante', 'Anti-edad', 'Regenerador', 'Nutritivo', 'Tonificante', 'Equilibrante', 'Refrescante', 'Exfoliante', 'Antibacteriano', 'Relajante', 'Aromático'];
-  const certificationOptions = ['organic', 'cruelty-free', 'vegan', 'natural', 'eco-friendly'];
+  const certificationOptions = [
+    { value: 'organic', label: 'Orgánico' },
+    { value: 'cruelty-free', label: 'Libre de Crueldad' },
+    { value: 'vegan', label: 'Vegano' },
+    { value: 'natural', label: 'Natural' },
+    { value: 'eco-friendly', label: 'Ecológico' }
+  ];
 
   useEffect(() => {
     fetchCategories();
@@ -114,130 +143,41 @@ export default function AddProductPage() {
     });
   };
 
-  const addSampleProducts = async () => {
-    setLoading(true);
-    try {
-      // First ensure we have categories
-      let categoryMap: Record<string, string> = {};
-      
-      // Try to get existing categories
-      const categoriesResponse = await fetch('/api/categories');
-      const categoriesData = await categoriesResponse.json();
-      
-      if (categoriesData.categories?.length === 0) {
-        // Create categories first
-        const categoryCreationPromises = [
-          { name: 'Cremas Faciales', slug: 'cremas-faciales', description: 'Cremas hidratantes y nutritivas para el rostro' },
-          { name: 'Aceites Corporales', slug: 'aceites-corporales', description: 'Aceites esenciales y nutritivos para el cuerpo' },
-          { name: 'Hidrolatos', slug: 'hidrolatos', description: 'Aguas florales purificadoras y tonificantes' },
-          { name: 'Jabones Artesanales', slug: 'jabones-artesanales', description: 'Jabones naturales hechos a mano' },
-          { name: 'Sets y Kits', slug: 'sets-kits', description: 'Combinaciones especiales de productos' }
-        ].map(cat => 
-          fetch('/api/categories', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(cat)
-          })
-        );
-
-        await Promise.all(categoryCreationPromises);
-        
-        // Fetch categories again
-        const newCategoriesResponse = await fetch('/api/categories');
-        const newCategoriesData = await newCategoriesResponse.json();
-        categoriesData.categories = newCategoriesData.categories;
-      }
-
-      // Build category map
-      categoriesData.categories.forEach((cat: Category) => {
-        categoryMap[cat.slug] = cat.id;
-      });
-
-      // Sample products
-      const sampleProducts = [
-        {
-          name: 'Crema Hidratante de Rosa Mosqueta',
-          slug: 'crema-hidratante-rosa-mosqueta',
-          description: 'Crema facial hidratante enriquecida con aceite de rosa mosqueta, perfecta para regenerar y nutrir la piel del rostro. Rica en vitaminas A y E, ayuda a reducir las líneas de expresión y mantener la piel suave y radiante.',
-          short_description: 'Hidratación profunda con aceite de rosa mosqueta',
-          price: 12500.00,
-          compare_at_price: 15000.00,
-          category_id: categoryMap['cremas-faciales'],
-          featured_image: 'https://images.unsplash.com/photo-1571875257727-256c39da42af?w=400&h=400&fit=crop',
-          skin_type: ['dry', 'mature', 'sensitive'],
-          benefits: ['Hidratante', 'Anti-edad', 'Regenerador', 'Nutritivo'],
-          usage_instructions: 'Aplicar sobre rostro limpio, mañana y noche. Masajear suavemente hasta absorción completa.',
-          precautions: 'Solo para uso externo. Evitar contacto con los ojos.',
-          certifications: ['organic', 'cruelty-free'],
-          inventory_quantity: 45,
-          is_featured: true
-        },
-        {
-          name: 'Aceite Corporal de Lavanda',
-          slug: 'aceite-corporal-lavanda',
-          description: 'Aceite corporal relajante con esencia pura de lavanda. Ideal para masajes e hidratación profunda de la piel. Sus propiedades aromáticas ayudan a reducir el estrés y promover la relajación.',
-          short_description: 'Relajación y suavidad con lavanda pura',
-          price: 8900.00,
-          category_id: categoryMap['aceites-corporales'],
-          featured_image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=400&h=400&fit=crop',
-          skin_type: ['dry', 'normal', 'sensitive'],
-          benefits: ['Hidratante', 'Relajante', 'Aromático', 'Nutritivo'],
-          usage_instructions: 'Aplicar sobre piel húmeda después del baño. Masajear suavemente por todo el cuerpo.',
-          precautions: 'Solo para uso externo. Evitar contacto con los ojos.',
-          certifications: ['organic', 'cruelty-free'],
-          inventory_quantity: 52,
-          is_featured: false
-        },
-        {
-          name: 'Hidrolato de Rosas',
-          slug: 'hidrolato-rosas',
-          description: 'Agua floral de rosas destilada, perfecta como tónico facial y spray refrescante. Equilibra el pH de la piel, cierra los poros y proporciona hidratación instantánea.',
-          short_description: 'Tónico natural equilibrante y refrescante',
-          price: 6700.00,
-          category_id: categoryMap['hidrolatos'],
-          featured_image: 'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400&h=400&fit=crop',
-          skin_type: ['oily', 'combination', 'normal', 'sensitive'],
-          benefits: ['Tonificante', 'Equilibrante', 'Refrescante', 'Hidratante'],
-          usage_instructions: 'Aplicar con algodón sobre rostro limpio o usar como spray. Usar mañana y noche.',
-          precautions: 'Solo para uso externo. Evitar contacto con los ojos.',
-          certifications: ['organic', 'cruelty-free'],
-          inventory_quantity: 28,
-          is_featured: false
-        }
-      ];
-
-      // Create products
-      const productPromises = sampleProducts.map(product => 
-        fetch('/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(product)
-        })
-      );
-
-      await Promise.all(productPromises);
-      toast.success('✅ Productos de muestra agregados exitosamente!');
-      
-    } catch (error) {
-      console.error('Error adding sample products:', error);
-      toast.error('Error al agregar productos de muestra');
-    } finally {
-      setLoading(false);
-    }
+  const addIngredient = () => {
+    updateFormData({
+      ingredients: [...formData.ingredients, { name: '', percentage: undefined }]
+    });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const removeIngredient = (index: number) => {
+    updateFormData({
+      ingredients: formData.ingredients.filter((_, i) => i !== index)
+    });
+  };
+
+  const updateIngredient = (index: number, field: 'name' | 'percentage', value: string | number) => {
+    const updatedIngredients = [...formData.ingredients];
+    updatedIngredients[index] = {
+      ...updatedIngredients[index],
+      [field]: value
+    };
+    updateFormData({ ingredients: updatedIngredients });
+  };
+
+
+  const handleSubmit = async (e?: React.FormEvent, status: string = 'active') => {
+    if (e && e.preventDefault) e.preventDefault();
     setLoading(true);
     markAsSaving(); // 🚀 Allow navigation during save process
 
     try {
       const productData = {
         ...formData,
+        status: status,
         price: parseFloat(formData.price),
         compare_at_price: formData.compare_at_price ? parseFloat(formData.compare_at_price) : null,
         inventory_quantity: parseInt(formData.inventory_quantity),
-        published_at: new Date().toISOString()
+        published_at: status === 'active' ? new Date().toISOString() : null
       };
 
       const response = await fetch('/api/products', {
@@ -287,24 +227,6 @@ export default function AddProductPage() {
         </div>
       </div>
 
-      {/* Quick Actions */}
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Acciones Rápidas</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Button
-            onClick={addSampleProducts}
-            disabled={loading}
-            className="w-full mb-4"
-          >
-            {loading ? 'Agregando...' : '🌿 Agregar Productos de Muestra'}
-          </Button>
-          <p className="text-sm text-gray-600">
-            Esto agregará 3 productos de ejemplo para que puedas probar la tienda inmediatamente.
-          </p>
-        </CardContent>
-      </Card>
 
       {/* Product Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -337,10 +259,9 @@ export default function AddProductPage() {
 
             <div>
               <Label htmlFor="short_description">Descripción Corta</Label>
-              <Textarea
-                id="short_description"
+              <RichTextEditor
                 value={formData.short_description}
-                onChange={(e) => handleInputChange('short_description', e.target.value)}
+                onChange={(value) => handleInputChange('short_description', value)}
                 placeholder="Descripción breve para listados"
                 rows={2}
               />
@@ -348,10 +269,9 @@ export default function AddProductPage() {
 
             <div>
               <Label htmlFor="description">Descripción Detallada</Label>
-              <Textarea
-                id="description"
+              <RichTextEditor
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                onChange={(value) => handleInputChange('description', value)}
                 placeholder="Descripción completa del producto"
                 rows={4}
               />
@@ -404,10 +324,9 @@ export default function AddProductPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Categoría e Imagen</CardTitle>
+            <CardTitle>Categoría</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="category">Categoría</Label>
                 <Select value={formData.category_id} onValueChange={(value) => handleInputChange('category_id', value)}>
@@ -423,14 +342,59 @@ export default function AddProductPage() {
                   </SelectContent>
                 </Select>
               </div>
-              <div>
-                <Label htmlFor="featured_image">URL de Imagen Principal</Label>
-                <Input
-                  id="featured_image"
-                  value={formData.featured_image}
-                  onChange={(e) => handleInputChange('featured_image', e.target.value)}
-                  placeholder="https://ejemplo.com/imagen.jpg"
-                />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Imágenes del Producto</CardTitle>
+            <p className="text-sm text-gray-600">Sube imágenes para el producto (máximo 5 imágenes)</p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <Label htmlFor="featured_image">Imagen Principal</Label>
+              <ImageUpload
+                value={formData.featured_image}
+                onChange={(url) => handleInputChange('featured_image', url)}
+                placeholder="Seleccionar imagen principal del producto"
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="gallery">Galería de Imágenes</Label>
+              <p className="text-sm text-gray-500 mb-3">
+                Puedes subir hasta 4 imágenes adicionales (máximo 5 en total)
+              </p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {Array.from({ length: 4 }, (_, index) => (
+                  <div key={index} className="relative">
+                    <ImageUpload
+                      value={formData.gallery[index] || ''}
+                      onChange={(url) => {
+                        const newGallery = [...formData.gallery];
+                        newGallery[index] = url;
+                        handleInputChange('gallery', newGallery);
+                      }}
+                      placeholder={`Imagen ${index + 2}`}
+                    />
+                    {formData.gallery[index] && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute -top-2 -right-2 h-6 w-6 p-0"
+                        onClick={() => {
+                          const newGallery = [...formData.gallery];
+                          newGallery[index] = '';
+                          handleInputChange('gallery', newGallery);
+                        }}
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </CardContent>
@@ -445,21 +409,24 @@ export default function AddProductPage() {
             <div>
               <Label>Tipos de Piel</Label>
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.skin_type.map((type) => (
+                {formData.skin_type.map((type) => {
+                  const skinTypeLabel = skinTypes.find(st => st.value === type)?.label || type;
+                  return (
                   <Badge key={type} variant="secondary" className="flex items-center gap-1">
-                    {type}
+                      {skinTypeLabel}
                     <X className="h-3 w-3 cursor-pointer" onClick={() => removeFromArray('skin_type', type)} />
                   </Badge>
-                ))}
+                  );
+                })}
               </div>
               <Select onValueChange={(value) => addToArray('skin_type', value)}>
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Agregar tipo de piel" />
                 </SelectTrigger>
                 <SelectContent>
-                  {skinTypes.filter(type => !formData.skin_type.includes(type)).map((type) => (
-                    <SelectItem key={type} value={type}>
-                      {type}
+                  {skinTypes.filter(type => !formData.skin_type.includes(type.value)).map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -495,25 +462,69 @@ export default function AddProductPage() {
             <div>
               <Label>Certificaciones</Label>
               <div className="flex flex-wrap gap-2 mt-2">
-                {formData.certifications.map((cert) => (
+                {formData.certifications.map((cert) => {
+                  const certLabel = certificationOptions.find(co => co.value === cert)?.label || cert;
+                  return (
                   <Badge key={cert} variant="secondary" className="flex items-center gap-1">
-                    {cert}
+                      {certLabel}
                     <X className="h-3 w-3 cursor-pointer" onClick={() => removeFromArray('certifications', cert)} />
                   </Badge>
-                ))}
+                  );
+                })}
               </div>
               <Select onValueChange={(value) => addToArray('certifications', value)}>
                 <SelectTrigger className="mt-2">
                   <SelectValue placeholder="Agregar certificación" />
                 </SelectTrigger>
                 <SelectContent>
-                  {certificationOptions.filter(cert => !formData.certifications.includes(cert)).map((cert) => (
-                    <SelectItem key={cert} value={cert}>
-                      {cert}
+                  {certificationOptions.filter(cert => !formData.certifications.includes(cert.value)).map((cert) => (
+                    <SelectItem key={cert.value} value={cert.value}>
+                      {cert.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+
+            {/* Ingredients */}
+            <div>
+              <Label>Ingredientes</Label>
+              <div className="space-y-3 mt-2">
+                {formData.ingredients.map((ingredient, index) => (
+                  <div key={index} className="flex gap-2 items-center">
+                    <Input
+                      placeholder="Nombre del ingrediente"
+                      value={ingredient.name}
+                      onChange={(e) => updateIngredient(index, 'name', e.target.value)}
+                      className="flex-1"
+                    />
+                    <Input
+                      type="number"
+                      placeholder="%"
+                      value={ingredient.percentage || ''}
+                      onChange={(e) => updateIngredient(index, 'percentage', parseFloat(e.target.value) || undefined)}
+                      className="w-20"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => removeIngredient(index)}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={addIngredient}
+                  className="w-full"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Agregar Ingrediente
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -525,22 +536,61 @@ export default function AddProductPage() {
           <CardContent className="space-y-4">
             <div>
               <Label htmlFor="usage_instructions">Instrucciones de Uso</Label>
-              <Textarea
-                id="usage_instructions"
+              <RichTextEditor
                 value={formData.usage_instructions}
-                onChange={(e) => handleInputChange('usage_instructions', e.target.value)}
+                onChange={(value) => handleInputChange('usage_instructions', value)}
                 placeholder="Cómo usar el producto"
                 rows={3}
               />
             </div>
             <div>
               <Label htmlFor="precautions">Precauciones</Label>
-              <Textarea
-                id="precautions"
+              <RichTextEditor
                 value={formData.precautions}
-                onChange={(e) => handleInputChange('precautions', e.target.value)}
+                onChange={(value) => handleInputChange('precautions', value)}
                 placeholder="Advertencias y precauciones"
                 rows={2}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Physical Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Detalles Físicos</CardTitle>
+            <p className="text-sm text-gray-600">Información sobre peso, dimensiones y características del empaque</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="weight">Peso (gramos)</Label>
+                <Input
+                  id="weight"
+                  type="number"
+                  value={formData.weight}
+                  onChange={(e) => handleInputChange('weight', e.target.value)}
+                  placeholder="Ej: 500"
+                />
+              </div>
+              <div>
+                <Label htmlFor="dimensions">Dimensiones</Label>
+                <Input
+                  id="dimensions"
+                  value={formData.dimensions}
+                  onChange={(e) => handleInputChange('dimensions', e.target.value)}
+                  placeholder="Ej: 15x10x5 cm"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <Label htmlFor="package_characteristics">Características del Empaque</Label>
+              <RichTextEditor
+                value={formData.package_characteristics}
+                onChange={(value) => handleInputChange('package_characteristics', value)}
+                placeholder="Describe las características específicas del empaque, materiales, diseño, etc."
+                rows={3}
               />
             </div>
           </CardContent>
@@ -550,12 +600,86 @@ export default function AddProductPage() {
           <Button type="button" variant="outline" onClick={() => router.back()}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={loading} className="flex items-center gap-2">
+          <Button 
+            type="button" 
+            variant="secondary" 
+            disabled={loading}
+            onClick={() => handleSubmit({ status: 'draft' })}
+            className="flex items-center gap-2"
+          >
+            <Save className="h-4 w-4" />
+            {loading ? 'Guardando...' : 'Guardar como Borrador'}
+          </Button>
+          <Button 
+            type="button" 
+            disabled={loading} 
+            onClick={() => setShowPublishAlert(true)}
+            className="flex items-center gap-2"
+          >
             <Save className="h-4 w-4" />
             {loading ? 'Guardando...' : 'Guardar Producto'}
           </Button>
         </div>
       </form>
+
+      {/* Publish Alert Dialog */}
+      <Dialog open={showPublishAlert} onOpenChange={setShowPublishAlert}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-600" />
+              Confirmar Publicación
+            </DialogTitle>
+            <DialogDescription>
+              <div className="space-y-3">
+                <p>
+                  <strong>¿Estás seguro de que deseas publicar este producto?</strong>
+                </p>
+                <p>
+                  Al hacer clic en "Publicar", el producto será publicado inmediatamente y estará visible para los clientes.
+                </p>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                  <p className="text-amber-800 font-medium">
+                    ⚠️ Recomendación de Seguridad:
+                  </p>
+                  <p className="text-amber-700 text-sm mt-1">
+                    Te recomendamos guardar primero como "Borrador" para revisar todos los detalles, 
+                    especialmente los precios, antes de publicar el producto.
+                  </p>
+                </div>
+                <p className="text-sm text-gray-600">
+                  ¿Has verificado que todos los precios y detalles son correctos?
+                </p>
+              </div>
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button 
+              variant="outline" 
+              onClick={() => setShowPublishAlert(false)}
+              disabled={loading}
+            >
+              Cancelar
+            </Button>
+            <Button 
+              variant="secondary" 
+              onClick={() => handleSubmit(undefined, 'draft')}
+              disabled={loading}
+            >
+              Guardar como Borrador
+            </Button>
+            <Button 
+              onClick={() => {
+                setShowPublishAlert(false);
+                handleSubmit(undefined, 'active');
+              }}
+              disabled={loading}
+            >
+              {loading ? 'Publicando...' : 'Sí, Publicar Producto'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 } 

@@ -8,10 +8,10 @@ interface CommerceLayoutProps {
 
 export default function CommerceLayout({ children }: CommerceLayoutProps) {
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <main className="flex-grow">{children}</main>
-      <Footer />
+    <div className="flex flex-col min-h-screen">  
+        <Header />
+        <main className="flex-grow">{children}</main>
+        <Footer />
     </div>
   );
 } 

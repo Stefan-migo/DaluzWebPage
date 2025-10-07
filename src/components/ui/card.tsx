@@ -35,7 +35,7 @@ const cardVariants = cva(
         // Elegant Sophisticated Variants
         elegant: "border-gradient bg-gradient-to-br from-bg-cream via-bg-light to-bg-cream shadow-alkimya-lg hover:shadow-alkimya-xl hover:-translate-y-2 hover:scale-[1.02] active:scale-100 active:translate-y-0",
         glass: "border-border/20 bg-white/10 backdrop-blur-md shadow-soft hover:bg-white/20 hover:shadow-medium",
-        artisanal: "border-brand-primary/30 bg-bg-cream shadow-soft hover:shadow-alkimya hover:-translate-y-1 relative overflow-hidden before:absolute before:inset-0 before:bg-hero-pattern",
+        artisanal: "border-brand-primary/30 bg-bg-cream shadow-soft hover:shadow-alkimya hover:-translate-y-1 relative overflow-hidden before:absolute before:inset-0 before:bg-hero-pattern before:pointer-events-none",
       },
       padding: {
         none: "",

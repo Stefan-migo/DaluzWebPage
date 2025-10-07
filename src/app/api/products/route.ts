@@ -19,6 +19,8 @@ export async function GET(request: NextRequest) {
     const maxPrice = searchParams.get('max_price');
     const featured = searchParams.get('featured');
     const inStock = searchParams.get('in_stock');
+    const status = searchParams.get('status'); // For admin use
+    const includeArchived = searchParams.get('include_archived') === 'true'; // For admin use
 
     // Sort
     const sortBy = searchParams.get('sort_by') || 'created_at';
@@ -44,8 +46,7 @@ export async function GET(request: NextRequest) {
           option3,
           is_default
         )
-      `)
-      .eq('status', 'active');
+      `);
 
     // Apply filters
     if (category) {
@@ -74,6 +75,14 @@ export async function GET(request: NextRequest) {
 
     if (inStock === 'true') {
       query = query.gt('inventory_quantity', 0);
+    }
+
+    // Status filtering - only show active products for public consumption
+    if (status) {
+      query = query.eq('status', status);
+    } else if (!includeArchived) {
+      // For public consumption, only show active products
+      query = query.eq('status', 'active');
     }
 
     // Apply sorting
@@ -159,6 +168,9 @@ export async function POST(request: NextRequest) {
       precautions: productData.precautions || '',
       certifications: productData.certifications || [],
       ingredients: productData.ingredients || [],
+      weight: productData.weight ? parseFloat(productData.weight) : null,
+      dimensions: productData.dimensions || '',
+      package_characteristics: productData.package_characteristics || '',
       inventory_quantity: parseInt(productData.inventory_quantity) || 0,
       status: productData.status || 'active',
       is_featured: productData.is_featured || false,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createServiceRoleClient } from '@/lib/supabase';
 
 interface Params {
   id: string;
@@ -10,10 +10,25 @@ export async function GET(
   { params }: { params: Params }
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const { id } = params;
+    const { searchParams } = new URL(request.url);
+    const includeArchived = searchParams.get('include_archived') === 'true';
 
-    const { data: product, error } = await supabase
+    // Check if this is an admin request
+    let isAdminRequest = false;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
+        isAdminRequest = isAdmin;
+      }
+    } catch (error) {
+      // If auth check fails, treat as non-admin request
+      console.log('Auth check failed, treating as non-admin request');
+    }
+
+    let query = supabase
       .from('products')
       .select(`
         *,
@@ -39,9 +54,14 @@ export async function GET(
           is_default
         )
       `)
-      .eq('id', id)
-      .eq('status', 'active')
-      .single();
+      .eq('id', id);
+
+    // Only filter by active status for non-admin requests or when not explicitly including archived
+    if (!isAdminRequest && !includeArchived) {
+      query = query.eq('status', 'active');
+    }
+
+    const { data: product, error } = await query.single();
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -72,38 +92,54 @@ export async function PUT(
   { params }: { params: Params }
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const { id } = params;
     const body = await request.json();
 
     // Validate required fields
-    if (!body.name || !body.price || !body.category_id || !body.inventory_quantity) {
+    if (!body.name || !body.price || body.inventory_quantity === undefined || body.inventory_quantity === null) {
       return NextResponse.json(
-        { error: 'Missing required fields: name, price, category_id, inventory_quantity' },
+        { error: 'Missing required fields: name, price, inventory_quantity' },
         { status: 400 }
       );
     }
 
-    // Update the product
+    // Validate category_id if provided (must be valid UUID or null)
+    if (body.category_id && body.category_id !== null && body.category_id !== '') {
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(body.category_id)) {
+        return NextResponse.json(
+          { error: 'Invalid category_id format. Must be a valid UUID or null.' },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Update the product - only include fields that exist in the database
     const { data: product, error } = await supabase
       .from('products')
       .update({
         name: body.name,
+        slug: body.slug,
+        short_description: body.short_description,
         description: body.description,
         price: body.price,
         compare_at_price: body.compare_at_price,
-        category_id: body.category_id,
+        category_id: body.category_id && body.category_id !== '' ? body.category_id : null,
         sku: body.sku,
         inventory_quantity: body.inventory_quantity,
         weight: body.weight,
         dimensions: body.dimensions,
-        image_url: body.image_url,
-        skin_types: body.skin_types,
+        package_characteristics: body.package_characteristics,
+        featured_image: body.featured_image,
+        gallery: body.gallery || [],
+        skin_type: body.skin_type,
         benefits: body.benefits,
         certifications: body.certifications,
         ingredients: body.ingredients,
         usage_instructions: body.usage_instructions,
-        featured: body.featured,
+        precautions: body.precautions,
+        is_featured: body.is_featured,
         status: body.status,
         updated_at: new Date().toISOString()
       })
@@ -137,7 +173,7 @@ export async function DELETE(
   { params }: { params: Params }
 ) {
   try {
-    const supabase = await createClient();
+    const supabase = createServiceRoleClient();
     const { id } = params;
 
     // Check if product exists
@@ -161,13 +197,12 @@ export async function DELETE(
       );
     }
 
-    // Soft delete: Update status to 'deleted' instead of hard delete
+    // Soft delete: Update status to 'archived' instead of hard delete
     // This preserves order history and prevents issues with foreign key references
     const { data: product, error } = await supabase
       .from('products')
       .update({
-        status: 'deleted',
-        deleted_at: new Date().toISOString(),
+        status: 'archived',
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
@@ -177,7 +212,7 @@ export async function DELETE(
     if (error) {
       console.error('Error deleting product:', error);
       return NextResponse.json(
-        { error: 'Failed to delete product' },
+        { error: 'Failed to delete product', details: error.message },
         { status: 500 }
       );
     }

@@ -5,6 +5,7 @@ import { ThemeProvider as NextThemeProvider } from '@/components/theme-provider'
 import { ThemeProvider as ProductLineThemeProvider } from '@/contexts/ThemeContext'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CartProvider } from '@/contexts/CartContext'
+import { LikeProvider } from '@/contexts/LikeContext'
 import { Toaster } from 'sonner'
 import './globals.css'
 
@@ -100,8 +101,10 @@ export default function RootLayout({
           <ProductLineThemeProvider>
             <AuthProvider>
               <CartProvider>
-                {children}
-                <Toaster position="top-right" />
+                <LikeProvider>
+                  {children}
+                  <Toaster position="top-right" />
+                </LikeProvider>
               </CartProvider>
             </AuthProvider>
           </ProductLineThemeProvider>

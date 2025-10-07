@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -175,6 +175,21 @@ export async function POST(request: NextRequest) {
           throw deleteError;
         }
         results = deletedProducts;
+        break;
+
+      case 'hard_delete':
+        // Hard delete - permanently remove from database
+        const serviceSupabase = createServiceRoleClient();
+        const { data: hardDeletedProducts, error: hardDeleteError } = await serviceSupabase
+          .from('products')
+          .delete()
+          .in('id', product_ids)
+          .select('id, name');
+
+        if (hardDeleteError) {
+          throw hardDeleteError;
+        }
+        results = hardDeletedProducts;
         break;
 
       case 'duplicate':

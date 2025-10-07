@@ -22,7 +22,8 @@ import {
   ChevronRight,
   Home,
   MessageSquare,
-  Server
+  Server,
+  Tag
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -49,6 +50,18 @@ const navigationItems = [
     label: 'Productos',
     icon: Package,
     description: 'Catálogo e inventario'
+  },
+  {
+    href: '/admin/categories',
+    label: 'Categorías',
+    icon: Tag,
+    description: 'Gestión de categorías'
+  },
+  {
+    href: '/admin/reviews',
+    label: 'Reseñas',
+    icon: MessageSquare,
+    description: 'Moderación de reseñas'
   },
   {
     href: '/admin/customers',
