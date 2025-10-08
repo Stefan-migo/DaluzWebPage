@@ -33,8 +33,6 @@ import {
   ArrowLeft,
   Check,
   AlertCircle,
-  ChevronUp,
-  ChevronDown,
   Sparkles,
   MessageSquare
 } from "lucide-react";
@@ -503,9 +501,9 @@ export default function ProductDetailPage() {
           {/* Left Column - Product Images */}
           <div className="space-y-4">
             {/* Thumbnail Navigation - Left Side */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 items-center">
               {/* Thumbnail Column */}
-              <div className="flex flex-col gap-2 w-20">
+              <div className="flex flex-col gap-2 w-auto justify-center">
                 {/* Up Arrow */}
                 {images.length > 3 && (
                   <button
@@ -513,10 +511,10 @@ export default function ProductDetailPage() {
                       const newIndex = Math.max(0, currentImageIndex - 1);
                       selectImage(images[newIndex], newIndex);
                     }}
-                    className="w-full h-8 flex items-center justify-center bg-white/80 hover:bg-white rounded-lg transition-colors"
+                    className="w-full h-8 flex items-center justify-center transition-colors"
                     disabled={currentImageIndex === 0}
                   >
-                    <ChevronUp className="h-4 w-4 text-azul-profundo" />
+                    <ArrowLeftSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
                   </button>
                 )}
                 
@@ -549,10 +547,10 @@ export default function ProductDetailPage() {
                       const newIndex = Math.min(images.length - 1, currentImageIndex + 1);
                       selectImage(images[newIndex], newIndex);
                     }}
-                    className="w-full h-8 flex items-center justify-center bg-white/80 hover:bg-white rounded-lg transition-colors"
+                    className="w-full h-8 flex items-center justify-center transition-colors"
                     disabled={currentImageIndex >= images.length - 1}
                   >
-                    <ChevronDown className="h-4 w-4 text-azul-profundo" />
+                    <ArrowRightSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
                   </button>
                 )}
               </div>

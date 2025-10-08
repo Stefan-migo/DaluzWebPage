@@ -502,7 +502,7 @@ export default function AddProductPage() {
                       type="number"
                       placeholder="%"
                       value={ingredient.percentage || ''}
-                      onChange={(e) => updateIngredient(index, 'percentage', parseFloat(e.target.value) || undefined)}
+                      onChange={(e) => updateIngredient(index, 'percentage', parseFloat(e.target.value) || 0)}
                       className="w-20"
                     />
                     <Button
@@ -604,7 +604,7 @@ export default function AddProductPage() {
             type="button" 
             variant="secondary" 
             disabled={loading}
-            onClick={() => handleSubmit({ status: 'draft' })}
+            onClick={() => handleSubmit(undefined, 'draft')}
             className="flex items-center gap-2"
           >
             <Save className="h-4 w-4" />

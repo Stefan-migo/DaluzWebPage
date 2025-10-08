@@ -179,17 +179,84 @@ export async function POST(request: NextRequest) {
 
       case 'hard_delete':
         // Hard delete - permanently remove from database
-        const serviceSupabase = createServiceRoleClient();
-        const { data: hardDeletedProducts, error: hardDeleteError } = await serviceSupabase
-          .from('products')
-          .delete()
-          .in('id', product_ids)
-          .select('id, name');
+        try {
+          const serviceSupabase = createServiceRoleClient();
+          
+          // First, get the products to be deleted for logging
+          const { data: productsToDelete, error: fetchError } = await serviceSupabase
+            .from('products')
+            .select('id, name')
+            .in('id', product_ids);
 
-        if (hardDeleteError) {
-          throw hardDeleteError;
+          if (fetchError) {
+            console.error('Error fetching products for hard delete:', fetchError);
+            throw new Error(`Failed to fetch products: ${fetchError.message}`);
+          }
+
+          // Check if any products have orders (foreign key constraint)
+          const { data: orderItems, error: orderCheckError } = await serviceSupabase
+            .from('order_items')
+            .select('product_id')
+            .in('product_id', product_ids)
+            .limit(1);
+
+          if (orderCheckError) {
+            console.error('Error checking order items:', orderCheckError);
+            throw new Error(`Failed to check order dependencies: ${orderCheckError.message}`);
+          }
+
+          if (orderItems && orderItems.length > 0) {
+            // Products have orders - check if force delete is requested
+            const forceDelete = updates?.force_delete === true;
+            
+            if (!forceDelete) {
+              // Products have orders - cannot hard delete without force
+              const orderedProductIds = orderItems.map(item => item.product_id);
+              const orderedProducts = productsToDelete?.filter(p => orderedProductIds.includes(p.id)) || [];
+              
+              return NextResponse.json({ 
+                error: `Cannot hard delete products that have been ordered: ${orderedProducts.map(p => p.name).join(', ')}. Use soft delete (archive) instead, or enable force delete to remove orders and products.`,
+                success: false,
+                operation: 'hard_delete',
+                affected_count: 0,
+                results: []
+              }, { status: 400 });
+            }
+
+            // Force delete: First delete order items, then products
+            console.log('Force deleting products with orders...');
+            
+            // Delete order items first
+            const { error: orderItemsDeleteError } = await serviceSupabase
+              .from('order_items')
+              .delete()
+              .in('product_id', product_ids);
+
+            if (orderItemsDeleteError) {
+              console.error('Error deleting order items:', orderItemsDeleteError);
+              throw new Error(`Failed to delete order items: ${orderItemsDeleteError.message}`);
+            }
+
+            console.log('Order items deleted successfully');
+          }
+
+          // Perform the hard delete (no foreign key constraints)
+          const { data: hardDeletedProducts, error: hardDeleteError } = await serviceSupabase
+            .from('products')
+            .delete()
+            .in('id', product_ids)
+            .select('id, name');
+
+          if (hardDeleteError) {
+            console.error('Error during hard delete:', hardDeleteError);
+            throw new Error(`Failed to delete products: ${hardDeleteError.message}`);
+          }
+
+          results = hardDeletedProducts || productsToDelete || [];
+        } catch (hardDeleteErr) {
+          console.error('Hard delete operation failed:', hardDeleteErr);
+          throw new Error(`Hard delete failed: ${hardDeleteErr instanceof Error ? hardDeleteErr.message : 'Unknown error'}`);
         }
-        results = hardDeletedProducts;
         break;
 
       case 'duplicate':
@@ -375,6 +442,17 @@ export async function GET(request: NextRequest) {
     }
 
     // Return JSON format
+    if (format === 'json') {
+      const jsonString = JSON.stringify(products, null, 2);
+      
+      return new Response(jsonString, {
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Disposition': `attachment; filename="productos-${new Date().toISOString().split('T')[0]}.json"`
+        }
+      });
+    }
+
     return NextResponse.json({ products });
 
   } catch (error) {

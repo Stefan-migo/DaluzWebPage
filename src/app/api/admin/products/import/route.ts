@@ -63,6 +63,24 @@ export async function POST(request: NextRequest) {
       'certifications': 'certifications',
       'instrucciones': 'usage_instructions',
       'usage_instructions': 'usage_instructions',
+      'ingredientes': 'ingredients',
+      'ingredients': 'ingredients',
+      'precauciones': 'precautions',
+      'precautions': 'precautions',
+      'dimensiones': 'dimensions',
+      'dimensions': 'dimensions',
+      'caracteristicas_paquete': 'package_characteristics',
+      'package_characteristics': 'package_characteristics',
+      'imagen_principal': 'featured_image',
+      'featured_image': 'featured_image',
+      'galeria_1': 'gallery_1',
+      'gallery_1': 'gallery_1',
+      'galeria_2': 'gallery_2',
+      'gallery_2': 'gallery_2',
+      'galeria_3': 'gallery_3',
+      'gallery_3': 'gallery_3',
+      'galeria_4': 'gallery_4',
+      'gallery_4': 'gallery_4',
       'categoria': 'category_name',
       'category': 'category_name'
     };
@@ -103,6 +121,7 @@ export async function POST(request: NextRequest) {
         const product: any = {
           name: rowData.name?.trim(),
           slug: rowData.slug?.trim() || generateSlug(rowData.name || ''),
+          short_description: rowData.short_description?.trim(),
           description: rowData.description?.trim(),
           price: parseFloat(rowData.price) || 0,
           compare_at_price: rowData.compare_at_price ? parseFloat(rowData.compare_at_price) : null,
@@ -111,10 +130,21 @@ export async function POST(request: NextRequest) {
           is_featured: parseBoolean(rowData.is_featured),
           sku: rowData.sku?.trim(),
           weight: rowData.weight ? parseFloat(rowData.weight) : null,
+          dimensions: rowData.dimensions?.trim(),
           skin_type: parseArray(rowData.skin_type),
           benefits: parseArray(rowData.benefits),
           certifications: parseArray(rowData.certifications),
+          ingredients: parseIngredients(rowData.ingredients),
           usage_instructions: rowData.usage_instructions?.trim(),
+          precautions: rowData.precautions?.trim(),
+          package_characteristics: rowData.package_characteristics?.trim(),
+          featured_image: rowData.featured_image?.trim(),
+          gallery: [
+            rowData.gallery_1?.trim(),
+            rowData.gallery_2?.trim(),
+            rowData.gallery_3?.trim(),
+            rowData.gallery_4?.trim()
+          ].filter(Boolean),
           track_inventory: true,
           vendor: 'ALKIMYA DA LUZ',
           currency: 'ARS'
@@ -379,5 +409,46 @@ function parseBoolean(value: string): boolean {
 
 function parseArray(value: string): string[] {
   if (!value) return [];
+  
+  // Try to parse as JSON first (for complex data like ingredients)
+  if (value.trim().startsWith('[') && value.trim().endsWith(']')) {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.map(item => typeof item === 'string' ? item : JSON.stringify(item));
+      }
+    } catch (e) {
+      // If JSON parsing fails, fall back to semicolon splitting
+    }
+  }
+  
+  // Fall back to semicolon-separated values
   return value.split(';').map(item => item.trim()).filter(item => item.length > 0);
+}
+
+function parseIngredients(value: string): Array<{name: string, percentage?: number}> {
+  if (!value) return [];
+  
+  // Try to parse as JSON array of objects
+  if (value.trim().startsWith('[') && value.trim().endsWith(']')) {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) {
+        return parsed.map(item => {
+          if (typeof item === 'object' && item.name) {
+            return {
+              name: item.name,
+              percentage: item.percentage || undefined
+            };
+          }
+          return { name: String(item) };
+        });
+      }
+    } catch (e) {
+      console.warn('Failed to parse ingredients JSON:', e);
+    }
+  }
+  
+  // Fall back to semicolon-separated values
+  return value.split(';').map(item => ({ name: item.trim() })).filter(item => item.name.length > 0);
 }

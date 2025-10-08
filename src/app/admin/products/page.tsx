@@ -76,25 +76,8 @@ interface BulkOperationResult {
   results: any[];
 }
 
-interface ImportResult {
-  success: boolean;
-  summary: {
-    total_processed: number;
-    created: number;
-    updated: number;
-    skipped: number;
-    errors_count: number;
-    warnings_count: number;
-  };
-  results: {
-    errors: string[];
-    warnings: string[];
-    details: any[];
-  };
-}
 
 export default function ProductsPage() {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // View state
   const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
@@ -135,11 +118,12 @@ export default function ProductsPage() {
   const [showBulkDialog, setShowBulkDialog] = useState(false);
   const [isDeleteDialog, setIsDeleteDialog] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [forceDelete, setForceDelete] = useState(false);
   
   // Import/Export states
-  const [showImportDialog, setShowImportDialog] = useState(false);
-  const [importMode, setImportMode] = useState('create');
-  const [importResults, setImportResults] = useState<ImportResult | null>(null);
+  const [showJsonImportDialog, setShowJsonImportDialog] = useState(false);
+  const [jsonImportResults, setJsonImportResults] = useState<any>(null);
+  const [jsonImportMode, setJsonImportMode] = useState('create'); // 'create', 'update', 'upsert', 'skip_duplicates'
   
   // Single product delete
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -228,12 +212,18 @@ export default function ProductsPage() {
         body: JSON.stringify({
           operation: bulkOperation,
           product_ids: selectedProducts,
-          updates: bulkUpdates
+          updates: {
+            ...bulkUpdates,
+            force_delete: forceDelete
+          }
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to perform bulk operation');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error || 'Failed to perform bulk operation';
+        toast.error(errorMessage);
+        return; // Don't throw error, just show toast and return
       }
 
       const result: BulkOperationResult = await response.json();
@@ -248,17 +238,18 @@ export default function ProductsPage() {
 
     } catch (error) {
       console.error('Error performing bulk operation:', error);
-      toast.error('Error al realizar la operación masiva');
+      const errorMessage = error instanceof Error ? error.message : 'Error al realizar la operación masiva';
+      toast.error(errorMessage);
       } finally {
       setProcessing(false);
     }
   };
 
   // Import/Export functions
-  const handleExport = async () => {
+  const handleJsonExport = async () => {
     try {
       const params = new URLSearchParams({
-        format: 'csv',
+        format: 'json',
         ...(categoryFilter !== 'all' && { category_id: categoryFilter }),
         ...(statusFilter !== 'all' && { status: statusFilter })
       });
@@ -272,7 +263,7 @@ export default function ProductsPage() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `productos-${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = `productos-${new Date().toISOString().split('T')[0]}.json`;
       document.body.appendChild(a);
       a.click();
       window.URL.revokeObjectURL(url);
@@ -285,38 +276,49 @@ export default function ProductsPage() {
     }
   };
 
-  const handleImport = async (file: File) => {
+  const handleJsonImport = async (file: File) => {
     if (!file) return;
 
     try {
       setProcessing(true);
       
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('mode', importMode);
+      const text = await file.text();
+      const products = JSON.parse(text);
 
-      const response = await fetch('/api/admin/products/import', {
+      const response = await fetch('/api/admin/products/import-json', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          products,
+          mode: jsonImportMode
+        }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to import products');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to import JSON products');
       }
 
-      const result: ImportResult = await response.json();
-      setImportResults(result);
+      const result = await response.json();
+      setJsonImportResults(result);
       
       if (result.success) {
-        toast.success(`Importación completada: ${result.summary.created} creados, ${result.summary.updated} actualizados`);
+        const summary = result.summary || {};
+        let message = `Importación JSON completada: `;
+        if (summary.created > 0) message += `${summary.created} creados `;
+        if (summary.updated > 0) message += `${summary.updated} actualizados `;
+        if (summary.skipped > 0) message += `${summary.skipped} omitidos `;
+        toast.success(message);
         fetchProducts();
       } else {
-        toast.error('Error en la importación');
+        toast.error('Error en la importación JSON');
       }
 
     } catch (error) {
-      console.error('Error importing products:', error);
-      toast.error('Error al importar productos');
+      console.error('Error importing JSON products:', error);
+      toast.error('Error al importar productos JSON');
     } finally {
       setProcessing(false);
     }
@@ -540,6 +542,27 @@ export default function ProductsPage() {
                 que permite recuperar los productos si es necesario.
               </p>
             </div>
+            
+            <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+              <div className="flex items-start space-x-3">
+                <input
+                  type="checkbox"
+                  id="force_delete"
+                  checked={forceDelete}
+                  onChange={(e) => setForceDelete(e.target.checked)}
+                  className="mt-1 h-4 w-4 text-orange-600 focus:ring-orange-500 border-orange-300 rounded"
+                />
+                <div>
+                  <label htmlFor="force_delete" className="text-sm font-medium text-orange-900">
+                    Forzar eliminación (incluye productos con órdenes)
+                  </label>
+                  <p className="text-xs text-orange-700 mt-1">
+                    ⚠️ Marca esta opción si quieres eliminar productos que tienen órdenes asociadas. 
+                    Esto eliminará también los elementos de las órdenes relacionadas.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         );
 
@@ -611,102 +634,24 @@ export default function ProductsPage() {
         </div>
         
         <div className="flex space-x-2">
-          <Button variant="outline" onClick={handleExport}>
+          <Button variant="outline" onClick={handleJsonExport}>
             <Download className="h-4 w-4 mr-2" />
-            Exportar CSV
+            Exportar JSON
           </Button>
           
           <Button
             variant="outline"
-            onClick={() => window.open('/api/admin/products/template', '_blank')}
+            onClick={() => window.open('/api/admin/products/json-template', '_blank')}
             className="flex items-center gap-2"
           >
             <Download className="h-4 w-4 mr-2" />
-            Descargar Plantilla CSV
+            Descargar Plantilla JSON
           </Button>
           
-          <Dialog open={showImportDialog} onOpenChange={setShowImportDialog}>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Upload className="h-4 w-4 mr-2" />
-                Importar CSV
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>Importar Productos desde CSV</DialogTitle>
-                <DialogDescription>
-                  Sube un archivo CSV para importar productos masivamente
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="import_mode">Modo de Importación</Label>
-                  <Select value={importMode} onValueChange={setImportMode}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="create">Crear - Solo productos nuevos</SelectItem>
-                      <SelectItem value="update">Actualizar - Solo productos existentes</SelectItem>
-                      <SelectItem value="upsert">Crear/Actualizar - Ambos</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                
-                <div>
-                  <Label htmlFor="csv_file">Archivo CSV</Label>
-                  <Input
-                    ref={fileInputRef}
-                    type="file"
-                    accept=".csv"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) {
-                        handleImport(file);
-                      }
-                    }}
-                  />
-                  <p className="text-sm text-tierra-media mt-1">
-                    Formatos soportados: nombre, descripción, precio, stock, estado, categoría, etc.
-                  </p>
-                </div>
-
-                {importResults && (
-                  <div className="mt-4 p-4 border rounded-lg">
-                    <h4 className="font-medium mb-2">Resultados de Importación</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>Procesados: {importResults.summary.total_processed}</div>
-                      <div>Creados: {importResults.summary.created}</div>
-                      <div>Actualizados: {importResults.summary.updated}</div>
-                      <div>Omitidos: {importResults.summary.skipped}</div>
-                    </div>
-                    
-                    {importResults.results.errors.length > 0 && (
-                      <div className="mt-2">
-                        <h5 className="font-medium text-red-600">Errores:</h5>
-                        <ul className="text-sm text-red-600 list-disc list-inside">
-                          {importResults.results.errors.slice(0, 5).map((error, index) => (
-                            <li key={index}>{error}</li>
-                          ))}
-                          {importResults.results.errors.length > 5 && (
-                            <li>... y {importResults.results.errors.length - 5} más</li>
-                          )}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-              
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setShowImportDialog(false)}>
-                  Cerrar
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button variant="outline" onClick={() => setShowJsonImportDialog(true)}>
+            <Upload className="h-4 w-4 mr-2" />
+            Importar JSON
+          </Button>
 
           <Button asChild>
             <Link href="/admin/products/add">
@@ -807,6 +752,7 @@ export default function ProductsPage() {
                     setIsDeleteDialog(false);
                     setBulkOperation('');
                     setBulkUpdates({});
+                    setForceDelete(false);
                   }
                 }}>
                   <DialogTrigger asChild>
@@ -814,6 +760,7 @@ export default function ProductsPage() {
                       setIsDeleteDialog(false);
                       setBulkOperation('');
                       setBulkUpdates({});
+                      setForceDelete(false);
                     }}>
                       <Edit className="h-4 w-4 mr-2" />
                       Operaciones Masivas
@@ -866,6 +813,7 @@ export default function ProductsPage() {
                         setIsDeleteDialog(false);
                         setBulkOperation('');
                         setBulkUpdates({});
+                        setForceDelete(false);
                       }}>
                         Cancelar
                       </Button>
@@ -1258,6 +1206,88 @@ export default function ProductsPage() {
               disabled={deleteLoading}
             >
               {deleteLoading ? 'Eliminando...' : 'Eliminar Producto'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* JSON Import Dialog */}
+      <Dialog open={showJsonImportDialog} onOpenChange={setShowJsonImportDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Importar Productos desde JSON</DialogTitle>
+            <DialogDescription>
+              Sube un archivo JSON para importar productos masivamente
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Modo de Importación
+              </label>
+              <select
+                value={jsonImportMode}
+                onChange={(e) => setJsonImportMode(e.target.value)}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="create">Solo productos nuevos - Crear únicamente productos que no existen</option>
+                <option value="update">Solo productos existentes - Actualizar únicamente productos que ya existen</option>
+                <option value="upsert">Crear/Actualizar - Crear nuevos y actualizar existentes</option>
+                <option value="skip_duplicates">Omitir duplicados - Crear solo si no existe, omitir duplicados</option>
+              </select>
+              <p className="text-sm text-tierra-media mt-1">
+                Elige cómo manejar productos duplicados o existentes
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-2">
+                Archivo JSON
+              </label>
+              <input
+                type="file"
+                accept=".json"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    handleJsonImport(file);
+                  }
+                }}
+              />
+              <p className="text-sm text-tierra-media mt-1">
+                Formato JSON con array de productos. Descarga la plantilla para ver el formato correcto.
+              </p>
+            </div>
+
+            {jsonImportResults && (
+              <div className="mt-4 p-4 border rounded-lg">
+                <h4 className="font-medium mb-2">Resultados de Importación JSON</h4>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>Total: {jsonImportResults.total}</div>
+                  <div>Exitosos: {jsonImportResults.successful}</div>
+                  <div>Fallidos: {jsonImportResults.failed}</div>
+                </div>
+                
+                {jsonImportResults.errors && jsonImportResults.errors.length > 0 && (
+                  <div className="mt-2">
+                    <h5 className="font-medium text-red-600">Errores:</h5>
+                    <ul className="text-sm text-red-600 max-h-32 overflow-y-auto">
+                      {jsonImportResults.errors.map((error: any, index: number) => (
+                        <li key={index}>
+                          Producto {error.index + 1} ({error.product}): {error.error}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowJsonImportDialog(false)}>
+              Cerrar
             </Button>
           </DialogFooter>
         </DialogContent>
