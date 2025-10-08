@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     // Get public URL
     const { data: urlData } = supabase.storage
-      .from(bucketUsed)
+      .from(bucketUsed!)
       .getPublicUrl(uploadResult.path);
 
     return NextResponse.json({

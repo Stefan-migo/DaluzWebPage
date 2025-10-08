@@ -20,7 +20,7 @@ export async function GET(
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
-        const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
+        const { data: isAdmin } = await (supabase as any).rpc('is_admin', { user_id: user.id });
         isAdminRequest = isAdmin;
       }
     } catch (error) {
@@ -77,7 +77,26 @@ export async function GET(
       );
     }
 
-    return NextResponse.json({ product });
+    // Fetch review data for the product
+    const { data: reviews } = await supabase
+      .from('reviews' as any)
+      .select('rating')
+      .eq('product_id', product.id)
+      .eq('is_approved', true);
+
+    const reviewCount = reviews?.length || 0;
+    const averageRating = reviewCount > 0 && reviews
+      ? reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / reviewCount
+      : 0;
+
+    // Add review data to product
+    const productWithReviews = {
+      ...product,
+      reviewCount,
+      averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal place
+    };
+
+    return NextResponse.json({ product: productWithReviews });
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(

@@ -7,7 +7,7 @@ export async function GET() {
     const supabase = createServiceRoleClient();
     
     const { data: categories, error } = await supabase
-      .from('categories')
+      .from('categories' as any)
       .select('*')
       .order('name', { ascending: true });
 
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // Insert category
     const { data, error } = await supabase
-      .from('categories')
+      .from('categories' as any)
       .insert([category])
       .select()
       .single();

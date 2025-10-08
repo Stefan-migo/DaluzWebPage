@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
     // Pagination
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '12');
+    const limit = parseInt(searchParams.get('limit') || '9'); // Changed default from 12 to 9
     const offset = (page - 1) * limit;
 
     // Filters
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get('sort_by') || 'created_at';
     const sortOrder = searchParams.get('sort_order') || 'desc';
 
-    // Build query
+    // Build query with count option
     let query = supabase
       .from('products')
       .select(`
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
           option3,
           is_default
         )
-      `);
+      `, { count: 'exact' });
 
     // Apply filters
     if (category) {
@@ -80,7 +80,7 @@ export async function GET(request: NextRequest) {
     // Status filtering - only show active products for public consumption
     if (status) {
       query = query.eq('status', status);
-    } else if (!includeArchived) {
+    } else {
       // For public consumption, only show active products
       query = query.eq('status', 'active');
     }
@@ -90,8 +90,8 @@ export async function GET(request: NextRequest) {
     const order = getSortOrder(sortBy);
     query = query.order(sortColumn, { ascending: order === 'asc' });
 
-    // Execute query with pagination
-    const { data: products, error, count } = await query
+    // Execute query with pagination and get count
+    const { data: products, count, error } = await query
       .range(offset, offset + limit - 1);
 
     if (error) {
@@ -102,12 +102,44 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Fetch review summaries for each product
+    const productsWithReviews = await Promise.all(
+      (products || []).map(async (product) => {
+        try {
+          // Get review summary for this product
+          const { data: reviews } = await supabase
+            .from('reviews')
+            .select('rating')
+            .eq('product_id', product.id)
+            .eq('is_approved', true);
+
+          const reviewCount = reviews?.length || 0;
+          const averageRating = reviewCount > 0 && reviews
+            ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
+            : 0;
+
+          return {
+            ...product,
+            reviewCount,
+            averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal place
+          };
+        } catch (error) {
+          console.error(`Error fetching reviews for product ${product.id}:`, error);
+          return {
+            ...product,
+            reviewCount: 0,
+            averageRating: 0,
+          };
+        }
+      })
+    );
+
     // Calculate pagination info
     const totalPages = Math.ceil((count || 0) / limit);
     const hasMore = page < totalPages;
 
     return NextResponse.json({
-      products,
+      products: productsWithReviews,
       pagination: {
         page,
         limit,

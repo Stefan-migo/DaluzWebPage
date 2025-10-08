@@ -13,18 +13,13 @@ export async function GET(request: NextRequest) {
     startDate.setDate(endDate.getDate() - period);
 
     // Fetch basic data from database
-    const [productsResult, categoriesResult] = await Promise.all([
-      supabase
-        .from('products')
-        .select('id, name, price, category_id, status, created_at')
-        .eq('status', 'active'),
-      supabase
-        .from('categories')
-        .select('id, name')
-    ]);
+    const productsResult = await supabase
+      .from('products')
+      .select('id, name, price, category_id, created_at')
+      .eq('status', 'active');
 
     const products = productsResult.data || [];
-    const categories = categoriesResult.data || [];
+    const categories: any[] = []; // Categories will be fetched separately if needed
 
     // Generate mock analytics data based on real products
     const analytics = {

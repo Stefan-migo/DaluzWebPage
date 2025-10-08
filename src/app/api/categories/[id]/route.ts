@@ -32,7 +32,7 @@ export async function PUT(
 
     // Update category
     const { data, error } = await supabase
-      .from('categories')
+      .from('categories' as any)
       .update({
         name: categoryData.name,
         slug: categoryData.slug,
@@ -119,7 +119,7 @@ export async function DELETE(
 
     // Delete category
     const { error } = await supabase
-      .from('categories')
+      .from('categories' as any)
       .delete()
       .eq('id', params.id);
 

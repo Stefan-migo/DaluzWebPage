@@ -14,7 +14,7 @@ export async function GET(
     const { slug } = params;
 
     const { data: category, error } = await supabase
-      .from('categories')
+      .from('categories' as any)
       .select('*')
       .eq('slug', slug)
       .eq('is_active', true)

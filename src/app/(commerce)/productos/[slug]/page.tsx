@@ -84,6 +84,8 @@ interface Product {
   package_characteristics?: string;
   tags: string[];
   is_featured: boolean;
+  averageRating?: number;
+  reviewCount?: number;
   categories?: {
     id: string;
     name: string;
@@ -645,11 +647,23 @@ export default function ProductDetailPage() {
               {/* Rating */}
               <div className="flex items-center gap-2 mt-2">
                 <div className="flex">
-                  {Array.from({ length: 5 }, (_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-dorado text-dorado" />
-                  ))}
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const rating = product?.averageRating || 0;
+                    const isFilled = i < Math.floor(rating);
+                    const isHalfFilled = i === Math.floor(rating) && rating % 1 >= 0.5;
+                    return (
+                      <Star 
+                        key={i} 
+                        className={`h-4 w-4 ${
+                          isFilled || isHalfFilled 
+                            ? 'fill-dorado text-dorado' 
+                            : 'text-gray-300'
+                        }`} 
+                      />
+                    );
+                  })}
                 </div>
-                <span className="text-sm text-tierra-media">(23 reseñas)</span>
+                <span className="text-sm text-tierra-media">({product?.reviewCount || 0} {product?.reviewCount === 1 ? 'reseña' : 'reseñas'})</span>
               </div>
             </div>
 
@@ -1153,8 +1167,8 @@ export default function ProductDetailPage() {
                   originalPrice={relatedProduct.compare_at_price}
                   category={relatedProduct.categories?.name || ''}
                   imageUrl={relatedProduct.featured_image}
-                  rating={4.5}
-                  reviewCount={23}
+                  rating={relatedProduct.averageRating || 0}
+                  reviewCount={relatedProduct.reviewCount || 0}
                   isNatural={true}
                   isNew={false}
                   isOnSale={!!relatedProduct.compare_at_price}

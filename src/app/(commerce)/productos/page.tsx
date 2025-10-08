@@ -27,6 +27,8 @@ interface Product {
   benefits: string[];
   inventory_quantity: number;
   is_featured: boolean;
+  averageRating?: number;
+  reviewCount?: number;
   categories?: {
     id: string;
     name: string;
@@ -79,7 +81,7 @@ function ProductsContent() {
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get('page') || '1'));
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: 12,
+    limit: 9, // Changed from 12 to 9
     total: 0,
     totalPages: 0,
     hasMore: false,
@@ -118,7 +120,7 @@ function ProductsContent() {
         if (sortBy) params.append('sort_by', getSortField(sortBy));
         if (getSortOrder(sortBy)) params.append('sort_order', getSortOrder(sortBy));
         params.append('page', currentPage.toString());
-        params.append('limit', '12');
+        params.append('limit', '9'); // Changed from 12 to 9
         params.append('in_stock', 'true');
 
         const response = await fetch(`/api/products?${params.toString()}`);
@@ -128,6 +130,7 @@ function ProductsContent() {
           setProducts(data.products);
           setPagination(data.pagination);
         } else {
+          console.error('API Error:', data);
           toast.error('Error al cargar productos');
         }
       } catch (error) {
@@ -282,8 +285,8 @@ function ProductsContent() {
                     originalPrice={product.compare_at_price}
                     category={product.categories?.name || ''}
                     imageUrl={product.featured_image}
-                    rating={4.5} // TODO: Implement actual ratings
-                    reviewCount={23} // TODO: Implement actual review counts
+                    rating={product.averageRating || 0}
+                    reviewCount={product.reviewCount || 0}
                     isNatural={true}
                     isNew={false}
                     isOnSale={!!product.compare_at_price}
@@ -298,11 +301,13 @@ function ProductsContent() {
 
             {/* Pagination */}
             {pagination.totalPages > 1 && (
-              <div className="mt-12 flex justify-center gap-2">
+              <div className="mt-12 flex justify-center gap-2 relative z-10">
                 <Button
                   variant="outline"
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage(currentPage - 1)}
+                  className="bg-white hover:bg-gray-100"
+                  style={{ opacity: 1, backgroundColor: '#ffffff' }}
                 >
                   Anterior
                 </Button>
@@ -324,6 +329,8 @@ function ProductsContent() {
                       key={page}
                       variant={currentPage === page ? "default" : "outline"}
                       onClick={() => setCurrentPage(page)}
+                      className={currentPage === page ? "bg-azul-profundo text-white" : "bg-white hover:bg-gray-100"}
+                      style={{ opacity: 1, backgroundColor: currentPage === page ? '#2C3E50' : '#ffffff' }}
                     >
                       {page}
                     </Button>
@@ -334,6 +341,8 @@ function ProductsContent() {
                   variant="outline"
                   disabled={currentPage === pagination.totalPages}
                   onClick={() => setCurrentPage(currentPage + 1)}
+                  className="bg-white hover:bg-gray-100"
+                  style={{ opacity: 1, backgroundColor: '#ffffff' }}
                 >
                   Siguiente
                 </Button>

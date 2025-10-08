@@ -416,8 +416,6 @@ export default function ProductGrid({
               variant={variant}
               lineTheme={product.lineTheme || lineTheme}
               onAddToCart={onAddToCart}
-              onToggleFavorite={onToggleFavorite}
-              isFavorite={favoriteProducts.includes(product.id)}
             />
           ))}
         </div>

@@ -65,7 +65,10 @@ interface Product {
   status: string;
   inventory_quantity: number;
   category?: { name: string };
+  categories?: { name: string };
   is_featured: boolean;
+  featured?: boolean;
+  title?: string;
   created_at: string;
 }
 
@@ -103,10 +106,24 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   
+  // Global stats (unaffected by filters)
+  const [globalStats, setGlobalStats] = useState({
+    totalProducts: 0,
+    activeProducts: 0,
+    lowStockCount: 0,
+    totalValue: 0
+  });
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(12);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('active'); // Default to active products
+  const [statusFilter, setStatusFilter] = useState('active'); // Show active products by default in admin
   const [showLowStockOnly, setShowLowStockOnly] = useState(false);
   
   // Selection for bulk operations
@@ -131,28 +148,57 @@ export default function ProductsPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
-    fetchProducts();
+    fetchGlobalStats(); // Fetch global stats once on mount
     fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    setCurrentPage(1); // Reset to first page when filters change
   }, [searchTerm, categoryFilter, statusFilter]);
 
+  useEffect(() => {
+    fetchProducts();
+  }, [currentPage, itemsPerPage, searchTerm, categoryFilter, statusFilter]);
+
   const fetchProducts = async () => {
-      try {
-        setLoading(true);
+    try {
+      setLoading(true);
+      
+      // Calculate offset for pagination
+      const offset = (currentPage - 1) * itemsPerPage;
+      
       const params = new URLSearchParams({
-        include_archived: 'true',
+        limit: itemsPerPage.toString(),
+        offset: offset.toString(),
         ...(searchTerm && { search: searchTerm }),
-        ...(categoryFilter !== 'all' && { category: categoryFilter }),
-        ...(statusFilter !== 'all' && { status: statusFilter })
       });
 
-      const response = await fetch(`/api/products?${params}`);
+      // Fix: Only send status param when filtering, otherwise use include_archived
+      if (statusFilter !== 'all') {
+        params.append('status', statusFilter);
+      } else {
+        params.append('include_archived', 'true');
+      }
+
+      // Fix: Send category ID, not name
+      if (categoryFilter !== 'all') {
+        params.append('category', categoryFilter);
+      }
+
+      const response = await fetch(`/api/admin/products?${params}`);
       if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
+        throw new Error('Failed to fetch products');
+      }
 
       const data = await response.json();
+      
+      // Calculate pagination
+      const total = data.pagination?.total || data.total || 0;
+      const calculatedTotalPages = Math.ceil(total / itemsPerPage);
+      
       setProducts(data.products || []);
-      setAllProducts(data.products || []);
+      setTotalProducts(total);
+      setTotalPages(calculatedTotalPages);
     } catch (error) {
       console.error('Error fetching products:', error);
       setError(error instanceof Error ? error.message : 'Unknown error occurred');
@@ -171,6 +217,39 @@ export default function ProductsPage() {
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchGlobalStats = async () => {
+    try {
+      // Fetch ALL products without any filters to calculate global stats
+      const params = new URLSearchParams({
+        limit: '10000', // Large limit to get all products
+        include_archived: 'true', // Include all statuses
+      });
+
+      const response = await fetch(`/api/admin/products?${params}`);
+      if (!response.ok) {
+        console.error('Failed to fetch global stats');
+        return;
+      }
+
+      const data = await response.json();
+      const allProducts = data.products || [];
+      
+      // Calculate global stats
+      const stats = {
+        totalProducts: allProducts.length,
+        activeProducts: allProducts.filter((p: Product) => p.status === 'active' || !p.status).length,
+        lowStockCount: allProducts.filter((p: Product) => (p.inventory_quantity || 0) <= 5).length,
+        totalValue: allProducts.reduce((sum: number, p: Product) => 
+          sum + (p.price || 0) * (p.inventory_quantity || 0), 0
+        )
+      };
+      
+      setGlobalStats(stats);
+    } catch (error) {
+      console.error('Error fetching global stats:', error);
     }
   };
 
@@ -383,27 +462,11 @@ export default function ProductsPage() {
     return <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>;
   };
 
-  // Filter products
+  // Filter products (client-side filtering for low stock toggle)
   const filteredProducts = products.filter(product => {
-    const productName = product.name || product.title || '';
-    const productCategory = product.categories?.name || product.category?.name || product.category || '';
-    const productStatus = product.status || 'active';
-    
-    const matchesSearch = 
-      productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      productCategory.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = categoryFilter === 'all' || productCategory === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || productStatus === statusFilter;
     const matchesLowStock = !showLowStockOnly || (product.inventory_quantity || 0) <= 5;
-    
-    return matchesSearch && matchesCategory && matchesStatus && matchesLowStock;
+    return matchesLowStock;
   });
-
-  // Stats
-  const lowStockCount = products.filter(p => (p.inventory_quantity || 0) <= 5).length;
-  const totalProducts = products.length;
-  const activeProducts = products.filter(p => p.status === 'active' || !p.status).length;
 
   // Bulk operation form renderer
   const renderBulkOperationForm = () => {
@@ -662,7 +725,7 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - Always show global stats regardless of filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         <Card>
           <CardContent className="p-6">
@@ -670,7 +733,8 @@ export default function ProductsPage() {
               <Package className="h-8 w-8 text-azul-profundo" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-tierra-media">Total Productos</p>
-                <p className="text-2xl font-bold text-azul-profundo">{totalProducts}</p>
+                <p className="text-2xl font-bold text-azul-profundo">{globalStats.totalProducts}</p>
+                <p className="text-xs text-tierra-media mt-1">Todos los estados</p>
               </div>
             </div>
           </CardContent>
@@ -682,7 +746,8 @@ export default function ProductsPage() {
               <TrendingUp className="h-8 w-8 text-verde-suave" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-tierra-media">Productos Activos</p>
-                <p className="text-2xl font-bold text-verde-suave">{activeProducts}</p>
+                <p className="text-2xl font-bold text-verde-suave">{globalStats.activeProducts}</p>
+                <p className="text-xs text-tierra-media mt-1">Estado activo</p>
               </div>
             </div>
           </CardContent>
@@ -694,7 +759,8 @@ export default function ProductsPage() {
               <AlertTriangle className="h-8 w-8 text-red-500" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-tierra-media">Stock Bajo</p>
-                <p className="text-2xl font-bold text-red-500">{lowStockCount}</p>
+                <p className="text-2xl font-bold text-red-500">{globalStats.lowStockCount}</p>
+                <p className="text-xs text-tierra-media mt-1">≤ 5 unidades</p>
               </div>
             </div>
           </CardContent>
@@ -707,8 +773,9 @@ export default function ProductsPage() {
               <div className="ml-4">
                 <p className="text-sm font-medium text-tierra-media">Valor Total</p>
                 <p className="text-2xl font-bold text-dorado">
-                  {formatPrice(products.reduce((sum, p) => sum + (p.price || 0) * (p.inventory_quantity || 0), 0))}
+                  {formatPrice(globalStats.totalValue)}
                 </p>
+                <p className="text-xs text-tierra-media mt-1">Inventario completo</p>
               </div>
             </div>
           </CardContent>
@@ -883,7 +950,7 @@ export default function ProductsPage() {
               <SelectContent>
                 <SelectItem value="all">Todas las categorías</SelectItem>
                 {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.name}>
+                  <SelectItem key={category.id} value={category.id}>
                     {category.name}
                   </SelectItem>
                 ))}
@@ -927,7 +994,7 @@ export default function ProductsPage() {
                     </div>
                   <div className="flex items-center gap-2 mt-1">
                     <Badge variant="outline" className="text-xs">
-                      {product.categories?.name || product.category?.name || product.category || 'Sin categoría'}
+                      {product.categories?.name || product.category?.name || (typeof product.category === 'string' ? product.category : '') || 'Sin categoría'}
                     </Badge>
                   </div>
                 </div>
@@ -1046,8 +1113,8 @@ export default function ProductsPage() {
                     </TableCell>
                     
                     <TableCell>
-                      {product.category ? (
-                        <Badge variant="outline">{product.category.name}</Badge>
+                      {product.categories?.name || product.category?.name ? (
+                        <Badge variant="outline">{product.categories?.name || product.category?.name}</Badge>
                       ) : (
                         <span className="text-tierra-media">Sin categoría</span>
                       )}
@@ -1111,6 +1178,107 @@ export default function ProductsPage() {
         </Card>
       )}
 
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-tierra-media">
+                Mostrando {((currentPage - 1) * itemsPerPage) + 1} - {Math.min(currentPage * itemsPerPage, totalProducts)} de {totalProducts} productos
+              </div>
+              
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1}
+                >
+                  Anterior
+                </Button>
+                
+                <div className="flex items-center space-x-1">
+                  {/* First page */}
+                  {currentPage > 3 && (
+                    <>
+                      <Button
+                        variant={currentPage === 1 ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setCurrentPage(1)}
+                      >
+                        1
+                      </Button>
+                      {currentPage > 4 && <span className="px-2">...</span>}
+                    </>
+                  )}
+                  
+                  {/* Pages around current */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter(page => {
+                      return page === currentPage || 
+                             page === currentPage - 1 || 
+                             page === currentPage + 1 ||
+                             (page === currentPage - 2 && currentPage <= 3) ||
+                             (page === currentPage + 2 && currentPage >= totalPages - 2);
+                    })
+                    .map(page => (
+                      <Button
+                        key={page}
+                        variant={currentPage === page ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setCurrentPage(page)}
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                  
+                  {/* Last page */}
+                  {currentPage < totalPages - 2 && (
+                    <>
+                      {currentPage < totalPages - 3 && <span className="px-2">...</span>}
+                      <Button
+                        variant={currentPage === totalPages ? 'default' : 'outline'}
+                        size="sm"
+                        onClick={() => setCurrentPage(totalPages)}
+                      >
+                        {totalPages}
+                      </Button>
+                    </>
+                  )}
+                </div>
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                  disabled={currentPage === totalPages}
+                >
+                  Siguiente
+                </Button>
+                
+                <Select 
+                  value={itemsPerPage.toString()} 
+                  onValueChange={(value) => {
+                    setItemsPerPage(parseInt(value));
+                    setCurrentPage(1);
+                  }}
+                >
+                  <SelectTrigger className="w-[100px]">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="12">12 / pág</SelectItem>
+                    <SelectItem value="24">24 / pág</SelectItem>
+                    <SelectItem value="48">48 / pág</SelectItem>
+                    <SelectItem value="100">100 / pág</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
@@ -1138,7 +1306,7 @@ export default function ProductsPage() {
               </div>
               <div className="flex-1">
                 <h3 className="font-semibold text-azul-profundo">Stock Bajo</h3>
-                <p className="text-sm text-tierra-media">{lowStockCount} productos necesitan restock</p>
+                <p className="text-sm text-tierra-media">{globalStats.lowStockCount} productos necesitan restock</p>
               </div>
               <Button 
                 variant="outline" 

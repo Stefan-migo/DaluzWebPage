@@ -9,7 +9,8 @@ interface ProductImport {
   price: number;
   compare_at_price?: number;
   inventory_quantity?: number;
-  category_id: string;
+  category_id?: string;
+  category?: string | { name: string; slug?: string };
   featured_image?: string;
   gallery?: string[];
   skin_type?: string[];
@@ -74,7 +75,9 @@ export async function POST(request: NextRequest) {
         let categoryId = product.category_id;
         if (!categoryId && product.category) {
           // Try to find category by name
-          const categoryName = product.category.name || product.category;
+          const categoryName = typeof product.category === 'string' 
+            ? product.category 
+            : product.category.name;
           if (typeof categoryName === 'string') {
             // Get categories to find the ID
             const { data: categories } = await supabase

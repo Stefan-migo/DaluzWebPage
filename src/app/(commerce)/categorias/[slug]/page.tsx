@@ -20,6 +20,8 @@ interface Product {
   featured_image: string;
   inventory_quantity: number;
   is_featured: boolean;
+  averageRating?: number;
+  reviewCount?: number;
   product_variants?: Array<{
     id: string;
     title: string;
@@ -234,8 +236,8 @@ export default function CategoryPage() {
               originalPrice={product.compare_at_price}
               category={category.name}
               imageUrl={product.featured_image}
-              rating={4.5} // TODO: Implement actual ratings
-              reviewCount={23} // TODO: Implement actual review counts
+              rating={product.averageRating || 0}
+              reviewCount={product.reviewCount || 0}
               isNatural={true}
               isNew={false}
               isOnSale={!!product.compare_at_price}

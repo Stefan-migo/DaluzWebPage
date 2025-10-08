@@ -25,6 +25,8 @@ interface Product {
   benefits: string[];
   inventory_quantity: number;
   is_featured: boolean;
+  averageRating?: number;
+  reviewCount?: number;
   categories?: {
     id: string;
     name: string;
@@ -209,7 +211,7 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
           
           // If we found products, limit to 6
           if (filteredProducts.length > 0) {
-            setProducts(filteredProducts.slice(0, 6));
+            setProducts(filteredProducts.slice(0, 4));
           } else {
             // If no products found for this line, don't show the section
             setProducts([]);
@@ -348,8 +350,8 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
               originalPrice={product.compare_at_price}
               category={product.categories?.name || selectedLine.name}
               imageUrl={product.featured_image}
-              rating={4.5} // TODO: Implement actual ratings
-              reviewCount={23} // TODO: Implement actual review counts
+              rating={product.averageRating || 0}
+              reviewCount={product.reviewCount || 0}
               isNatural={true}
               isNew={false}
               isOnSale={!!product.compare_at_price}

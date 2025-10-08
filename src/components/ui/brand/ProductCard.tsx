@@ -304,7 +304,7 @@ export default function ProductCard({
               {renderStars(rating)}
             </div>
             <span className="text-sm text-text-secondary font-medium">
-              ({reviewCount} reseñas)
+              ({reviewCount} {reviewCount === 1 ? 'reseña' : 'reseñas'})
             </span>
           </div>
 

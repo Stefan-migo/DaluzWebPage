@@ -275,13 +275,13 @@ export default function TiendaSidebar({
                   type="number"
                   placeholder="Mín"
                   value={priceRange.min}
-                  onChange={(e) => setPriceRange(prev => ({ ...prev, min: e.target.value }))}
+                  onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
                 />
                 <Input
                   type="number"
                   placeholder="Máx"
                   value={priceRange.max}
-                  onChange={(e) => setPriceRange(prev => ({ ...prev, max: e.target.value }))}
+                  onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
                 />
               </div>
             </div>
