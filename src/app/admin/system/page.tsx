@@ -338,7 +338,7 @@ export default function SystemAdministrationPage() {
 
       {/* System Health Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -350,7 +350,7 @@ export default function SystemAdministrationPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <AlertTriangle className="h-8 w-8 text-yellow-500" />
@@ -364,7 +364,7 @@ export default function SystemAdministrationPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <XCircle className="h-8 w-8 text-red-500" />
@@ -378,7 +378,7 @@ export default function SystemAdministrationPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Clock className="h-8 w-8 text-verde-suave" />
@@ -408,7 +408,7 @@ export default function SystemAdministrationPage() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Quick Actions */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Settings className="h-5 w-5 mr-2" />
@@ -438,7 +438,7 @@ export default function SystemAdministrationPage() {
             </Card>
 
             {/* System Metrics Summary */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2" />
@@ -470,7 +470,7 @@ export default function SystemAdministrationPage() {
 
         <TabsContent value="config" className="space-y-6">
           {/* Config Filters */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
             <CardContent className="p-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -513,7 +513,7 @@ export default function SystemAdministrationPage() {
             const Icon = getCategoryIcon(category);
             
             return (
-              <Card key={category}>
+              <Card key={category} className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Icon className="h-5 w-5 mr-2" />
@@ -586,7 +586,7 @@ export default function SystemAdministrationPage() {
         <TabsContent value="health" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Health Metrics */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -630,7 +630,7 @@ export default function SystemAdministrationPage() {
 
             {/* Critical Issues */}
             {healthStatus && (healthStatus.critical_metrics.length > 0 || healthStatus.warning_metrics.length > 0) && (
-              <Card>
+              <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <AlertTriangle className="h-5 w-5 mr-2" />

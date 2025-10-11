@@ -75,7 +75,7 @@ export function StarRating({
         key={starNumber}
         type="button"
         className={cn(
-          'transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-400',
+          'transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#AE000060]',
           isInteractive && 'cursor-pointer hover:scale-110 transform',
           !isInteractive && 'cursor-default'
         )}
@@ -89,10 +89,10 @@ export function StarRating({
           className={cn(
             sizeClasses[size],
             'transition-colors duration-150',
-            fill === 'fill' && 'text-yellow-400',
-            fill === 'half' && 'text-yellow-400',
-            fill === 'empty' && 'text-gray-300',
-            isInteractive && 'hover:text-yellow-400'
+            fill === 'fill' && 'text-[#AE000060]',
+            fill === 'half' && 'text-[#AE000060]',
+            fill === 'empty' && 'text-[#AE000060]',
+            isInteractive && 'hover:text-[#AE000060]'
           )}
           fill={fill === 'fill' ? 'currentColor' : 'none'}
         />

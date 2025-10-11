@@ -37,7 +37,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Coming Soon Card */}
-      <Card className="text-center py-16">
+      <Card className="text-center py-16 bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardContent>
           <div className="max-w-md mx-auto space-y-6">
             <div className="relative">
@@ -84,7 +84,7 @@ export default function SettingsPage() {
 
       {/* Feature Preview Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center text-azul-profundo">
               <CreditCard className="h-5 w-5 mr-2" />
@@ -112,7 +112,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center text-azul-profundo">
               <Truck className="h-5 w-5 mr-2" />
@@ -140,7 +140,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center text-azul-profundo">
               <Bell className="h-5 w-5 mr-2" />
@@ -168,7 +168,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center text-azul-profundo">
               <Palette className="h-5 w-5 mr-2" />
@@ -196,7 +196,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center text-azul-profundo">
               <Users className="h-5 w-5 mr-2" />
@@ -224,7 +224,7 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center text-azul-profundo">
               <Database className="h-5 w-5 mr-2" />
@@ -254,7 +254,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Current Configuration Status */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardHeader>
           <CardTitle className="text-azul-profundo">Estado Actual de Configuración</CardTitle>
         </CardHeader>

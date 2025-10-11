@@ -741,7 +741,7 @@ export default function ProductsPage() {
 
       {/* Stats Cards - Always show global stats regardless of filters */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Package className="h-8 w-8 text-azul-profundo" />
@@ -754,7 +754,7 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-verde-suave" />
@@ -767,7 +767,7 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <AlertTriangle className="h-8 w-8 text-red-500" />
@@ -780,7 +780,7 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <BarChart3 className="h-8 w-8 text-dorado" />
@@ -798,7 +798,7 @@ export default function ProductsPage() {
 
       {/* Selection Actions */}
       {selectedProducts.length > 0 && (
-        <Card className="border-dorado">
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -917,75 +917,6 @@ export default function ProductsPage() {
         </Card>
       )}
 
-      {/* Filters and View Toggle */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center text-azul-profundo">
-            <Filter className="h-5 w-5 mr-2" />
-            Filtros
-          </CardTitle>
-            <div className="flex items-center space-x-2">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => handleViewModeChange('grid')}
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'table' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => handleViewModeChange('table')}
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="Buscar productos..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            
-            <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Categoría" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas las categorías</SelectItem>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-full sm:w-[200px]">
-                <SelectValue placeholder="Estado" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los estados</SelectItem>
-                <SelectItem value="active">Activo</SelectItem>
-                <SelectItem value="draft">Borrador</SelectItem>
-                <SelectItem value="archived">Archivado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Products Display */}
       {viewMode === 'grid' ? (
         /* Grid View */
@@ -1065,7 +996,7 @@ export default function ProductsPage() {
       </div>
       ) : (
         /* Table View */
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center">
@@ -1194,7 +1125,7 @@ export default function ProductsPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="text-sm text-tierra-media">
@@ -1295,7 +1226,7 @@ export default function ProductsPage() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className="p-3 bg-dorado/20 rounded-lg">
@@ -1312,7 +1243,7 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className="p-3 bg-red-100 rounded-lg">
@@ -1338,7 +1269,7 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center space-x-4">
               <div className="p-3 bg-azul-profundo/20 rounded-lg">

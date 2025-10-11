@@ -141,16 +141,16 @@
     --utopica-text-inverse: #FFFFFF;
 
     /* ADMIN-SPECIFIC COLOR SYSTEM */
-    --admin-bg-primary: #F8F9FA;
-    --admin-bg-secondary: #FFFFFF;
-    --admin-bg-tertiary: #F1F3F4;
-    --admin-border-primary: #E5E7EB;
-    --admin-border-secondary: #D1D5DB;
-    --admin-text-primary: #1F2937;
-    --admin-text-secondary: #6B7280;
-    --admin-text-tertiary: #9CA3AF;
-    --admin-accent-primary: #AE0000;
-    --admin-accent-secondary: #C70000;
+    --admin-bg-primary: #F0EACE;
+    --admin-bg-secondary: #AE0000;
+    --admin-bg-tertiary: #FFF4B330;
+    --admin-border-primary: #FFF4B3;
+    --admin-border-secondary: #FFF4B3;
+    --admin-text-primary: #1C1B1A;
+    --admin-text-secondary: #1C1B1A;
+    --admin-text-tertiary: #1C1B1A;
+    --admin-accent-primary:#F0EACE;
+    --admin-accent-secondary: #F0EACE;
     --admin-accent-tertiary: #DB3600;
     --admin-success: #10B981;
     --admin-warning: #F59E0B;
@@ -1124,7 +1124,7 @@ input[type="submit"]:not(.btn-no-radius) {
 }
 
 .admin-sidebar {
-  background-color: var(--admin-bg-secondary);
+  background-color: var(--admin-bg-primary);
   border-right: 1px solid var(--admin-border-primary);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -1156,15 +1156,16 @@ input[type="submit"]:not(.btn-no-radius) {
 }
 
 .admin-nav-item:hover {
-  background-color: var(--admin-bg-tertiary);
+  background-color: #AE000025;
   color: var(--admin-text-primary);
+  box-shadow: 0 2px 8px rgba(97, 2, 2, 0.2);
   transform: translateX(2px);
 }
 
 .admin-nav-item.active {
-  background-color: var(--admin-accent-primary);
+  background-color: #AE000025;
   color: var(--admin-text-inverse);
-  box-shadow: 0 2px 8px rgba(174, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgba(97, 2, 2, 0.2);
 }
 
 .admin-nav-item.active:hover {
@@ -1174,10 +1175,9 @@ input[type="submit"]:not(.btn-no-radius) {
 
 /* Admin Cards */
 .admin-card {
-  background-color: var(--admin-bg-secondary);
   border: 1px solid var(--admin-border-primary);
   border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
   transition: all 0.2s ease;
 }
 

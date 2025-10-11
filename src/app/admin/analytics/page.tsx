@@ -299,7 +299,7 @@ export default function AnalyticsPage() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -319,7 +319,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -336,7 +336,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -353,7 +353,7 @@ export default function AnalyticsPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
@@ -383,7 +383,7 @@ export default function AnalyticsPage() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Sales Trend */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <TrendingUp className="h-5 w-5 mr-2" />
@@ -400,7 +400,7 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* Customer Acquisition */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Users className="h-5 w-5 mr-2" />
@@ -417,7 +417,7 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* Order Status Distribution */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <PieChart className="h-5 w-5 mr-2" />
@@ -440,7 +440,7 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* Customer Segmentation */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Users className="h-5 w-5 mr-2" />
@@ -484,7 +484,7 @@ export default function AnalyticsPage() {
         <TabsContent value="sales" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Revenue by Category */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2" />
@@ -503,7 +503,7 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* Sales Metrics */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Target className="h-5 w-5 mr-2" />
@@ -545,7 +545,7 @@ export default function AnalyticsPage() {
         <TabsContent value="products" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top Products */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Package className="h-5 w-5 mr-2" />
@@ -564,7 +564,7 @@ export default function AnalyticsPage() {
             </Card>
 
             {/* Product Performance Table */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <BarChart3 className="h-5 w-5 mr-2" />

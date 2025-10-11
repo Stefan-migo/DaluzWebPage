@@ -284,7 +284,7 @@ export default function AdminDashboard() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Revenue Card */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <DollarSign className="h-8 w-8 text-azul-profundo" />
@@ -322,7 +322,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Orders Card */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <ShoppingCart className="h-8 w-8 text-azul-profundo" />
@@ -344,7 +344,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Products Card - Only Active */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Package className="h-8 w-8 text-azul-profundo" />
@@ -375,7 +375,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Customers Card */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Users className="h-8 w-8 text-azul-profundo" />
@@ -400,7 +400,7 @@ export default function AdminDashboard() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Revenue Trend Chart */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle>Ingresos Últimos 7 Días</CardTitle>
             <p className="text-sm text-tierra-media">Evolución de ingresos diarios</p>
@@ -447,7 +447,7 @@ export default function AdminDashboard() {
         </Card>
 
         {/* Orders Status Distribution */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle>Estado de Pedidos (30 días)</CardTitle>
             <p className="text-sm text-tierra-media">Distribución por estado</p>
@@ -485,7 +485,7 @@ export default function AdminDashboard() {
 
       {/* Top Products Chart */}
       {data.charts.topProducts.length > 0 && (
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle>Productos Más Vendidos</CardTitle>
             <p className="text-sm text-tierra-media">Top 5 por ingresos</p>
@@ -514,7 +514,7 @@ export default function AdminDashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Orders - Takes 2 columns */}
         <div className="lg:col-span-2">
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle>Pedidos Recientes</CardTitle>
@@ -530,7 +530,7 @@ export default function AdminDashboard() {
               <div className="space-y-3">
                 {data.recentOrders.length > 0 ? (
                   data.recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                    <div key={order.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-[#AE000025] transition-colors">
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-1">
                           <p className="font-medium text-azul-profundo text-sm">
@@ -569,7 +569,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* Quick Actions */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle>Acciones Rápidas</CardTitle>
           </CardHeader>

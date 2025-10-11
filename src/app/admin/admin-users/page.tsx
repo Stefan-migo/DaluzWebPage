@@ -366,7 +366,7 @@ export default function AdminUsersPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Users className="h-8 w-8 text-azul-profundo" />
@@ -378,7 +378,7 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Crown className="h-8 w-8 text-dorado" />
@@ -392,7 +392,7 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <CheckCircle className="h-8 w-8 text-verde-suave" />
@@ -406,7 +406,7 @@ export default function AdminUsersPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Activity className="h-8 w-8 text-red-500" />
@@ -422,7 +422,7 @@ export default function AdminUsersPage() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
@@ -465,7 +465,7 @@ export default function AdminUsersPage() {
       </Card>
 
       {/* Admin Users Table */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardHeader>
           <CardTitle className="flex items-center">
             <Users className="h-5 w-5 mr-2" />
@@ -506,7 +506,7 @@ export default function AdminUsersPage() {
                   return fullName.includes(searchLower) || email.includes(searchLower);
                 });
                 return filteredAdminUsers.map((admin) => (
-                <TableRow key={admin.id}>
+                <TableRow key={admin.id} className="hover:bg-[#AE000025] transition-colors">
                   <TableCell>
                     <div>
                       <div className="font-medium">

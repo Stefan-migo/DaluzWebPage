@@ -179,7 +179,7 @@ export default function AdminReviewsPage() {
         </div>
 
         {/* Filters */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle>Filtros</CardTitle>
           </CardHeader>
@@ -252,7 +252,7 @@ export default function AdminReviewsPage() {
         </Card>
 
         {/* Reviews Table */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
           <CardHeader>
             <CardTitle>
               Reseñas ({reviews.length})
@@ -284,7 +284,7 @@ export default function AdminReviewsPage() {
                   </TableHeader>
                   <TableBody>
                     {reviews.map((review) => (
-                      <TableRow key={review.id}>
+                      <TableRow key={review.id} className="hover:bg-[#AE000025] transition-colors">
                         <TableCell>
                           <div>
                             <p className="font-medium">{review.product.name}</p>

@@ -345,7 +345,7 @@ export default function OrdersPage() {
       </div>
 
       {/* Filters and Search */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardHeader>
           <CardTitle className="flex items-center text-azul-profundo">
             <Filter className="h-5 w-5 mr-2" />
@@ -385,11 +385,11 @@ export default function OrdersPage() {
       </Card>
 
       {/* Orders Table */}
-      <Card className="shadow-lg">
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <Table>
-              <TableHeader className="bg-gray-50">
+              <TableHeader className="">
                 <TableRow>
                   <TableHead className="font-semibold text-azul-profundo">Pedido</TableHead>
                   <TableHead className="font-semibold text-azul-profundo">Cliente</TableHead>
@@ -402,7 +402,7 @@ export default function OrdersPage() {
               </TableHeader>
               <TableBody>
                 {filteredOrders.map((order) => (
-                  <TableRow key={order.id} className="hover:bg-gray-50 transition-colors">
+                  <TableRow key={order.id} className="hover:bg-[#AE000025] transition-colors">
                     <TableCell className="py-4">
                       <div>
                         <p className="font-medium text-azul-profundo">{order.order_number}</p>

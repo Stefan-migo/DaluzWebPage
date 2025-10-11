@@ -269,7 +269,7 @@ export default function CategoriesPage() {
       {/* Categories Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {categories.map((category) => (
-          <Card key={category.id} className="transition-all duration-200 hover:shadow-md">
+          <Card key={category.id} className="transition-all duration-200 bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
             <CardHeader>
               <div className="flex items-start justify-between">
                 <div className="flex-1">
