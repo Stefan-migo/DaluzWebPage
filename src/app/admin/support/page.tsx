@@ -114,7 +114,7 @@ export default function SupportPage() {
   useEffect(() => {
     fetchTickets();
     fetchCategories();
-  }, [currentPage, searchTerm, statusFilter, priorityFilter, categoryFilter, assignedFilter]);
+  }, [currentPage, statusFilter, priorityFilter, categoryFilter, assignedFilter]);
 
   // Recalculate stats when tickets data changes
   useEffect(() => {
@@ -129,7 +129,6 @@ export default function SupportPage() {
       const params = new URLSearchParams({
         page: currentPage.toString(),
         limit: '20',
-        ...(searchTerm && { search: searchTerm }),
         ...(statusFilter !== 'all' && { status: statusFilter }),
         ...(priorityFilter !== 'all' && { priority: priorityFilter }),
         ...(categoryFilter !== 'all' && { category_id: categoryFilter }),
@@ -475,7 +474,29 @@ export default function SupportPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <MessageSquare className="h-5 w-5 mr-2" />
-            Tickets de Soporte ({tickets.length})
+            Tickets de Soporte ({(() => {
+              // Client-side filtering for search
+              const filtered = tickets.filter(ticket => {
+                if (!searchTerm) return true;
+                const searchLower = searchTerm.toLowerCase();
+                const ticketNumber = (ticket.ticket_number || '').toLowerCase();
+                const subject = (ticket.subject || '').toLowerCase();
+                const customerName = (ticket.customer_name || '').toLowerCase();
+                const customerEmail = (ticket.customer_email || '').toLowerCase();
+                const customerFirstName = (ticket.customer?.first_name || '').toLowerCase();
+                const customerLastName = (ticket.customer?.last_name || '').toLowerCase();
+                const fullCustomerName = `${customerFirstName} ${customerLastName}`.trim();
+                
+                return ticketNumber.includes(searchLower) || 
+                       subject.includes(searchLower) || 
+                       customerName.includes(searchLower) || 
+                       customerEmail.includes(searchLower) ||
+                       customerFirstName.includes(searchLower) ||
+                       customerLastName.includes(searchLower) ||
+                       fullCustomerName.includes(searchLower);
+              });
+              return filtered.length;
+            })()})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -493,7 +514,28 @@ export default function SupportPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {tickets.map((ticket) => (
+              {(() => {
+                // Client-side filtering for search
+                const filteredTickets = tickets.filter(ticket => {
+                  if (!searchTerm) return true;
+                  const searchLower = searchTerm.toLowerCase();
+                  const ticketNumber = (ticket.ticket_number || '').toLowerCase();
+                  const subject = (ticket.subject || '').toLowerCase();
+                  const customerName = (ticket.customer_name || '').toLowerCase();
+                  const customerEmail = (ticket.customer_email || '').toLowerCase();
+                  const customerFirstName = (ticket.customer?.first_name || '').toLowerCase();
+                  const customerLastName = (ticket.customer?.last_name || '').toLowerCase();
+                  const fullCustomerName = `${customerFirstName} ${customerLastName}`.trim();
+                  
+                  return ticketNumber.includes(searchLower) || 
+                         subject.includes(searchLower) || 
+                         customerName.includes(searchLower) || 
+                         customerEmail.includes(searchLower) ||
+                         customerFirstName.includes(searchLower) ||
+                         customerLastName.includes(searchLower) ||
+                         fullCustomerName.includes(searchLower);
+                });
+                return filteredTickets.map((ticket) => (
                 <TableRow key={ticket.id} className={ticket.stats?.needsResponse ? 'bg-yellow-50' : ''}>
                   <TableCell>
                     <div>
@@ -583,7 +625,8 @@ export default function SupportPage() {
                     </Link>
                   </TableCell>
                 </TableRow>
-              ))}
+              ));
+              })()}
             </TableBody>
           </Table>
 

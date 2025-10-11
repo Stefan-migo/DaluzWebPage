@@ -93,13 +93,12 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     fetchAdminUsers();
-  }, [searchTerm, roleFilter, statusFilter]);
+  }, [roleFilter, statusFilter]);
 
   const fetchAdminUsers = async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams({
-        ...(searchTerm && { search: searchTerm }),
         ...(roleFilter !== 'all' && { role: roleFilter }),
         ...(statusFilter !== 'all' && { status: statusFilter })
       });
@@ -470,7 +469,17 @@ export default function AdminUsersPage() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Users className="h-5 w-5 mr-2" />
-            Usuarios Administradores ({adminUsers.length})
+            Usuarios Administradores ({(() => {
+              // Client-side filtering for search
+              const filtered = adminUsers.filter(admin => {
+                if (!searchTerm) return true;
+                const searchLower = searchTerm.toLowerCase();
+                const fullName = (admin.analytics?.fullName || '').toLowerCase();
+                const email = admin.email.toLowerCase();
+                return fullName.includes(searchLower) || email.includes(searchLower);
+              });
+              return filtered.length;
+            })()})
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -487,7 +496,16 @@ export default function AdminUsersPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {adminUsers.map((admin) => (
+              {(() => {
+                // Client-side filtering for search
+                const filteredAdminUsers = adminUsers.filter(admin => {
+                  if (!searchTerm) return true;
+                  const searchLower = searchTerm.toLowerCase();
+                  const fullName = (admin.analytics?.fullName || '').toLowerCase();
+                  const email = admin.email.toLowerCase();
+                  return fullName.includes(searchLower) || email.includes(searchLower);
+                });
+                return filteredAdminUsers.map((admin) => (
                 <TableRow key={admin.id}>
                   <TableCell>
                     <div>
@@ -566,7 +584,8 @@ export default function AdminUsersPage() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+              ));
+              })()}
             </TableBody>
           </Table>
 

@@ -54,6 +54,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { toast } from 'sonner';
+import CreateManualOrderForm from '@/components/admin/CreateManualOrderForm';
 
 interface Order {
   id: string;
@@ -81,6 +82,7 @@ export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [showCreateOrder, setShowCreateOrder] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -208,6 +210,33 @@ export default function OrdersPage() {
     }
   };
 
+  const createManualOrder = async (orderData: any) => {
+    try {
+      const response = await fetch('/api/admin/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'create_manual_order',
+          orderData
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create order');
+      }
+
+      const data = await response.json();
+      toast.success('Pedido creado exitosamente');
+      setShowCreateOrder(false);
+      fetchOrders(); // Refresh the orders list
+    } catch (error) {
+      console.error('Error creating manual order:', error);
+      toast.error('Error al crear el pedido');
+    }
+  };
+
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
@@ -303,10 +332,16 @@ export default function OrdersPage() {
           </p>
         </div>
         
-        <Button onClick={fetchOrders} variant="outline">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Actualizar
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={fetchOrders} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Actualizar
+          </Button>
+          <Button onClick={() => setShowCreateOrder(true)}>
+            <Package className="h-4 w-4 mr-2" />
+            Nuevo Pedido
+          </Button>
+        </div>
       </div>
 
       {/* Filters and Search */}
@@ -350,55 +385,56 @@ export default function OrdersPage() {
       </Card>
 
       {/* Orders Table */}
-      <Card>
+      <Card className="shadow-lg">
         <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Pedido</TableHead>
-                <TableHead>Cliente</TableHead>
-                <TableHead>Fecha</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Pago</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead className="w-[50px]">Acciones</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrders.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium text-azul-profundo">{order.order_number}</p>
-                      <p className="text-xs text-tierra-media">
-                        {order.order_items.length} producto{order.order_items.length !== 1 ? 's' : ''}
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader className="bg-gray-50">
+                <TableRow>
+                  <TableHead className="font-semibold text-azul-profundo">Pedido</TableHead>
+                  <TableHead className="font-semibold text-azul-profundo">Cliente</TableHead>
+                  <TableHead className="font-semibold text-azul-profundo">Fecha</TableHead>
+                  <TableHead className="font-semibold text-azul-profundo">Estado</TableHead>
+                  <TableHead className="font-semibold text-azul-profundo">Pago</TableHead>
+                  <TableHead className="font-semibold text-azul-profundo">Total</TableHead>
+                  <TableHead className="w-[50px] font-semibold text-azul-profundo">Acciones</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrders.map((order) => (
+                  <TableRow key={order.id} className="hover:bg-gray-50 transition-colors">
+                    <TableCell className="py-4">
+                      <div>
+                        <p className="font-medium text-azul-profundo">{order.order_number}</p>
+                        <p className="text-xs text-tierra-media">
+                          {order.order_items.length} producto{order.order_items.length !== 1 ? 's' : ''}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div>
+                        <p className="font-medium">{order.customer_name}</p>
+                        <p className="text-xs text-tierra-media">{order.customer_email}</p>
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <div className="flex items-center text-sm">
+                        <Calendar className="h-4 w-4 mr-1 text-tierra-media" />
+                        {formatDate(order.created_at)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-4">
+                      {getStatusBadge(order.status)}
+                    </TableCell>
+                    <TableCell className="py-4">
+                      {getPaymentStatusBadge(order.payment_status)}
+                    </TableCell>
+                    <TableCell className="py-4">
+                      <p className="font-semibold text-verde-suave">
+                        {formatPrice(order.total_amount)}
                       </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <p className="font-medium">{order.customer_name}</p>
-                      <p className="text-xs text-tierra-media">{order.customer_email}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center text-sm">
-                      <Calendar className="h-4 w-4 mr-1 text-tierra-media" />
-                      {formatDate(order.created_at)}
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {getStatusBadge(order.status)}
-                  </TableCell>
-                  <TableCell>
-                    {getPaymentStatusBadge(order.payment_status)}
-                  </TableCell>
-                  <TableCell>
-                    <p className="font-semibold text-verde-suave">
-                      {formatPrice(order.total_amount)}
-                    </p>
-                  </TableCell>
-                  <TableCell>
+                    </TableCell>
+                    <TableCell className="py-4">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
@@ -463,12 +499,13 @@ export default function OrdersPage() {
                           </DropdownMenuItem>
                         )}
                       </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
           
           {filteredOrders.length === 0 && (
             <div className="text-center py-12">
@@ -565,6 +602,25 @@ export default function OrdersPage() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Manual Order Dialog */}
+      <Dialog open={showCreateOrder} onOpenChange={setShowCreateOrder}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-azul-profundo">
+              Crear Pedido Manual
+            </DialogTitle>
+            <DialogDescription>
+              Agregar un pedido realizado fuera de la plataforma
+            </DialogDescription>
+          </DialogHeader>
+          
+          <CreateManualOrderForm 
+            onSubmit={createManualOrder}
+            onCancel={() => setShowCreateOrder(false)}
+          />
         </DialogContent>
       </Dialog>
     </div>

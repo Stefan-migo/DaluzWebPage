@@ -131,15 +131,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
+      console.log('🔍 Admin layout useEffect triggered:', { loading, user: !!user, profile: !!profile });
+      
       // Don't check admin status if auth is still loading
       if (loading) {
-        setAdminState(prev => ({ ...prev, isChecking: true, hasChecked: false }));
+        console.log('⏳ Auth still loading, waiting...');
+        // Don't set state here to avoid unnecessary re-renders
         return;
       }
 
       // Wait a bit longer after auth loads to ensure auth state is stable
       if (!user) {
-        console.log('🔍 No user found, waiting for auth to stabilize...');
+        console.log('🔍 No user found, setting admin state to false');
         setAdminState({
           isChecking: false,
           isAdmin: false,
@@ -251,8 +254,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }, [user?.id, loading]); // 🚀 KEY FIX: Only depend on user.id instead of entire user object
 
   useEffect(() => {
+    // Skip if redirect is already in progress
+    if (redirectInProgress.current) {
+      return;
+    }
+
     // Only redirect after both auth and admin checks are COMPLETELY finished
-    if (!loading && adminState.hasChecked && !adminState.isChecking && !redirectInProgress.current) {
+    if (!loading && adminState.hasChecked && !adminState.isChecking) {
       console.log('🔄 Admin redirect check:', { 
         user: !!user, 
         userEmail: user?.email,
@@ -262,12 +270,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         hasChecked: adminState.hasChecked
       });
       
-      // Add a small delay to let auth fully stabilize
+      // If user is admin, just mark as done and return early
+      if (user && user.email && adminState.isAdmin) {
+        console.log('✅ Admin access confirmed immediately, showing dashboard');
+        return;
+      }
+
+      // Add a small delay to let auth fully stabilize before redirecting
       const delayRedirect = () => {
+        redirectInProgress.current = true;
         setTimeout(() => {
           if (!user || !user.email) {
             console.log('🚪 No user or email found after delay, redirecting to login');
-            redirectInProgress.current = true;
             router.push('/login');
             return;
           }
@@ -275,32 +289,22 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           // Check admin access - only redirect if we've definitely checked and user is not admin
           if (!adminState.isAdmin) {
             console.log('🚫 User not admin after delay, redirecting to home');
-            redirectInProgress.current = true;
             router.push('/');
             return;
           }
-          
-          console.log('✅ Admin access confirmed after delay, showing dashboard');
-          // Reset redirect flag when we successfully show dashboard
-          redirectInProgress.current = false;
         }, 500); // 500ms delay to let auth stabilize
       };
       
-      if (!user || !user.email) {
+      if (!user || !user.email || !adminState.isAdmin) {
         delayRedirect();
-      } else if (!adminState.isAdmin) {
-        delayRedirect();
-      } else {
-        console.log('✅ Admin access confirmed immediately, showing dashboard');
-        redirectInProgress.current = false;
       }
     }
-  }, [user, adminState, loading, router]);
+  }, [user?.id, adminState.hasChecked, adminState.isChecking, adminState.isAdmin, loading, router]);
 
   // Reset redirect flag when user changes
   useEffect(() => {
     redirectInProgress.current = false;
-  }, [user]);
+  }, [user?.id]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -367,10 +371,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   console.log('🎉 Admin dashboard rendering for:', user.email);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="admin-layout">
       {/* Mobile Header */}
-      <div className="lg:hidden bg-white border-b border-gray-200 px-4 py-3">
-        <div className="flex items-center justify-between">
+      <div className="lg:hidden admin-header">
+        <div className="admin-header-content">
           <div className="flex items-center space-x-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
@@ -383,10 +387,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               </SheetContent>
             </Sheet>
             
-            <h1 className="text-xl font-semibold text-azul-profundo">Admin</h1>
+            <h1 className="admin-header-title">Admin</h1>
           </div>
           
-          <div className="flex items-center space-x-2">
+          <div className="admin-header-actions">
             <Button variant="ghost" size="icon">
               <Bell className="h-5 w-5" />
             </Button>
@@ -404,50 +408,48 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Main Content */}
-        <div className="lg:pl-72">
+        <div className="lg:pl-72"
+        style={{width: '-webkit-fill-available'}}
+        >
           {/* Desktop Header */}
-          <div className="hidden lg:block bg-white border-b border-gray-200">
-            <div className="px-6 py-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h1 className="text-2xl font-semibold text-azul-profundo">
-                    DA LUZ CONSCIENTE
-                  </h1>
-                  <p className="text-sm text-tierra-media">Panel de Administración</p>
-                </div>
+          <div className="hidden lg:block admin-header">
+            <div className="admin-header-content">
+              <div>
+                <h1 className="admin-header-title">
+                  DA LUZ CONSCIENTE
+                </h1>
+                <p className="admin-header-subtitle">Panel de Administración</p>
+              </div>
+              
+              <div className="admin-header-actions">
+                <Button variant="ghost" size="icon" className="relative">
+                  <Bell className="h-5 w-5" />
+                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+                </Button>
                 
-                <div className="flex items-center space-x-4">
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="h-5 w-5" />
-                    <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-                  </Button>
-                  
-                  <div className="flex items-center space-x-3">
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-azul-profundo">
-                        {profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : user.email}
-                      </p>
-                      <p className="text-xs text-tierra-media">
-                        Administrador
-                      </p>
-                    </div>
-                    <Button variant="ghost" size="icon">
-                      <User className="h-5 w-5" />
-                    </Button>
-                    <Button variant="ghost" size="icon" onClick={handleSignOut}>
-                      <LogOut className="h-5 w-5" />
-                    </Button>
+                <div className="admin-header-user">
+                  <div className="admin-header-user-info">
+                    <p className="admin-header-user-name">
+                      {profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : user.email}
+                    </p>
+                    <p className="admin-header-user-role">
+                      Administrador
+                    </p>
                   </div>
+                  <Button variant="ghost" size="icon">
+                    <User className="h-5 w-5" />
+                  </Button>
+                  <Button variant="ghost" size="icon" onClick={handleSignOut}>
+                    <LogOut className="h-5 w-5" />
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Page Content */}
-          <main className="flex-1 py-6">
-            <div className="px-4 sm:px-6 lg:px-8">
-              {children}
-            </div>
+          <main className="admin-content">
+            {children}
           </main>
         </div>
       </div>
@@ -464,46 +466,48 @@ function AdminSidebar({
   onNavigate?: () => void;
 }) {
   return (
-    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border-r border-gray-200">
+    <div className="admin-sidebar flex grow flex-col gap-y-5 overflow-y-auto">
       {/* Logo */}
-      <div className="flex h-16 shrink-0 items-center px-6 border-b border-gray-200">
-        <Link href="/" className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-br from-dorado to-verde-suave rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">DL</span>
+      <div className="admin-sidebar-header">
+        <Link href="/" className="admin-sidebar-logo">
+          <div className="admin-sidebar-logo-icon">
+            <span>DL</span>
           </div>
-          <span className="font-semibold text-azul-profundo">DA LUZ</span>
+          <span>DA LUZ</span>
         </Link>
       </div>
 
       {/* Quick Stats */}
       <div className="px-6">
-        <div className="bg-gradient-to-r from-dorado/10 to-verde-suave/10 rounded-lg p-4">
-          <h3 className="text-sm font-medium text-azul-profundo mb-2">Resumen Rápido</h3>
-          <div className="space-y-2">
-            <div className="flex justify-between text-xs">
-              <span className="text-tierra-media">Pedidos Hoy</span>
-              <span className="font-medium text-azul-profundo">12</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-tierra-media">Ventas</span>
-              <span className="font-medium text-verde-suave">$48,320</span>
-            </div>
-            <div className="flex justify-between text-xs">
-              <span className="text-tierra-media">Stock Bajo</span>
-              <span className="font-medium text-red-500">3</span>
+        <div className="admin-card">
+          <div className="admin-card-content">
+            <h3 className="admin-card-title">Resumen Rápido</h3>
+            <div className="space-y-2">
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-600">Pedidos Hoy</span>
+                <span className="font-medium text-gray-900">12</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-600">Ventas</span>
+                <span className="font-medium text-green-600">$48,320</span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span className="text-gray-600">Stock Bajo</span>
+                <span className="font-medium text-red-500">3</span>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Navigation */}
-      <nav className="flex flex-1 flex-col px-6">
+      <nav className="admin-sidebar-nav">
         <ul role="list" className="flex flex-1 flex-col gap-y-1">
           {/* Quick Return to Site */}
           <li className="mb-4">
             <Link
               href="/"
-              className="group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-medium text-tierra-media hover:text-azul-profundo hover:bg-gray-50 transition-colors"
+              className="admin-nav-item"
               onClick={onNavigate}
             >
               <Home className="h-5 w-5 shrink-0" />
@@ -522,31 +526,24 @@ function AdminSidebar({
                   href={item.href}
                   onClick={onNavigate}
                   className={cn(
-                    'group flex gap-x-3 rounded-md p-3 text-sm leading-6 font-medium transition-colors',
-                    isActive
-                      ? 'bg-gradient-to-r from-dorado/20 to-verde-suave/20 text-azul-profundo border-r-2 border-dorado'
-                      : 'text-tierra-media hover:text-azul-profundo hover:bg-gray-50'
+                    'admin-nav-item',
+                    isActive && 'active'
                   )}
                 >
-                  <item.icon 
-                    className={cn(
-                      'h-5 w-5 shrink-0',
-                      isActive ? 'text-dorado' : 'text-tierra-media group-hover:text-azul-profundo'
-                    )} 
-                  />
+                  <item.icon className="h-5 w-5 shrink-0" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span>{item.label}</span>
                       {item.badge && (
                         <Badge 
                           variant="secondary" 
-                          className="bg-red-100 text-red-700 border-red-200"
+                          className="admin-badge admin-badge-error"
                         >
                           {item.badge}
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-tierra-media mt-1">
+                    <p className="text-xs text-gray-500 mt-1">
                       {item.description}
                     </p>
                   </div>
@@ -560,10 +557,10 @@ function AdminSidebar({
       {/* Footer */}
       <div className="border-t border-gray-200 p-6">
         <div className="text-center">
-          <p className="text-xs text-tierra-media">
+          <p className="text-xs text-gray-500">
             DA LUZ CONSCIENTE v1.0
           </p>
-          <p className="text-xs text-tierra-media mt-1">
+          <p className="text-xs text-gray-500 mt-1">
             Admin Panel
           </p>
         </div>

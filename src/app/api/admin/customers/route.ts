@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
     }
     console.log('✅ Admin access confirmed for:', user.email);
 
-    // Build the query (simplified to use only existing tables)
+    // Build the query to get customers from profiles table
     console.log('🗄️ Building database query...');
     let query = supabase
       .from('profiles')
@@ -78,12 +78,9 @@ export async function GET(request: NextRequest) {
     }
     console.log('✅ Customers fetched successfully:', customers?.length || 0);
 
-    // Calculate customer analytics (simplified without orders data)
+    // Calculate customer analytics
     console.log('📊 Calculating customer analytics...');
     const customerStats = customers?.map(customer => {
-      // For now, use basic customer data without order analytics
-      // TODO: Add order analytics once orders table relationship is confirmed
-      
       // Basic segment classification based on membership
       let segment = 'new';
       if (customer.is_member) {
@@ -119,66 +116,147 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Export the customer analytics summary
+// Handle both analytics and customer creation
 export async function POST(request: NextRequest) {
   try {
-    console.log('🔍 Customers API POST called (analytics summary)');
     const supabase = await createClient();
     
     // Check admin authorization
+    console.log('🔐 Checking user authentication...');
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
+      console.error('❌ User authentication failed:', userError);
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    console.log('✅ User authenticated:', user.email);
 
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
+    console.log('🔒 Checking admin privileges...');
+    const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin', { user_id: user.id });
+    if (adminError) {
+      console.error('❌ Admin check error:', adminError);
+      return NextResponse.json({ error: 'Admin verification failed' }, { status: 500 });
+    }
     if (!isAdmin) {
+      console.log('❌ User is not admin:', user.email);
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
+    console.log('✅ Admin access confirmed for:', user.email);
 
-    // Get customer analytics summary
-    const { data: totalCustomers, count: totalCount } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true });
+    // Get request body to determine action
+    const body = await request.json();
+    
+    // Check if this is a customer creation request (has email field)
+    if (body.email) {
+      console.log('🔍 Customers API POST called (create new customer)');
+      console.log('📝 Create customer data received:', body);
 
-    const { data: activeMembers, count: activeCount } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .eq('is_member', true);
+      // Validate required fields
+      if (!body.email) {
+        return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+      }
 
-    const { data: recentCustomers, count: recentCount } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true })
-      .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+      if (!body.first_name && !body.last_name) {
+        return NextResponse.json({ error: 'At least first name or last name is required' }, { status: 400 });
+      }
 
-    // Get membership tier distribution
-    console.log('📊 Getting membership distribution...');
-    const { data: membershipDistribution, error: membershipError } = await supabase
-      .from('profiles')
-      .select('membership_tier')
-      .neq('membership_tier', 'none');
+      // Check if customer already exists
+      const { data: existingCustomer, error: checkError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', body.email)
+        .single();
 
-    if (membershipError) {
-      console.error('❌ Error getting membership distribution:', membershipError);
-      // Continue with empty distribution rather than failing
+      if (existingCustomer) {
+        return NextResponse.json({ error: 'Customer with this email already exists' }, { status: 400 });
+      }
+
+      // Prepare customer data
+      const customerData = {
+        first_name: body.first_name || null,
+        last_name: body.last_name || null,
+        email: body.email,
+        phone: body.phone || null,
+        address_line_1: body.address_line_1 || null,
+        address_line_2: body.address_line_2 || null,
+        city: body.city || null,
+        state: body.state || null,
+        postal_code: body.postal_code || null,
+        country: body.country || 'Argentina',
+        membership_tier: body.membership_tier || 'none',
+        is_member: body.is_member || false,
+        membership_start_date: body.membership_start_date ? new Date(body.membership_start_date).toISOString() : null,
+        membership_end_date: body.membership_end_date ? new Date(body.membership_end_date).toISOString() : null,
+        newsletter_subscribed: body.newsletter_subscribed || false,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      console.log('🔄 Creating new customer profile...');
+      const { data: newCustomer, error: createError } = await supabase
+        .from('profiles')
+        .insert(customerData)
+        .select()
+        .single();
+
+      if (createError) {
+        console.error('❌ Error creating customer:', createError);
+        return NextResponse.json({ error: 'Failed to create customer' }, { status: 500 });
+      }
+
+      console.log('✅ Customer created successfully:', newCustomer.email);
+
+      return NextResponse.json({
+        success: true,
+        customer: newCustomer
+      });
+    } else {
+      // This is an analytics request
+      console.log('🔍 Customers API POST called (analytics summary)');
+
+      // Get customer analytics summary
+      const { data: totalCustomers, count: totalCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true });
+
+      const { data: activeMembers, count: activeCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_member', true);
+
+      const { data: recentCustomers, count: recentCount } = await supabase
+        .from('profiles')
+        .select('*', { count: 'exact', head: true })
+        .gte('created_at', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString());
+
+      // Get membership tier distribution
+      console.log('📊 Getting membership distribution...');
+      const { data: membershipDistribution, error: membershipError } = await supabase
+        .from('profiles')
+        .select('membership_tier')
+        .neq('membership_tier', 'none');
+
+      if (membershipError) {
+        console.error('❌ Error getting membership distribution:', membershipError);
+        // Continue with empty distribution rather than failing
+      }
+
+      const tierCounts = membershipDistribution?.reduce((acc: any, profile: any) => {
+        acc[profile.membership_tier] = (acc[profile.membership_tier] || 0) + 1;
+        return acc;
+      }, {}) || {};
+
+      return NextResponse.json({
+        summary: {
+          totalCustomers: totalCount || 0,
+          activeMembers: activeCount || 0,
+          newCustomersThisMonth: recentCount || 0,
+          membershipDistribution: tierCounts || {}
+        }
+      });
     }
 
-    const tierCounts = membershipDistribution?.reduce((acc: any, profile: any) => {
-      acc[profile.membership_tier] = (acc[profile.membership_tier] || 0) + 1;
-      return acc;
-    }, {}) || {};
-
-    return NextResponse.json({
-      summary: {
-        totalCustomers: totalCount || 0,
-        activeMembers: activeCount || 0,
-        newCustomersThisMonth: recentCount || 0,
-        membershipDistribution: tierCounts || {}
-      }
-    });
-
   } catch (error) {
-    console.error('Error in customer analytics API:', error);
+    console.error('Error in customers API:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

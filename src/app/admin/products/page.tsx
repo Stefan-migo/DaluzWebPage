@@ -133,6 +133,7 @@ export default function ProductsPage() {
   const [bulkOperation, setBulkOperation] = useState('');
   const [bulkUpdates, setBulkUpdates] = useState<any>({});
   const [showBulkDialog, setShowBulkDialog] = useState(false);
+  
   const [isDeleteDialog, setIsDeleteDialog] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [forceDelete, setForceDelete] = useState(false);
@@ -148,6 +149,7 @@ export default function ProductsPage() {
   const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
+    console.log('🚀 ProductsPage component mounted');
     fetchGlobalStats(); // Fetch global stats once on mount
     fetchCategories();
   }, []);
@@ -158,11 +160,13 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [currentPage, itemsPerPage, searchTerm, categoryFilter, statusFilter]);
+  }, [currentPage, itemsPerPage, categoryFilter, statusFilter]);
 
   const fetchProducts = async () => {
     try {
+      console.log('📦 Fetching products...');
       setLoading(true);
+      setError(null); // Clear any previous errors
       
       // Calculate offset for pagination
       const offset = (currentPage - 1) * itemsPerPage;
@@ -170,7 +174,6 @@ export default function ProductsPage() {
       const params = new URLSearchParams({
         limit: itemsPerPage.toString(),
         offset: offset.toString(),
-        ...(searchTerm && { search: searchTerm }),
       });
 
       // Fix: Only send status param when filtering, otherwise use include_archived
@@ -185,12 +188,17 @@ export default function ProductsPage() {
         params.append('category', categoryFilter);
       }
 
+      console.log('🔗 API URL:', `/api/admin/products?${params}`);
       const response = await fetch(`/api/admin/products?${params}`);
+      
       if (!response.ok) {
-        throw new Error('Failed to fetch products');
+        const errorText = await response.text();
+        console.error('❌ API Error:', response.status, errorText);
+        throw new Error(`API Error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
+      console.log('✅ API Response:', data);
       
       // Calculate pagination
       const total = data.pagination?.total || data.total || 0;
@@ -200,7 +208,7 @@ export default function ProductsPage() {
       setTotalProducts(total);
       setTotalPages(calculatedTotalPages);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('❌ Error fetching products:', error);
       setError(error instanceof Error ? error.message : 'Unknown error occurred');
       toast.error('Error al cargar productos');
     } finally {
@@ -462,10 +470,14 @@ export default function ProductsPage() {
     return <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>;
   };
 
-  // Filter products (client-side filtering for low stock toggle)
+  // Filter products (client-side filtering for search and low stock toggle)
   const filteredProducts = products.filter(product => {
+    const matchesSearch = !searchTerm || 
+      product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    
     const matchesLowStock = !showLowStockOnly || (product.inventory_quantity || 0) <= 5;
-    return matchesLowStock;
+    
+    return matchesSearch && matchesLowStock;
   });
 
   // Bulk operation form renderer
@@ -685,6 +697,8 @@ export default function ProductsPage() {
     );
   }
 
+  console.log('🎨 ProductsPage rendering, loading:', loading, 'error:', error);
+  
   return (
     <div className="space-y-6">
       {/* Header */}

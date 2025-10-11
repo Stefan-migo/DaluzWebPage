@@ -1,12 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServiceRoleClient } from '@/utils/supabase/server';
+import { createClient } from '@/utils/supabase/server';
 
 // GET /api/admin/reviews - Get all reviews for admin management
 export async function GET(request: NextRequest) {
   try {
-    const supabase = createServiceRoleClient();
-    const { searchParams } = new URL(request.url);
+    console.log('🔍 Admin Reviews API GET called');
+    const supabase = await createClient();
     
+    // Check admin authorization
+    console.log('🔐 Checking user authentication...');
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      console.error('❌ User authentication failed:', userError);
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    console.log('✅ User authenticated:', user.email);
+
+    console.log('🔒 Checking admin privileges...');
+    const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin', { user_id: user.id });
+    if (adminError) {
+      console.error('❌ Admin check error:', adminError);
+      return NextResponse.json({ error: 'Admin verification failed' }, { status: 500 });
+    }
+    if (!isAdmin) {
+      console.log('❌ User is not admin:', user.email);
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+    console.log('✅ Admin access confirmed for:', user.email);
+
+    const { searchParams } = new URL(request.url);
     const search = searchParams.get('search');
     const status = searchParams.get('status');
     const rating = searchParams.get('rating');
@@ -14,6 +36,8 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     
     const offset = (page - 1) * limit;
+
+    console.log('📊 Query params:', { search, status, rating, page, limit });
 
     // Build query
     let query = supabase
@@ -24,20 +48,13 @@ export async function GET(request: NextRequest) {
           id,
           name,
           slug
-        ),
-        user:user_id (
-          id,
-          email,
-          user_metadata (
-            full_name
-          )
         )
       `)
       .order('created_at', { ascending: false });
 
     // Apply filters
     if (search) {
-      query = query.or(`title.ilike.%${search}%,comment.ilike.%${search}%,product.name.ilike.%${search}%,user.email.ilike.%${search}%`);
+      query = query.or(`title.ilike.%${search}%,comment.ilike.%${search}%,product.name.ilike.%${search}%`);
     }
 
     if (status) {
@@ -63,15 +80,18 @@ export async function GET(request: NextRequest) {
     // Apply pagination
     query = query.range(offset, offset + limit - 1);
 
+    console.log('🗄️ Executing reviews query...');
     const { data: reviews, error, count } = await query;
 
     if (error) {
-      console.error('Error fetching reviews:', error);
+      console.error('❌ Error fetching reviews:', error);
       return NextResponse.json(
         { error: 'Failed to fetch reviews' },
         { status: 500 }
       );
     }
+
+    console.log('✅ Reviews fetched successfully:', reviews?.length || 0);
 
     // Get total count for pagination
     const { count: totalCount } = await supabase
@@ -90,7 +110,7 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('Error in admin reviews GET:', error);
+    console.error('❌ Error in admin reviews GET:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

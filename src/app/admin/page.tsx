@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { cn } from '@/lib/utils';
 import { 
   TrendingUp, 
   TrendingDown,
@@ -16,15 +17,76 @@ import {
   Plus,
   ArrowRight,
   Calendar,
-  Clock,
   CheckCircle,
-  XCircle
+  XCircle,
+  Clock
 } from 'lucide-react';
 import Link from 'next/link';
-import { AutoRefreshFixNotification } from '@/components/admin/AutoRefreshFixNotification';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  PieChart,
+  Pie,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
 
-// Default fallback data structure
-const defaultDashboardData = {
+// Colors from the brand palette
+const COLORS = {
+  primary: '#8B5A3C',
+  secondary: '#B17A47',
+  accent: '#D4A574',
+  success: '#4ade80',
+  warning: '#fbbf24',
+  danger: '#ef4444',
+  info: '#60a5fa'
+};
+
+const CHART_COLORS = [COLORS.primary, COLORS.secondary, COLORS.accent, COLORS.success, COLORS.warning];
+
+interface DashboardData {
+  kpis: {
+    products: {
+      total: number;
+      lowStock: number;
+      outOfStock: number;
+    };
+    orders: {
+      total: number;
+      pending: number;
+      processing: number;
+      completed: number;
+      failed: number;
+    };
+    revenue: {
+      current: number;
+      previous: number;
+      change: number;
+      currency: string;
+    };
+    customers: {
+      total: number;
+      new: number;
+      returning: number;
+    };
+  };
+  recentOrders: any[];
+  lowStockProducts: any[];
+  charts: {
+    revenueTrend: any[];
+    ordersStatus: any;
+    topProducts: any[];
+  };
+}
+
+const defaultDashboardData: DashboardData = {
   kpis: {
     revenue: {
       current: 0,
@@ -50,14 +112,18 @@ const defaultDashboardData = {
       returning: 0
     }
   },
-  recentOrders: [] as any[],
-  lowStockProducts: [] as any[]
+  recentOrders: [],
+  lowStockProducts: [],
+  charts: {
+    revenueTrend: [],
+    ordersStatus: {},
+    topProducts: []
+  }
 };
 
 export default function AdminDashboard() {
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState(defaultDashboardData);
-  const [dashboardMetrics, setDashboardMetrics] = useState<any>(null);
+  const [data, setData] = useState<DashboardData>(defaultDashboardData);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -65,118 +131,18 @@ export default function AdminDashboard() {
       try {
         setIsLoading(true);
         
-        // Fetch products data
-        const productsResponse = await fetch('/api/products');
-        const productsData = await productsResponse.json();
+        const response = await fetch('/api/admin/dashboard');
         
-        // Fetch orders data
-        let ordersData = { orders: [] };
-        try {
-          const ordersResponse = await fetch('/api/orders');
-          if (ordersResponse.ok) {
-            ordersData = await ordersResponse.json();
-          }
-        } catch (ordersError) {
-          console.log('Orders endpoint not available, using empty data');
+        if (!response.ok) {
+          throw new Error('Failed to fetch dashboard data');
         }
 
-        // Fetch customers data
-        let customersData = { profiles: [] };
-        try {
-          const customersResponse = await fetch('/api/admin/customers');
-          if (customersResponse.ok) {
-            const customerResult = await customersResponse.json();
-            customersData = { profiles: customerResult.customers || [] };
-          }
-        } catch (customerError) {
-          console.log('Customers endpoint not available, using empty data');
-        }
-
-        // Calculate metrics from real data
-        const products = productsData.products || [];
-        const orders = ordersData.orders || [];
-        const customers = customersData.profiles || [];
-        
-        // Get low stock products (≤5 units)
-        const lowStockProducts = products
-          .filter((p: any) => (p.inventory_quantity || 0) <= 5)
-          .map((p: any) => ({
-            id: p.id,
-            name: p.name || p.title,
-            currentStock: p.inventory_quantity || 0,
-            threshold: 5
-          }))
-          .slice(0, 5); // Show top 5 low stock items
-
-        // Get recent orders (last 5)
-        const recentOrders = orders
-          .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-          .slice(0, 5)
-          .map((o: any) => ({
-            id: o.id,
-            orderNumber: o.order_number || `DL-${o.id}`,
-            customerName: o.customer_name || 'Cliente no especificado',
-            total: o.total_amount || 0,
-            status: o.status || 'pending',
-            createdAt: o.created_at
-          }));
-
-        // Calculate revenue from completed orders
-        const completedOrders = orders.filter((o: any) => o.status === 'completed' || o.payment_status === 'paid');
-        const currentRevenue = completedOrders.reduce((sum: number, o: any) => sum + (o.total_amount || 0), 0);
-
-        // Calculate customers metrics
-        const now = new Date();
-        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-        const newCustomers = customers.filter((c: any) => 
-          new Date(c.created_at) >= thirtyDaysAgo
-        ).length;
-
-        const metrics = {
-          products: {
-            total: products.length,
-            lowStock: lowStockProducts.length,
-            outOfStock: products.filter((p: any) => (p.inventory_quantity || 0) === 0).length,
-            active: products.filter((p: any) => p.status === 'active' || !p.status).length
-          },
-          orders: {
-            total: orders.length,
-            pending: orders.filter((o: any) => o.status === 'pending').length,
-            processing: orders.filter((o: any) => o.status === 'processing').length,
-            completed: orders.filter((o: any) => o.status === 'completed').length,
-            failed: orders.filter((o: any) => o.status === 'failed').length
-          },
-          revenue: {
-            current: currentRevenue,
-            previous: 0, // TODO: Calculate from previous period data
-            change: 0, // TODO: Calculate percentage change
-            currency: 'ARS'
-          },
-          customers: {
-            total: customers.length,
-            new: newCustomers,
-            returning: customers.length - newCustomers
-          }
-        };
-        
-        // Update data with real information
-        setData({
-          kpis: {
-            revenue: metrics.revenue,
-            orders: metrics.orders,
-            products: metrics.products,
-            customers: metrics.customers
-          },
-          recentOrders,
-          lowStockProducts
-        });
-        
-        setDashboardMetrics(metrics);
+        const result = await response.json();
+        setData(result);
         setError(null);
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
-        setError('Error al cargar algunos datos');
-        // Keep default data as fallback
+        setError('Error al cargar los datos del dashboard');
       } finally {
         setIsLoading(false);
       }
@@ -189,11 +155,10 @@ export default function AdminDashboard() {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
     }).format(amount);
   };
-
-  // Use the current data state (always real data or default empty state)
-  const currentData = data;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-AR', {
@@ -207,17 +172,26 @@ export default function AdminDashboard() {
   const getOrderStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge className="bg-verde-suave text-white"><CheckCircle className="h-3 w-3 mr-1" />Completado</Badge>;
+        return <Badge className="bg-verde-suave text-white text-xs"><CheckCircle className="h-3 w-3 mr-1" />Completado</Badge>;
       case 'pending':
-        return <Badge className="bg-dorado text-azul-profundo"><Clock className="h-3 w-3 mr-1" />Pendiente</Badge>;
+        return <Badge className="bg-dorado text-azul-profundo text-xs"><Clock className="h-3 w-3 mr-1" />Pendiente</Badge>;
       case 'processing':
-        return <Badge className="bg-azul-profundo text-white"><Package className="h-3 w-3 mr-1" />Procesando</Badge>;
+        return <Badge className="bg-azul-profundo text-white text-xs"><Package className="h-3 w-3 mr-1" />Procesando</Badge>;
       case 'failed':
-        return <Badge variant="destructive"><XCircle className="h-3 w-3 mr-1" />Fallido</Badge>;
+        return <Badge variant="destructive" className="text-xs"><XCircle className="h-3 w-3 mr-1" />Fallido</Badge>;
       default:
-        return <Badge variant="secondary">{status}</Badge>;
+        return <Badge variant="secondary" className="text-xs">{status}</Badge>;
     }
   };
+
+  // Prepare chart data
+  const ordersStatusData = data.charts.ordersStatus ? [
+    { name: 'Pendiente', value: data.charts.ordersStatus.pending || 0 },
+    { name: 'Procesando', value: data.charts.ordersStatus.processing || 0 },
+    { name: 'Completado', value: data.charts.ordersStatus.completed || 0 },
+    { name: 'Enviado', value: data.charts.ordersStatus.shipped || 0 },
+    { name: 'Fallido', value: data.charts.ordersStatus.failed || 0 }
+  ].filter(item => item.value > 0) : [];
 
   if (isLoading) {
     return (
@@ -237,11 +211,23 @@ export default function AdminDashboard() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="text-center">
+          <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+          <p className="text-lg font-semibold text-azul-profundo mb-2">Error al cargar el dashboard</p>
+          <p className="text-tierra-media">{error}</p>
+          <Button onClick={() => window.location.reload()} className="mt-4">
+            Reintentar
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
-      {/* Auto-refresh fix notification */}
-      <AutoRefreshFixNotification />
-      
       {/* Header */}
       <div className="flex justify-between items-start">
         <div>
@@ -251,7 +237,7 @@ export default function AdminDashboard() {
           </p>
         </div>
         
-        <div className="flex gap-3">
+        <div className="flex space-x-2">
           <Button variant="outline" asChild>
             <Link href="/admin/products/add">
               <Plus className="h-4 w-4 mr-2" />
@@ -267,228 +253,352 @@ export default function AdminDashboard() {
         </div>
       </div>
 
+      {/* Stock Alert Banner - Compact */}
+      {data.lowStockProducts.length > 0 && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-red-500" />
+                <div>
+                  <p className="font-semibold text-azul-profundo text-sm">
+                    {data.lowStockProducts.length} producto{data.lowStockProducts.length !== 1 ? 's' : ''} con stock bajo
+                  </p>
+                  <p className="text-xs text-tierra-media">
+                    {data.lowStockProducts.slice(0, 2).map(p => p.name).join(', ')}
+                    {data.lowStockProducts.length > 2 && ` y ${data.lowStockProducts.length - 2} más`}
+                  </p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm" asChild>
+                <Link href="/admin/products?filter=low_stock">
+                  Ver Inventario
+                  <ArrowRight className="h-4 w-4 ml-2" />
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {/* Revenue Card */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ingresos del Mes</CardTitle>
-            <DollarSign className="h-4 w-4 text-verde-suave" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-azul-profundo">
-              {formatPrice(currentData.kpis.revenue.current)}
-            </div>
-            <div className="flex items-center text-xs text-verde-suave mt-1">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              Datos en tiempo real
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <DollarSign className="h-8 w-8 text-azul-profundo" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-tierra-media">Ingresos del Mes</p>
+                <p className="text-2xl font-bold text-azul-profundo">
+                  {formatPrice(data.kpis.revenue.current)}
+                </p>
+                <div className={cn(
+                  "flex items-center text-xs mt-1",
+                  data.kpis.revenue.change >= 0 ? "text-green-600" : "text-red-600"
+                )}>
+                  {data.kpis.revenue.change >= 0 ? (
+                    <>
+                      <TrendingUp className="h-3 w-3 mr-1" />
+                      <span>
+                        +{data.kpis.revenue.change.toFixed(1)}% vs mes anterior
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <TrendingDown className="h-3 w-3 mr-1" />
+                      <span>
+                        {data.kpis.revenue.change.toFixed(1)}% vs mes anterior
+                      </span>
+                    </>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Solo pedidos completados/pagados
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Orders Card */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pedidos</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-dorado" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-azul-profundo">
-              {currentData.kpis.orders.total}
-            </div>
-            <div className="flex items-center justify-between text-xs mt-1">
-              <span className="text-dorado">{currentData.kpis.orders.pending} pendientes</span>
-              <span className="text-verde-suave">{currentData.kpis.orders.completed} completados</span>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <ShoppingCart className="h-8 w-8 text-azul-profundo" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-tierra-media">Pedidos</p>
+                <p className="text-2xl font-bold text-azul-profundo">
+                  {data.kpis.orders.total}
+                </p>
+                <div className="flex items-center justify-between text-xs mt-1">
+                  <span className="text-orange-600">{data.kpis.orders.pending} pendientes</span>
+                  <span className="text-green-600">{data.kpis.orders.completed} completados</span>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {data.kpis.orders.processing} en proceso
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Products Card */}
+        {/* Products Card - Only Active */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Productos</CardTitle>
-            <Package className="h-4 w-4 text-azul-profundo" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-azul-profundo">
-              {currentData.kpis.products.total}
-            </div>
-            <div className="flex items-center text-xs mt-1">
-              <AlertTriangle className="h-3 w-3 mr-1 text-red-500" />
-              <span className="text-red-500">{currentData.kpis.products.lowStock} con stock bajo</span>
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Package className="h-8 w-8 text-azul-profundo" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-tierra-media">Productos Activos</p>
+                <p className="text-2xl font-bold text-azul-profundo">
+                  {data.kpis.products.total}
+                </p>
+                <div className="flex items-center text-xs mt-1">
+                  {data.kpis.products.lowStock > 0 ? (
+                    <>
+                      <AlertTriangle className="h-3 w-3 mr-1 text-red-500" />
+                      <span className="text-red-500">{data.kpis.products.lowStock} con stock bajo</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle className="h-3 w-3 mr-1 text-green-600" />
+                      <span className="text-green-600">Stock saludable</span>
+                    </>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {data.kpis.products.outOfStock} sin stock
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Customers Card */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Clientes</CardTitle>
-            <Users className="h-4 w-4 text-tierra-media" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-azul-profundo">
-              {data.kpis.customers.total}
-            </div>
-            <div className="flex items-center text-xs text-verde-suave mt-1">
-              <TrendingUp className="h-3 w-3 mr-1" />
-              +{data.kpis.customers.new} nuevos este mes
+          <CardContent className="p-6">
+            <div className="flex items-center">
+              <Users className="h-8 w-8 text-azul-profundo" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-tierra-media">Clientes</p>
+                <p className="text-2xl font-bold text-azul-profundo">
+                  {data.kpis.customers.total}
+                </p>
+                <div className="flex items-center text-xs text-green-600 mt-1">
+                  <TrendingUp className="h-3 w-3 mr-1" />
+                  +{data.kpis.customers.new} nuevos (30 días)
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {data.kpis.customers.returning} recurrentes
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Orders */}
+        {/* Revenue Trend Chart */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-azul-profundo">Pedidos Recientes</CardTitle>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/admin/orders">
-                  Ver todos
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
-              </Button>
-            </div>
+            <CardTitle>Ingresos Últimos 7 Días</CardTitle>
+            <p className="text-sm text-tierra-media">Evolución de ingresos diarios</p>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              {data.recentOrders.length > 0 ? (
-                data.recentOrders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="font-medium text-azul-profundo text-sm">
-                          {order.orderNumber}
-                        </p>
-                        {getOrderStatusBadge(order.status)}
-                      </div>
-                      <p className="text-xs text-tierra-media mb-1">
-                        {order.customerName}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <p className="font-semibold text-verde-suave">
-                          {formatPrice(order.total)}
-                        </p>
-                        <p className="text-xs text-tierra-media flex items-center">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          {formatDate(order.createdAt)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <ShoppingCart className="h-12 w-12 text-tierra-media mx-auto mb-2" />
-                  <p className="text-tierra-media">
-                    No hay pedidos recientes para mostrar.
-                  </p>
-                </div>
-              )}
-            </div>
+            {data.charts.revenueTrend.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={data.charts.revenueTrend}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis 
+                    dataKey="date" 
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(date) => new Date(date).toLocaleDateString('es-AR', { month: 'short', day: 'numeric' })}
+                  />
+                  <YAxis 
+                    tick={{ fontSize: 12 }}
+                    tickFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}
+                  />
+                  <Tooltip 
+                    formatter={(value: number) => formatPrice(value)}
+                    labelFormatter={(date) => new Date(date).toLocaleDateString('es-AR', { 
+                      weekday: 'short', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })}
+                  />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="revenue" 
+                    name="Ingresos"
+                    stroke={COLORS.success} 
+                    strokeWidth={2}
+                    dot={{ fill: COLORS.success }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <div className="flex items-center justify-center h-[300px] text-center">
+                <p className="text-tierra-media">No hay datos de ingresos disponibles</p>
+              </div>
+            )}
           </CardContent>
         </Card>
 
-        {/* Low Stock Alerts */}
+        {/* Orders Status Distribution */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-azul-profundo flex items-center">
-                <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />
-                Alertas de Stock
-              </CardTitle>
-              <Button variant="ghost" size="sm" asChild>
-                <Link href="/admin/products">
-                  Ver inventario
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Link>
-              </Button>
-            </div>
+            <CardTitle>Estado de Pedidos (30 días)</CardTitle>
+            <p className="text-sm text-tierra-media">Distribución por estado</p>
           </CardHeader>
           <CardContent>
-            {data.lowStockProducts.length > 0 ? (
-              <div className="space-y-4">
-                {data.lowStockProducts.map((product) => (
-                  <div key={product.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-100">
-                    <div className="flex-1">
-                      <p className="font-medium text-azul-profundo text-sm mb-1">
-                        {product.name}
-                      </p>
-                      <div className="flex items-center justify-between">
-                        <p className="text-xs text-tierra-media">
-                          Stock actual: <span className="font-semibold text-red-600">{product.currentStock}</span>
-                        </p>
-                        <p className="text-xs text-tierra-media">
-                          Mínimo: {product.threshold}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            {ordersStatusData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={ordersStatusData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name }: { name?: string }) => name || ''}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {ordersStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
             ) : (
-              <div className="text-center py-8">
-                <CheckCircle className="h-12 w-12 text-verde-suave mx-auto mb-2" />
-                <p className="text-tierra-media">
-                  ¡Perfecto! Todos los productos tienen stock suficiente.
-                </p>
+              <div className="flex items-center justify-center h-[300px] text-center">
+                <p className="text-tierra-media">No hay pedidos recientes</p>
               </div>
             )}
           </CardContent>
         </Card>
       </div>
 
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Top Products Chart */}
+      {data.charts.topProducts.length > 0 && (
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-dorado/20 rounded-lg">
-                <Plus className="h-6 w-6 text-dorado" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-azul-profundo">Nuevo Producto</h3>
-                <p className="text-sm text-tierra-media">Agregar producto al catálogo</p>
-              </div>
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/admin/products/add">Crear</Link>
-              </Button>
-            </div>
+          <CardHeader>
+            <CardTitle>Productos Más Vendidos</CardTitle>
+            <p className="text-sm text-tierra-media">Top 5 por ingresos</p>
+          </CardHeader>
+          <CardContent>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.charts.topProducts} layout="horizontal">
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis type="number" tick={{ fontSize: 12 }} tickFormatter={(value) => formatPrice(value)} />
+                <YAxis type="category" dataKey="name" width={150} tick={{ fontSize: 12 }} />
+                <Tooltip 
+                  formatter={(value: number, name: string) => {
+                    if (name === 'revenue') return [formatPrice(value), 'Ingresos'];
+                    return [value, 'Cantidad'];
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="revenue" name="Ingresos" fill={COLORS.primary} />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
+      )}
 
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-azul-profundo/20 rounded-lg">
-                <ShoppingCart className="h-6 w-6 text-azul-profundo" />
+      {/* Recent Orders & Quick Actions */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Recent Orders - Takes 2 columns */}
+        <div className="lg:col-span-2">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Pedidos Recientes</CardTitle>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href="/admin/orders">
+                    Ver todos
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
               </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-azul-profundo">Gestionar Pedidos</h3>
-                <p className="text-sm text-tierra-media">Procesar y actualizar pedidos</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {data.recentOrders.length > 0 ? (
+                  data.recentOrders.map((order) => (
+                    <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <p className="font-medium text-azul-profundo text-sm">
+                            #{order.order_number}
+                          </p>
+                          {getOrderStatusBadge(order.status)}
+                        </div>
+                        <p className="text-xs text-tierra-media mb-1">
+                          {order.customer_name} • {order.items_count} producto{order.items_count !== 1 ? 's' : ''}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <p className="font-semibold text-verde-suave text-sm">
+                            {formatPrice(order.total_amount)}
+                          </p>
+                          <p className="text-xs text-tierra-media flex items-center">
+                            <Calendar className="h-3 w-3 mr-1" />
+                            {formatDate(order.created_at)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="flex items-center justify-center h-[200px] text-center">
+                    <div>
+                      <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-tierra-media">
+                        No hay pedidos recientes para mostrar.
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/admin/orders">Ver</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
+        {/* Quick Actions */}
         <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-verde-suave/20 rounded-lg">
-                <Users className="h-6 w-6 text-verde-suave" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-azul-profundo">Ver Clientes</h3>
-                <p className="text-sm text-tierra-media">Gestionar base de clientes</p>
-              </div>
-              <Button variant="outline" size="sm" asChild>
-                <Link href="/admin/customers">Ver</Link>
-              </Button>
+          <CardHeader>
+            <CardTitle>Acciones Rápidas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link href="/admin/products/add">
+                <Plus className="h-4 w-4 mr-2" />
+                Nuevo Producto
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link href="/admin/orders">
+                <ShoppingCart className="h-4 w-4 mr-2" />
+                Gestionar Pedidos
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link href="/admin/customers">
+                <Users className="h-4 w-4 mr-2" />
+                Ver Clientes
+              </Link>
+            </Button>
+            <Button variant="outline" className="w-full justify-start" asChild>
+              <Link href="/admin/products">
+                <Package className="h-4 w-4 mr-2" />
+                Inventario
+              </Link>
+            </Button>
             </div>
           </CardContent>
         </Card>

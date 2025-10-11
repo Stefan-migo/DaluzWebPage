@@ -1,177 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { requireAuth, requireRole, logAdminActivity } from '@/lib/api/middleware';
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    // Check authentication and admin role
-    const { userId } = await requireAuth(request);
-    await requireRole(userId, 'admin');
-
-    const { data: order, error } = await supabaseAdmin
-      .from('orders')
-      .select(`
-        *,
-        order_items (
-          *
-        ),
-        profiles!orders_user_id_fkey (
-          full_name,
-          email
-        )
-      `)
-      .eq('id', params.id)
-      .single();
-
-    if (error) {
-      console.error('Error fetching order:', error);
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      order: {
-        ...order,
-        customer_name: order.profiles?.full_name || 'Cliente',
-        customer_email: order.profiles?.email || order.email
-      }
-    });
-
-  } catch (error) {
-    console.error('Admin order detail API error:', error);
-    
-    if (error instanceof Error && error.message.includes('Authentication required')) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
-    if (error instanceof Error && error.message.includes('Insufficient permissions')) {
-      return NextResponse.json(
-        { error: 'Insufficient permissions' },
-        { status: 403 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
+import { createClient } from '@/utils/supabase/server';
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Check authentication and admin role
-    const { userId } = await requireAuth(request);
-    await requireRole(userId, 'admin');
-
-    const updates = await request.json();
+    console.log('🔍 Admin Orders PATCH called for order:', params.id);
+    const supabase = await createClient();
     
-    // Validate allowed fields
-    const allowedFields = [
-      'status',
-      'payment_status',
-      'fulfillment_status',
-      'tracking_number',
-      'carrier',
-      'shipped_at',
-      'delivered_at',
-      'customer_notes'
-    ];
-    
-    const updateData: any = {
-      updated_at: new Date().toISOString()
-    };
-    
-    // Filter and validate updates
-    Object.keys(updates).forEach(key => {
-      if (allowedFields.includes(key)) {
-        updateData[key] = updates[key];
-      }
-    });
-
-    // Set timestamps for status changes
-    if (updates.status === 'shipped' && !updateData.shipped_at) {
-      updateData.shipped_at = new Date().toISOString();
-      updateData.fulfillment_status = 'fulfilled';
-    }
-    
-    if (updates.status === 'completed' && !updateData.delivered_at) {
-      updateData.delivered_at = new Date().toISOString();
-      updateData.fulfillment_status = 'fulfilled';
-      updateData.payment_status = 'paid'; // Assume payment is confirmed when order is completed
+    // Check admin authorization
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { data: order, error } = await supabaseAdmin
+    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+
+    const { status, payment_status } = await request.json();
+
+    console.log('📝 Updating order with:', { status, payment_status });
+
+    // Update the order
+    const { data: updatedOrder, error: updateError } = await supabase
       .from('orders')
-      .update(updateData)
+      .update({
+        status: status,
+        payment_status: payment_status,
+        updated_at: new Date().toISOString()
+      })
       .eq('id', params.id)
       .select()
       .single();
 
-    if (error) {
-      console.error('Error updating order:', error);
+    if (updateError) {
+      console.error('❌ Error updating order:', updateError);
       return NextResponse.json(
         { error: 'Failed to update order' },
         { status: 500 }
       );
     }
 
-    // Log admin activity
-    await logAdminActivity(
-      userId,
-      'update_order_status',
-      'order',
-      params.id,
-      {
-        old_status: order.status,
-        new_updates: updateData,
-        order_number: order.order_number
-      }
-    );
-
-    // TODO: Send email notification to customer about status change
-    // This can be implemented later using the existing email service
+    console.log('✅ Order updated successfully');
 
     return NextResponse.json({
       success: true,
-      order,
-      message: 'Order updated successfully'
+      order: updatedOrder
     });
 
   } catch (error) {
-    console.error('Admin order update API error:', error);
-    
-    if (error instanceof Error && error.message.includes('Authentication required')) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
-    if (error instanceof Error && error.message.includes('Insufficient permissions')) {
-      return NextResponse.json(
-        { error: 'Insufficient permissions' },
-        { status: 403 }
-      );
-    }
-
+    console.error('❌ Admin order update error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
@@ -179,58 +60,57 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
+export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    // Check authentication and admin role
-    const { userId } = await requireAuth(request);
-    await requireRole(userId, 'admin');
+    console.log('🔍 Admin Orders GET single order:', params.id);
+    const supabase = await createClient();
+    
+    // Check admin authorization
+    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    if (userError || !user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    // Note: Instead of actually deleting, we should mark as cancelled
-    // to preserve data integrity and for audit purposes
-    const { data: order, error } = await supabaseAdmin
+    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
+    if (!isAdmin) {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
+    }
+
+    // Get order details
+    const { data: order, error: orderError } = await supabase
       .from('orders')
-      .update({ 
-        status: 'cancelled',
-        updated_at: new Date().toISOString()
-      })
+      .select(`
+        *,
+        order_items (
+          id,
+          product_name,
+          variant_title,
+          quantity,
+          unit_price,
+          total_price
+        )
+      `)
       .eq('id', params.id)
-      .select()
       .single();
 
-    if (error) {
-      console.error('Error cancelling order:', error);
+    if (orderError) {
+      console.error('❌ Error fetching order:', orderError);
       return NextResponse.json(
-        { error: 'Failed to cancel order' },
+        { error: 'Failed to fetch order' },
         { status: 500 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      order,
-      message: 'Order cancelled successfully'
+      order
     });
 
   } catch (error) {
-    console.error('Admin order cancel API error:', error);
-    
-    if (error instanceof Error && error.message.includes('Authentication required')) {
-      return NextResponse.json(
-        { error: 'Authentication required' },
-        { status: 401 }
-      );
-    }
-
-    if (error instanceof Error && error.message.includes('Insufficient permissions')) {
-      return NextResponse.json(
-        { error: 'Insufficient permissions' },
-        { status: 403 }
-      );
-    }
-
+    console.error('❌ Admin order fetch error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

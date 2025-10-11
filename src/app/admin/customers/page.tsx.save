@@ -428,6 +428,9 @@ export default function CustomersPage() {
                           Último: {new Date(customer.analytics.lastOrderDate).toLocaleDateString('es-AR')}
                         </div>
                       )}
+clear
+clear
+clear
                     </div>
                   </TableCell>
                   
@@ -467,8 +470,7 @@ export default function CustomersPage() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ));
-              })()}
+              ))}
             </TableBody>
           </Table>
 

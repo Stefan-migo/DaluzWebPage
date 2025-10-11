@@ -48,13 +48,6 @@ interface Review {
     name: string;
     slug: string;
   };
-  user: {
-    id: string;
-    email: string;
-    user_metadata?: {
-      full_name?: string;
-    };
-  };
 }
 
 export default function AdminReviewsPage() {
@@ -163,8 +156,9 @@ export default function AdminReviewsPage() {
     return <Badge variant="secondary">Pendiente</Badge>;
   };
 
-  const getUserName = (user: Review['user']) => {
-    return user.user_metadata?.full_name || user.email.split('@')[0] || 'Usuario';
+  const getUserName = (review: Review) => {
+    // Since we don't have user data, we'll use a generic name
+    return 'Usuario';
   };
 
   return (
@@ -299,8 +293,8 @@ export default function AdminReviewsPage() {
                         </TableCell>
                         <TableCell>
                           <div>
-                            <p className="font-medium">{getUserName(review.user)}</p>
-                            <p className="text-sm text-gray-500">{review.user.email}</p>
+                            <p className="font-medium">{getUserName(review)}</p>
+                            <p className="text-sm text-gray-500">Usuario</p>
                             {review.is_verified_purchase && (
                               <Badge variant="secondary" className="text-xs mt-1">
                                 Compra verificada
