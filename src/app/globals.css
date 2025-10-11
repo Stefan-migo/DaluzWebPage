@@ -1801,7 +1801,6 @@ input[type="submit"]:not(.btn-no-radius) {
 .admin-sidebar-logo-icon {
   width: 2rem;
   height: 2rem;
-  background: linear-gradient(135deg, var(--admin-accent-primary), var(--admin-accent-secondary));
   border-radius: 0.5rem;
   display: flex;
   align-items: center;
@@ -1846,13 +1845,11 @@ input[type="submit"]:not(.btn-no-radius) {
 .admin-header-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--admin-text-primary);
   margin: 0;
 }
 
 .admin-header-subtitle {
   font-size: 0.875rem;
-  color: var(--admin-text-secondary);
   margin: 0.25rem 0 0 0;
 }
 
@@ -1875,13 +1872,13 @@ input[type="submit"]:not(.btn-no-radius) {
 .admin-header-user-name {
   font-size: 0.875rem;
   font-weight: 500;
-  color: var(--admin-text-primary);
+
   margin: 0;
 }
 
 .admin-header-user-role {
   font-size: 0.75rem;
-  color: var(--admin-text-secondary);
+
   margin: 0;
 }
 

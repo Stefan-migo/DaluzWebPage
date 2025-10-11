@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
+import Image from 'next/image';
 import { 
   LayoutDashboard, 
   ShoppingCart, 
@@ -379,7 +380,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
+                  <Menu className="h-5 w-5" color="#F0EACE" />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80 p-0">
@@ -392,10 +393,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           
           <div className="admin-header-actions">
             <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" />
+              <Bell className="h-5 w-5" color="#F0EACE" />
             </Button>
             <Button variant="ghost" size="icon" onClick={handleSignOut}>
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-5 w-5" color="#F0EACE" />
             </Button>
           </div>
         </div>
@@ -415,32 +416,32 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="hidden lg:block admin-header">
             <div className="admin-header-content">
               <div>
-                <h1 className="admin-header-title">
+                <h1 className="admin-header-title font-malisha text-[#F0EACE]">
                   DA LUZ CONSCIENTE
                 </h1>
-                <p className="admin-header-subtitle">Panel de Administración</p>
+                <p className="admin-header-subtitle font-caption text-[#F0EACE]">Panel de Administración</p>
               </div>
               
               <div className="admin-header-actions">
                 <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
+                  <Bell className="h-5 w-5" color="#F0EACE" />
                   <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
                 </Button>
                 
                 <div className="admin-header-user">
                   <div className="admin-header-user-info">
-                    <p className="admin-header-user-name">
+                    <p className="admin-header-user-name font-caption text-[#F0EACE]">
                       {profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : user.email}
                     </p>
-                    <p className="admin-header-user-role">
+                    <p className="admin-header-user-role font-caption text-[#F0EACE]">
                       Administrador
                     </p>
                   </div>
                   <Button variant="ghost" size="icon">
-                    <User className="h-5 w-5" />
+                    <User className="h-5 w-5" color="#F0EACE" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={handleSignOut}>
-                    <LogOut className="h-5 w-5" />
+                    <LogOut className="h-5 w-5" color="#F0EACE" />
                   </Button>
                 </div>
               </div>
@@ -471,9 +472,16 @@ function AdminSidebar({
       <div className="admin-sidebar-header">
         <Link href="/" className="admin-sidebar-logo">
           <div className="admin-sidebar-logo-icon">
-            <span>DL</span>
+            <Image 
+                  src="/svg/logo.svg" 
+                  alt="DA LUZ Logo" 
+                  width={60} 
+                  height={60}
+                  className="transition-transform duration-300 hover:scale-105"
+                  style={{color: '#F0EACE'}}
+                />
           </div>
-          <span>DA LUZ</span>
+          <span className="font-malisha text-[#F0EACE]">DA LUZ</span>
         </Link>
       </div>
 
