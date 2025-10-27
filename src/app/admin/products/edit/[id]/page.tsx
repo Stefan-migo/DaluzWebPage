@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -24,12 +24,12 @@ export default function EditProductPage() {
   const router = useRouter();
   const params = useParams();
   const productId = params.id as string;
-  
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [categories, setCategories] = useState<any[]>([]);
-  
+
   // Skin types and certifications options (same as add form)
   const skinTypes = [
     { value: 'dry', label: 'Seco' },
@@ -39,7 +39,7 @@ export default function EditProductPage() {
     { value: 'normal', label: 'Normal' },
     { value: 'mature', label: 'Maduro' }
   ];
-  
+
   const certificationOptions = [
     { value: 'organic', label: 'Orgánico' },
     { value: 'cruelty-free', label: 'Libre de Crueldad' },
@@ -47,7 +47,7 @@ export default function EditProductPage() {
     { value: 'natural', label: 'Natural' },
     { value: 'eco-friendly', label: 'Ecológico' }
   ];
-  
+
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
@@ -65,7 +65,7 @@ export default function EditProductPage() {
     skin_type: [] as string[],
     benefits: [] as string[],
     certifications: [] as string[],
-    ingredients: [] as Array<{name: string, percentage?: number}>,
+    ingredients: [] as Array<{ name: string, percentage?: number }>,
     usage_instructions: '',
     precautions: '',
     is_featured: false,
@@ -80,13 +80,13 @@ export default function EditProductPage() {
   const updateFormData = (updates: any) => {
     setFormData(prev => {
       const newData = { ...prev, ...updates };
-      
+
       // Check if there are changes
       if (initialData) {
         const hasFormChanges = JSON.stringify(newData) !== JSON.stringify(initialData);
         setHasChanges(hasFormChanges);
       }
-      
+
       return newData;
     });
   };
@@ -96,21 +96,21 @@ export default function EditProductPage() {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
+
         // Fetch product data including archived products for admin editing
         const productResponse = await fetch(`/api/products/${productId}?include_archived=true`);
         if (!productResponse.ok) {
           throw new Error('Failed to fetch product');
         }
         const productData = await productResponse.json();
-        
+
         // Fetch categories
         const categoriesResponse = await fetch('/api/categories');
         if (!categoriesResponse.ok) {
           throw new Error('Failed to fetch categories');
         }
         const categoriesData = await categoriesResponse.json();
-        
+
         // Set form data with product values
         const product = productData.product;
         const initialFormData = {
@@ -136,10 +136,10 @@ export default function EditProductPage() {
           is_featured: product.is_featured || false,
           status: product.status || 'active'
         };
-        
+
         setFormData(initialFormData);
         setInitialData(initialFormData);
-        
+
         setCategories(categoriesData.categories || []);
         setError(null);
       } catch (err) {
@@ -244,7 +244,7 @@ export default function EditProductPage() {
             </Link>
           </Button>
         </div>
-        
+
         <Card>
           <CardContent className="p-6">
             <div className="text-center">
@@ -264,13 +264,7 @@ export default function EditProductPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {/* Header with changes indicator */}
-      <div className="flex items-center gap-3 mb-6">
-        <Button variant="ghost" size="sm" asChild>
-          <Link href="/admin/products">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Volver a Productos
-          </Link>
-        </Button>
+      <div className="flex justify-between items-center gap-3 mb-6">
         <div className="flex items-center gap-2">
           <Package className="h-5 w-5 text-azul-profundo" />
           <h1 className="text-2xl font-bold text-azul-profundo">Editar Producto</h1>
@@ -280,11 +274,17 @@ export default function EditProductPage() {
             </span>
           )}
         </div>
+        <Link href="/admin/products">
+          <Button className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Volver a Productos
+          </Button>
+        </Link>
       </div>
 
       {/* Product Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Información Básica</CardTitle>
           </CardHeader>
@@ -298,6 +298,7 @@ export default function EditProductPage() {
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Ej: Crema Hidratante de Rosa Mosqueta"
                   required
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -307,6 +308,7 @@ export default function EditProductPage() {
                   value={formData.slug}
                   onChange={(e) => handleInputChange('slug', e.target.value)}
                   placeholder="Se genera automáticamente"
+                  className='border-black/20'
                 />
               </div>
             </div>
@@ -333,7 +335,7 @@ export default function EditProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Precios e Inventario</CardTitle>
           </CardHeader>
@@ -349,6 +351,7 @@ export default function EditProductPage() {
                   onChange={(e) => handleInputChange('price', e.target.value)}
                   placeholder="15000"
                   required
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -360,6 +363,7 @@ export default function EditProductPage() {
                   value={formData.compare_at_price}
                   onChange={(e) => handleInputChange('compare_at_price', e.target.value)}
                   placeholder="18000"
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -371,13 +375,14 @@ export default function EditProductPage() {
                   onChange={(e) => handleInputChange('inventory_quantity', e.target.value)}
                   placeholder="50"
                   required
+                  className='border-black/20'
                 />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Categoría y Características</CardTitle>
           </CardHeader>
@@ -422,13 +427,13 @@ export default function EditProductPage() {
                   placeholder="Seleccionar imagen principal del producto"
                 />
               </div>
-              
+
               <div>
                 <Label htmlFor="gallery">Galería de Imágenes</Label>
                 <p className="text-sm text-gray-500 mb-3">
                   Puedes subir hasta 4 imágenes adicionales (máximo 5 en total)
                 </p>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {Array.from({ length: 4 }, (_, index) => (
                     <div key={index} className="relative">
@@ -473,7 +478,7 @@ export default function EditProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Características del Producto</CardTitle>
           </CardHeader>
@@ -523,7 +528,7 @@ export default function EditProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Ingredientes</CardTitle>
           </CardHeader>
@@ -567,7 +572,7 @@ export default function EditProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Instrucciones y Precauciones</CardTitle>
           </CardHeader>
@@ -594,7 +599,7 @@ export default function EditProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Detalles Físicos</CardTitle>
             <p className="text-sm text-gray-600">Información sobre peso, dimensiones y características del empaque</p>
@@ -622,7 +627,7 @@ export default function EditProductPage() {
                 />
               </div>
             </div>
-            
+
             <div>
               <Label htmlFor="package_characteristics">Características del Empaque</Label>
               <RichTextEditor
@@ -637,23 +642,23 @@ export default function EditProductPage() {
 
         {/* Submit Buttons */}
         <div className="flex gap-4">
-          <Button type="button" variant="outline" asChild>
-            <Link href="/admin/products">
+          <Link href="/admin/products">
+            <Button type="button" variant="outline">
               Cancelar
-            </Link>
-          </Button>
-          
-          <Button 
-            type="button" 
-            variant="secondary" 
+            </Button>
+          </Link>
+
+          <Button
+            type="button"
+            variant="secondary"
             disabled={saving}
             onClick={() => handleSubmit(undefined, 'draft')}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 text-white"
           >
             <Save className="h-4 w-4" />
             {saving ? 'Guardando...' : 'Guardar como Borrador'}
           </Button>
-          
+
           <Button type="submit" disabled={saving} className="flex-1">
             <Save className="h-4 w-4 mr-2" />
             {saving ? 'Guardando...' : 'Guardar Cambios'}

@@ -87,7 +87,7 @@ export function ReviewForm({
       toast.success(
         isEditing 
           ? 'Reseña actualizada exitosamente' 
-          : 'Reseña enviada exitosamente. Será publicada después de la aprobación.'
+          : '¡Gracias por tu reseña! Tu opinión es muy valiosa para nosotros.'
       );
 
       // Reset form if not editing

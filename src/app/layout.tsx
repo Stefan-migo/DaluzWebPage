@@ -103,7 +103,7 @@ export default function RootLayout({
               <CartProvider>
                 <LikeProvider>
                   {children}
-                  <Toaster position="top-right" />
+                  <Toaster position="bottom-right" />
                 </LikeProvider>
               </CartProvider>
             </AuthProvider>

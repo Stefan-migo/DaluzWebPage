@@ -154,12 +154,9 @@ export default function ProductCard({
   return (
     <Card 
       className={cn(
-        "group relative overflow-hidden transition-all duration-500",
+        "group relative overflow-hidden transition-all duration-500 h-full flex flex-col",
         "hover:shadow-xl",
-        // "hover:-translate-y-2 hover:scale-[1.02]", // Temporarily disabled for debugging
         cardVariants[variant],
-        // Add shimmer effect for elegant variant - temporarily disabled for debugging
-        // variant === 'elegant' && "before:absolute before:inset-0 before:opacity-0 hover:before:opacity-100 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent before:animate-shimmer before:pointer-events-none",
         className
       )}
       onMouseEnter={() => setIsHovered(true)}
@@ -167,7 +164,7 @@ export default function ProductCard({
       onClick={() => console.log('Card clicked for product:', id)}
       style={{ pointerEvents: 'auto' }}
     >
-      <div className="relative">
+      <div className="relative flex-1 flex flex-col">
         {/* Product Image */}
         <div className="relative aspect-square overflow-hidden bg-gradient-to-br from-bg-light to-bg-cream">
           {!imageLoaded && (
@@ -186,65 +183,34 @@ export default function ProductCard({
             onError={() => setImageLoaded(true)}
           />
           
-          {/* Gradient overlay for better text readability */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-          
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {isNew && (
-              <Badge className={cn(theme.badge, "font-semibold shadow-md animate-pulse-gentle")}>
-                <Sparkles className="h-3 w-3 mr-1" />
-                Nuevo
-              </Badge>
-            )}
-            {isOnSale && (
-              <Badge variant="destructive" className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md">
-                <span className="font-bold">Oferta</span>
-              </Badge>
-            )}
-            {isNatural && (
-              <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 shadow-md">
-                <Leaf className="h-3 w-3 mr-1" />
-                Natural
-              </Badge>
-            )}
-          </div>
-
-          {/* Like Button - Always visible in top-right */}
-          <div className="absolute top-3 right-3 z-20">
-            <Button
-              variant="secondary"
-              size="sm"
-              className="h-9 w-9 p-0 bg-white/95 hover:bg-white shadow-lg backdrop-blur-sm border-white/20 transition-all duration-300 hover:scale-110"
+          {/* Like Button - Just heart icon, no button wrapper */}
+          <div className="absolute top-2 right-2 z-20">
+            <Heart 
+              className={cn(
+                "h-4 w-4 lg:h-5 lg:w-5 cursor-pointer transition-all duration-300 hover:scale-110",
+                isFavorite ? "fill-red-500 text-red-500" : "text-white/80 hover:text-red-500 hover:fill-red-500",
+                likeLoading && "opacity-50"
+              )}
               onClick={handleToggleFavorite}
-              disabled={likeLoading}
-            >
-              <Heart 
-                className={cn(
-                  "h-4 w-4 transition-colors",
-                  isFavorite ? "fill-red-500 text-red-500" : "text-gray-600 hover:text-red-500",
-                  likeLoading && "opacity-50"
-                )}
-              />
-            </Button>
+            />
           </div>
 
-          {/* Hover Overlay - Ver Producto */}
+          {/* Hover Overlay - Ver Producto - Responsive size */}
           <div className={cn(
             "absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center transition-all duration-300 z-10",
             isHovered ? "opacity-100" : "opacity-0"
           )}>
             <Link href={`/productos/${id}`} className="block">
-              <div className="bg-white/90 text-gray-800 px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-white hover:scale-105 transition-all duration-300">
+              <div className="bg-white/90 text-gray-800 px-3 py-2 lg:px-6 lg:py-3 rounded-lg font-semibold shadow-lg hover:bg-white hover:scale-105 transition-all duration-300 text-xs lg:text-sm">
                 Ver producto
               </div>
             </Link>
           </div>
 
-          {/* Stock Warning */}
+          {/* Stock Warning - Only show on desktop */}
           {stock <= 5 && stock > 0 && (
-            <div className="absolute bottom-3 left-3">
-              <Badge variant="outline" className="bg-white/95 text-orange-600 border-orange-300 shadow-md backdrop-blur-sm animate-pulse-gentle">
+            <div className="hidden lg:block absolute bottom-2 left-2 lg:bottom-3 lg:left-3">
+              <Badge variant="outline" className="bg-white/95 text-orange-600 border-orange-300 shadow-md backdrop-blur-sm animate-pulse-gentle text-xs px-1.5 py-0.5 lg:text-sm lg:px-2 lg:py-1">
                 ¡Solo {stock} disponibles!
               </Badge>
             </div>
@@ -260,137 +226,276 @@ export default function ProductCard({
         </div>
 
         {/* Product Info */}
-        <CardContent className="p-5 space-y-4">
-          {/* Category */}
-          <div className="text-xs text-text-secondary uppercase tracking-widest font-medium">
-            {category}
-          </div>
+        <CardContent padding="none" className="p-2 flex-1 flex flex-col">
+          {/* Desktop Layout */}
+          <div className="hidden lg:flex lg:flex-col lg:h-full lg:justify-between">
+            {/* Top Content */}
+            <div className="space-y-4">
+              {/* Badges - Below image like MercadoLibre */}
+              <div className="flex flex-wrap gap-1">
+                {isOnSale && (
+                  <Badge variant="destructive" className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-sm px-2 py-1">
+                    <span className="font-bold">OFERTA DEL DÍA</span>
+                  </Badge>
+                )}
+                {isNew && (
+                  <Badge className={cn(theme.badge, "font-semibold shadow-md animate-pulse-gentle text-sm px-2 py-1")}>
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    Nuevo
+                  </Badge>
+                )}
+                {isNatural && (
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 shadow-md text-sm px-2 py-1">
+                    <Leaf className="h-3 w-3 mr-1" />
+                    Natural
+                  </Badge>
+                )}
+              </div>
 
-          {/* Name */}
-          <div className="space-y-3">
-            <Link href={`/productos/${id}`} className="block group/link">
-              <h3 
-                className="font-normal text-lg text-text-primary line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight"
-                style={{
-                  fontFamily: 'VELISTA, var(--font-velista), serif',
-                  fontWeight: 'normal',
-                  fontStyle: 'normal'
-                }}
-              >
-                {name}
-              </h3>
-            </Link>
-          </div>
+              {/* Name */}
+              <div className="space-y-3">
+                <Link href={`/productos/${id}`} className="block group/link">
+                  <h3 
+                    className="font-normal text-lg text-text-primary line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight"
+                    style={{
+                      fontFamily: 'VELISTA, var(--font-velista), serif',
+                      fontWeight: 'normal',
+                      fontStyle: 'normal'
+                    }}
+                  >
+                    {name}
+                  </h3>
+                </Link>
+              </div>
 
-          {/* Description */}
-          <div className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
-            <RichTextDisplay 
-              content={description} 
-              className="text-sm text-text-secondary line-clamp-2 leading-relaxed [&_strong]:font-semibold [&_em]:italic [&_u]:underline [&_p]:m-0 [&_p]:p-0"
-            />
-          </div>
-
-          {/* Size */}
-          {size && (
-            <div className="flex items-center text-xs text-text-secondary">
-              <Sparkles className="h-3 w-3 mr-1 text-gold-500" />
-              <span className="font-medium">{size}</span>
-            </div>
-          )}
-
-          {/* Rating */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
-              {renderStars(rating)}
-            </div>
-            <span className="text-sm text-text-secondary font-medium">
-              ({reviewCount} {reviewCount === 1 ? 'reseña' : 'reseñas'})
-            </span>
-          </div>
-
-          {/* Price */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className={cn("text-xl font-bold", theme.accent)}>
-                {formatPrice(price)}
-              </span>
-              {originalPrice && originalPrice > price && (
-                <span className="text-sm text-text-secondary line-through">
-                  {formatPrice(originalPrice)}
+              {/* Rating */}
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1">
+                  {renderStars(rating)}
+                </div>
+                <span className="text-sm text-text-secondary font-medium">
+                  ({reviewCount} {reviewCount === 1 ? 'reseña' : 'reseñas'})
                 </span>
+              </div>
+
+              {/* Price */}
+              <div className="space-y-2">
+                <div className="flex items-center gap-3">
+                  <span className={cn("text-xl font-bold", theme.accent)}>
+                    {formatPrice(price)}
+                  </span>
+                  {originalPrice && originalPrice > price && (
+                    <span className="text-sm text-text-secondary line-through">
+                      {formatPrice(originalPrice)}
+                    </span>
+                  )}
+                </div>
+                {originalPrice && originalPrice > price && (
+                  <div className="text-sm text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-md inline-block">
+                    Ahorrás {formatPrice(originalPrice - price)}
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <div className="text-sm text-text-secondary line-clamp-2 leading-relaxed">
+                <RichTextDisplay 
+                  content={description} 
+                  className="text-sm text-text-secondary line-clamp-2 leading-relaxed [&_strong]:font-semibold [&_em]:italic [&_u]:underline [&_p]:m-0 [&_p]:p-0"
+                />
+              </div>
+
+              {/* Size */}
+              {size && (
+                <div className="flex items-center text-xs text-text-secondary">
+                  <Sparkles className="h-3 w-3 mr-1 text-gold-500" />
+                  <span className="font-medium">{size}</span>
+                </div>
               )}
             </div>
-            {originalPrice && originalPrice > price && (
-              <div className="text-sm text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-md inline-block">
-                Ahorrás {formatPrice(originalPrice - price)}
-              </div>
-            )}
-          </div>
 
-          {/* Add to Cart */}
-          <div className="space-y-3 pt-2">
-            {stock > 0 && (
-              <div className="flex items-center gap-3">
-                <div className="flex items-center border border-border rounded-lg bg-white shadow-sm">
+            {/* Bottom Content - Always at bottom */}
+            <div className="mt-auto pt-4">
+              {/* Desktop Add to Cart */}
+              <div className="space-y-3 w-full">
+              {stock > 0 && (
+                <div className="flex items-center gap-2">
+                  {/* Desktop: Full quantity selector */}
+                  <div className="flex items-center border border-border rounded-lg bg-white shadow-sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 p-0 hover:bg-gray-50 rounded-l-lg disabled:opacity-50"
+                      onClick={() => {
+                        console.log('Minus clicked, current quantity:', quantity);
+                        setQuantity(Math.max(1, quantity - 1));
+                      }}
+                      disabled={quantity <= 1}
+                    >
+                      <Minus className="h-4 w-4" />
+                    </Button>
+                    <span className="px-4 py-2 text-sm min-w-[3rem] text-center font-medium">
+                      {quantity}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-9 w-9 p-0 hover:bg-gray-50 rounded-r-lg disabled:opacity-50"
+                      onClick={() => {
+                        console.log('Plus clicked, current quantity:', quantity, 'stock:', stock);
+                        setQuantity(Math.min(stock, quantity + 1));
+                      }}
+                      disabled={quantity >= stock}
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
+
+                  {/* Desktop: Add button */}
                   <Button
-                    variant="ghost"
+                    onClick={handleAddToCart}
+                    disabled={stock === 0}
+                    className={cn(
+                      "flex-1 font-semibold shadow-md transition-all duration-300",
+                      "hover:shadow-lg hover:scale-105 active:scale-95",
+                      "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100",
+                      "text-sm h-9",
+                      theme.button
+                    )}
                     size="sm"
-                    className="h-9 w-9 p-0 hover:bg-gray-50 rounded-l-lg disabled:opacity-50"
-                    onClick={() => {
-                      console.log('Minus clicked, current quantity:', quantity);
-                      setQuantity(Math.max(1, quantity - 1));
-                    }}
-                    disabled={quantity <= 1}
                   >
-                    <Minus className="h-4 w-4" />
-                  </Button>
-                  <span className="px-4 py-2 text-sm min-w-[3rem] text-center font-medium">
-                    {quantity}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-9 w-9 p-0 hover:bg-gray-50 rounded-r-lg disabled:opacity-50"
-                    onClick={() => {
-                      console.log('Plus clicked, current quantity:', quantity, 'stock:', stock);
-                      setQuantity(Math.min(stock, quantity + 1));
-                    }}
-                    disabled={quantity >= stock}
-                  >
-                    <Plus className="h-4 w-4" />
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    {stock > 0 ? 'Agregar al carrito' : 'Sin Stock'}
                   </Button>
                 </div>
+              )}
+              
+              {stock === 0 && (
+                <Button
+                  disabled
+                  variant="secondary"
+                  className="w-full opacity-60 h-9"
+                  size="sm"
+                >
+                  Sin Stock
+                </Button>
+              )}
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Layout - Flex column with justify-between */}
+          <div className="lg:hidden flex flex-col justify-between min-h-[200px]">
+            {/* Top Content */}
+            <div className="space-y-1">
+              {/* Badges - Smaller on mobile */}
+              <div className="flex flex-wrap gap-1">
+                {isOnSale && (
+                  <Badge variant="destructive" className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-[10px] px-1 py-0.5">
+                    <span className="font-bold">OFERTA DEL DÍA</span>
+                  </Badge>
+                )}
+                {isNew && (
+                  <Badge className={cn(theme.badge, "font-semibold shadow-md animate-pulse-gentle text-[10px] px-1 py-0.5")}>
+                    <Sparkles className="h-1.5 w-1.5 mr-0.5" />
+                    Nuevo
+                  </Badge>
+                )}
+                {isNatural && (
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 border-green-200 shadow-md text-[10px] px-1 py-0.5">
+                    <Leaf className="h-1.5 w-1.5 mr-0.5" />
+                    Natural
+                  </Badge>
+                )}
+              </div>
+
+              {/* Name - Smaller, Left aligned */}
+              <Link href={`/productos/${id}`} className="block group/link">
+                <h3 
+                  className="font-normal text-sm text-text-primary line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight text-left"
+                  style={{
+                    fontFamily: 'VELISTA, var(--font-velista), serif',
+                    fontWeight: 'normal',
+                    fontStyle: 'normal'
+                  }}
+                >
+                  {name}
+                </h3>
+              </Link>
+
+              {/* Rating - Compact, Left aligned */}
+              <div className="flex items-center gap-1 text-left">
+                <div className="flex items-center gap-0.5">
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <Star
+                      key={index}
+                      className={`h-2.5 w-2.5 transition-colors ${
+                        index < Math.floor(rating)
+                          ? theme.star
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-text-secondary">
+                  ({reviewCount})
+                </span>
+              </div>
+
+              {/* Price - Prominent, Left aligned */}
+              <div className="flex items-center gap-2 text-left">
+                <span className={cn("text-base font-bold", theme.accent)}>
+                  {formatPrice(price)}
+                </span>
+                {originalPrice && originalPrice > price && (
+                  <span className="text-xs text-text-secondary line-through">
+                    {formatPrice(originalPrice)}
+                  </span>
+                )}
+              </div>
+
+              {/* Low Stock Alert - Mobile only */}
+              {stock <= 5 && stock > 0 && (
+                <div>
+                  <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-300 text-[10px] px-1 py-0.5">
+                    ¡Solo {stock} disponibles!
+                  </Badge>
+                </div>
+              )}
+            </div>
+
+            {/* Bottom Content - Always at bottom */}
+            <div className="mt-auto pt-2">
+              {stock > 0 ? (
                 <Button
                   onClick={handleAddToCart}
                   disabled={stock === 0}
                   className={cn(
-                    "flex-1 font-semibold shadow-md transition-all duration-300",
+                    "w-full font-semibold shadow-md transition-all duration-300",
                     "hover:shadow-lg hover:scale-105 active:scale-95",
                     "disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100",
+                    "text-xs h-7",
                     theme.button
                   )}
                   size="sm"
                 >
-                  <ShoppingCart className="h-4 w-4 mr-2" />
-                  {stock > 0 ? 'Agregar' : 'Sin Stock'}
+                  <ShoppingCart className="h-3 w-3 mr-1" />
+                  Agregar
                 </Button>
-              </div>
-            )}
-            
-            {stock === 0 && (
-              <Button
-                disabled
-                variant="secondary"
-                className="w-full opacity-60"
-                size="sm"
-              >
-                Sin Stock
-              </Button>
-            )}
-            
+              ) : (
+                <Button
+                  disabled
+                  variant="secondary"
+                  className="w-full opacity-60 h-7"
+                  size="sm"
+                >
+                  Sin Stock
+                </Button>
+              )}
+            </div>
           </div>
         </CardContent>
       </div>
     </Card>
   );
-} 
+}

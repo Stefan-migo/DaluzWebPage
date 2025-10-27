@@ -27,14 +27,6 @@ export async function GET(
       .from('reviews')
       .select(`
         *,
-        user:user_id (
-          id,
-          email,
-          user_metadata (
-            full_name,
-            avatar_url
-          )
-        ),
         helpfulness:review_helpfulness (
           id,
           is_helpful,
@@ -184,7 +176,7 @@ export async function POST(
       );
     }
 
-    // Create the review
+    // Create the review (auto-approved by default)
     const { data: review, error } = await supabase
       .from('reviews')
       .insert({
@@ -194,7 +186,7 @@ export async function POST(
         title: title || null,
         comment: comment || null,
         is_verified_purchase: false, // TODO: Implement purchase verification
-        is_approved: false // Reviews need approval
+        is_approved: true // Auto-approve reviews by default
       })
       .select()
       .single();
@@ -209,7 +201,7 @@ export async function POST(
 
     return NextResponse.json({
       review,
-      message: 'Review submitted successfully. It will be published after approval.'
+      message: '¡Gracias por tu reseña! Tu opinión es muy valiosa para nosotros.'
     }, { status: 201 });
 
   } catch (error) {

@@ -151,7 +151,7 @@ export default function AdminReviewsPage() {
 
   const getStatusBadge = (isApproved: boolean) => {
     if (isApproved) {
-      return <Badge className="bg-green-100 text-green-800">Aprobada</Badge>;
+      return <Badge className="bg-green-100 text-green-800">Publicada</Badge>;
     }
     return <Badge variant="secondary">Pendiente</Badge>;
   };
@@ -193,7 +193,7 @@ export default function AdminReviewsPage() {
                     placeholder="Buscar por producto o usuario..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 border-black/20"
                   />
                 </div>
               </div>
@@ -206,8 +206,8 @@ export default function AdminReviewsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Todos</SelectItem>
-                    <SelectItem value="pending">Pendientes</SelectItem>
-                    <SelectItem value="approved">Aprobadas</SelectItem>
+                    <SelectItem value="approved">Aprobadas (Publicadas)</SelectItem>
+                    <SelectItem value="pending">Pendientes (Raras)</SelectItem>
                     <SelectItem value="rejected">Rechazadas</SelectItem>
                   </SelectContent>
                 </Select>
@@ -330,36 +330,19 @@ export default function AdminReviewsPage() {
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            {!review.is_approved && (
-                              <>
-                                <Button
-                                  size="sm"
-                                  onClick={() => handleApproveReview(review.id)}
-                                  className="bg-green-600 hover:bg-green-700"
-                                >
-                                  <Check className="w-4 h-4" />
-                                </Button>
-                                <Button
-                                  size="sm"
-                                  variant="destructive"
-                                  onClick={() => handleRejectReview(review.id)}
-                                >
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </>
-                            )}
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => window.open(`/productos/${review.product.slug}`, '_blank')}
+                              title="Ver en producto"
                             >
                               <Eye className="w-4 h-4" />
                             </Button>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="destructive"
                               onClick={() => handleDeleteReview(review.id)}
-                              className="text-red-600 hover:text-red-700"
+                              title="Eliminar reseña"
                             >
                               <Trash2 className="w-4 h-4" />
                             </Button>

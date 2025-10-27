@@ -101,12 +101,12 @@ export default function TiendaSidebar({
   };
 
   return (
-    <div className={cn("w-full lg:w-80 space-y-6", className)}>
+    <div className={cn("w-full lg:w-80 space-y-4 lg:space-y-6", className)}>
       {/* Mobile Filter Toggle - Hidden on desktop */}
-      <div className="lg:hidden mb-4">
+      <div className="lg:hidden mb-2">
         <Button
           variant="outline"
-          className="w-full flex items-center gap-2"
+          className="w-full flex items-center gap-2 text-sm h-9"
           onClick={() => setExpandedSections(prev => ({ ...prev, categories: !prev.categories }))}
         >
           <SlidersHorizontal className="h-4 w-4" />
@@ -114,28 +114,28 @@ export default function TiendaSidebar({
         </Button>
       </div>
       {/* Search */}
-      <Card variant="artisanal">
-        <CardHeader className="pb-3">
+      <Card variant="artisanal" className="lg:block">
+        <CardHeader className="pb-2 lg:pb-3">
           <CardTitle 
-            className="text-lg flex items-center gap-2"
+            className="text-base lg:text-lg flex items-center gap-2"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
               fontWeight: 'normal',
               fontStyle: 'normal'
             }}
           >
-            <Search className="h-5 w-5 text-azul-profundo" />
+            <Search className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
             Buscar Productos
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="pt-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
             <Input
               placeholder="Buscar productos..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="pl-10 h-9 lg:h-10 text-sm"
             />
           </div>
         </CardContent>
@@ -144,14 +144,14 @@ export default function TiendaSidebar({
       {/* Categories */}
       <Card variant="artisanal">
         <CardHeader 
-          className="pb-3 cursor-pointer"
+          className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
             console.log('Categories header clicked');
             toggleSection('categories');
           }}
         >
           <CardTitle 
-            className="text-lg flex items-center justify-between"
+            className="text-base lg:text-lg flex items-center justify-between"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
               fontWeight: 'normal',
@@ -159,7 +159,7 @@ export default function TiendaSidebar({
             }}
           >
             <span className="flex items-center gap-2">
-              <Filter className="h-5 w-5 text-azul-profundo" />
+              <Filter className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
               Categorías
             </span>
             {expandedSections.categories ? (
@@ -171,11 +171,11 @@ export default function TiendaSidebar({
         </CardHeader>
         {expandedSections.categories && (
           <CardContent className="pt-0">
-            <div className="space-y-3">
+            <div className="space-y-2 lg:space-y-3">
               {/* All Categories */}
               <Button
                 variant={selectedCategory === '' ? 'line-primary' : 'line-ghost'}
-                className="w-full justify-start"
+                className="w-full justify-start text-sm h-8 lg:h-9"
                 onClick={() => setSelectedCategory('')}
               >
                 Todas las categorías
@@ -189,7 +189,7 @@ export default function TiendaSidebar({
                   key={line.id}
                   variant={selectedCategory === line.id ? 'line-primary' : 'line-ghost'}
                   className={cn(
-                    "w-full justify-start",
+                    "w-full justify-start text-sm h-8 lg:h-9",
                     line.color
                   )}
                   onClick={() => {
@@ -208,7 +208,7 @@ export default function TiendaSidebar({
                 <Button
                   key={category.id}
                   variant={selectedCategory === category.id ? 'line-primary' : 'line-ghost'}
-                  className="w-full justify-start"
+                  className="w-full justify-start text-sm h-8 lg:h-9"
                   onClick={() => setSelectedCategory(category.id)}
                 >
                   {category.name}
@@ -222,14 +222,14 @@ export default function TiendaSidebar({
       {/* Filters */}
       <Card variant="artisanal">
         <CardHeader 
-          className="pb-3 cursor-pointer"
+          className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
             console.log('Filters header clicked');
             toggleSection('filters');
           }}
         >
           <CardTitle 
-            className="text-lg flex items-center justify-between"
+            className="text-base lg:text-lg flex items-center justify-between"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
               fontWeight: 'normal',
@@ -237,7 +237,7 @@ export default function TiendaSidebar({
             }}
           >
             <span className="flex items-center gap-2">
-              <SlidersHorizontal className="h-5 w-5 text-azul-profundo" />
+              <SlidersHorizontal className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
               Filtros
             </span>
             {expandedSections.filters ? (
@@ -248,12 +248,12 @@ export default function TiendaSidebar({
           </CardTitle>
         </CardHeader>
         {expandedSections.filters && (
-          <CardContent className="pt-0 space-y-4">
+          <CardContent className="pt-0 space-y-3 lg:space-y-4">
             {/* Skin Type */}
             <div>
-              <label className="text-sm font-medium mb-2 block">Tipo de Piel</label>
+              <label className="text-xs lg:text-sm font-medium mb-2 block">Tipo de Piel</label>
               <Select value={selectedSkinType} onValueChange={setSelectedSkinType}>
-                <SelectTrigger>
+                <SelectTrigger className="h-8 lg:h-10 text-sm">
                   <SelectValue placeholder="Todos los tipos" />
                 </SelectTrigger>
                 <SelectContent>
@@ -269,19 +269,21 @@ export default function TiendaSidebar({
 
             {/* Price Range */}
             <div>
-              <label className="text-sm font-medium mb-2 block">Rango de Precio</label>
+              <label className="text-xs lg:text-sm font-medium mb-2 block">Rango de Precio</label>
               <div className="grid grid-cols-2 gap-2">
                 <Input
                   type="number"
                   placeholder="Mín"
                   value={priceRange.min}
                   onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                  className="h-8 lg:h-10 text-sm"
                 />
                 <Input
                   type="number"
                   placeholder="Máx"
                   value={priceRange.max}
                   onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                  className="h-8 lg:h-10 text-sm"
                 />
               </div>
             </div>
@@ -294,7 +296,7 @@ export default function TiendaSidebar({
                   console.log('Clear filters clicked');
                   onClearFilters();
                 }}
-                className="w-full flex items-center gap-2"
+                className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
               >
                 <X className="h-4 w-4" />
                 Limpiar filtros
@@ -304,8 +306,8 @@ export default function TiendaSidebar({
         )}
       </Card>
 
-      {/* Sort & Grid */}
-      <Card variant="artisanal">
+      {/* Sort & Grid - Hidden on mobile */}
+      <Card variant="artisanal" className="hidden lg:block">
         <CardHeader 
           className="pb-3 cursor-pointer"
           onClick={() => {

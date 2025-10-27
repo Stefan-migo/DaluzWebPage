@@ -32,7 +32,8 @@ interface ReviewItemProps {
     is_verified_purchase: boolean;
     created_at: string;
     updated_at: string;
-    user: {
+    user_id?: string;
+    user?: {
       id: string;
       email: string;
       user_metadata?: {
@@ -72,9 +73,9 @@ export function ReviewItem({
     };
   });
 
-  const isOwner = currentUserId === review.user.id;
-  const userName = review.user.user_metadata?.full_name || 
-                  review.user.email.split('@')[0] || 
+  const isOwner = currentUserId && review.user_id && currentUserId === review.user_id;
+  const userName = review.user?.user_metadata?.full_name || 
+                  review.user?.email?.split('@')[0] || 
                   'Usuario';
 
   const handleHelpfulnessVote = async (isHelpful: boolean) => {

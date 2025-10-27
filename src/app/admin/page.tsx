@@ -229,27 +229,32 @@ export default function AdminDashboard() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex justify-between items-start">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-azul-profundo">Dashboard</h1>
-          <p className="text-tierra-media">
+          <h1 className="text-2xl md:text-3xl font-bold text-azul-profundo">Dashboard</h1>
+          <p className="text-sm md:text-base text-tierra-media">
             Bienvenido al panel de administración de DA LUZ CONSCIENTE
           </p>
         </div>
         
-        <div className="flex space-x-2">
-          <Button variant="outline" asChild>
-            <Link href="/admin/products/add">
+        <div className="flex flex-wrap gap-2">
+
+          <Link href="/admin/products/add">
+          <Button 
+                      className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto"
+          >
               <Plus className="h-4 w-4 mr-2" />
               Nuevo Producto
+            </Button>  
             </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/admin/orders">
+          <Link href="/admin/orders">
+          <Button 
+            className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto"
+          >
               <Eye className="h-4 w-4 mr-2" />
               Ver Pedidos
-            </Link>
           </Button>
+            </Link>
         </div>
       </div>
 
@@ -270,51 +275,51 @@ export default function AdminDashboard() {
                   </p>
                 </div>
               </div>
-              <Button variant="outline" size="sm" asChild>
                 <Link href="/admin/products?filter=low_stock">
+                <Button variant="outline" size="sm">
                   Ver Inventario
                   <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
                 </Link>
-              </Button>
             </div>
           </CardContent>
         </Card>
       )}
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         {/* Revenue Card */}
         <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <DollarSign className="h-8 w-8 text-azul-profundo" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-tierra-media">Ingresos del Mes</p>
-                <p className="text-2xl font-bold text-azul-profundo">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-start gap-3">
+              <DollarSign className="h-6 w-6 md:h-8 md:w-8 text-azul-profundo flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs md:text-sm font-medium text-tierra-media truncate">Ingresos del Mes</p>
+                <p className="text-lg md:text-2xl font-bold text-azul-profundo break-words">
                   {formatPrice(data.kpis.revenue.current)}
                 </p>
                 <div className={cn(
-                  "flex items-center text-xs mt-1",
+                  "flex items-center text-xs mt-1 gap-1",
                   data.kpis.revenue.change >= 0 ? "text-green-600" : "text-red-600"
                 )}>
                   {data.kpis.revenue.change >= 0 ? (
                     <>
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                      <span>
-                        +{data.kpis.revenue.change.toFixed(1)}% vs mes anterior
+                      <TrendingUp className="h-3 w-3 flex-shrink-0" />
+                      <span className="truncate">
+                        +{data.kpis.revenue.change.toFixed(1)}% vs anterior
                       </span>
                     </>
                   ) : (
                     <>
-                      <TrendingDown className="h-3 w-3 mr-1" />
-                      <span>
-                        {data.kpis.revenue.change.toFixed(1)}% vs mes anterior
+                      <TrendingDown className="h-3 w-3 flex-shrink-0" />
+                      <span className="truncate">
+                        {data.kpis.revenue.change.toFixed(1)}% vs anterior
                       </span>
                     </>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  Solo pedidos completados/pagados
+                <p className="text-xs text-gray-500 mt-1 truncate">
+                  Solo completados/pagados
                 </p>
               </div>
             </div>
@@ -323,19 +328,19 @@ export default function AdminDashboard() {
 
         {/* Orders Card */}
         <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <ShoppingCart className="h-8 w-8 text-azul-profundo" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-tierra-media">Pedidos</p>
-                <p className="text-2xl font-bold text-azul-profundo">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-start gap-3">
+              <ShoppingCart className="h-6 w-6 md:h-8 md:w-8 text-azul-profundo flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs md:text-sm font-medium text-tierra-media truncate">Pedidos</p>
+                <p className="text-lg md:text-2xl font-bold text-azul-profundo">
                   {data.kpis.orders.total}
                 </p>
-                <div className="flex items-center justify-between text-xs mt-1">
-                  <span className="text-orange-600">{data.kpis.orders.pending} pendientes</span>
-                  <span className="text-green-600">{data.kpis.orders.completed} completados</span>
+                <div className="flex flex-wrap items-center gap-2 text-xs mt-1">
+                  <span className="text-orange-600 truncate">{data.kpis.orders.pending} pend.</span>
+                  <span className="text-green-600 truncate">{data.kpis.orders.completed} comp.</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1 truncate">
                   {data.kpis.orders.processing} en proceso
                 </p>
               </div>
@@ -345,28 +350,28 @@ export default function AdminDashboard() {
 
         {/* Products Card - Only Active */}
         <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Package className="h-8 w-8 text-azul-profundo" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-tierra-media">Productos Activos</p>
-                <p className="text-2xl font-bold text-azul-profundo">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-start gap-3">
+              <Package className="h-6 w-6 md:h-8 md:w-8 text-azul-profundo flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs md:text-sm font-medium text-tierra-media truncate">Productos Activos</p>
+                <p className="text-lg md:text-2xl font-bold text-azul-profundo">
                   {data.kpis.products.total}
                 </p>
-                <div className="flex items-center text-xs mt-1">
+                <div className="flex items-center text-xs mt-1 gap-1">
                   {data.kpis.products.lowStock > 0 ? (
                     <>
-                      <AlertTriangle className="h-3 w-3 mr-1 text-red-500" />
-                      <span className="text-red-500">{data.kpis.products.lowStock} con stock bajo</span>
+                      <AlertTriangle className="h-3 w-3 text-red-500 flex-shrink-0" />
+                      <span className="text-red-500 truncate">{data.kpis.products.lowStock} stock bajo</span>
                     </>
                   ) : (
                     <>
-                      <CheckCircle className="h-3 w-3 mr-1 text-green-600" />
-                      <span className="text-green-600">Stock saludable</span>
+                      <CheckCircle className="h-3 w-3 text-green-600 flex-shrink-0" />
+                      <span className="text-green-600 truncate">Stock saludable</span>
                     </>
                   )}
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1 truncate">
                   {data.kpis.products.outOfStock} sin stock
                 </p>
               </div>
@@ -376,19 +381,19 @@ export default function AdminDashboard() {
 
         {/* Customers Card */}
         <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-          <CardContent className="p-6">
-            <div className="flex items-center">
-              <Users className="h-8 w-8 text-azul-profundo" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-tierra-media">Clientes</p>
-                <p className="text-2xl font-bold text-azul-profundo">
+          <CardContent className="p-4 md:p-6">
+            <div className="flex items-start gap-3">
+              <Users className="h-6 w-6 md:h-8 md:w-8 text-azul-profundo flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs md:text-sm font-medium text-tierra-media truncate">Clientes</p>
+                <p className="text-lg md:text-2xl font-bold text-azul-profundo">
                   {data.kpis.customers.total}
                 </p>
-                <div className="flex items-center text-xs text-green-600 mt-1">
-                  <TrendingUp className="h-3 w-3 mr-1" />
-                  +{data.kpis.customers.new} nuevos (30 días)
+                <div className="flex items-center text-xs text-green-600 mt-1 gap-1">
+                  <TrendingUp className="h-3 w-3 flex-shrink-0" />
+                  <span className="truncate">+{data.kpis.customers.new} nuevos</span>
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
+                <p className="text-xs text-gray-500 mt-1 truncate">
                   {data.kpis.customers.returning} recurrentes
                 </p>
               </div>
@@ -511,41 +516,41 @@ export default function AdminDashboard() {
       )}
 
       {/* Recent Orders & Quick Actions */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
         {/* Recent Orders - Takes 2 columns */}
         <div className="lg:col-span-2">
           <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Pedidos Recientes</CardTitle>
-                <Button variant="ghost" size="sm" asChild>
+            <CardHeader className="pb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <CardTitle className="text-lg md:text-xl">Pedidos Recientes</CardTitle>
                   <Link href="/admin/orders">
+                  <Button variant="ghost" size="sm" className="self-start sm:self-auto">
                     Ver todos
                     <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
                   </Link>
-                </Button>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
+              <div className="space-y-2">
                 {data.recentOrders.length > 0 ? (
                   data.recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-[#AE000025] transition-colors">
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <p className="font-medium text-azul-profundo text-sm">
+                    <div key={order.id} className="flex flex-col p-3 rounded-lg hover:bg-[#AE000025] transition-colors border border-transparent hover:border-[#AE0000]/20">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between mb-2 gap-2">
+                          <p className="font-medium text-azul-profundo text-sm truncate">
                             #{order.order_number}
                           </p>
                           {getOrderStatusBadge(order.status)}
                         </div>
-                        <p className="text-xs text-tierra-media mb-1">
+                        <p className="text-xs text-tierra-media mb-2 truncate">
                           {order.customer_name} • {order.items_count} producto{order.items_count !== 1 ? 's' : ''}
                         </p>
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between gap-2">
                           <p className="font-semibold text-verde-suave text-sm">
                             {formatPrice(order.total_amount)}
                           </p>
-                          <p className="text-xs text-tierra-media flex items-center">
+                          <p className="text-xs text-tierra-media flex items-center flex-shrink-0">
                             <Calendar className="h-3 w-3 mr-1" />
                             {formatDate(order.created_at)}
                           </p>
@@ -557,7 +562,7 @@ export default function AdminDashboard() {
                   <div className="flex items-center justify-center h-[200px] text-center">
                     <div>
                       <ShoppingCart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-tierra-media">
+                      <p className="text-sm text-tierra-media">
                         No hay pedidos recientes para mostrar.
                       </p>
                     </div>
@@ -570,35 +575,86 @@ export default function AdminDashboard() {
 
         {/* Quick Actions */}
         <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
-          <CardHeader>
-            <CardTitle>Acciones Rápidas</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg md:text-xl">Acciones Rápidas</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-            <Button variant="outline" className="w-full justify-start" asChild>
+            <div className="space-y-2">
+              {/* Stock Alerts Section */}
+              {data.lowStockProducts.length > 0 && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 mb-2">
+                    <AlertTriangle className="h-4 w-4 text-red-500 flex-shrink-0" />
+                    <p className="text-sm font-semibold text-red-700">Alertas de Stock</p>
+                  </div>
+                  <p className="text-xs text-red-600 mb-2">
+                    {data.lowStockProducts.length} producto{data.lowStockProducts.length !== 1 ? 's' : ''} requiere{data.lowStockProducts.length === 1 ? '' : 'n'} atención
+                  </p>
+                  <div className="space-y-1.5 max-h-32 overflow-y-auto">
+                    {data.lowStockProducts.slice(0, 5).map((product) => (
+                      <div key={product.id} className="flex items-center justify-between text-xs bg-white p-2 rounded">
+                        <span className="text-azul-profundo truncate flex-1 mr-2">{product.name}</span>
+                        <Badge variant="destructive" className="text-xs flex-shrink-0">
+                          {product.currentStock} un.
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                  {data.lowStockProducts.length > 5 && (
+                    <p className="text-xs text-red-500 mt-2 text-center">
+                      +{data.lowStockProducts.length - 5} más
+                    </p>
+                  )}
+                  <Link href="/admin/products?filter=low_stock">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full mt-3 text-red-600 border-red-300 hover:bg-red-50" 
+                  >
+                      Ver Todos
+                      <ArrowRight className="h-3 w-3 ml-2" />
+                    </Button>
+                    </Link>
+                </div>
+              )}
+
+              {/* Action Buttons */}
               <Link href="/admin/products/add">
-                <Plus className="h-4 w-4 mr-2" />
-                Nuevo Producto
-              </Link>
-            </Button>
-            <Button variant="outline" className="w-full justify-start" asChild>
+              <Button 
+                variant="outline" 
+                  className="w-full justify-start h-10 hover:bg-[#AE0000]/5 hover:border-[#AE0000] border-gray-300 transition-all duration-300"
+              >
+                  <Plus className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Nuevo Producto</span>
+                </Button>
+                </Link>
               <Link href="/admin/orders">
-                <ShoppingCart className="h-4 w-4 mr-2" />
-                Gestionar Pedidos
-              </Link>
-            </Button>
-            <Button variant="outline" className="w-full justify-start" asChild>
+              <Button 
+                variant="outline" 
+                  className="w-full justify-start h-10 hover:bg-[#AE0000]/5 hover:border-[#AE0000] border-gray-300 transition-all duration-300"
+              >
+                  <ShoppingCart className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Gestionar Pedidos</span>
+                </Button>
+                </Link>
               <Link href="/admin/customers">
-                <Users className="h-4 w-4 mr-2" />
-                Ver Clientes
-              </Link>
-            </Button>
-            <Button variant="outline" className="w-full justify-start" asChild>
+              <Button 
+                variant="outline" 
+                  className="w-full justify-start h-10 hover:bg-[#AE0000]/5 hover:border-[#AE0000] border-gray-300 transition-all duration-300"
+              >
+                  <Users className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Ver Clientes</span>
+                </Button>
+                </Link>
               <Link href="/admin/products">
-                <Package className="h-4 w-4 mr-2" />
-                Inventario
-              </Link>
-            </Button>
+              <Button 
+                variant="outline" 
+                  className="w-full justify-start h-10 hover:bg-[#AE0000]/5 hover:border-[#AE0000] border-gray-300 transition-all duration-300"
+              >
+                  <Package className="h-4 w-4 mr-2 flex-shrink-0" />
+                  <span className="truncate">Inventario</span>
+                </Button>
+                </Link>
             </div>
           </CardContent>
         </Card>

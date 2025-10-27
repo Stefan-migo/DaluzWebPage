@@ -387,6 +387,56 @@ export default function ProductDetailPage() {
     // The ReviewList component will automatically refresh
   };
 
+  const handleShare = async () => {
+    if (!product) return;
+
+    const shareData = {
+      title: product.name,
+      text: product.short_description || product.description || 'Descubre este increíble producto de DA LUZ',
+      url: window.location.href,
+    };
+
+    try {
+      // Check if Web Share API is supported and we're in a secure context
+      if (navigator.share && navigator.canShare && navigator.canShare(shareData) && window.isSecureContext) {
+        await navigator.share(shareData);
+        toast.success('¡Producto compartido exitosamente!');
+      } else {
+        // Fallback: Copy to clipboard
+        await copyToClipboard(window.location.href);
+        toast.success('¡Enlace copiado al portapapeles!');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Try clipboard fallback
+      try {
+        await copyToClipboard(window.location.href);
+        toast.success('¡Enlace copiado al portapapeles!');
+      } catch (clipboardError) {
+        console.error('Clipboard error:', clipboardError);
+        toast.error('No se pudo compartir el producto. Intenta copiar el enlace manualmente.');
+      }
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // Fallback for older browsers or non-secure contexts
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+  };
+
   const getCurrentPrice = () => {
     return selectedVariant?.price || product?.price || 0;
   };
@@ -502,8 +552,91 @@ export default function ProductDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column - Product Images */}
           <div className="space-y-4">
-            {/* Thumbnail Navigation - Left Side */}
-            <div className="flex gap-4 items-center">
+            {/* Mobile: Main Image First */}
+            <div className="lg:hidden">
+              <div 
+                className="aspect-square relative overflow-hidden rounded-lg bg-white shadow-lg cursor-pointer group"
+                onClick={() => setShowImageModal(true)}
+              >
+                <Image
+                  src={selectedImage || product.featured_image}
+                  alt={product.name}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  priority
+                />
+                
+                {/* Navigation Arrows */}
+                {images.length > 1 && (
+                  <>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        prevImage();
+                      }}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    >
+                      <ArrowLeftSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nextImage();
+                      }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
+                    >
+                      <ArrowRightSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                    </button>
+                  </>
+                )}
+                
+                {/* Click to enlarge indicator */}
+                <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                  Click para ampliar
+                </div>
+                
+                {/* Badges */}
+                {product.compare_at_price && product.compare_at_price > currentPrice && (
+                  <Badge className="absolute top-4 left-4 bg-red-500 text-white">
+                    -{Math.round(((product.compare_at_price - currentPrice) / product.compare_at_price) * 100)}%
+                  </Badge>
+                )}
+                {product.is_featured && (
+                  <Badge className="absolute top-4 right-4 bg-dorado text-white">
+                    Destacado
+                  </Badge>
+                )}
+              </div>
+            </div>
+
+            {/* Mobile: Horizontal Thumbnails Below Main Image - Centered */}
+            <div className="lg:hidden">
+              <div className="flex justify-center gap-2 overflow-x-auto pb-2">
+                {images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => selectImage(image, index)}
+                    className={`w-20 h-20 flex-shrink-0 relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                      selectedImage === image 
+                        ? 'border-dorado shadow-lg scale-105' 
+                        : 'border-gray-200 hover:border-gray-300 hover:scale-105'
+                    }`}
+                  >
+                    <Image
+                      src={image}
+                      alt={`${product.name} ${index + 1}`}
+                      fill
+                      className="object-cover"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: Main Image Above, Thumbnails Below */}
+            <div className="hidden lg:block">
+              {/* Thumbnail Navigation - Left Side */}
+              <div className="flex gap-4 items-center">
               {/* Thumbnail Column */}
               <div className="flex flex-col gap-2 w-auto justify-center">
                 {/* Up Arrow */}
@@ -615,10 +748,11 @@ export default function ProductDetailPage() {
                 </div>
               </div>
             </div>
+            </div>
           </div>
 
           {/* Right Column - Product Information */}
-          <div className="space-y-6 px-[4rem]">
+          <div className="space-y-6 px-4 lg:px-[4rem]">
             {/* Header */}
             <div>
               
@@ -793,6 +927,7 @@ export default function ProductDetailPage() {
                     variant="outline" 
                     size="sm"
                     className={getColorPalette().outlineColor}
+                    onClick={handleShare}
                   >
                     <Share2 className="h-4 w-4 mr-2" />
                     Compartir
@@ -822,7 +957,8 @@ export default function ProductDetailPage() {
         {/* Product Details Tabs */}
         <div className="mt-12">
           <Tabs defaultValue="description" className="w-full">
-            <TabsList className="grid w-full grid-cols-5 bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+            {/* Desktop Tabs */}
+            <TabsList className="hidden lg:grid w-full grid-cols-5 bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
               <TabsTrigger 
                 value="description"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
@@ -882,6 +1018,80 @@ export default function ProductDetailPage() {
               <TabsTrigger 
                 value="reviews"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
+                style={{ 
+                  color: getColorPalette().primaryColor,
+                  backgroundColor: 'transparent'
+                }}
+                data-state-active-style={{
+                  backgroundColor: getColorPalette().primaryColor,
+                  color: 'white'
+                }}
+              >
+                Reseñas
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Mobile Tabs */}
+            <TabsList className="lg:hidden flex w-full bg-white/50 backdrop-blur-sm border overflow-x-auto scrollbar-hide" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+              <TabsTrigger 
+                value="description"
+                className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
+                style={{ 
+                  color: getColorPalette().primaryColor,
+                  backgroundColor: 'transparent'
+                }}
+                data-state-active-style={{
+                  backgroundColor: getColorPalette().primaryColor,
+                  color: 'white'
+                }}
+              >
+                Descripción
+              </TabsTrigger>
+              <TabsTrigger 
+                value="ingredients"
+                className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
+                style={{ 
+                  color: getColorPalette().primaryColor,
+                  backgroundColor: 'transparent'
+                }}
+                data-state-active-style={{
+                  backgroundColor: getColorPalette().primaryColor,
+                  color: 'white'
+                }}
+              >
+                Ingredientes
+              </TabsTrigger>
+              <TabsTrigger 
+                value="usage"
+                className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
+                style={{ 
+                  color: getColorPalette().primaryColor,
+                  backgroundColor: 'transparent'
+                }}
+                data-state-active-style={{
+                  backgroundColor: getColorPalette().primaryColor,
+                  color: 'white'
+                }}
+              >
+                Modo de uso
+              </TabsTrigger>
+              <TabsTrigger 
+                value="physical"
+                className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
+                style={{ 
+                  color: getColorPalette().primaryColor,
+                  backgroundColor: 'transparent'
+                }}
+                data-state-active-style={{
+                  backgroundColor: getColorPalette().primaryColor,
+                  color: 'white'
+                }}
+              >
+                Detalles Físicos
+              </TabsTrigger>
+              <TabsTrigger 
+                value="reviews"
+                className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
                 style={{ 
                   color: getColorPalette().primaryColor,
                   backgroundColor: 'transparent'
@@ -1147,69 +1357,131 @@ export default function ProductDetailPage() {
         </div>
 
         {/* Related Products Section */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-16">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-bold text-azul-profundo mb-2">
-                Más productos de {determineProductLine(product)?.name || 'esta línea'}
-              </h2>
-              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-azul-profundo to-transparent mx-auto" />
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct) => (
-                <ProductCard
-                  key={relatedProduct.id}
-                  id={relatedProduct.id}
-                  name={relatedProduct.name}
-                  description={relatedProduct.short_description || relatedProduct.description}
-                  price={relatedProduct.price}
-                  originalPrice={relatedProduct.compare_at_price}
-                  category={relatedProduct.categories?.name || ''}
-                  imageUrl={relatedProduct.featured_image}
-                  rating={relatedProduct.averageRating || 0}
-                  reviewCount={relatedProduct.reviewCount || 0}
-                  isNatural={true}
-                  isNew={false}
-                  isOnSale={!!relatedProduct.compare_at_price}
-                  stock={relatedProduct.inventory_quantity}
-                  size={relatedProduct.product_variants?.find(v => v.is_default)?.option1}
-                  onAddToCart={(productId: string, quantity: number) => {
-                    const product = relatedProducts.find(p => p.id === productId);
-                    if (!product) return;
+        <div className="mt-16">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold text-azul-profundo mb-2">
+              Más productos de {determineProductLine(product)?.name || 'esta línea'}
+            </h2>
+            <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-azul-profundo to-transparent mx-auto" />
+          </div>
+          
+          {relatedProducts.length > 0 ? (
+            <div className="relative">
+              {/* Desktop Grid */}
+              <div className="hidden lg:grid grid-cols-4 gap-6">
+                {relatedProducts.map((relatedProduct) => (
+                  <ProductCard
+                    className="p-[0]"
+                    key={relatedProduct.id}
+                    id={relatedProduct.id}
+                    name={relatedProduct.name}
+                    description={relatedProduct.short_description || relatedProduct.description}
+                    price={relatedProduct.price}
+                    originalPrice={relatedProduct.compare_at_price}
+                    category={relatedProduct.categories?.name || ''}
+                    imageUrl={relatedProduct.featured_image}
+                    rating={relatedProduct.averageRating || 0}
+                    reviewCount={relatedProduct.reviewCount || 0}
+                    isNatural={true}
+                    isNew={false}
+                    isOnSale={!!relatedProduct.compare_at_price}
+                    stock={relatedProduct.inventory_quantity}
+                    size={relatedProduct.product_variants?.find(v => v.is_default)?.option1}
+                    onAddToCart={(productId: string, quantity: number) => {
+                      const product = relatedProducts.find(p => p.id === productId);
+                      if (!product) return;
 
-                    const defaultVariant = product.product_variants?.find(v => v.is_default) || product.product_variants?.[0];
-                    
-                    addItem({
-                      productId: product.id,
-                      variantId: defaultVariant?.id,
-                      name: product.name,
-                      price: defaultVariant?.price || product.price,
-                      originalPrice: product.compare_at_price,
-                      image: product.featured_image,
-                      stock: defaultVariant?.inventory_quantity || product.inventory_quantity,
-                      size: defaultVariant?.option1,
-                      sku: product.slug,
-                      quantity,
-                    });
+                      const defaultVariant = product.product_variants?.find(v => v.is_default) || product.product_variants?.[0];
+                      
+                      addItem({
+                        productId: product.id,
+                        variantId: defaultVariant?.id,
+                        name: product.name,
+                        price: defaultVariant?.price || product.price,
+                        originalPrice: product.compare_at_price,
+                        image: product.featured_image,
+                        stock: defaultVariant?.inventory_quantity || product.inventory_quantity,
+                        size: defaultVariant?.option1,
+                        sku: product.slug,
+                        quantity,
+                      });
 
-                    toast.success(`${product.name} agregado al carrito`);
-                  }}
-                  variant="elegant"
-                />
-              ))}
+                      toast.success(`${product.name} agregado al carrito`);
+                    }}
+                    variant="elegant"
+                  />
+                ))}
+              </div>
+
+              {/* Mobile Carousel */}
+              <div className="lg:hidden">
+                <div className="flex gap-1 overflow-x-auto pb-4 scrollbar-hide">
+                  {relatedProducts.map((relatedProduct) => (
+                    <div key={relatedProduct.id} className="flex-shrink-0 w-48">
+                      <ProductCard
+                        className="p-[0] h-full"
+                        id={relatedProduct.id}
+                        name={relatedProduct.name}
+                        description={relatedProduct.short_description || relatedProduct.description}
+                        price={relatedProduct.price}
+                        originalPrice={relatedProduct.compare_at_price}
+                        category={relatedProduct.categories?.name || ''}
+                        imageUrl={relatedProduct.featured_image}
+                        rating={relatedProduct.averageRating || 0}
+                        reviewCount={relatedProduct.reviewCount || 0}
+                        isNatural={true}
+                        isNew={false}
+                        isOnSale={!!relatedProduct.compare_at_price}
+                        stock={relatedProduct.inventory_quantity}
+                        size={relatedProduct.product_variants?.find(v => v.is_default)?.option1}
+                        onAddToCart={(productId: string, quantity: number) => {
+                          const product = relatedProducts.find(p => p.id === productId);
+                          if (!product) return;
+
+                          const defaultVariant = product.product_variants?.find(v => v.is_default) || product.product_variants?.[0];
+                          
+                          addItem({
+                            productId: product.id,
+                            variantId: defaultVariant?.id,
+                            name: product.name,
+                            price: defaultVariant?.price || product.price,
+                            originalPrice: product.compare_at_price,
+                            image: product.featured_image,
+                            stock: defaultVariant?.inventory_quantity || product.inventory_quantity,
+                            size: defaultVariant?.option1,
+                            sku: product.slug,
+                            quantity,
+                          });
+
+                          toast.success(`${product.name} agregado al carrito`);
+                        }}
+                        variant="elegant"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            
-            <div className="text-center mt-8">
-              <Link href={`/categorias/linea-${determineProductLine(product)?.id}`}>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-tierra-media mb-4">No hay productos relacionados disponibles en este momento.</p>
+              <Link href="/productos">
                 <Button className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Ver toda la línea {determineProductLine(product)?.name}
+                  Ver todos los productos
                 </Button>
               </Link>
             </div>
+          )}
+          
+          <div className="text-center mt-8">
+            <Link href={`/categorias/linea-${determineProductLine(product)?.id}`}>
+              <Button className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Ver toda la línea {determineProductLine(product)?.name}
+              </Button>
+            </Link>
           </div>
-        )}
+        </div>
       </div>
 
       {/* Image Modal Dialog */}

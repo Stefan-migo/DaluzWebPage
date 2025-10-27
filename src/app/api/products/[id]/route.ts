@@ -134,42 +134,69 @@ export async function PUT(
       }
     }
 
+    // Log the incoming data for debugging
+    console.log('📝 Updating product with data:', {
+      id,
+      body: JSON.stringify(body, null, 2)
+    });
+
     // Update the product - only include fields that exist in the database
+    const updateData: any = {
+      name: body.name,
+      slug: body.slug,
+      short_description: body.short_description,
+      description: body.description,
+      price: body.price,
+      compare_at_price: body.compare_at_price,
+      category_id: body.category_id && body.category_id !== '' ? body.category_id : null,
+      sku: body.sku,
+      inventory_quantity: body.inventory_quantity,
+      weight: body.weight,
+      dimensions: body.dimensions,
+      package_characteristics: body.package_characteristics,
+      featured_image: body.featured_image,
+      gallery: body.gallery || [],
+      skin_type: body.skin_type,
+      benefits: body.benefits,
+      certifications: body.certifications,
+      ingredients: body.ingredients,
+      usage_instructions: body.usage_instructions,
+      precautions: body.precautions,
+      is_featured: body.is_featured,
+      status: body.status,
+      updated_at: new Date().toISOString()
+    };
+
+    // Remove any undefined or null values that might cause issues
+    Object.keys(updateData).forEach(key => {
+      if (updateData[key] === undefined) {
+        delete updateData[key];
+      }
+    });
+
+    console.log('📝 Cleaned update data:', JSON.stringify(updateData, null, 2));
+
     const { data: product, error } = await supabase
       .from('products')
-      .update({
-        name: body.name,
-        slug: body.slug,
-        short_description: body.short_description,
-        description: body.description,
-        price: body.price,
-        compare_at_price: body.compare_at_price,
-        category_id: body.category_id && body.category_id !== '' ? body.category_id : null,
-        sku: body.sku,
-        inventory_quantity: body.inventory_quantity,
-        weight: body.weight,
-        dimensions: body.dimensions,
-        package_characteristics: body.package_characteristics,
-        featured_image: body.featured_image,
-        gallery: body.gallery || [],
-        skin_type: body.skin_type,
-        benefits: body.benefits,
-        certifications: body.certifications,
-        ingredients: body.ingredients,
-        usage_instructions: body.usage_instructions,
-        precautions: body.precautions,
-        is_featured: body.is_featured,
-        status: body.status,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating product:', error);
+      console.error('❌ Error updating product:', error);
+      console.error('❌ Error details:', {
+        code: error.code,
+        message: error.message,
+        details: error.details,
+        hint: error.hint
+      });
       return NextResponse.json(
-        { error: 'Failed to update product' },
+        { 
+          error: 'Failed to update product',
+          details: error.message,
+          code: error.code
+        },
         { status: 500 }
       );
     }

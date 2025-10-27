@@ -91,7 +91,7 @@ export default function RichTextEditor({
   return (
     <div className={`space-y-2 ${className}`}>
       {/* Toolbar */}
-      <div className="flex items-center gap-1 p-2 border rounded-md bg-gray-50">
+      <div className="flex items-center gap-1 p-2 rounded-md">
         <Button
           type="button"
           variant={isRichMode ? "default" : "outline"}

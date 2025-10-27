@@ -26,13 +26,14 @@ import {
   Server,
   Tag
 } from 'lucide-react';
+import AdminNotificationDropdown from '@/components/admin/AdminNotificationDropdown';
 
 interface AdminLayoutProps {
   children: React.ReactNode;
 }
 
-// Admin navigation items
-const navigationItems = [
+// Admin navigation items - will be populated dynamically
+const createNavigationItems = (ordersCount?: number) => [
   {
     href: '/admin',
     label: 'Dashboard',
@@ -44,7 +45,7 @@ const navigationItems = [
     label: 'Pedidos',
     icon: ShoppingCart,
     description: 'Gestión de pedidos',
-    badge: '12' // This would be dynamic
+    badge: ordersCount !== undefined ? ordersCount.toString() : undefined
   },
   {
     href: '/admin/products',
@@ -121,6 +122,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     checkedUserId: null
   });
 
+  // Dynamic stats state
+  const [stats, setStats] = useState<{
+    todayOrders: number;
+    totalOrders: number;
+    revenue: number;
+    lowStock: number;
+  }>({
+    todayOrders: 0,
+    totalOrders: 0,
+    revenue: 0,
+    lowStock: 0
+  });
+
   // Add state to prevent multiple simultaneous admin checks
   const [isAdminCheckInProgress, setIsAdminCheckInProgress] = useState(false);
   
@@ -129,6 +143,33 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   
   // Debug mode - can be enabled via localStorage
   const debugMode = typeof window !== 'undefined' && localStorage.getItem('admin-debug') === 'true';
+
+  // Fetch dashboard stats
+  useEffect(() => {
+    const fetchStats = async () => {
+      if (!adminState.isAdmin) return;
+
+      try {
+        const response = await fetch('/api/admin/dashboard');
+        if (response.ok) {
+          const data = await response.json();
+          setStats({
+            todayOrders: data.todayOrders || 0,
+            totalOrders: data.pendingOrders || 0,
+            revenue: data.revenue || 0,
+            lowStock: data.lowStockProducts?.length || 0
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching stats:', error);
+      }
+    };
+
+    fetchStats();
+    // Refresh stats every 60 seconds
+    const interval = setInterval(fetchStats, 60000);
+    return () => clearInterval(interval);
+  }, [adminState.isAdmin]);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
@@ -384,7 +425,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80 p-0">
-                <AdminSidebar pathname={pathname} onNavigate={() => setSidebarOpen(false)} />
+                <AdminSidebar pathname={pathname} onNavigate={() => setSidebarOpen(false)} stats={stats} />
               </SheetContent>
             </Sheet>
             
@@ -392,9 +433,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
           
           <div className="admin-header-actions">
-            <Button variant="ghost" size="icon">
-              <Bell className="h-5 w-5" color="#F0EACE" />
-            </Button>
+            <AdminNotificationDropdown />
             <Button variant="ghost" size="icon" onClick={handleSignOut}>
               <LogOut className="h-5 w-5" color="#F0EACE" />
             </Button>
@@ -405,7 +444,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="lg:flex">
         {/* Desktop Sidebar */}
         <div className="hidden lg:flex lg:w-72 lg:flex-col lg:fixed lg:inset-y-0">
-          <AdminSidebar pathname={pathname} />
+          <AdminSidebar pathname={pathname} stats={stats} />
         </div>
 
         {/* Main Content */}
@@ -423,10 +462,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               </div>
               
               <div className="admin-header-actions">
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" color="#F0EACE" />
-                  <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
-                </Button>
+                <AdminNotificationDropdown />
                 
                 <div className="admin-header-user">
                   <div className="admin-header-user-info">
@@ -437,10 +473,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                       Administrador
                     </p>
                   </div>
-                  <Button variant="ghost" size="icon">
-                    <User className="h-5 w-5" color="#F0EACE" />
-                  </Button>
-                  <Button variant="ghost" size="icon" onClick={handleSignOut}>
+                  <Link href="/perfil">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="hover:bg-[#AE000020] transition-colors"
+                      title="Ver perfil"
+                    >
+                      <User className="h-5 w-5" color="#F0EACE" />
+                    </Button>
+                  </Link>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    onClick={handleSignOut}
+                    className="hover:bg-[#AE000020] transition-colors"
+                    title="Cerrar sesión"
+                  >
                     <LogOut className="h-5 w-5" color="#F0EACE" />
                   </Button>
                 </div>
@@ -461,10 +510,17 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 // Sidebar Component
 function AdminSidebar({ 
   pathname, 
-  onNavigate 
+  onNavigate,
+  stats
 }: { 
   pathname: string; 
   onNavigate?: () => void;
+  stats: {
+    todayOrders: number;
+    totalOrders: number;
+    revenue: number;
+    lowStock: number;
+  };
 }) {
   return (
     <div className="admin-sidebar flex grow flex-col gap-y-5 overflow-y-auto">
@@ -493,15 +549,17 @@ function AdminSidebar({
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
                 <span className="text-gray-600">Pedidos Hoy</span>
-                <span className="font-medium text-gray-900">12</span>
+                <span className="font-medium text-gray-900">{stats.todayOrders}</span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-gray-600">Ventas</span>
-                <span className="font-medium text-green-600">$48,320</span>
+                <span className="font-medium text-green-600">
+                  ${stats.revenue.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                </span>
               </div>
               <div className="flex justify-between text-xs">
                 <span className="text-gray-600">Stock Bajo</span>
-                <span className="font-medium text-red-500">3</span>
+                <span className="font-medium text-red-500">{stats.lowStock}</span>
               </div>
             </div>
           </div>
@@ -524,7 +582,7 @@ function AdminSidebar({
             </Link>
           </li>
 
-          {navigationItems.map((item) => {
+          {createNavigationItems(stats.totalOrders).map((item) => {
             const isActive = pathname === item.href || 
               (item.href !== '/admin' && pathname.startsWith(item.href));
             

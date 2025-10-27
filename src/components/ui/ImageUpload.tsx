@@ -95,11 +95,11 @@ export default function ImageUpload({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`space-y-4 pt-2 ${className}`}>
       {/* Upload Methods */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* File Upload */}
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardContent className="p-4">
             <Label className="text-sm font-medium mb-2 block">
               Subir desde dispositivo
@@ -139,7 +139,7 @@ export default function ImageUpload({
         </Card>
 
         {/* Manual URL */}
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardContent className="p-4">
             <Label className="text-sm font-medium mb-2 block">
               URL de imagen
@@ -160,7 +160,7 @@ export default function ImageUpload({
 
       {/* Preview */}
       {(preview || value) && (
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'  >
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-2">
               <Label className="text-sm font-medium">Vista previa</Label>

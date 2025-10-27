@@ -208,7 +208,15 @@ export default function AddProductPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <div className="flex items-center gap-4 mb-6">
+      <div className="flex justify-between items-center gap-4 mb-6">
+      <div className="flex items-center gap-3">
+          <h1 className="text-3xl font-bold">Agregar Producto</h1>
+          {hasChanges && (
+            <span className="px-2 py-1 text-xs bg-amber-100 text-amber-800 rounded-full border border-amber-200">
+              Cambios sin guardar
+            </span>
+          )}
+        </div>
         <Button
           variant="outline"
           onClick={() => router.back()}
@@ -217,20 +225,12 @@ export default function AddProductPage() {
           <ArrowLeft className="h-4 w-4" />
           Volver
         </Button>
-        <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold">Agregar Producto</h1>
-          {hasChanges && (
-            <span className="px-2 py-1 text-xs bg-amber-100 text-amber-800 rounded-full border border-amber-200">
-              Cambios sin guardar
-            </span>
-          )}
-        </div>
       </div>
 
 
       {/* Product Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Información Básica</CardTitle>
           </CardHeader>
@@ -244,6 +244,7 @@ export default function AddProductPage() {
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Ej: Crema Hidratante de Rosa Mosqueta"
                   required
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -253,6 +254,7 @@ export default function AddProductPage() {
                   value={formData.slug}
                   onChange={(e) => handleInputChange('slug', e.target.value)}
                   placeholder="Se genera automáticamente"
+                  className='border-black/20'
                 />
               </div>
             </div>
@@ -279,7 +281,7 @@ export default function AddProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Precios e Inventario</CardTitle>
           </CardHeader>
@@ -295,6 +297,7 @@ export default function AddProductPage() {
                   onChange={(e) => handleInputChange('price', e.target.value)}
                   placeholder="0.00"
                   required
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -306,6 +309,7 @@ export default function AddProductPage() {
                   value={formData.compare_at_price}
                   onChange={(e) => handleInputChange('compare_at_price', e.target.value)}
                   placeholder="0.00"
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -316,13 +320,14 @@ export default function AddProductPage() {
                   value={formData.inventory_quantity}
                   onChange={(e) => handleInputChange('inventory_quantity', e.target.value)}
                   placeholder="0"
+                  className='border-black/20'
                 />
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Categoría</CardTitle>
           </CardHeader>
@@ -345,7 +350,7 @@ export default function AddProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Imágenes del Producto</CardTitle>
             <p className="text-sm text-gray-600">Sube imágenes para el producto (máximo 5 imágenes)</p>
@@ -400,7 +405,7 @@ export default function AddProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Atributos del Producto</CardTitle>
           </CardHeader>
@@ -529,7 +534,7 @@ export default function AddProductPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Instrucciones de Uso</CardTitle>
           </CardHeader>
@@ -556,7 +561,7 @@ export default function AddProductPage() {
         </Card>
 
         {/* Physical Details */}
-        <Card>
+        <Card className='bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]'>
           <CardHeader>
             <CardTitle>Detalles Físicos</CardTitle>
             <p className="text-sm text-gray-600">Información sobre peso, dimensiones y características del empaque</p>
@@ -571,6 +576,7 @@ export default function AddProductPage() {
                   value={formData.weight}
                   onChange={(e) => handleInputChange('weight', e.target.value)}
                   placeholder="Ej: 500"
+                  className='border-black/20'
                 />
               </div>
               <div>
@@ -580,6 +586,7 @@ export default function AddProductPage() {
                   value={formData.dimensions}
                   onChange={(e) => handleInputChange('dimensions', e.target.value)}
                   placeholder="Ej: 15x10x5 cm"
+                  className='border-black/20'
                 />
               </div>
             </div>
@@ -665,6 +672,7 @@ export default function AddProductPage() {
               variant="secondary" 
               onClick={() => handleSubmit(undefined, 'draft')}
               disabled={loading}
+              className='text-white'
             >
               Guardar como Borrador
             </Button>

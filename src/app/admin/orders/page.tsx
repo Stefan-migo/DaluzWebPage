@@ -51,7 +51,11 @@ import {
   User,
   CreditCard,
   ExternalLink,
-  RefreshCw
+  RefreshCw,
+  ChevronLeft,
+  ChevronRight,
+  Trash2,
+  AlertTriangle
 } from 'lucide-react';
 import { toast } from 'sonner';
 import CreateManualOrderForm from '@/components/admin/CreateManualOrderForm';
@@ -83,24 +87,55 @@ export default function OrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
   const [showCreateOrder, setShowCreateOrder] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [deletingOrder, setDeletingOrder] = useState<string | null>(null);
+  const ordersPerPage = 10;
 
   useEffect(() => {
     fetchOrders();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage, statusFilter]);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
       
-      // This will fetch from a new admin orders API endpoint
-      const response = await fetch('/api/admin/orders');
+      const offset = (currentPage - 1) * ordersPerPage;
+      const params = new URLSearchParams({
+        limit: ordersPerPage.toString(),
+        offset: offset.toString()
+      });
+
+      if (statusFilter !== 'all') {
+        params.append('status', statusFilter);
+      }
+      
+      const response = await fetch(`/api/admin/orders?${params}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch orders');
       }
       
       const data = await response.json();
+      console.log('📊 Orders API response:', {
+        ordersLength: data.orders?.length,
+        total: data.total,
+        totalPages: Math.ceil((data.total || 0) / ordersPerPage)
+      });
+
       setOrders(data.orders || []);
+      setTotalOrders(data.total || 0);
+      const calculatedTotalPages = Math.ceil((data.total || 0) / ordersPerPage);
+      setTotalPages(calculatedTotalPages);
+      
+      console.log('Pagination state updated:', {
+        totalOrders: data.total || 0,
+        totalPages: calculatedTotalPages,
+        ordersPerPage,
+        shouldShowPagination: calculatedTotalPages > 1
+      });
     } catch (error) {
       console.error('Error fetching orders:', error);
       toast.error('Error al cargar los pedidos');
@@ -138,7 +173,7 @@ export default function OrdersPage() {
           customer_name: 'Carlos Ruiz',
           customer_email: 'carlos@example.com',
           total_amount: 8900,
-          status: 'completed',
+          status: 'delivered',
           payment_status: 'paid',
           created_at: '2024-01-20T09:15:00Z',
           mp_payment_id: '123456788',
@@ -185,6 +220,38 @@ export default function OrdersPage() {
     } catch (error) {
       console.error('Error updating order:', error);
       toast.error('Error al actualizar el pedido');
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  const updatePaymentStatus = async (orderId: string, newPaymentStatus: string) => {
+    try {
+      setUpdating(orderId);
+      
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ payment_status: newPaymentStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update payment status');
+      }
+
+      // Update local state
+      setOrders(orders.map(order => 
+        order.id === orderId 
+          ? { ...order, payment_status: newPaymentStatus }
+          : order
+      ));
+
+      toast.success('Estado de pago actualizado');
+    } catch (error) {
+      console.error('Error updating payment status:', error);
+      toast.error('Error al actualizar el estado de pago');
     } finally {
       setUpdating(null);
     }
@@ -237,6 +304,31 @@ export default function OrdersPage() {
     }
   };
 
+  const deleteOrder = async (orderId: string) => {
+    try {
+      setDeletingOrder(orderId);
+      
+      const response = await fetch(`/api/admin/orders/${orderId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to delete order');
+      }
+
+      toast.success('Pedido eliminado exitosamente');
+      fetchOrders(); // Refresh the orders list
+    } catch (error) {
+      console.error('Error deleting order:', error);
+      toast.error('Error al eliminar el pedido');
+    } finally {
+      setDeletingOrder(null);
+    }
+  };
+
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
@@ -256,6 +348,7 @@ export default function OrdersPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
+      case 'delivered':
       case 'completed':
         return <Badge className="bg-verde-suave text-white"><CheckCircle className="h-3 w-3 mr-1" />Completado</Badge>;
       case 'pending':
@@ -265,9 +358,9 @@ export default function OrdersPage() {
       case 'shipped':
         return <Badge className="bg-blue-500 text-white"><Truck className="h-3 w-3 mr-1" />Enviado</Badge>;
       case 'cancelled':
-        return <Badge variant="secondary">Cancelado</Badge>;
-      case 'failed':
-        return <Badge variant="destructive"><XCircle className="h-3 w-3 mr-1" />Fallido</Badge>;
+        return <Badge variant="secondary"><XCircle className="h-3 w-3 mr-1" />Cancelado</Badge>;
+      case 'refunded':
+        return <Badge variant="secondary">Reembolsado</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -283,12 +376,16 @@ export default function OrdersPage() {
         return <Badge variant="outline" className="border-red-500 text-red-500">Fallido</Badge>;
       case 'refunded':
         return <Badge variant="outline" className="border-gray-500 text-gray-500">Reembolsado</Badge>;
+      case 'partially_refunded':
+        return <Badge variant="outline" className="border-gray-400 text-gray-400">Parcialmente Reembolsado</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
   };
 
-  const filteredOrders = orders.filter(order => {
+  // For display, we'll use the orders directly since pagination is handled server-side
+  // Only apply client-side filtering for search when not using server pagination
+  const displayOrders = searchTerm ? orders.filter(order => {
     const matchesSearch = 
       order.order_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
       order.customer_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -297,7 +394,7 @@ export default function OrdersPage() {
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     
     return matchesSearch && matchesStatus;
-  });
+  }) : orders;
 
   if (loading) {
     return (
@@ -375,9 +472,9 @@ export default function OrdersPage() {
                 <SelectItem value="pending">Pendiente</SelectItem>
                 <SelectItem value="processing">Procesando</SelectItem>
                 <SelectItem value="shipped">Enviado</SelectItem>
-                <SelectItem value="completed">Completado</SelectItem>
+                  <SelectItem value="delivered">Completado</SelectItem>
                 <SelectItem value="cancelled">Cancelado</SelectItem>
-                <SelectItem value="failed">Fallido</SelectItem>
+                  <SelectItem value="refunded">Reembolsado</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -401,7 +498,7 @@ export default function OrdersPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredOrders.map((order) => (
+                {displayOrders.map((order) => (
                   <TableRow key={order.id} className="hover:bg-[#AE000025] transition-colors">
                     <TableCell className="py-4">
                       <div>
@@ -424,10 +521,76 @@ export default function OrdersPage() {
                       </div>
                     </TableCell>
                     <TableCell className="py-4">
-                      {getStatusBadge(order.status)}
+                      <Select 
+                        value={order.status} 
+                        onValueChange={(value) => updateOrderStatus(order.id, value)}
+                        disabled={updating === order.id}
+                      >
+                        <SelectTrigger className="w-[140px] h-8 text-xs">
+                          <SelectValue>{getStatusBadge(order.status)}</SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">
+                            <div className="flex items-center">
+                              <Clock className="h-3 w-3 mr-2" />
+                              Pendiente
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="processing">
+                            <div className="flex items-center">
+                              <Package className="h-3 w-3 mr-2" />
+                              Procesando
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="shipped">
+                            <div className="flex items-center">
+                              <Truck className="h-3 w-3 mr-2" />
+                              Enviado
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="delivered">
+                            <div className="flex items-center">
+                              <CheckCircle className="h-3 w-3 mr-2" />
+                              Completado
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="cancelled">Cancelado</SelectItem>
+                          <SelectItem value="refunded">Reembolsado</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                     <TableCell className="py-4">
-                      {getPaymentStatusBadge(order.payment_status)}
+                      <Select 
+                        value={order.payment_status} 
+                        onValueChange={(value) => updatePaymentStatus(order.id, value)}
+                        disabled={updating === order.id}
+                      >
+                        <SelectTrigger className="w-[120px] h-8 text-xs">
+                          <SelectValue>{getPaymentStatusBadge(order.payment_status)}</SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="pending">
+                            <div className="flex items-center">
+                              <Clock className="h-3 w-3 mr-2 text-dorado" />
+                              Pendiente
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="paid">
+                            <div className="flex items-center">
+                              <CheckCircle className="h-3 w-3 mr-2 text-verde-suave" />
+                              Pagado
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="failed">
+                            <div className="flex items-center">
+                              <XCircle className="h-3 w-3 mr-2 text-red-500" />
+                              Fallido
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="refunded">Reembolsado</SelectItem>
+                          <SelectItem value="partially_refunded">Parcialmente Reembolsado</SelectItem>
+                        </SelectContent>
+                      </Select>
                     </TableCell>
                     <TableCell className="py-4">
                       <p className="font-semibold text-verde-suave">
@@ -471,7 +634,7 @@ export default function OrdersPage() {
                         
                         {order.status === 'shipped' && (
                           <DropdownMenuItem 
-                            onClick={() => updateOrderStatus(order.id, 'completed')}
+                            onClick={() => updateOrderStatus(order.id, 'delivered')}
                             disabled={updating === order.id}
                           >
                             <CheckCircle className="h-4 w-4 mr-2" />
@@ -498,6 +661,26 @@ export default function OrdersPage() {
                             </a>
                           </DropdownMenuItem>
                         )}
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuItem 
+                          onClick={() => deleteOrder(order.id)}
+                          disabled={deletingOrder === order.id}
+                          className="text-red-600 focus:text-red-600"
+                        >
+                          {deletingOrder === order.id ? (
+                            <>
+                              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                              Eliminando...
+                            </>
+                          ) : (
+                            <>
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Eliminar Pedido
+                            </>
+                          )}
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                       </DropdownMenu>
                     </TableCell>
@@ -507,7 +690,7 @@ export default function OrdersPage() {
             </Table>
           </div>
           
-          {filteredOrders.length === 0 && (
+          {displayOrders.length === 0 && (
             <div className="text-center py-12">
               <Package className="h-16 w-16 text-tierra-media mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-azul-profundo mb-2">
@@ -522,6 +705,65 @@ export default function OrdersPage() {
             </div>
           )}
         </CardContent>
+
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-between px-6 py-4 border-t">
+            <div className="text-sm text-tierra-media">
+              Mostrando {((currentPage - 1) * ordersPerPage) + 1} a {Math.min(currentPage * ordersPerPage, totalOrders)} de {totalOrders} pedidos
+            </div>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1 || loading}
+              >
+                <ChevronLeft className="h-4 w-4 mr-1" />
+                Anterior
+              </Button>
+              
+              <div className="flex items-center gap-1">
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  // Show first 2, current page, and last 2 pages
+                  let pageNum;
+                  if (totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={currentPage === pageNum ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(pageNum)}
+                      disabled={loading}
+                      className={currentPage === pageNum ? "bg-[#AE0000] hover:bg-[#C70000]" : ""}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages || loading}
+              >
+                Siguiente
+                <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
+          </div>
+        )}
       </Card>
 
       {/* Order Detail Dialog */}
@@ -623,6 +865,7 @@ export default function OrdersPage() {
           />
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }

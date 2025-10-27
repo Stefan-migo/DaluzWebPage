@@ -23,6 +23,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   Table,
   TableBody,
@@ -52,7 +58,8 @@ import {
   RefreshCw,
   Grid3X3,
   List,
-  X
+  X,
+  ChevronDown
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -711,31 +718,39 @@ export default function ProductsPage() {
         </div>
         
         <div className="flex space-x-2">
-          <Button variant="outline" onClick={handleJsonExport}>
-            <Download className="h-4 w-4 mr-2" />
-            Exportar JSON
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={() => window.open('/api/admin/products/json-template', '_blank')}
-            className="flex items-center gap-2"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Descargar Plantilla JSON
-          </Button>
-          
-          <Button variant="outline" onClick={() => setShowJsonImportDialog(true)}>
-            <Upload className="h-4 w-4 mr-2" />
-            Importar JSON
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                JSON
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem onClick={handleJsonExport}>
+                <Download className="h-4 w-4 mr-2" />
+                Exportar Productos
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => window.open('/api/admin/products/json-template', '_blank')}>
+                <Download className="h-4 w-4 mr-2" />
+                Descargar Plantilla
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setShowJsonImportDialog(true)}>
+                <Upload className="h-4 w-4 mr-2" />
+                Importar Productos
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
 
-          <Button asChild>
-            <Link href="/admin/products/add">
-              <Plus className="h-4 w-4 mr-2" />
+          <Link href="/admin/products/add">
+          <Button 
+          className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto">
+            
+              <Plus className="h-4 w-4" />
               Agregar Producto
-            </Link>
+
           </Button>
+          </Link>
         </div>
       </div>
 
@@ -795,6 +810,82 @@ export default function ProductsPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Search and Filters */}
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
+        <CardHeader>
+          <CardTitle className="flex items-center text-azul-profundo">
+            <Filter className="h-5 w-5 mr-2" />
+            Filtros y Búsqueda
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col sm:flex-row gap-4">
+            {/* Search Input */}
+            <div className="flex-1">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <Input
+                  placeholder="Buscar productos por nombre..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+
+            {/* Category Filter */}
+            <div className="w-full sm:w-48">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Todas las categorías" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todas las categorías</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Status Filter */}
+            <div className="w-full sm:w-48">
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Estado" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los estados</SelectItem>
+                  <SelectItem value="active">Activo</SelectItem>
+                  <SelectItem value="draft">Borrador</SelectItem>
+                  <SelectItem value="archived">Archivado</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Low Stock Toggle */}
+            <div className="w-full sm:w-auto">
+              <Button
+                variant={showLowStockOnly ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setShowLowStockOnly(!showLowStockOnly);
+                  setSearchTerm('');
+                  setCategoryFilter('all');
+                  setStatusFilter('all');
+                }}
+              >
+                {showLowStockOnly ? 'Ver Todos' : 'Ver'}
+                <AlertTriangle className="h-4 w-4 ml-2" />
+                Stock Bajo
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Selection Actions */}
       {selectedProducts.length > 0 && (
