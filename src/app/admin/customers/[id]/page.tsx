@@ -79,6 +79,7 @@ export default function CustomerDetailPage() {
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     if (customerId) {
@@ -144,6 +145,18 @@ export default function CustomerDetailPage() {
 
     const tierConfig = config[tier] || { variant: 'outline', label: tier };
     return <Badge variant={tierConfig.variant}>{tierConfig.label}</Badge>;
+  };
+
+  const toggleOrderExpansion = (orderId: string) => {
+    setExpandedOrders(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(orderId)) {
+        newSet.delete(orderId);
+      } else {
+        newSet.add(orderId);
+      }
+      return newSet;
+    });
   };
 
   const getOrderStatusBadge = (status: string) => {
@@ -242,7 +255,7 @@ export default function CustomerDetailPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <DollarSign className="h-8 w-8 text-verde-suave" />
@@ -256,7 +269,7 @@ export default function CustomerDetailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <ShoppingBag className="h-8 w-8 text-azul-profundo" />
@@ -270,7 +283,7 @@ export default function CustomerDetailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <TrendingUp className="h-8 w-8 text-dorado" />
@@ -284,7 +297,7 @@ export default function CustomerDetailPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardContent className="p-6">
             <div className="flex items-center">
               <Calendar className="h-8 w-8 text-red-500" />
@@ -311,7 +324,7 @@ export default function CustomerDetailPage() {
         <TabsContent value="overview" className="space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Customer Information */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <User className="h-5 w-5 mr-2" />
@@ -352,7 +365,7 @@ export default function CustomerDetailPage() {
             </Card>
 
             {/* Address Information */}
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <MapPin className="h-5 w-5 mr-2" />
@@ -401,7 +414,7 @@ export default function CustomerDetailPage() {
 
           {/* Recent Orders */}
           {customer.orders && customer.orders.length > 0 && (
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -446,7 +459,7 @@ export default function CustomerDetailPage() {
         </TabsContent>
 
         <TabsContent value="orders" className="space-y-6">
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Package className="h-5 w-5 mr-2" />
@@ -467,43 +480,104 @@ export default function CustomerDetailPage() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {customer.orders.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell>
-                          <div>
-                            <p className="font-medium">#{order.order_number}</p>
-                            <p className="text-sm text-tierra-media">
-                              {order.order_items?.length || 0} productos
-                            </p>
-                          </div>
-                        </TableCell>
+                    {customer.orders.map((order: any) => (
+                      <>
+                        <TableRow key={order.id} className="hover:bg-[#AE000010]">
+                          <TableCell>
+                            <div className="flex items-center space-x-2">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => toggleOrderExpansion(order.id)}
+                                className="h-6 w-6 p-0"
+                              >
+                                {expandedOrders.has(order.id) ? '−' : '+'}
+                              </Button>
+                              <div>
+                                <p className="font-medium">#{order.order_number}</p>
+                                <p className="text-sm text-tierra-media">
+                                  {order.order_items?.length || 0} productos
+                                </p>
+                              </div>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell>
+                            {new Date(order.created_at).toLocaleDateString('es-AR', {
+                              day: '2-digit',
+                              month: 'short',
+                              year: 'numeric'
+                            })}
+                          </TableCell>
+                          
+                          <TableCell>
+                            {getOrderStatusBadge(order.status)}
+                          </TableCell>
+                          
+                          <TableCell>
+                            <Badge variant={order.payment_status === 'paid' ? 'default' : 'outline'}>
+                              {order.payment_status === 'paid' ? 'Pagado' : 
+                               order.payment_status === 'pending' ? 'Pendiente' :
+                               order.payment_status === 'failed' ? 'Fallido' :
+                               order.payment_status}
+                            </Badge>
+                          </TableCell>
+                          
+                          <TableCell className="font-medium text-verde-suave">
+                            {formatPrice(order.total_amount)}
+                          </TableCell>
+                          
+                          <TableCell>
+                            <Link href={`/admin/orders/${order.id}`}>
+                              <Button variant="outline" size="sm">
+                                Ver Detalle
+                              </Button>
+                            </Link>
+                          </TableCell>
+                        </TableRow>
                         
-                        <TableCell>
-                          {new Date(order.created_at).toLocaleDateString('es-AR')}
-                        </TableCell>
-                        
-                        <TableCell>
-                          {getOrderStatusBadge(order.status)}
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Badge variant={order.payment_status === 'paid' ? 'default' : 'outline'}>
-                            {order.payment_status === 'paid' ? 'Pagado' : order.payment_status}
-                          </Badge>
-                        </TableCell>
-                        
-                        <TableCell className="font-medium">
-                          {formatPrice(order.total_amount)}
-                        </TableCell>
-                        
-                        <TableCell>
-                          <Link href={`/admin/orders/${order.id}`}>
-                            <Button variant="outline" size="sm">
-                              Ver Detalle
-                            </Button>
-                          </Link>
-                        </TableCell>
-                      </TableRow>
+                        {/* Expanded Order Items */}
+                        {expandedOrders.has(order.id) && order.order_items && order.order_items.length > 0 && (
+                          <TableRow key={`${order.id}-items`}>
+                            <TableCell colSpan={6} className="bg-gray-50 p-4">
+                              <div className="space-y-2">
+                                <p className="text-sm font-medium text-azul-profundo mb-3">Productos del Pedido:</p>
+                                {order.order_items.map((item: any, idx: number) => {
+                                  const product = item.products || item.product;
+                                  return (
+                                    <div key={idx} className="flex items-center justify-between p-2 bg-white rounded border">
+                                      <div className="flex items-center space-x-3">
+                                        {product?.featured_image ? (
+                                          <img 
+                                            src={product.featured_image} 
+                                            alt={product.name || item.product_name}
+                                            className="w-10 h-10 object-cover rounded"
+                                          />
+                                        ) : (
+                                          <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
+                                            <Package className="h-5 w-5 text-gray-400" />
+                                          </div>
+                                        )}
+                                        <div>
+                                          <p className="text-sm font-medium">
+                                            {product?.name || item.product_name || 'Producto'}
+                                          </p>
+                                          <p className="text-xs text-tierra-media">
+                                            Cantidad: {item.quantity} × {formatPrice(item.unit_price)}
+                                          </p>
+                                        </div>
+                                      </div>
+                                      <p className="text-sm font-medium text-verde-suave">
+                                        {formatPrice(item.total_price)}
+                                      </p>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      </>
                     ))}
                   </TableBody>
                 </Table>
@@ -519,11 +593,32 @@ export default function CustomerDetailPage() {
         </TabsContent>
 
         <TabsContent value="analytics" className="space-y-6">
+          {/* Empty State for No Orders */}
+          {customer.analytics?.orderCount === 0 && (
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+              <CardContent className="text-center py-16">
+                <TrendingUp className="h-16 w-16 text-tierra-media mx-auto mb-4 opacity-50" />
+                <h3 className="text-xl font-semibold text-azul-profundo mb-2">
+                  Sin Datos de Analíticas
+                </h3>
+                <p className="text-tierra-media mb-6 max-w-md mx-auto">
+                  Este cliente aún no ha realizado ningún pedido. Las analíticas estarán disponibles una vez que realice su primera compra.
+                </p>
+                <Button onClick={() => router.push('/admin/orders/new')}>
+                  <Package className="h-4 w-4 mr-2" />
+                  Crear Pedido Manual
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Customer Analytics Content */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Favorite Products */}
-            {customer.analytics?.favoriteProducts && customer.analytics.favoriteProducts.length > 0 && (
-              <Card>
+          {customer.analytics?.orderCount && customer.analytics.orderCount > 0 && (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Favorite Products */}
+                {customer.analytics?.favoriteProducts && customer.analytics.favoriteProducts.length > 0 && (
+              <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Heart className="h-5 w-5 mr-2" />
@@ -532,25 +627,32 @@ export default function CustomerDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
-                    {customer.analytics.favoriteProducts.slice(0, 5).map((item, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+                    {customer.analytics.favoriteProducts.slice(0, 5).map((item: any, index: number) => (
+                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg hover:bg-[#AE000010] transition-colors">
                         <div className="flex items-center space-x-3">
-                          {item.product?.featured_image && (
+                          {item.product?.featured_image ? (
                             <img 
                               src={item.product.featured_image} 
-                              alt={item.product.name}
-                              className="w-12 h-12 object-cover rounded"
+                              alt={item.product.name || 'Product'}
+                              className="w-12 h-12 object-cover rounded border border-gray-200"
                             />
+                          ) : (
+                            <div className="w-12 h-12 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
+                              <Package className="h-6 w-6 text-gray-400" />
+                            </div>
                           )}
                           <div>
-                            <p className="font-medium">{item.product?.name}</p>
+                            <p className="font-medium">{item.product?.name || 'Producto'}</p>
                             <p className="text-sm text-tierra-media">
-                              {item.quantity} unidades compradas
+                              {item.quantity} {item.quantity === 1 ? 'unidad' : 'unidades'} compradas
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-medium">{formatPrice(item.totalSpent)}</p>
+                          <p className="font-medium text-verde-suave">{formatPrice(item.totalSpent)}</p>
+                          <p className="text-xs text-tierra-media">
+                            {formatPrice(item.totalSpent / item.quantity)} por unidad
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -561,7 +663,7 @@ export default function CustomerDetailPage() {
 
             {/* Order Status Distribution */}
             {customer.analytics?.orderStatusCounts && (
-              <Card>
+              <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
                 <CardHeader>
                   <CardTitle className="flex items-center">
                     <Activity className="h-5 w-5 mr-2" />
@@ -581,35 +683,71 @@ export default function CustomerDetailPage() {
                   </div>
                 </CardContent>
               </Card>
-            )}
-          </div>
+                )}
+              </div>
 
-          {/* Monthly Spending Chart */}
-          {customer.analytics?.monthlySpending && (
-            <Card>
+              {/* Monthly Spending Chart */}
+          {customer.analytics?.monthlySpending && customer.analytics.monthlySpending.length > 0 && (
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2" />
-                  Tendencia de Gastos (Últimos 12 meses)
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <TrendingUp className="h-5 w-5 mr-2" />
+                    Tendencia de Gastos (Últimos 12 meses)
+                  </div>
+                  <div className="text-sm font-normal text-tierra-media">
+                    Total: {formatPrice(customer.analytics.totalSpent)}
+                  </div>
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-2">
-                  {customer.analytics.monthlySpending.map((month, index) => (
-                    <div key={index} className="text-center p-2 border rounded">
-                      <p className="text-xs text-tierra-media">{month.month}</p>
-                      <p className="font-medium text-sm">{formatPrice(month.amount)}</p>
-                      <p className="text-xs text-tierra-media">{month.orders} pedidos</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                  {customer.analytics.monthlySpending.map((month: any, index: number) => (
+                    <div 
+                      key={index} 
+                      className={`text-center p-3 border rounded-lg transition-all hover:shadow-md ${
+                        month.amount > 0 ? 'bg-verde-suave/10 border-verde-suave/30' : 'bg-gray-50'
+                      }`}
+                    >
+                      <p className="text-xs font-medium text-tierra-media mb-1">{month.month}</p>
+                      <p className="font-bold text-sm text-azul-profundo">{formatPrice(month.amount)}</p>
+                      <p className="text-xs text-tierra-media mt-1">
+                        {month.orders} {month.orders === 1 ? 'pedido' : 'pedidos'}
+                      </p>
                     </div>
                   ))}
+                </div>
+                
+                {/* Summary Stats */}
+                <div className="mt-6 pt-4 border-t grid grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="text-xs text-tierra-media">Promedio Mensual</p>
+                    <p className="font-bold text-lg text-azul-profundo">
+                      {formatPrice(customer.analytics.totalSpent / 12)}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-tierra-media">Mejor Mes</p>
+                    <p className="font-bold text-lg text-verde-suave">
+                      {formatPrice(Math.max(...customer.analytics.monthlySpending.map((m: any) => m.amount)))}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-tierra-media">Meses Activos</p>
+                    <p className="font-bold text-lg text-dorado">
+                      {customer.analytics.monthlySpending.filter((m: any) => m.amount > 0).length}
+                    </p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
           )}
+            </>
+          )}
         </TabsContent>
 
         <TabsContent value="membership" className="space-y-6">
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Crown className="h-5 w-5 mr-2" />
@@ -636,31 +774,65 @@ export default function CustomerDetailPage() {
                   
                   {customer.memberships && customer.memberships.length > 0 && (
                     <div>
-                      <h4 className="font-medium mb-2">Programa Actual</h4>
-                      {customer.memberships.map((membership) => (
-                        <div key={membership.id} className="p-4 border rounded-lg">
-                          <div className="grid grid-cols-2 gap-4">
+                      <h4 className="font-medium mb-3 text-azul-profundo">Programa Actual</h4>
+                      {customer.memberships.map((membership: any) => (
+                        <div key={membership.id} className="p-4 border rounded-lg bg-[#F6FBD6] border-verde-suave/30">
+                          <div className="grid grid-cols-2 gap-4 mb-4">
                             <div>
                               <p className="text-sm text-tierra-media">Estado</p>
                               <Badge variant={membership.status === 'active' ? 'default' : 'outline'}>
-                                {membership.status}
+                                {membership.status === 'active' ? 'Activo' : 
+                                 membership.status === 'paused' ? 'Pausado' : 
+                                 membership.status === 'completed' ? 'Completado' : 
+                                 membership.status}
                               </Badge>
                             </div>
                             <div>
                               <p className="text-sm text-tierra-media">Semana Actual</p>
-                              <p className="font-medium">{membership.current_week || 1} / 28</p>
+                              <p className="font-medium text-azul-profundo">{membership.current_week || 1} / 28</p>
                             </div>
                             <div>
                               <p className="text-sm text-tierra-media">Progreso</p>
-                              <p className="font-medium">{membership.progress_percentage || 0}%</p>
+                              <div className="flex items-center space-x-2">
+                                <div className="flex-1 bg-gray-200 rounded-full h-2">
+                                  <div 
+                                    className="bg-verde-suave h-2 rounded-full transition-all"
+                                    style={{ width: `${membership.progress_percentage || 0}%` }}
+                                  />
+                                </div>
+                                <span className="font-medium text-sm text-verde-suave">
+                                  {membership.progress_percentage || 0}%
+                                </span>
+                              </div>
                             </div>
                             <div>
                               <p className="text-sm text-tierra-media">Lecciones Completadas</p>
-                              <p className="font-medium">
-                                {membership.completed_lessons || 0} / {membership.total_lessons || 0}
+                              <p className="font-medium text-azul-profundo">
+                                {membership.completed_lessons || 0} / {membership.total_lessons || 28}
                               </p>
                             </div>
                           </div>
+                          
+                          {membership.start_date && (
+                            <div className="pt-3 border-t border-verde-suave/20">
+                              <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                  <p className="text-tierra-media">Fecha de Inicio</p>
+                                  <p className="font-medium">
+                                    {new Date(membership.start_date).toLocaleDateString('es-AR')}
+                                  </p>
+                                </div>
+                                {membership.end_date && (
+                                  <div>
+                                    <p className="text-tierra-media">Fecha de Fin</p>
+                                    <p className="font-medium">
+                                      {new Date(membership.end_date).toLocaleDateString('es-AR')}
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       ))}
                     </div>

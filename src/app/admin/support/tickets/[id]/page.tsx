@@ -48,11 +48,12 @@ import {
   Globe
 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface SupportTicket {
   id: string;
   ticket_number: string;
-  title: string;
+  subject: string; // Database field name
   description: string;
   status: string;
   priority: string;
@@ -139,6 +140,7 @@ export default function TicketDetailPage() {
 
   const [ticket, setTicket] = useState<SupportTicket | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [adminUsers, setAdminUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState(false);
@@ -162,6 +164,7 @@ export default function TicketDetailPage() {
     if (ticketId) {
       fetchTicketDetails();
       fetchCategories();
+      fetchAdminUsers();
     }
   }, [ticketId]);
 
@@ -202,6 +205,18 @@ export default function TicketDetailPage() {
     }
   };
 
+  const fetchAdminUsers = async () => {
+    try {
+      const response = await fetch('/api/admin/users');
+      if (response.ok) {
+        const data = await response.json();
+        setAdminUsers(data.users || []);
+      }
+    } catch (err) {
+      console.error('Error fetching admin users:', err);
+    }
+  };
+
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !ticket) return;
     
@@ -234,11 +249,16 @@ export default function TicketDetailPage() {
       setNewMessage('');
       setIsInternalNote(false);
       
+      toast.success(isInternalNote ? 'Nota interna agregada' : 'Mensaje enviado');
+      
       // Refresh ticket to get updated analytics
       fetchTicketDetails();
     } catch (err) {
       console.error('Error sending message:', err);
-      alert('Error al enviar el mensaje. Por favor, inténtalo de nuevo.');
+      const errorMessage = err instanceof Error ? err.message : 'Error al enviar el mensaje';
+      toast.error('Error al enviar el mensaje', {
+        description: errorMessage
+      });
     } finally {
       setSendingMessage(false);
     }
@@ -256,6 +276,8 @@ export default function TicketDetailPage() {
         },
         body: JSON.stringify({
           ...editForm,
+          assigned_to: editForm.assigned_to || null, // Convert empty string to null
+          category_id: editForm.category_id || null, // Convert empty string to null
           previous_status: ticket.status,
           previous_assigned_to: ticket.assigned_to
         }),
@@ -269,11 +291,16 @@ export default function TicketDetailPage() {
       setTicket(data.ticket);
       setEditDialogOpen(false);
       
+      toast.success('Ticket actualizado exitosamente');
+      
       // Refresh to get updated data
       fetchTicketDetails();
     } catch (err) {
       console.error('Error updating ticket:', err);
-      alert('Error al actualizar el ticket. Por favor, inténtalo de nuevo.');
+      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar el ticket';
+      toast.error('Error al actualizar el ticket', {
+        description: errorMessage
+      });
     } finally {
       setUpdating(false);
     }
@@ -428,11 +455,11 @@ export default function TicketDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Ticket Details */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <MessageSquare className="h-5 w-5 mr-2" />
-                {ticket.title}
+                {ticket.subject}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -457,7 +484,7 @@ export default function TicketDetailPage() {
           </Card>
 
           {/* Messages Thread */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -576,7 +603,7 @@ export default function TicketDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Customer Info */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <User className="h-5 w-5 mr-2" />
@@ -633,7 +660,7 @@ export default function TicketDetailPage() {
 
           {/* Ticket Analytics */}
           {ticket.analytics && (
-            <Card>
+            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Activity className="h-5 w-5 mr-2" />
@@ -686,7 +713,7 @@ export default function TicketDetailPage() {
           )}
 
           {/* Ticket Metadata */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Settings className="h-5 w-5 mr-2" />
@@ -815,14 +842,17 @@ export default function TicketDetailPage() {
 
             <div>
               <label className="text-sm font-medium text-tierra-media mb-2 block">Asignar a:</label>
-              <Select value={editForm.assigned_to} onValueChange={(value) => setEditForm(prev => ({ ...prev, assigned_to: value }))}>
+              <Select value={editForm.assigned_to || 'unassigned'} onValueChange={(value) => setEditForm(prev => ({ ...prev, assigned_to: value === 'unassigned' ? '' : value }))}>
                 <SelectTrigger>
                   <SelectValue placeholder="Sin asignar" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">Sin asignar</SelectItem>
-                  <SelectItem value="admin1">Admin Principal</SelectItem>
-                  <SelectItem value="admin2">Soporte Técnico</SelectItem>
+                  <SelectItem value="unassigned">Sin asignar</SelectItem>
+                  {adminUsers.map((admin) => (
+                    <SelectItem key={admin.id} value={admin.id}>
+                      {admin.email || admin.name || `Admin ${admin.id.slice(0, 8)}`}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

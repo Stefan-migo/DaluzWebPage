@@ -27,46 +27,33 @@ export async function GET(request: NextRequest) {
     }
     console.log('✅ Admin access confirmed for:', user.email);
 
-    // Get all support categories (using mock data until tables are created)
-    console.log('🗄️ Returning mock support categories...');
+    // Get all support categories from database
+    console.log('🗄️ Fetching support categories from database...');
     
-    // TODO: Replace with actual database query once support_categories table is created
-    const categories = [
-      {
-        id: '1',
-        name: 'Productos',
-        description: 'Consultas sobre productos biocosmética',
-        is_active: true,
-        sort_order: 1,
-        color: '#10B981'
-      },
-      {
-        id: '2', 
-        name: 'Pedidos',
-        description: 'Problemas con pedidos y entregas',
-        is_active: true,
-        sort_order: 2,
-        color: '#3B82F6'
-      },
-      {
-        id: '3',
-        name: 'Membresía',
-        description: 'Consultas sobre programa de transformación',
-        is_active: true,
-        sort_order: 3,
-        color: '#8B5CF6'
-      },
-      {
-        id: '4',
-        name: 'Técnico',
-        description: 'Problemas técnicos del sitio web',
-        is_active: true,
-        sort_order: 4,
-        color: '#F59E0B'
-      }
-    ];
+    const { data: categories, error: fetchError } = await supabase
+      .from('support_categories')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true });
+
+    if (fetchError) {
+      console.error('❌ Error fetching categories:', fetchError);
+      return NextResponse.json({ 
+        error: 'Failed to fetch categories',
+        details: fetchError.message 
+      }, { status: 500 });
+    }
+
+    // If no categories exist, return empty array
+    if (!categories || categories.length === 0) {
+      console.log('⚠️ No categories found in database');
+      return NextResponse.json({ 
+        categories: [],
+        message: 'No categories found. Please create some categories first.' 
+      });
+    }
     
-    console.log('✅ Support categories provided:', categories.length);
+    console.log('✅ Support categories fetched:', categories.length);
     return NextResponse.json({ categories });
 
   } catch (error) {

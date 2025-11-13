@@ -59,7 +59,7 @@ export async function GET(
         *,
         order_items (
           *,
-          product:product_id (
+          products:product_id (
             id,
             name,
             featured_image
@@ -113,17 +113,35 @@ export async function GET(
     // Favorite products (most purchased)
     const productCounts = orders?.reduce((acc: Record<string, any>, order) => {
       order.order_items?.forEach((item: any) => {
-        if (item.product) {
-          const productId = item.product.id;
+        // Try both 'products' and 'product' for compatibility
+        const product = item.products || item.product;
+        if (product) {
+          const productId = product.id;
           if (!acc[productId]) {
             acc[productId] = {
-              product: item.product,
+              product: product,
               quantity: 0,
               totalSpent: 0
             };
           }
           acc[productId].quantity += item.quantity;
           acc[productId].totalSpent += item.total_price;
+        } else if (item.product_name) {
+          // Fallback to using product_name if no product relation
+          const productKey = `product_${item.product_id}`;
+          if (!acc[productKey]) {
+            acc[productKey] = {
+              product: {
+                id: item.product_id,
+                name: item.product_name,
+                featured_image: null
+              },
+              quantity: 0,
+              totalSpent: 0
+            };
+          }
+          acc[productKey].quantity += item.quantity;
+          acc[productKey].totalSpent += item.total_price;
         }
       });
       return acc;

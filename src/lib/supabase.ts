@@ -18,6 +18,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 })
 
 // Helper function for server-side operations
+// Using 'any' for Database type to allow access to all tables (service role has full access)
 export const createServiceRoleClient = () => {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
   
@@ -25,7 +26,7 @@ export const createServiceRoleClient = () => {
     throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY environment variable')
   }
   
-  return createClient<Database>(supabaseUrl, serviceRoleKey, {
+  return createClient<any>(supabaseUrl, serviceRoleKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false

@@ -42,6 +42,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface SupportTicket {
   id: string;
@@ -110,6 +111,9 @@ export default function SupportPage() {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+
+  // Status update loading state
+  const [updatingTickets, setUpdatingTickets] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     fetchTickets();
@@ -246,6 +250,115 @@ export default function SupportPage() {
     if (diffDays < 7) return `Hace ${diffDays} días`;
     
     return date.toLocaleDateString('es-AR');
+  };
+
+  const handleStatusChange = async (ticketId: string, newStatus: string) => {
+    try {
+      // Add to updating set
+      setUpdatingTickets(prev => new Set(prev).add(ticketId));
+
+      const response = await fetch(`/api/admin/support/tickets/${ticketId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status: newStatus,
+          previous_status: tickets.find(t => t.id === ticketId)?.status
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update ticket status');
+      }
+
+      const data = await response.json();
+      
+      // Update the ticket in the local state
+      setTickets(prevTickets => 
+        prevTickets.map(ticket => 
+          ticket.id === ticketId ? { ...ticket, status: newStatus, updated_at: new Date().toISOString() } : ticket
+        )
+      );
+
+      // Remove from updating set
+      setUpdatingTickets(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(ticketId);
+        return newSet;
+      });
+
+      toast.success('Estado actualizado exitosamente');
+      
+      // Refresh stats
+      fetchStats();
+    } catch (err) {
+      console.error('Error updating ticket status:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar el estado';
+      toast.error('Error al actualizar el estado', {
+        description: errorMessage
+      });
+      
+      // Remove from updating set
+      setUpdatingTickets(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(ticketId);
+        return newSet;
+      });
+    }
+  };
+
+  const handlePriorityChange = async (ticketId: string, newPriority: string) => {
+    try {
+      // Add to updating set
+      setUpdatingTickets(prev => new Set(prev).add(ticketId));
+
+      const response = await fetch(`/api/admin/support/tickets/${ticketId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          priority: newPriority
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update ticket priority');
+      }
+
+      // Update local state
+      setTickets(prevTickets => 
+        prevTickets.map(ticket => 
+          ticket.id === ticketId ? { ...ticket, priority: newPriority, updated_at: new Date().toISOString() } : ticket
+        )
+      );
+
+      // Remove from updating set
+      setUpdatingTickets(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(ticketId);
+        return newSet;
+      });
+
+      toast.success('Prioridad actualizada exitosamente');
+      
+      // Refresh stats
+      fetchStats();
+    } catch (err) {
+      console.error('Error updating ticket priority:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar la prioridad';
+      toast.error('Error al actualizar la prioridad', {
+        description: errorMessage
+      });
+      
+      // Remove from updating set
+      setUpdatingTickets(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(ticketId);
+        return newSet;
+      });
+    }
   };
 
   if (loading && tickets.length === 0) {
@@ -575,11 +688,85 @@ export default function SupportPage() {
                   </TableCell>
                   
                   <TableCell>
-                    {getStatusBadge(ticket.status)}
+                    <Select 
+                      value={ticket.status} 
+                      onValueChange={(value) => handleStatusChange(ticket.id, value)}
+                      disabled={updatingTickets.has(ticket.id)}
+                    >
+                      <SelectTrigger className="w-[160px]">
+                        <SelectValue>
+                          {updatingTickets.has(ticket.id) ? (
+                            <span className="text-xs">Actualizando...</span>
+                          ) : (
+                            getStatusBadge(ticket.status)
+                          )}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="open">
+                          <div className="flex items-center gap-2">
+                            <AlertTriangle className="h-3 w-3" />
+                            Abierto
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="in_progress">
+                          <div className="flex items-center gap-2">
+                            <Activity className="h-3 w-3" />
+                            En Progreso
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="pending_customer">
+                          <div className="flex items-center gap-2">
+                            <Clock className="h-3 w-3" />
+                            Esperando Cliente
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="resolved">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-3 w-3" />
+                            Resuelto
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="closed">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle className="h-3 w-3" />
+                            Cerrado
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   
                   <TableCell>
-                    {getPriorityBadge(ticket.priority)}
+                    <Select 
+                      value={ticket.priority} 
+                      onValueChange={(value) => handlePriorityChange(ticket.id, value)}
+                      disabled={updatingTickets.has(ticket.id)}
+                    >
+                      <SelectTrigger className="w-[140px]">
+                        <SelectValue>
+                          {updatingTickets.has(ticket.id) ? (
+                            <span className="text-xs">Actualizando...</span>
+                          ) : (
+                            getPriorityBadge(ticket.priority)
+                          )}
+                        </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">
+                          <Badge variant="outline">Baja</Badge>
+                        </SelectItem>
+                        <SelectItem value="medium">
+                          <Badge variant="secondary">Media</Badge>
+                        </SelectItem>
+                        <SelectItem value="high">
+                          <Badge variant="default">Alta</Badge>
+                        </SelectItem>
+                        <SelectItem value="urgent">
+                          <Badge variant="destructive">Urgente</Badge>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </TableCell>
                   
                   <TableCell>

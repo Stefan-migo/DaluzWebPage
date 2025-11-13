@@ -132,7 +132,7 @@ export default function NewCustomerPage() {
       {/* Form */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Personal Information */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center">
               <User className="h-5 w-5 mr-2" />
@@ -194,7 +194,7 @@ export default function NewCustomerPage() {
         </Card>
 
         {/* Address Information */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center">
               <MapPin className="h-5 w-5 mr-2" />
@@ -267,7 +267,7 @@ export default function NewCustomerPage() {
         </Card>
 
         {/* Membership Information */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle className="flex items-center">
               <Crown className="h-5 w-5 mr-2" />
@@ -329,7 +329,7 @@ export default function NewCustomerPage() {
         </Card>
 
         {/* Additional Notes */}
-        <Card>
+        <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
           <CardHeader>
             <CardTitle>Notas Adicionales</CardTitle>
           </CardHeader>

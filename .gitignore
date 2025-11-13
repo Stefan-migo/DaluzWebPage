@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+.env.production
 
 # vercel
 .vercel
@@ -42,6 +43,11 @@ next-env.d.ts
 # Supabase
 supabase/.branches
 supabase/.temp
+supabase/backups/
+*.sql.backup
+create-admin-user.sql
+fix-admin-access.sql
+verify-and-fix-admin.sql
 
 # IDE
 .vscode/

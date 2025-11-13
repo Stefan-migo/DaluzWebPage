@@ -72,30 +72,131 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Temporarily bypass admin checks and RPC calls for testing
-    console.log('🔍 Testing health metrics collection for user:', user.email);
+    console.log('📊 Collecting system health metrics for user:', user.email);
 
-    // Skip RPC collection for now, just return success
-    const collectError = null;
-    
-    if (collectError) {
-      console.error('Error collecting health metrics:', collectError);
-      return NextResponse.json({ error: 'Failed to collect health metrics' }, { status: 500 });
+    const metricsToCollect = [];
+    const now = new Date().toISOString();
+
+    // 1. Database Response Time
+    const dbStartTime = Date.now();
+    await supabase.from('profiles').select('id').limit(1);
+    const dbResponseTime = (Date.now() - dbStartTime) / 1000; // seconds
+    metricsToCollect.push({
+      metric_name: 'database_response_time',
+      metric_value: dbResponseTime,
+      metric_unit: 'seconds',
+      category: 'database',
+      threshold_warning: 1.0,
+      threshold_critical: 3.0,
+      is_healthy: dbResponseTime < 1.0,
+      collected_at: now
+    });
+
+    // 2. Total Users Count
+    const { count: totalUsers } = await supabase
+      .from('profiles')
+      .select('*', { count: 'exact', head: true });
+    metricsToCollect.push({
+      metric_name: 'total_users',
+      metric_value: totalUsers || 0,
+      metric_unit: 'count',
+      category: 'users',
+      threshold_warning: 10000,
+      threshold_critical: 50000,
+      is_healthy: (totalUsers || 0) < 10000,
+      collected_at: now
+    });
+
+    // 3. Active Admin Users
+    const { count: activeAdmins } = await supabase
+      .from('admin_users')
+      .select('*', { count: 'exact', head: true })
+      .eq('is_active', true);
+    metricsToCollect.push({
+      metric_name: 'active_admin_users',
+      metric_value: activeAdmins || 0,
+      metric_unit: 'count',
+      category: 'users',
+      threshold_warning: 50,
+      threshold_critical: 100,
+      is_healthy: (activeAdmins || 0) < 50,
+      collected_at: now
+    });
+
+    // 4. Recent Activity (last 24 hours)
+    const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+    const { count: recentActivity } = await supabase
+      .from('admin_activity_log')
+      .select('*', { count: 'exact', head: true })
+      .gte('created_at', yesterday);
+    metricsToCollect.push({
+      metric_name: 'admin_activity_24h',
+      metric_value: recentActivity || 0,
+      metric_unit: 'count',
+      category: 'activity',
+      threshold_warning: 1000,
+      threshold_critical: 5000,
+      is_healthy: (recentActivity || 0) < 1000,
+      collected_at: now
+    });
+
+    // 5. System Memory Usage (Node.js process)
+    const memoryUsage = process.memoryUsage();
+    const memoryUsageMB = memoryUsage.heapUsed / 1024 / 1024;
+    // More realistic thresholds: warning at 1GB, critical at 2GB
+    metricsToCollect.push({
+      metric_name: 'memory_usage',
+      metric_value: memoryUsageMB,
+      metric_unit: 'megabytes',
+      category: 'system',
+      threshold_warning: 1024, // 1GB
+      threshold_critical: 2048, // 2GB
+      is_healthy: memoryUsageMB < 1024,
+      collected_at: now
+    });
+
+    // 6. Database Size (approximate - count of records in key tables)
+    const { count: productsCount } = await supabase
+      .from('products')
+      .select('*', { count: 'exact', head: true });
+    const { count: ordersCount } = await supabase
+      .from('orders')
+      .select('*', { count: 'exact', head: true });
+    const totalRecords = (productsCount || 0) + (ordersCount || 0);
+    metricsToCollect.push({
+      metric_name: 'database_records',
+      metric_value: totalRecords,
+      metric_unit: 'count',
+      category: 'database',
+      threshold_warning: 100000,
+      threshold_critical: 500000,
+      is_healthy: totalRecords < 100000,
+      collected_at: now
+    });
+
+    // Insert all metrics
+    const { data: insertedMetrics, error: insertError } = await supabase
+      .from('system_health_metrics')
+      .insert(metricsToCollect)
+      .select();
+
+    if (insertError) {
+      console.error('Error inserting health metrics:', insertError);
+      return NextResponse.json({ error: 'Failed to save health metrics' }, { status: 500 });
     }
+
+    console.log('✅ Health metrics collection completed:', insertedMetrics?.length, 'metrics');
 
     // Get the newly collected metrics
     const { data: newMetrics } = await supabase
       .from('system_health_metrics')
       .select('*')
-      .gte('collected_at', new Date(Date.now() - 5 * 60 * 1000).toISOString()) // Last 5 minutes
+      .gte('collected_at', new Date(Date.now() - 5 * 60 * 1000).toISOString())
       .order('collected_at', { ascending: false });
-
-    // Temporarily skip activity logging for testing
-    console.log('✅ Health metrics collection completed');
 
     return NextResponse.json({ 
       success: true,
-      metrics_collected: newMetrics?.length || 0,
+      metrics_collected: insertedMetrics?.length || 0,
       latest_metrics: newMetrics || []
     });
 

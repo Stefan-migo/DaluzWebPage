@@ -28,10 +28,10 @@ export async function POST(
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    // Verify ticket exists
+    // Verify ticket exists and get full details for email
     const { data: ticket, error: ticketError } = await supabase
       .from('support_tickets')
-      .select('id, customer_email, customer_name')
+      .select('id, ticket_number, subject, description, status, priority, customer_email, customer_name, first_response_at')
       .eq('id', ticketId)
       .single();
 
@@ -74,10 +74,39 @@ export async function POST(
         .from('support_tickets')
         .update({
           status: 'pending_customer',
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          last_response_at: new Date().toISOString(),
+          // Set first_response_at if not set
+          first_response_at: ticket.first_response_at || new Date().toISOString()
         })
         .eq('id', ticketId)
         .eq('status', 'open'); // Only update if currently open
+
+      // Send email notification to customer for admin responses (not internal notes)
+      try {
+        const { sendNewResponseEmail } = await import('@/lib/email/templates/support');
+        await sendNewResponseEmail(
+          {
+            id: ticket.id,
+            ticket_number: ticket.ticket_number || ticketId,
+            subject: ticket.subject || 'Support Ticket',
+            description: ticket.description || '',
+            status: ticket.status || 'open',
+            priority: ticket.priority || 'medium',
+            customer_name: ticket.customer_name,
+            customer_email: ticket.customer_email
+          },
+          {
+            message: newMessage.message,
+            created_at: newMessage.created_at,
+            is_from_customer: false
+          }
+        );
+        console.log('✅ Response email sent successfully');
+      } catch (emailError) {
+        console.error('⚠️ Failed to send response email:', emailError);
+        // Don't fail the request if email fails
+      }
     }
 
     // Log admin activity

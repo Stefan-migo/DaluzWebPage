@@ -21,7 +21,7 @@ export async function GET(
       return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    // Get ticket with full details
+    // Get ticket with full details (without customer join to avoid null issues)
     const { data: ticket, error: ticketError } = await supabase
       .from('support_tickets')
       .select(`
@@ -39,15 +39,6 @@ export async function GET(
           id,
           email
         ),
-        customer:profiles!customer_id(
-          id,
-          first_name,
-          last_name,
-          email,
-          phone,
-          membership_tier,
-          is_member
-        ),
         order:orders!order_id(
           id,
           order_number,
@@ -60,8 +51,27 @@ export async function GET(
       .single();
 
     if (ticketError || !ticket) {
-      return NextResponse.json({ error: 'Ticket not found' }, { status: 404 });
+      console.error('Error fetching ticket:', ticketError);
+      return NextResponse.json({ 
+        error: 'Ticket not found',
+        details: ticketError?.message 
+      }, { status: 404 });
     }
+
+    // Fetch customer profile separately if customer_id exists
+    let customerProfile = null;
+    if (ticket.customer_id) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email, phone, membership_tier, is_member')
+        .eq('id', ticket.customer_id)
+        .single();
+      
+      customerProfile = profile;
+    }
+
+    // Attach customer data
+    ticket.customer = customerProfile;
 
     // Get ticket messages
     const { data: messages, error: messagesError } = await supabase
@@ -173,7 +183,7 @@ export async function PUT(
       updateData.resolved_by = user.id;
     }
 
-    // Update the ticket
+    // Update the ticket (without customer join to avoid null issues)
     const { data: updatedTicket, error: updateError } = await supabase
       .from('support_tickets')
       .update(updateData)
@@ -181,14 +191,27 @@ export async function PUT(
       .select(`
         *,
         category:support_categories(id, name),
-        assigned_admin:admin_users!assigned_to(id, email),
-        customer:profiles!customer_id(id, first_name, last_name, email)
+        assigned_admin:admin_users!assigned_to(id, email)
       `)
       .single();
 
     if (updateError) {
       console.error('Error updating support ticket:', updateError);
-      return NextResponse.json({ error: 'Failed to update support ticket' }, { status: 500 });
+      return NextResponse.json({ 
+        error: 'Failed to update support ticket',
+        details: updateError.message 
+      }, { status: 500 });
+    }
+
+    // Fetch customer profile separately if customer_id exists
+    if (updatedTicket.customer_id) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email')
+        .eq('id', updatedTicket.customer_id)
+        .single();
+      
+      updatedTicket.customer = profile;
     }
 
     // Create a system message for status changes
@@ -234,6 +257,37 @@ export async function PUT(
       }
     });
 
+    // Send status change email notification if status changed
+    if (status && status !== body.previous_status) {
+      try {
+        const { sendStatusChangeEmail } = await import('@/lib/email/templates/support');
+        
+        // Get ticket details from the update response
+        const ticketForEmail = {
+          id: updatedTicket.id,
+          ticket_number: updatedTicket.ticket_number,
+          subject: updatedTicket.subject,
+          description: updatedTicket.description || '',
+          status: updatedTicket.status,
+          priority: updatedTicket.priority,
+          customer_name: updatedTicket.customer?.first_name && updatedTicket.customer?.last_name
+            ? `${updatedTicket.customer.first_name} ${updatedTicket.customer.last_name}`.trim()
+            : undefined,
+          customer_email: updatedTicket.customer?.email || ''
+        };
+        
+        await sendStatusChangeEmail(
+          ticketForEmail,
+          body.previous_status || 'unknown',
+          status
+        );
+        console.log('✅ Status change email sent successfully');
+      } catch (emailError) {
+        console.error('⚠️ Failed to send status change email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
+
     return NextResponse.json({ ticket: updatedTicket });
 
   } catch (error) {
@@ -258,8 +312,8 @@ export async function DELETE(
     }
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
-    if (adminRole !== 'super_admin') {
-      return NextResponse.json({ error: 'Super admin access required' }, { status: 403 });
+    if (adminRole !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
     // Delete the ticket (messages will be cascade deleted)

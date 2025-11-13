@@ -25,6 +25,7 @@ import {
   Package
 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 interface Customer {
   id: string;
@@ -59,6 +60,7 @@ export default function NewTicketPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [adminUsers, setAdminUsers] = useState<any[]>([]);
   const [searchingCustomers, setSearchingCustomers] = useState(false);
   const [searchingOrders, setSearchingOrders] = useState(false);
 
@@ -71,7 +73,7 @@ export default function NewTicketPage() {
     customer_email: '',
     customer_name: '',
     order_id: '',
-    assigned_to: ''
+    assigned_to: 'unassigned'
   });
 
   // Search states
@@ -82,6 +84,7 @@ export default function NewTicketPage() {
 
   useEffect(() => {
     fetchCategories();
+    fetchAdminUsers();
   }, []);
 
   useEffect(() => {
@@ -109,6 +112,18 @@ export default function NewTicketPage() {
       }
     } catch (err) {
       console.error('Error fetching categories:', err);
+    }
+  };
+
+  const fetchAdminUsers = async () => {
+    try {
+      const response = await fetch('/api/admin/users');
+      if (response.ok) {
+        const data = await response.json();
+        setAdminUsers(data.users || []);
+      }
+    } catch (err) {
+      console.error('Error fetching admin users:', err);
     }
   };
 
@@ -186,17 +201,27 @@ export default function NewTicketPage() {
           customer_email: form.customer_email.trim(),
           customer_name: form.customer_name.trim() || null,
           order_id: form.order_id || null,
-          assigned_to: form.assigned_to || null,
+          assigned_to: (form.assigned_to && form.assigned_to !== 'unassigned') ? form.assigned_to : null,
           created_by_admin: true
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create ticket');
+        console.error('❌ Server error response:', errorData);
+        const errorMessage = errorData.details 
+          ? `${errorData.error}: ${errorData.details}`
+          : errorData.error || 'Failed to create ticket';
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
+      console.log('✅ Ticket created:', data);
+      
+      // Show success toast
+      toast.success('Ticket creado exitosamente', {
+        description: `Número de ticket: ${data.ticket?.ticket_number || 'N/A'}`
+      });
       
       // Redirect to the created ticket
       if (data.ticket?.id) {
@@ -205,8 +230,11 @@ export default function NewTicketPage() {
         router.push('/admin/support');
       }
     } catch (err) {
-      console.error('Error creating ticket:', err);
-      alert(err instanceof Error ? err.message : 'Error al crear el ticket. Por favor, inténtalo de nuevo.');
+      console.error('❌ Error creating ticket:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Error al crear el ticket. Por favor, inténtalo de nuevo.';
+      toast.error('Error al crear el ticket', {
+        description: errorMessage
+      });
     } finally {
       setLoading(false);
     }
@@ -241,7 +269,7 @@ export default function NewTicketPage() {
         {/* Main Form */}
         <div className="lg:col-span-2 space-y-6">
           {/* Ticket Details */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <MessageSquare className="h-5 w-5 mr-2" />
@@ -315,14 +343,17 @@ export default function NewTicketPage() {
                 <label className="block text-sm font-medium text-tierra-media mb-2">
                   Asignar a
                 </label>
-                <Select value={form.assigned_to} onValueChange={(value) => setForm(prev => ({ ...prev, assigned_to: value }))}>
+                <Select value={form.assigned_to} onValueChange={(value) => setForm(prev => ({ ...prev, assigned_to: value === 'unassigned' ? '' : value }))}>
                   <SelectTrigger>
                     <SelectValue placeholder="Sin asignar" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Sin asignar</SelectItem>
-                    <SelectItem value="admin1">Admin Principal</SelectItem>
-                    <SelectItem value="admin2">Soporte Técnico</SelectItem>
+                    <SelectItem value="unassigned">Sin asignar</SelectItem>
+                    {adminUsers.map((admin) => (
+                      <SelectItem key={admin.id} value={admin.id}>
+                        {admin.email || admin.name || `Admin ${admin.id.slice(0, 8)}`}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -333,7 +364,7 @@ export default function NewTicketPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Customer Selection */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <User className="h-5 w-5 mr-2" />
@@ -436,7 +467,7 @@ export default function NewTicketPage() {
           </Card>
 
           {/* Order Selection */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Package className="h-5 w-5 mr-2" />
@@ -507,7 +538,7 @@ export default function NewTicketPage() {
           </Card>
 
           {/* Actions */}
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
             <CardContent className="p-6">
               <div className="space-y-3">
                 <Button 

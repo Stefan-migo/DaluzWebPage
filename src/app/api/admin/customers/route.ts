@@ -159,19 +159,59 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ error: 'At least first name or last name is required' }, { status: 400 });
       }
 
-      // Check if customer already exists
-      const { data: existingCustomer, error: checkError } = await supabase
+      // Check if profile already exists
+      const { data: existingProfile, error: checkProfileError } = await supabase
         .from('profiles')
         .select('id')
         .eq('email', body.email)
-        .single();
+        .maybeSingle();
 
-      if (existingCustomer) {
-        return NextResponse.json({ error: 'Customer with this email already exists' }, { status: 400 });
+      if (existingProfile) {
+        console.log('❌ Profile with this email already exists');
+        return NextResponse.json({ 
+          error: 'Ya existe un cliente con este email. Por favor, utiliza otro email o edita el cliente existente.' 
+        }, { status: 400 });
       }
 
-      // Prepare customer data
-      const customerData = {
+      // Use service role client to create auth user
+      const supabaseServiceRole = await createServiceRoleClient();
+
+      // Generate a random password (customer will reset it later)
+      const randomPassword = crypto.randomUUID();
+
+      console.log('👤 Creating Supabase Auth user with service role...');
+      const { data: authData, error: authError } = await supabaseServiceRole.auth.admin.createUser({
+        email: body.email,
+        password: randomPassword,
+        email_confirm: true, // Auto-confirm email for admin-created users
+        user_metadata: {
+          first_name: body.first_name || '',
+          last_name: body.last_name || '',
+          created_by_admin: true,
+          admin_created_at: new Date().toISOString()
+        }
+      });
+
+      if (authError) {
+        console.error('❌ Error creating auth user:', authError);
+        
+        // Check if it's a duplicate email error in auth
+        if (authError.message?.includes('already registered') || authError.message?.includes('User already registered')) {
+          return NextResponse.json({ 
+            error: 'Este email ya está registrado en el sistema de autenticación. El cliente puede iniciar sesión o recuperar su contraseña.' 
+          }, { status: 400 });
+        }
+        
+        return NextResponse.json({ 
+          error: `Error al crear usuario: ${authError.message}` 
+        }, { status: 500 });
+      }
+
+      console.log('✅ Auth user created:', authData.user?.email);
+
+      // Now create/update the profile with additional data
+      const profileData = {
+        id: authData.user.id,
         first_name: body.first_name || null,
         last_name: body.last_name || null,
         email: body.email,
@@ -187,23 +227,52 @@ export async function POST(request: NextRequest) {
         membership_start_date: body.membership_start_date ? new Date(body.membership_start_date).toISOString() : null,
         membership_end_date: body.membership_end_date ? new Date(body.membership_end_date).toISOString() : null,
         newsletter_subscribed: body.newsletter_subscribed || false,
-        created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
 
-      console.log('🔄 Creating new customer profile...');
-      const { data: newCustomer, error: createError } = await supabase
+      console.log('🔄 Creating/updating customer profile...');
+      const { data: newCustomer, error: profileError } = await supabaseServiceRole
         .from('profiles')
-        .insert(customerData)
+        .upsert(profileData, { onConflict: 'id' })
         .select()
         .single();
 
-      if (createError) {
-        console.error('❌ Error creating customer:', createError);
-        return NextResponse.json({ error: 'Failed to create customer' }, { status: 500 });
+      if (profileError) {
+        console.error('❌ Error creating profile:', profileError);
+        
+        // Try to clean up the auth user if profile creation failed
+        try {
+          await supabaseServiceRole.auth.admin.deleteUser(authData.user.id);
+          console.log('🧹 Cleaned up orphaned auth user');
+        } catch (cleanupError) {
+          console.error('⚠️ Could not clean up auth user:', cleanupError);
+        }
+        
+        return NextResponse.json({ error: 'Failed to create customer profile' }, { status: 500 });
       }
 
-      console.log('✅ Customer created successfully:', newCustomer.email);
+      console.log('✅ Customer profile created successfully:', newCustomer.email);
+
+      // Send password reset email so customer can set their own password
+      try {
+        console.log('📧 Sending password reset email to customer...');
+        const { error: resetError } = await supabaseServiceRole.auth.resetPasswordForEmail(
+          body.email,
+          {
+            redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/reset-password`
+          }
+        );
+
+        if (resetError) {
+          console.warn('⚠️ Could not send password reset email:', resetError.message);
+          // Don't fail the entire operation for email issues
+        } else {
+          console.log('✅ Password reset email sent successfully');
+        }
+      } catch (emailError) {
+        console.warn('⚠️ Email sending error (non-critical):', emailError);
+        // Continue - customer can use "forgot password" later
+      }
 
       return NextResponse.json({
         success: true,

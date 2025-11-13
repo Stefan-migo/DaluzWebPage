@@ -17,11 +17,11 @@ export async function GET(
     }
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
-    if (adminRole !== 'super_admin') {
-      return NextResponse.json({ error: 'Super admin access required' }, { status: 403 });
+    if (adminRole !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    // Get admin user details - simplified without profiles join for now
+    // Get admin user details
     const { data: adminUser, error: adminError } = await supabase
       .from('admin_users')
       .select(`
@@ -40,6 +40,19 @@ export async function GET(
     if (adminError || !adminUser) {
       return NextResponse.json({ error: 'Admin user not found' }, { status: 404 });
     }
+
+    // Get profile separately
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('first_name, last_name, phone')
+      .eq('id', adminUserId)
+      .single();
+
+    // Combine admin user with profile
+    const adminUserWithProfile = {
+      ...adminUser,
+      profiles: profile || null
+    };
 
     // Get activity history
     const { data: activityHistory, error: activityError } = await supabase
@@ -85,7 +98,7 @@ export async function GET(
     }
 
     const adminUserWithAnalytics = {
-      ...adminUser,
+      ...adminUserWithProfile,
       activityHistory: activityHistory || [],
       analytics: {
         totalActions: activityHistory?.length || 0,
@@ -93,7 +106,11 @@ export async function GET(
         actionsLast7Days: weeklyActivity.length,
         lastActivity: adminUser.last_login,
         activityByDay,
-        mostFrequentActions: getMostFrequentActions(recentActivity)
+        mostFrequentActions: getMostFrequentActions(recentActivity),
+        activityCount30Days: recentActivity.length,
+        fullName: profile 
+          ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() || adminUser.email
+          : adminUser.email
       }
     };
 
@@ -123,14 +140,14 @@ export async function PUT(
     }
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
-    if (adminRole !== 'super_admin') {
-      return NextResponse.json({ error: 'Super admin access required' }, { status: 403 });
+    if (adminRole !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
-    // Prevent self-demotion from super admin
-    if (user.id === adminUserId && role && role !== 'super_admin') {
+    // Prevent self-demotion from admin
+    if (user.id === adminUserId && role && role !== 'admin') {
       return NextResponse.json({ 
-        error: 'Cannot change your own super admin role' 
+        error: 'Cannot change your own admin role' 
       }, { status: 400 });
     }
 
@@ -141,12 +158,9 @@ export async function PUT(
       }, { status: 400 });
     }
 
-    // Validate role if provided
-    if (role) {
-      const validRoles = ['super_admin', 'store_manager', 'customer_support', 'content_manager'];
-      if (!validRoles.includes(role)) {
-        return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
-      }
+    // Validate role if provided (only 'admin' is allowed)
+    if (role && role !== 'admin') {
+      return NextResponse.json({ error: 'Invalid role. Only "admin" role is allowed.' }, { status: 400 });
     }
 
     // Get current admin user
@@ -229,8 +243,8 @@ export async function DELETE(
     }
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
-    if (adminRole !== 'super_admin') {
-      return NextResponse.json({ error: 'Super admin access required' }, { status: 403 });
+    if (adminRole !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
     // Prevent self-deletion
@@ -251,19 +265,17 @@ export async function DELETE(
       return NextResponse.json({ error: 'Admin user not found' }, { status: 404 });
     }
 
-    // Check if this is the last super admin
-    if (adminUser.role === 'super_admin') {
-      const { count: superAdminCount } = await supabase
-        .from('admin_users')
-        .select('*', { count: 'exact', head: true })
-        .eq('role', 'super_admin')
-        .eq('is_active', true);
+    // Check if this is the last admin
+    const { count: adminCount } = await supabase
+      .from('admin_users')
+      .select('*', { count: 'exact', head: true })
+      .eq('role', 'admin')
+      .eq('is_active', true);
 
-      if ((superAdminCount || 0) <= 1) {
-        return NextResponse.json({ 
-          error: 'Cannot delete the last super admin. At least one super admin must remain.' 
-        }, { status: 400 });
-      }
+    if ((adminCount || 0) <= 1) {
+      return NextResponse.json({ 
+        error: 'Cannot delete the last admin. At least one admin must remain.' 
+      }, { status: 400 });
     }
 
     // Delete admin user (this will cascade to activity logs due to ON DELETE SET NULL)

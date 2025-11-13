@@ -1,10 +1,11 @@
 import { Resend } from 'resend'
 
+// Gracefully handle missing API key for development
 if (!process.env.RESEND_API_KEY) {
-  throw new Error('RESEND_API_KEY environment variable is required')
+  console.warn('⚠️  RESEND_API_KEY not configured. Email notifications will be disabled.')
 }
 
-export const resend = new Resend(process.env.RESEND_API_KEY)
+export const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 // Email configuration
 export const emailConfig = {
@@ -38,6 +39,12 @@ export async function sendEmail(data: {
   text?: string
   replyTo?: string
 }) {
+  // Check if Resend is configured
+  if (!resend) {
+    console.warn('⚠️  Resend not configured, skipping email send')
+    return { success: false, error: 'Resend not configured' }
+  }
+
   try {
     const result = await resend.emails.send({
       from: emailConfig.from,

@@ -30,6 +30,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   Users, 
   UserPlus, 
@@ -46,7 +54,9 @@ import {
   Activity,
   Clock,
   Mail,
-  Phone
+  Phone,
+  Check,
+  MoreVertical
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -72,6 +82,14 @@ interface AdminUser {
   };
 }
 
+interface SuggestedUser {
+  id: string;
+  email: string;
+  fullName: string;
+  firstName?: string;
+  lastName?: string;
+}
+
 export default function AdminUsersPage() {
   const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -81,19 +99,106 @@ export default function AdminUsersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  
+  // Search autocomplete state
+  const [showSearchSuggestions, setShowSearchSuggestions] = useState(false);
+  const [searchSuggestions, setSearchSuggestions] = useState<AdminUser[]>([]);
 
   // Create admin dialog
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [creating, setCreating] = useState(false);
   const [newAdminData, setNewAdminData] = useState({
     email: '',
-    role: 'store_manager',
+    role: 'admin',
     is_active: true
   });
+  
+  // Autocomplete state
+  const [openUserSelect, setOpenUserSelect] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState('');
+  const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
+  const [loadingUsers, setLoadingUsers] = useState(false);
 
   useEffect(() => {
     fetchAdminUsers();
   }, [roleFilter, statusFilter]);
+
+  // Fetch suggested users when search query changes
+  useEffect(() => {
+    if (openUserSelect) {
+      fetchSuggestedUsers(userSearchQuery);
+    }
+  }, [userSearchQuery, openUserSelect]);
+
+  // Fetch users when dialog opens and reset state when closed
+  useEffect(() => {
+    if (showCreateDialog) {
+      fetchSuggestedUsers('');
+      setUserSearchQuery('');
+      setOpenUserSelect(false);
+    } else {
+      // Clean up when dialog closes
+      setUserSearchQuery('');
+      setSuggestedUsers([]);
+      setOpenUserSelect(false);
+    }
+  }, [showCreateDialog]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (openUserSelect && !target.closest('.autocomplete-container')) {
+        setOpenUserSelect(false);
+      }
+      if (showSearchSuggestions && !target.closest('.search-autocomplete-container')) {
+        setShowSearchSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [openUserSelect, showSearchSuggestions]);
+
+  // Generate search suggestions from existing admin users
+  useEffect(() => {
+    if (searchTerm.trim().length > 0) {
+      const filtered = adminUsers.filter(admin => {
+        const searchLower = searchTerm.toLowerCase();
+        const email = admin.email.toLowerCase();
+        const fullName = (admin.analytics?.fullName || '').toLowerCase();
+        return email.includes(searchLower) || fullName.includes(searchLower);
+      });
+      setSearchSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+      setShowSearchSuggestions(filtered.length > 0);
+    } else {
+      setSearchSuggestions([]);
+      setShowSearchSuggestions(false);
+    }
+  }, [searchTerm, adminUsers]);
+
+  const fetchSuggestedUsers = async (query: string) => {
+    try {
+      setLoadingUsers(true);
+      const params = new URLSearchParams();
+      if (query.trim()) {
+        params.set('q', query);
+      }
+      
+      const response = await fetch(`/api/admin/users/search?${params}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch users');
+      }
+      
+      const data = await response.json();
+      setSuggestedUsers(data.users || []);
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      setSuggestedUsers([]);
+    } finally {
+      setLoadingUsers(false);
+    }
+  };
 
   const fetchAdminUsers = async () => {
     try {
@@ -106,7 +211,7 @@ export default function AdminUsersPage() {
       const response = await fetch(`/api/admin/admin-users?${params}`);
       if (!response.ok) {
         if (response.status === 403) {
-          throw new Error('Acceso restringido: Solo super administradores pueden ver esta sección');
+          throw new Error('Acceso restringido: Solo administradores pueden ver esta sección');
         }
         throw new Error('Failed to fetch admin users');
       }
@@ -146,7 +251,7 @@ export default function AdminUsersPage() {
 
       toast.success('Usuario administrador creado exitosamente');
       setShowCreateDialog(false);
-      setNewAdminData({ email: '', role: 'store_manager', is_active: true });
+      setNewAdminData({ email: '', role: 'admin', is_active: true });
       fetchAdminUsers();
 
     } catch (error) {
@@ -206,20 +311,11 @@ export default function AdminUsersPage() {
   };
 
   const getRoleBadge = (role: string) => {
-    const config: Record<string, { variant: any; label: string; icon: any }> = {
-      super_admin: { variant: 'destructive', label: 'Super Admin', icon: Crown },
-      store_manager: { variant: 'default', label: 'Gerente', icon: Shield },
-      customer_support: { variant: 'secondary', label: 'Soporte', icon: User },
-      content_manager: { variant: 'outline', label: 'Contenido', icon: Edit }
-    };
-
-    const roleConfig = config[role] || config['store_manager'];
-    const Icon = roleConfig.icon;
-
+    // Simplified: only 'admin' role
     return (
-      <Badge variant={roleConfig.variant} className="flex items-center gap-1">
-        <Icon className="h-3 w-3" />
-        {roleConfig.label}
+      <Badge variant="default" className="flex items-center gap-1">
+        <Crown className="h-3 w-3" />
+        Administrador
       </Badge>
     );
   };
@@ -319,36 +415,76 @@ export default function AdminUsersPage() {
             </DialogHeader>
             
             <div className="space-y-4">
-              <div>
+              <div className="relative autocomplete-container">
                 <Label htmlFor="email">Email del Usuario</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="usuario@ejemplo.com"
-                  value={newAdminData.email}
-                  onChange={(e) => setNewAdminData({...newAdminData, email: e.target.value})}
-                />
+                <div className="relative">
+                  <Input
+                    id="email"
+                    type="text"
+                    placeholder="Buscar por email o nombre..."
+                    value={userSearchQuery}
+                    onChange={(e) => {
+                      setUserSearchQuery(e.target.value);
+                      setOpenUserSelect(true);
+                    }}
+                    onFocus={() => setOpenUserSelect(true)}
+                    className="w-full"
+                  />
+                  {loadingUsers && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <div className="animate-spin h-4 w-4 border-2 border-admin-accent-tertiary border-t-transparent rounded-full" />
+                    </div>
+                  )}
+                </div>
+                
+                {/* Autocomplete Suggestions */}
+                {openUserSelect && (userSearchQuery.length > 0 || suggestedUsers.length > 0) && (
+                  <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {suggestedUsers.length === 0 && !loadingUsers && (
+                      <div className="px-4 py-3 text-sm text-tierra-media text-center">
+                        No se encontraron usuarios
+                      </div>
+                    )}
+                    {suggestedUsers.map((user) => (
+                      <div
+                        key={user.id}
+                        className="px-4 py-3 hover:bg-admin-bg-tertiary cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
+                        onClick={() => {
+                          setNewAdminData({...newAdminData, email: user.email});
+                          setUserSearchQuery(user.email);
+                          setOpenUserSelect(false);
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          {newAdminData.email === user.email && (
+                            <Check className="h-4 w-4 text-admin-accent-tertiary flex-shrink-0" />
+                          )}
+                          <div className="flex flex-col min-w-0 flex-1">
+                            <span className="font-medium text-sm truncate">{user.fullName}</span>
+                            <span className="text-xs text-tierra-media truncate">{user.email}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
                 <p className="text-sm text-tierra-media mt-1">
-                  El usuario debe estar registrado previamente en el sistema
+                  Escribe para buscar un usuario registrado del sistema
                 </p>
               </div>
               
               <div>
                 <Label htmlFor="role">Rol Administrativo</Label>
-                <Select 
-                  value={newAdminData.role} 
-                  onValueChange={(value) => setNewAdminData({...newAdminData, role: value})}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="store_manager">Gerente de Tienda</SelectItem>
-                    <SelectItem value="customer_support">Soporte al Cliente</SelectItem>
-                    <SelectItem value="content_manager">Gestor de Contenido</SelectItem>
-                    <SelectItem value="super_admin">Super Administrador</SelectItem>
-                  </SelectContent>
-                </Select>
+                <div className="mt-2 p-3 bg-admin-bg-tertiary rounded-md">
+                  <div className="flex items-center gap-2">
+                    <Crown className="h-4 w-4 text-admin-accent-tertiary" />
+                    <span className="font-medium">Administrador</span>
+                  </div>
+                  <p className="text-sm text-tierra-media mt-1">
+                    Acceso completo a todas las funciones del sistema
+                  </p>
+                </div>
               </div>
             </div>
             
@@ -383,9 +519,9 @@ export default function AdminUsersPage() {
             <div className="flex items-center">
               <Crown className="h-8 w-8 text-dorado" />
               <div className="ml-4">
-                <p className="text-sm text-tierra-media">Super Admins</p>
+                <p className="text-sm text-tierra-media">Administradores</p>
                 <p className="text-2xl font-bold text-dorado">
-                  {adminUsers.filter(admin => admin.role === 'super_admin').length}
+                  {adminUsers.filter(admin => admin.role === 'admin').length}
                 </p>
               </div>
             </div>
@@ -426,30 +562,56 @@ export default function AdminUsersPage() {
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-tierra-media h-4 w-4" />
+              <div className="relative search-autocomplete-container">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-tierra-media h-4 w-4 z-10" />
                 <Input
-                  placeholder="Buscar por email..."
+                  placeholder="Buscar por email o nombre..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setShowSearchSuggestions(true);
+                  }}
+                  onFocus={() => {
+                    if (searchTerm.trim().length > 0 && searchSuggestions.length > 0) {
+                      setShowSearchSuggestions(true);
+                    }
+                  }}
                   className="pl-10"
                 />
+                
+                {/* Search Autocomplete Suggestions */}
+                {showSearchSuggestions && searchSuggestions.length > 0 && (
+                  <div className="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                    {searchSuggestions.map((admin) => {
+                      const fullName = admin.analytics?.fullName || admin.email;
+                      return (
+                        <div
+                          key={admin.id}
+                          className="px-4 py-3 hover:bg-admin-bg-tertiary cursor-pointer transition-colors border-b border-gray-100 last:border-b-0"
+                          onClick={() => {
+                            setSearchTerm(admin.email);
+                            setShowSearchSuggestions(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex flex-col min-w-0 flex-1">
+                              <span className="font-medium text-sm truncate">{fullName}</span>
+                              <span className="text-xs text-tierra-media truncate">{admin.email}</span>
+                            </div>
+                            {admin.is_active ? (
+                              <Badge className="bg-verde-suave text-primary text-xs">Activo</Badge>
+                            ) : (
+                              <Badge variant="destructive" className="text-xs">Inactivo</Badge>
+                            )}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
             
-            <Select value={roleFilter} onValueChange={setRoleFilter}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Rol" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos los roles</SelectItem>
-                <SelectItem value="super_admin">Super Admin</SelectItem>
-                <SelectItem value="store_manager">Gerente</SelectItem>
-                <SelectItem value="customer_support">Soporte</SelectItem>
-                <SelectItem value="content_manager">Contenido</SelectItem>
-              </SelectContent>
-            </Select>
-
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Estado" />
@@ -460,6 +622,7 @@ export default function AdminUsersPage() {
                 <SelectItem value="inactive">Inactivos</SelectItem>
               </SelectContent>
             </Select>
+
           </div>
         </CardContent>
       </Card>
@@ -551,37 +714,55 @@ export default function AdminUsersPage() {
                   </TableCell>
                   
                   <TableCell>
-                    <div className="flex space-x-2">
-                      <Link href={`/admin/admin-users/${admin.id}`}>
-                        <Button variant="outline" size="sm">
-                          <Eye className="h-3 w-3" />
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <span className="sr-only">Abrir menú</span>
+                          <MoreVertical className="h-4 w-4" />
                         </Button>
-                      </Link>
-                      <Link href={`/admin/admin-users/${admin.id}/edit`}>
-                        <Button variant="outline" size="sm">
-                          <Edit className="h-3 w-3" />
-                        </Button>
-                      </Link>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleToggleStatus(admin.id, admin.is_active)}
-                      >
-                        {admin.is_active ? (
-                          <AlertTriangle className="h-3 w-3 text-red-500" />
-                        ) : (
-                          <CheckCircle className="h-3 w-3 text-green-500" />
-                        )}
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => handleDeleteAdmin(admin.id, admin.email)}
-                        className="text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link href={`/admin/admin-users/${admin.id}`} className="flex items-center cursor-pointer">
+                            <Eye className="mr-2 h-4 w-4" />
+                            Ver detalles
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link href={`/admin/admin-users/${admin.id}/edit`} className="flex items-center cursor-pointer">
+                            <Edit className="mr-2 h-4 w-4" />
+                            Editar
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleToggleStatus(admin.id, admin.is_active)}
+                          className="flex items-center cursor-pointer"
+                        >
+                          {admin.is_active ? (
+                            <>
+                              <AlertTriangle className="mr-2 h-4 w-4 text-red-500" />
+                              Desactivar
+                            </>
+                          ) : (
+                            <>
+                              <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
+                              Activar
+                            </>
+                          )}
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteAdmin(admin.id, admin.email)}
+                          className="flex items-center cursor-pointer text-red-500 focus:text-red-500"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Eliminar
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </TableCell>
                 </TableRow>
               ));

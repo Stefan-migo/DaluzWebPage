@@ -243,6 +243,9 @@ export default async function HomePage() {
           <h2 className="font-title text-5xl md:text-6xl leading-tight drop-shadow-lg" style={{ color: '#FFF4B3' }}>
             MANIFIESTO DA LUZ
           </h2>
+          <p className="font-subtitle text-xl md:text-2xl mt-4 drop-shadow-md" style={{ color: '#FFF4B3' }}>
+            VivÍ en Presencia, Creá con Placer.
+          </p>
           {/* Bottom gradient divider */}
           <div className="w-32 h-0.5 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto mt-4 mb-5" />
         </div>
@@ -298,32 +301,23 @@ export default async function HomePage() {
             {/* Content - Shows second on mobile */}
             <div className="order-2 lg:order-1 w-full">
               {/* Content Card with mobile-optimized spacing */}
-              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-6 lg:p-8 text-center shadow-lg border border-white/20">
+              <div className="card-enhanced backdrop-blur-sm rounded-2xl p-6 lg:p-8 text-left shadow-lg border border-white/20">
                 {/* Enhanced Content with mobile-friendly text sizing */}
                 <div className="space-y-4 lg:space-y-6 text-base lg:text-lg leading-relaxed">
                   <p className="font-text text-gray-800">
-                    Te damos la bienvenida a Da Luz, 
+                    Bienvenida/o a Da Luz, tu portal hacia la Alquimia Viva. Deseamos que experimentes la profunda conexión con tu Ser esencial. Creemos que la vida es tu mayor acto de creación, y nuestra intención es facilitarte una nueva forma de habitarte, más placentera y consciente. Te invitamos a sumergirte en un viaje interior donde tu cuerpo es el templo y el Placer es el verdadero pase hacia tu Poder Creador.
                   </p>
-                  <p className="font-text text-gray-800">
-                    <u>Un espacio dedicado a la alquimia de nuestra naturaleza y al despertar de la profunda conexión con tu Ser auténtico.</u>
-                    <br/>
-                    <br/>
-                    <strong>Nuestra intención es facilitarte una nueva forma de habitarte. Te invitamos a sumergirte en un viaje alquímico hacia tu interior, donde tu cuerpo es tratado como un templo.</strong>
-                    <br/><strong>Deseamos que tomarte momentos de pausa para percibir y nutrir tu Ser se convierta en un ritual diario 
-                    donde la atención plena, la gratitud y la presencia te acompañen en tu sendero.</strong>  
-                  </p>
-                  <p className="font-text text-gray-800">
-                  Nuestro propósito fundamental es acompañarte en la construcción de <u>un equilibrio más completo</u>, donde <strong>el amor por vos misma y por la Tierra sean las raíces de cada elección que realices.</strong>
-                  </p>
+                  
+                  
                 </div>
 
                 {/* Enhanced CTA with responsive sizing */}
                 <div className="pt-4 lg:pt-6">
-                  <Link href="/nuestra-filosofia">
+                  <Link href="/productos">
                     <Button
                       className="group btn-enhanced px-6 py-3 lg:px-8 lg:py-4 text-white font-semibold text-sm lg:text-base w-full sm:w-auto"
                     >
-                      Explora Nuestra Filosofía
+                      CONOCE TU BIOTIPO Y DOSHA
                     </Button>
                   </Link>
                 </div>

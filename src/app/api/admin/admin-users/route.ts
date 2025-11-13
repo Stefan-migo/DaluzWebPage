@@ -10,15 +10,15 @@ export async function GET(request: NextRequest) {
 
     const supabase = await createClient();
     
-    // Check admin authorization (only super admin can manage admin users)
+    // Check admin authorization (only admins can manage admin users)
     const { data: { user }, error: userError } = await supabase.auth.getUser();
     if (userError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
-    if (adminRole !== 'super_admin') {
-      return NextResponse.json({ error: 'Super admin access required' }, { status: 403 });
+    if (adminRole !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
     // Build the query - simplified without profiles join for now
@@ -103,26 +103,31 @@ export async function POST(request: NextRequest) {
     }
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
-    if (adminRole !== 'super_admin') {
-      return NextResponse.json({ error: 'Super admin access required' }, { status: 403 });
+    if (adminRole !== 'admin') {
+      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
     }
 
     // Validate input
-    if (!email || !role) {
-      return NextResponse.json({ error: 'Email and role are required' }, { status: 400 });
+    if (!email) {
+      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
     }
 
-    const validRoles = ['super_admin', 'store_manager', 'customer_support', 'content_manager'];
-    if (!validRoles.includes(role)) {
-      return NextResponse.json({ error: 'Invalid role' }, { status: 400 });
-    }
+    // Set role to 'admin' (simplified system)
+    const finalRole = 'admin';
 
-    // Check if user exists in auth.users
-    const { data: existingUser } = await supabase
-      .from('auth.users')
+    // Check if user exists in profiles table (linked to auth.users)
+    const { data: existingUser, error: userCheckError } = await supabase
+      .from('profiles')
       .select('id, email')
       .eq('email', email)
-      .single();
+      .maybeSingle();
+
+    if (userCheckError) {
+      console.error('Error checking user existence:', userCheckError);
+      return NextResponse.json({ 
+        error: 'Error verifying user. Please try again.' 
+      }, { status: 500 });
+    }
 
     if (!existingUser) {
       return NextResponse.json({ 
@@ -131,18 +136,25 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user is already an admin
-    const { data: existingAdmin } = await supabase
+    const { data: existingAdmin, error: adminCheckError } = await supabase
       .from('admin_users')
       .select('id, email')
       .eq('email', email)
-      .single();
+      .maybeSingle();
+
+    if (adminCheckError) {
+      console.error('Error checking admin existence:', adminCheckError);
+      return NextResponse.json({ 
+        error: 'Error verifying admin status. Please try again.' 
+      }, { status: 500 });
+    }
 
     if (existingAdmin) {
       return NextResponse.json({ error: 'User is already an admin' }, { status: 400 });
     }
 
-    // Default permissions based on role
-    const defaultPermissions = getDefaultPermissions(role);
+    // Default permissions for admin role (full access)
+    const defaultPermissions = getDefaultPermissions('admin');
     const finalPermissions = permissions || defaultPermissions;
 
     // Create admin user
@@ -151,11 +163,9 @@ export async function POST(request: NextRequest) {
       .insert({
         id: existingUser.id,
         email: existingUser.email,
-        role,
+        role: finalRole,
         permissions: finalPermissions,
-        is_active,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
+        is_active
       })
       .select(`
         id,
@@ -163,26 +173,35 @@ export async function POST(request: NextRequest) {
         role,
         permissions,
         is_active,
-        created_at
+        created_at,
+        updated_at
       `)
       .single();
 
     if (createError) {
       console.error('Error creating admin user:', createError);
-      return NextResponse.json({ error: 'Failed to create admin user' }, { status: 500 });
+      return NextResponse.json({ 
+        error: 'Failed to create admin user', 
+        details: createError.message 
+      }, { status: 500 });
     }
 
-    // Log admin activity
-    await supabase.rpc('log_admin_activity', {
-      action: 'create_admin_user',
-      resource_type: 'admin_user',
-      resource_id: newAdmin.id,
-      details: { 
-        new_admin_email: email,
-        role,
-        created_by: user.email
-      }
-    });
+    // Log admin activity (don't fail if logging fails)
+    try {
+      await supabase.rpc('log_admin_activity', {
+        action: 'create_admin_user',
+        resource_type: 'admin_user',
+        resource_id: newAdmin.id,
+        details: { 
+          new_admin_email: email,
+          role: 'admin',
+          created_by: user.email
+        }
+      });
+    } catch (logError) {
+      console.error('Error logging admin activity (non-critical):', logError);
+      // Continue anyway, logging failure shouldn't block admin creation
+    }
 
     return NextResponse.json({ adminUser: newAdmin });
 
@@ -192,42 +211,17 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Helper function to get default permissions based on role
+// Helper function to get default permissions for admin role
 function getDefaultPermissions(role: string) {
-  const permissions: Record<string, any> = {
-    super_admin: {
-      orders: ['read', 'create', 'update', 'delete'],
-      products: ['read', 'create', 'update', 'delete'],
-      customers: ['read', 'create', 'update', 'delete'],
-      analytics: ['read'],
-      settings: ['read', 'create', 'update', 'delete'],
-      admin_users: ['read', 'create', 'update', 'delete'],
-      support: ['read', 'create', 'update', 'delete'],
-      bulk_operations: ['read', 'create', 'update', 'delete']
-    },
-    store_manager: {
-      orders: ['read', 'create', 'update', 'delete'],
-      products: ['read', 'create', 'update', 'delete'],
-      customers: ['read', 'update'],
-      analytics: ['read'],
-      settings: ['read'],
-      support: ['read', 'create', 'update'],
-      bulk_operations: ['read', 'create', 'update']
-    },
-    customer_support: {
-      orders: ['read', 'update'],
-      products: ['read'],
-      customers: ['read', 'create', 'update'],
-      analytics: ['read'],
-      support: ['read', 'create', 'update', 'delete']
-    },
-    content_manager: {
-      products: ['read', 'create', 'update'],
-      customers: ['read'],
-      analytics: ['read'],
-      settings: ['read']
-    }
+  // Simplified: all admins have full access
+  return {
+    orders: ['read', 'create', 'update', 'delete'],
+    products: ['read', 'create', 'update', 'delete'],
+    customers: ['read', 'create', 'update', 'delete'],
+    analytics: ['read'],
+    settings: ['read', 'create', 'update', 'delete'],
+    admin_users: ['read', 'create', 'update', 'delete'],
+    support: ['read', 'create', 'update', 'delete'],
+    bulk_operations: ['read', 'create', 'update', 'delete']
   };
-
-  return permissions[role] || {};
 }

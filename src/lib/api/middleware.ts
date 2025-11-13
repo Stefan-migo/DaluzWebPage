@@ -154,19 +154,14 @@ export async function requireRole(userId: string, requiredRole: string = 'admin'
         throw new AuthorizationError('Unable to verify admin role')
       }
       
-      // Define role hierarchy
-      const roleHierarchy = {
-        'super_admin': 4,
-        'store_manager': 3,
-        'customer_support': 2,
-        'content_manager': 1
+      // Simplified role system - only 'admin' role
+      if (userRole !== 'admin') {
+        throw new AuthorizationError('Admin role required')
       }
       
-      const userRoleLevel = roleHierarchy[userRole as keyof typeof roleHierarchy] || 0
-      const requiredRoleLevel = roleHierarchy[requiredRole as keyof typeof roleHierarchy] || 0
-      
-      if (userRoleLevel < requiredRoleLevel) {
-        throw new AuthorizationError(`Insufficient permissions - ${requiredRole} role required`)
+      // Check if required role is also admin
+      if (requiredRole && requiredRole !== 'admin') {
+        throw new AuthorizationError(`Invalid role requirement - only 'admin' role exists`)
       }
     }
     
