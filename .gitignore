@@ -48,6 +48,7 @@ supabase/backups/
 create-admin-user.sql
 fix-admin-access.sql
 verify-and-fix-admin.sql
+remote-data-dump.sql
 
 # IDE
 .vscode/
@@ -91,5 +92,3 @@ pids
 # srs directory
 srs/
 
-# nul file
-nul 
