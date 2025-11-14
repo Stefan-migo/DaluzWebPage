@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -53,6 +53,10 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
     status: 'idle' | 'success' | 'error';
     message?: string;
   }>({ status: 'idle' });
+  
+  // Local state for credential inputs (to avoid updating on every keystroke)
+  const [credentialValues, setCredentialValues] = useState<Record<string, string>>({});
+  const debounceTimers = useRef<Record<string, NodeJS.Timeout>>({});
 
   // Build config map from props
   const configMap: PaymentConfig = {};
@@ -70,6 +74,19 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
       'https://daluzconsciente.com';
     setWebhookUrl(`${baseUrl}/api/webhooks/mercadopago`);
   }, []);
+
+  // Initialize credential values from configs when they change
+  useEffect(() => {
+    const initialValues: Record<string, string> = {};
+    ['access_token', 'public_key', 'webhook_secret'].forEach(key => {
+      const config = configs.find(c => c.config_key === `mercadopago_${key}`);
+      const value = config?.config_value;
+      if (value) {
+        initialValues[key] = value;
+      }
+    });
+    setCredentialValues(prev => ({ ...prev, ...initialValues }));
+  }, [configs]);
 
   const handleToggleVisibility = (key: string) => {
     setShowTokens(prev => ({ ...prev, [key]: !prev[key] }));
@@ -137,6 +154,47 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
     }
   };
 
+  // Debounced update for credential inputs
+  const handleCredentialChange = (key: string, value: string) => {
+    // Update local state immediately for responsive UI
+    setCredentialValues(prev => ({ ...prev, [key]: value }));
+
+    // Clear existing timer for this key
+    if (debounceTimers.current[key]) {
+      clearTimeout(debounceTimers.current[key]);
+    }
+
+    // Set new timer to update after user stops typing (800ms)
+    debounceTimers.current[key] = setTimeout(() => {
+      handleUpdate(key, value);
+      delete debounceTimers.current[key];
+    }, 800);
+  };
+
+  // Handle blur event to ensure value is saved when user leaves the field
+  const handleCredentialBlur = (key: string) => {
+    // Clear any pending debounce timer
+    if (debounceTimers.current[key]) {
+      clearTimeout(debounceTimers.current[key]);
+      delete debounceTimers.current[key];
+    }
+    
+    // Immediately save the current value
+    const currentValue = credentialValues[key];
+    if (currentValue !== undefined) {
+      handleUpdate(key, currentValue);
+    }
+  };
+
+  // Cleanup timers on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(debounceTimers.current).forEach(timer => {
+        clearTimeout(timer);
+      });
+    };
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Credentials Section */}
@@ -165,10 +223,11 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
                   id="access_token"
                   type={showTokens.access_token ? 'text' : 'password'}
                   value={showTokens.access_token 
-                    ? (getConfigValue('access_token') || '') 
-                    : maskValue(getConfigValue('access_token'))
+                    ? (credentialValues.access_token ?? getConfigValue('access_token') ?? '') 
+                    : (credentialValues.access_token ? maskValue(credentialValues.access_token) : maskValue(getConfigValue('access_token')))
                   }
-                  onChange={(e) => handleUpdate('access_token', e.target.value)}
+                  onChange={(e) => handleCredentialChange('access_token', e.target.value)}
+                  onBlur={() => handleCredentialBlur('access_token')}
                   placeholder="PROD_ACCESS_TOKEN_HERE"
                   disabled={loading}
                   className="pr-10"
@@ -202,10 +261,11 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
                   id="public_key"
                   type={showTokens.public_key ? 'text' : 'password'}
                   value={showTokens.public_key 
-                    ? (getConfigValue('public_key') || '') 
-                    : maskValue(getConfigValue('public_key'))
+                    ? (credentialValues.public_key ?? getConfigValue('public_key') ?? '') 
+                    : (credentialValues.public_key ? maskValue(credentialValues.public_key) : maskValue(getConfigValue('public_key')))
                   }
-                  onChange={(e) => handleUpdate('public_key', e.target.value)}
+                  onChange={(e) => handleCredentialChange('public_key', e.target.value)}
+                  onBlur={() => handleCredentialBlur('public_key')}
                   placeholder="PUBLIC_KEY_HERE"
                   disabled={loading}
                   className="pr-10"
@@ -239,10 +299,11 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
                   id="webhook_secret"
                   type={showTokens.webhook_secret ? 'text' : 'password'}
                   value={showTokens.webhook_secret 
-                    ? (getConfigValue('webhook_secret') || '') 
-                    : maskValue(getConfigValue('webhook_secret'))
+                    ? (credentialValues.webhook_secret ?? getConfigValue('webhook_secret') ?? '') 
+                    : (credentialValues.webhook_secret ? maskValue(credentialValues.webhook_secret) : maskValue(getConfigValue('webhook_secret')))
                   }
-                  onChange={(e) => handleUpdate('webhook_secret', e.target.value)}
+                  onChange={(e) => handleCredentialChange('webhook_secret', e.target.value)}
+                  onBlur={() => handleCredentialBlur('webhook_secret')}
                   placeholder="WEBHOOK_SECRET_HERE"
                   disabled={loading}
                   className="pr-10"

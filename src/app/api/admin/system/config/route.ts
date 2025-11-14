@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
 
 export async function GET(request: NextRequest) {
   try {
@@ -189,11 +189,43 @@ export async function PUT(request: NextRequest) {
 
       try {
         // Get existing config to check permissions
-        const { data: existingConfig } = await supabase
+        const { data: existingConfig, error: checkError } = await supabase
           .from('system_config')
           .select('is_sensitive, category, value_type')
           .eq('config_key', config_key)
-          .single();
+          .maybeSingle();
+
+        // Handle error
+        if (checkError) {
+          results.push({ config_key, error: `Failed to check config: ${checkError.message}` });
+          continue;
+        }
+
+        // Check if user is admin (for sensitive configs, we'll use service role client)
+        const { data: adminUser, error: adminCheckError } = await supabase
+          .from('admin_users')
+          .select('role')
+          .eq('id', user.id)
+          .eq('is_active', true)
+          .maybeSingle();
+
+        if (adminCheckError) {
+          results.push({ config_key, error: `Failed to verify admin access: ${adminCheckError.message}` });
+          continue;
+        }
+
+        if (!adminUser) {
+          results.push({ config_key, error: 'Admin access required' });
+          continue;
+        }
+
+        // Determine if config is sensitive (for new configs, infer from key)
+        const isSensitive = existingConfig?.is_sensitive ?? 
+          (config_key.includes('token') || config_key.includes('secret') || config_key.includes('key'));
+
+        // For sensitive configs, use service role client to bypass RLS
+        // (but only if user is an admin - we already verified above)
+        const dbClient = isSensitive ? createServiceRoleClient() : supabase;
 
         // If config doesn't exist, create it (upsert behavior)
         if (!existingConfig) {
@@ -213,14 +245,14 @@ export async function PUT(request: NextRequest) {
           }
 
           // Create the config
-          const { data: newConfig, error: createError } = await supabase
+          const { data: newConfig, error: createError } = await dbClient
             .from('system_config')
             .insert({
               config_key,
               config_value: JSON.stringify(config_value),
               category,
               value_type: valueType,
-              is_sensitive: config_key.includes('token') || config_key.includes('secret') || config_key.includes('key'),
+              is_sensitive: isSensitive,
               last_modified_by: user.id
             })
             .select()
@@ -250,11 +282,10 @@ export async function PUT(request: NextRequest) {
           continue;
         }
 
-        // Temporarily skip sensitive config checks for testing
-        console.log('🔧 Updating config:', config_key);
+        console.log('🔧 Updating config:', config_key, isSensitive ? '(sensitive - using service role)' : '');
 
-        // Update the config
-        const { data: updatedConfig, error: updateError } = await supabase
+        // Update the config (use service role client for sensitive configs to bypass RLS)
+        const { data: updatedConfig, error: updateError } = await dbClient
           .from('system_config')
           .update({
             config_value: JSON.stringify(config_value),
@@ -263,10 +294,16 @@ export async function PUT(request: NextRequest) {
           })
           .eq('config_key', config_key)
           .select()
-          .single();
+          .maybeSingle();
 
         if (updateError) {
           results.push({ config_key, error: updateError.message });
+          continue;
+        }
+
+        // If no rows were updated, the config might have been deleted
+        if (!updatedConfig) {
+          results.push({ config_key, error: 'Config not found or could not be updated' });
           continue;
         }
 
