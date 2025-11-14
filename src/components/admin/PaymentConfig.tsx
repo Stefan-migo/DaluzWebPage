@@ -383,10 +383,31 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
             Métodos de Pago
           </CardTitle>
           <CardDescription>
-            Selecciona los métodos de pago que estarán disponibles para tus clientes
+            Selecciona los métodos de pago que estarán disponibles para tus clientes.
+            <br />
+            <span className="text-xs text-muted-foreground mt-1 block">
+              Nota: "Dinero en cuenta de Mercado Pago" siempre está disponible y no puede deshabilitarse según las políticas de MercadoPago.
+            </span>
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Account Money - Always Available (cannot be disabled by MercadoPago API) */}
+          <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border border-dashed">
+            <div className="flex items-center gap-2">
+              <Label htmlFor="method_account_money" className="font-semibold">
+                Dinero en cuenta de Mercado Pago
+              </Label>
+              <Badge variant="secondary" className="text-xs">Siempre disponible</Badge>
+            </div>
+            <Switch
+              id="method_account_money"
+              checked={true}
+              disabled={true}
+              className="opacity-50"
+            />
+          </div>
+          
+          {/* Other Payment Methods */}
           {['credit_card', 'debit_card', 'cash', 'bank_transfer'].map((method) => {
             const methodNames: Record<string, string> = {
               credit_card: 'Tarjeta de Crédito',
