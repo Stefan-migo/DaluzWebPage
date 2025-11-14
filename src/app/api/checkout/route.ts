@@ -170,7 +170,8 @@ export async function POST(req: NextRequest) {
   const paymentMethodsConfig: any = {};
   if (mpConfig.paymentMethods && mpConfig.paymentMethods.length > 0) {
     // If specific methods are configured, exclude all others
-    const allMethods = ['credit_card', 'debit_card', 'cash', 'bank_transfer', 'account_money'];
+    // Note: account_money cannot be excluded per MercadoPago API restrictions
+    const allMethods = ['credit_card', 'debit_card', 'cash', 'bank_transfer'];
     const excludedMethods = allMethods.filter(m => !mpConfig.paymentMethods.includes(m));
     if (excludedMethods.length > 0) {
       paymentMethodsConfig.excluded_payment_methods = excludedMethods.map(m => ({ id: m }));
