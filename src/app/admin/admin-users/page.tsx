@@ -60,6 +60,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'sonner';
+import PermissionsEditor from '@/components/admin/PermissionsEditor';
 
 interface AdminUser {
   id: string;
@@ -118,6 +119,10 @@ export default function AdminUsersPage() {
   const [userSearchQuery, setUserSearchQuery] = useState('');
   const [suggestedUsers, setSuggestedUsers] = useState<SuggestedUser[]>([]);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  
+  // Permissions editor state
+  const [showPermissionsEditor, setShowPermissionsEditor] = useState(false);
+  const [selectedUserForPermissions, setSelectedUserForPermissions] = useState<AdminUser | null>(null);
 
   useEffect(() => {
     fetchAdminUsers();
@@ -736,6 +741,16 @@ export default function AdminUsersPage() {
                             Editar
                           </Link>
                         </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setSelectedUserForPermissions(admin);
+                            setShowPermissionsEditor(true);
+                          }}
+                          className="flex items-center cursor-pointer"
+                        >
+                          <Shield className="mr-2 h-4 w-4" />
+                          Editar Permisos
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                           onClick={() => handleToggleStatus(admin.id, admin.is_active)}
@@ -779,6 +794,20 @@ export default function AdminUsersPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Permissions Editor Dialog */}
+      {showPermissionsEditor && selectedUserForPermissions && (
+        <PermissionsEditor
+          userId={selectedUserForPermissions.id}
+          currentPermissions={selectedUserForPermissions.permissions || {}}
+          open={showPermissionsEditor}
+          onOpenChange={setShowPermissionsEditor}
+          onSave={() => {
+            fetchAdminUsers();
+            setSelectedUserForPermissions(null);
+          }}
+        />
+      )}
     </div>
   );
 }

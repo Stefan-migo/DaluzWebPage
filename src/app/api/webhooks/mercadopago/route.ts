@@ -3,25 +3,60 @@ import { NextRequest, NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
+import { getMercadoPagoAccessToken } from '@/lib/mercadopago/config';
 import { EmailNotificationService } from '@/lib/email/notifications';
 
-const client = new MercadoPagoConfig({ 
-  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN! 
-});
+// Client will be created dynamically with database config
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET!;
+// Function to get webhook secret from database or env
+async function getWebhookSecret() {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    
+    const { data: config } = await supabase
+      .from('system_config')
+      .select('config_value')
+      .eq('config_key', 'mercadopago_webhook_secret')
+      .single();
+    
+    if (config && config.config_value) {
+      try {
+        const secret = JSON.parse(config.config_value);
+        if (secret && secret !== 'WEBHOOK_SECRET_HERE') {
+          return secret;
+        }
+      } catch {
+        if (config.config_value !== 'WEBHOOK_SECRET_HERE') {
+          return config.config_value;
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Failed to load webhook secret from database, using env fallback');
+  }
+  
+  return process.env.MERCADOPAGO_WEBHOOK_SECRET!;
+}
 
 // Function to verify the Mercado Pago webhook signature
-const verifySignature = (req: NextRequest, rawBody: string) => {
+const verifySignature = async (req: NextRequest, rawBody: string) => {
   const signature = req.headers.get('x-signature');
   const timestamp = req.headers.get('x-request-id');
   
   if (!signature || !timestamp) {
+    return false;
+  }
+
+  const webhookSecret = await getWebhookSecret();
+  if (!webhookSecret) {
     return false;
   }
 
@@ -39,19 +74,61 @@ export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   
   // Verify webhook signature for security
+  let body: any;
+  try {
+    body = JSON.parse(rawBody);
+  } catch (parseError) {
+    console.error('Error parsing webhook body:', parseError);
+    return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 });
+  }
+
   if (process.env.NODE_ENV === 'production') {
-    const isValidSignature = verifySignature(req, rawBody);
+    const isValidSignature = await verifySignature(req, rawBody);
     if (!isValidSignature) {
       console.error('Invalid webhook signature detected');
+      // Log failed webhook
+      try {
+        await supabaseAdmin.from('webhook_logs').insert({
+          webhook_type: 'mercadopago',
+          event_type: body?.type || 'unknown',
+          payload: { error: 'Invalid signature' },
+          status: 'failed',
+          response_code: 401,
+          error_message: 'Invalid webhook signature',
+          processed_at: new Date().toISOString()
+        });
+      } catch (logError) {
+        console.error('Error logging webhook:', logError);
+      }
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }
   }
   
-  const body = JSON.parse(rawBody);
+  // Log webhook receipt
+  try {
+    await supabaseAdmin.from('webhook_logs').insert({
+      webhook_type: 'mercadopago',
+      event_type: body?.type || 'unknown',
+      payload: body,
+      status: 'pending',
+      processed_at: null
+    });
+  } catch (logError) {
+    console.error('Error logging webhook:', logError);
+  }
 
   if (body.type === 'payment') {
     const paymentId = body.data.id;
-    const payment = new Payment(client);
+    
+    // Get MercadoPago config from database (with env fallback)
+    const accessToken = await getMercadoPagoAccessToken();
+    const mpClient = new MercadoPagoConfig({ 
+      accessToken,
+      options: {
+        timeout: 5000
+      }
+    });
+    const payment = new Payment(mpClient);
 
     try {
       const paymentInfo = await payment.get({ id: paymentId });
@@ -168,9 +245,45 @@ export async function POST(req: NextRequest) {
         }
 
         console.log(`Order ${orderId} updated to status: ${orderStatus} (MP status: ${paymentInfo.status})`);
+        
+        // Update webhook log to success
+        try {
+          await supabaseAdmin
+            .from('webhook_logs')
+            .update({
+              status: 'success',
+              response_code: 200,
+              processed_at: new Date().toISOString()
+            })
+            .eq('webhook_type', 'mercadopago')
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false })
+            .limit(1);
+        } catch (logError) {
+          console.error('Error updating webhook log:', logError);
+        }
       }
     } catch (error) {
       console.error('Error fetching payment info from Mercado Pago:', error);
+      
+      // Update webhook log to failed
+      try {
+        await supabaseAdmin
+          .from('webhook_logs')
+          .update({
+            status: 'failed',
+            response_code: 500,
+            error_message: error instanceof Error ? error.message : 'Unknown error',
+            processed_at: new Date().toISOString()
+          })
+          .eq('webhook_type', 'mercadopago')
+          .eq('status', 'pending')
+          .order('created_at', { ascending: false })
+          .limit(1);
+      } catch (logError) {
+        console.error('Error updating webhook log:', logError);
+      }
+      
       return NextResponse.json({ error: 'Failed to process webhook' }, { status: 500 });
     }
   }

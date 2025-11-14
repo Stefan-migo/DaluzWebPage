@@ -59,9 +59,20 @@ import {
   Download,
   RotateCcw,
   FileText,
-  Calendar
+  Calendar,
+  CreditCard,
+  Truck,
+  Palette,
+  Globe,
+  Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
+import PaymentConfig from '@/components/admin/PaymentConfig';
+import EmailTemplatesManager from '@/components/admin/EmailTemplatesManager';
+import ShippingManager from '@/components/admin/ShippingManager';
+import WebhookMonitor from '@/components/admin/WebhookMonitor';
+import BrandingManager from '@/components/admin/BrandingManager';
+import SEOManager from '@/components/admin/SEOManager';
 
 interface SystemConfig {
   id: string;
@@ -746,11 +757,35 @@ export default function SystemAdministrationPage() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Resumen</TabsTrigger>
-          <TabsTrigger value="config">Configuración</TabsTrigger>
-          <TabsTrigger value="health">Salud del Sistema</TabsTrigger>
-          <TabsTrigger value="maintenance">Mantenimiento</TabsTrigger>
+        <TabsList className="flex w-full justify-between gap-1 h-auto">
+          <TabsTrigger value="overview" className="flex-1">Resumen</TabsTrigger>
+          <TabsTrigger value="config" className="flex-1">Configuración</TabsTrigger>
+          <TabsTrigger value="pagos" className="flex-1">
+            <CreditCard className="h-4 w-4 mr-1" />
+            Pagos
+          </TabsTrigger>
+          <TabsTrigger value="email" className="flex-1">
+            <Mail className="h-4 w-4 mr-1" />
+            Email
+          </TabsTrigger>
+          <TabsTrigger value="envios" className="flex-1">
+            <Truck className="h-4 w-4 mr-1" />
+            Envíos
+          </TabsTrigger>
+          <TabsTrigger value="personalizacion" className="flex-1">
+            <Palette className="h-4 w-4 mr-1" />
+            Personalización
+          </TabsTrigger>
+          <TabsTrigger value="seo" className="flex-1">
+            <Globe className="h-4 w-4 mr-1" />
+            SEO
+          </TabsTrigger>
+          <TabsTrigger value="webhooks" className="flex-1">
+            <Zap className="h-4 w-4 mr-1" />
+            Webhooks
+          </TabsTrigger>
+          <TabsTrigger value="health" className="flex-1">Salud</TabsTrigger>
+          <TabsTrigger value="maintenance" className="flex-1">Mantenimiento</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -769,17 +804,37 @@ export default function SystemAdministrationPage() {
                     <Settings className="h-4 w-4 mr-2" />
                     Configuración
                   </Button>
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('pagos')}>
+                    <CreditCard className="h-4 w-4 mr-2" />
+                    Pagos
+                  </Button>
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('email')}>
+                    <Mail className="h-4 w-4 mr-2" />
+                    Plantillas Email
+                  </Button>
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('envios')}>
+                    <Truck className="h-4 w-4 mr-2" />
+                    Envíos
+                  </Button>
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('personalizacion')}>
+                    <Palette className="h-4 w-4 mr-2" />
+                    Personalización
+                  </Button>
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('seo')}>
+                    <Globe className="h-4 w-4 mr-2" />
+                    SEO
+                  </Button>
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('webhooks')}>
+                    <Zap className="h-4 w-4 mr-2" />
+                    Webhooks
+                  </Button>
                   <Button variant="outline" className="justify-start" onClick={() => setActiveTab('health')}>
                     <Activity className="h-4 w-4 mr-2" />
                     Salud del Sistema
                   </Button>
-                  <Button variant="outline" className="justify-start">
-                    <Mail className="h-4 w-4 mr-2" />
-                    Plantillas Email
-                  </Button>
-                  <Button variant="outline" className="justify-start">
+                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('maintenance')}>
                     <Database className="h-4 w-4 mr-2" />
-                    Base de Datos
+                    Mantenimiento
                   </Button>
                 </div>
               </CardContent>
@@ -1038,6 +1093,33 @@ export default function SystemAdministrationPage() {
               );
             })
           )}
+        </TabsContent>
+
+        <TabsContent value="pagos" className="space-y-6">
+          <PaymentConfig 
+            configs={configs.filter(c => c.category === 'payments')}
+            onUpdate={handleUpdateConfig}
+          />
+        </TabsContent>
+
+        <TabsContent value="email" className="space-y-6">
+          <EmailTemplatesManager />
+        </TabsContent>
+
+        <TabsContent value="envios" className="space-y-6">
+          <ShippingManager />
+        </TabsContent>
+
+        <TabsContent value="personalizacion" className="space-y-6">
+          <BrandingManager />
+        </TabsContent>
+
+        <TabsContent value="seo" className="space-y-6">
+          <SEOManager />
+        </TabsContent>
+
+        <TabsContent value="webhooks" className="space-y-6">
+          <WebhookMonitor />
         </TabsContent>
 
         <TabsContent value="health" className="space-y-6">

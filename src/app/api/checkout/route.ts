@@ -3,10 +3,7 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { createClient } from '@supabase/supabase-js';
-
-const mpClient = new MercadoPagoConfig({ 
-  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN! 
-});
+import { getMercadoPagoConfig, getMercadoPagoAccessToken } from '@/lib/mercadopago/config';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -110,6 +107,21 @@ export async function POST(req: NextRequest) {
     console.warn('Order created but order items failed:', order.id);
   }
 
+  // Get MercadoPago configuration from database
+  const mpConfig = await getMercadoPagoConfig();
+  const accessToken = await getMercadoPagoAccessToken();
+  
+  // Create MercadoPago client
+  const mpClientConfig = new MercadoPagoConfig({
+    accessToken,
+    options: {
+      timeout: 5000,
+      idempotencyKey: 'abc'
+    }
+  });
+  
+  const preference = new Preference(mpClientConfig);
+  
   const preferenceItems = items.map((item: any) => ({
     id: item.productId,
     title: item.name,
@@ -119,10 +131,23 @@ export async function POST(req: NextRequest) {
     unit_price: item.price,
     currency_id: 'ARS',
   }));
+  
+  // Build payment methods configuration from database config
+  const paymentMethodsConfig: any = {};
+  if (mpConfig.paymentMethods && mpConfig.paymentMethods.length > 0) {
+    // If specific methods are configured, exclude all others
+    const allMethods = ['credit_card', 'debit_card', 'cash', 'bank_transfer', 'account_money'];
+    const excludedMethods = allMethods.filter(m => !mpConfig.paymentMethods.includes(m));
+    if (excludedMethods.length > 0) {
+      paymentMethodsConfig.excluded_payment_methods = excludedMethods.map(m => ({ id: m }));
+    }
+  }
+  
+  if (mpConfig.maxInstallments) {
+    paymentMethodsConfig.installments = mpConfig.maxInstallments;
+  }
 
-  const preference = new Preference(mpClient);
-
-    const result = await preference.create({
+  const result = await preference.create({
       body: {
         items: preferenceItems,
         payer: {
@@ -131,12 +156,14 @@ export async function POST(req: NextRequest) {
           email: customerInfo.email,
         },
         back_urls: {
-          success: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/success`,
-          failure: `${process.env.NEXT_PUBLIC_APP_URL}/checkout/failure`,
+          success: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL}/checkout/success`,
+          failure: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL}/checkout/failure`,
         },
-        auto_return: 'approved',
+        auto_return: mpConfig.autoReturn ? 'approved' : undefined,
+        binary_mode: mpConfig.binaryMode,
         external_reference: order.id.toString(),
-        notification_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/mercadopago`,
+        notification_url: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL}/api/webhooks/mercadopago`,
+        payment_methods: Object.keys(paymentMethodsConfig).length > 0 ? paymentMethodsConfig : undefined,
       },
     });
 

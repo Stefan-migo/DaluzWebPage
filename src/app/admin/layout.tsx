@@ -15,7 +15,6 @@ import {
   Package, 
   Users, 
   BarChart3, 
-  Settings, 
   Menu,
   LogOut,
   Bell,
@@ -94,12 +93,6 @@ const createNavigationItems = (ordersCount?: number) => [
     label: 'Sistema',
     icon: Server,
     description: 'Administración del sistema'
-  },
-  {
-    href: '/admin/settings',
-    label: 'Configuración',
-    icon: Settings,
-    description: 'Configuración del sistema'
   },
 ];
 

@@ -1,7 +1,12 @@
 import { MercadoPagoConfig, Payment, Preference } from 'mercadopago';
+import { getMercadoPagoAccessToken } from './mercadopago/config';
 
-// Mercado Pago configuration for DA LUZ CONSCIENTE - Argentina market
-const mercadopagoConfig = new MercadoPagoConfig({
+// Note: MercadoPago clients are now initialized dynamically
+// Use getMercadoPagoClient() or createMercadoPagoClient() instead of these exports
+// These are kept for backward compatibility but will use env vars only
+
+// Legacy configuration (uses env vars only - for backward compatibility)
+const legacyMercadopagoConfig = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
   options: {
     timeout: 5000,
@@ -9,9 +14,29 @@ const mercadopagoConfig = new MercadoPagoConfig({
   }
 });
 
-// Initialize Mercado Pago clients
-export const payment = new Payment(mercadopagoConfig);
-export const preference = new Preference(mercadopagoConfig);
+// Legacy clients (use env vars only)
+export const payment = new Payment(legacyMercadopagoConfig);
+export const preference = new Preference(legacyMercadopagoConfig);
+
+/**
+ * Create a new MercadoPago client with database config (preferred method)
+ */
+export async function createMercadoPagoClient() {
+  const accessToken = await getMercadoPagoAccessToken();
+  const config = new MercadoPagoConfig({
+    accessToken,
+    options: {
+      timeout: 5000,
+      idempotencyKey: 'abc'
+    }
+  });
+  
+  return {
+    payment: new Payment(config),
+    preference: new Preference(config),
+    config
+  };
+}
 
 // Argentina-specific configuration
 export const MERCADOPAGO_CONFIG = {
@@ -188,6 +213,4 @@ export const ARGENTINA_PAYMENT_LABELS = {
   account_money: 'Dinero en cuenta de Mercado Pago',
   debin: 'Débito inmediato (DEBIN)',
   pse: 'PSE'
-};
-
-export default mercadopagoConfig; 
+}; 

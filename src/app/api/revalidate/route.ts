@@ -1,6 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath, revalidateTag } from 'next/cache';
 import crypto from 'crypto';
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET;
 
@@ -38,6 +44,19 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
 
+    // Log webhook receipt
+    try {
+      await supabaseAdmin.from('webhook_logs').insert({
+        webhook_type: 'sanity',
+        event_type: payload._type || 'unknown',
+        payload: payload,
+        status: 'pending',
+        processed_at: null
+      });
+    } catch (logError) {
+      console.error('Error logging webhook:', logError);
+    }
+
     // Handle different document types
     switch (payload._type) {
       case 'post':
@@ -65,6 +84,23 @@ export async function POST(request: NextRequest) {
         await generalRevalidation();
     }
 
+    // Update webhook log to success
+    try {
+      await supabaseAdmin
+        .from('webhook_logs')
+        .update({
+          status: 'success',
+          response_code: 200,
+          processed_at: new Date().toISOString()
+        })
+        .eq('webhook_type', 'sanity')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(1);
+    } catch (logError) {
+      console.error('Error updating webhook log:', logError);
+    }
+
     return NextResponse.json({ 
       success: true, 
       message: 'Cache revalidated successfully',
@@ -73,6 +109,25 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Error in revalidation webhook:', error);
+    
+    // Update webhook log to failed
+    try {
+      await supabaseAdmin
+        .from('webhook_logs')
+        .update({
+          status: 'failed',
+          response_code: 500,
+          error_message: error instanceof Error ? error.message : 'Unknown error',
+          processed_at: new Date().toISOString()
+        })
+        .eq('webhook_type', 'sanity')
+        .eq('status', 'pending')
+        .order('created_at', { ascending: false })
+        .limit(1);
+    } catch (logError) {
+      console.error('Error updating webhook log:', logError);
+    }
+    
     return NextResponse.json({ 
       error: 'Failed to revalidate cache' 
     }, { status: 500 });

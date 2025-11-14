@@ -191,12 +191,62 @@ export async function PUT(request: NextRequest) {
         // Get existing config to check permissions
         const { data: existingConfig } = await supabase
           .from('system_config')
-          .select('is_sensitive')
+          .select('is_sensitive, category, value_type')
           .eq('config_key', config_key)
           .single();
 
+        // If config doesn't exist, create it (upsert behavior)
         if (!existingConfig) {
-          results.push({ config_key, error: 'Config not found' });
+          // Determine category and value type from config_key
+          let category = 'general';
+          let valueType = 'string';
+          
+          if (config_key.startsWith('mercadopago_')) {
+            category = 'payments';
+            if (config_key.includes('test_mode') || config_key.includes('auto_return') || config_key.includes('binary_mode')) {
+              valueType = 'boolean';
+            } else if (config_key.includes('max_installments')) {
+              valueType = 'number';
+            } else if (config_key.includes('payment_methods')) {
+              valueType = 'array';
+            }
+          }
+
+          // Create the config
+          const { data: newConfig, error: createError } = await supabase
+            .from('system_config')
+            .insert({
+              config_key,
+              config_value: JSON.stringify(config_value),
+              category,
+              value_type: valueType,
+              is_sensitive: config_key.includes('token') || config_key.includes('secret') || config_key.includes('key'),
+              last_modified_by: user.id
+            })
+            .select()
+            .single();
+
+          if (createError) {
+            results.push({ config_key, error: `Failed to create config: ${createError.message}` });
+            continue;
+          }
+
+          // Parse the created config value safely
+          let parsedValue = newConfig.config_value;
+          try {
+            parsedValue = JSON.parse(newConfig.config_value);
+          } catch (error) {
+            console.log('⚠️ Created config value is not valid JSON, keeping as string:', config_key);
+          }
+
+          results.push({ 
+            config_key, 
+            success: true,
+            config: {
+              ...newConfig,
+              config_value: parsedValue
+            }
+          });
           continue;
         }
 
