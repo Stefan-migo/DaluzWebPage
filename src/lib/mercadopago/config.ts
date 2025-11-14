@@ -18,6 +18,10 @@ export async function getMercadoPagoConfig() {
       .in('config_key', [
         'mercadopago_access_token',
         'mercadopago_public_key',
+        'mercadopago_webhook_secret',
+        'mercadopago_test_access_token',
+        'mercadopago_test_public_key',
+        'mercadopago_test_webhook_secret',
         'mercadopago_test_mode',
         'mercadopago_payment_methods',
         'mercadopago_max_installments',
@@ -35,13 +39,35 @@ export async function getMercadoPagoConfig() {
         }
       });
 
+      // Determine if test mode is enabled
+      const testMode = configMap['mercadopago_test_mode'] === true || configMap['mercadopago_test_mode'] === 'true';
+      
+      // Use test credentials if test mode is enabled, otherwise use production credentials
+      let accessToken: string | undefined;
+      let publicKey: string | undefined;
+      let webhookSecret: string | undefined;
+      
+      if (testMode) {
+        // Use test credentials
+        accessToken = configMap['mercadopago_test_access_token'];
+        publicKey = configMap['mercadopago_test_public_key'];
+        webhookSecret = configMap['mercadopago_test_webhook_secret'];
+      } else {
+        // Use production credentials
+        accessToken = configMap['mercadopago_access_token'];
+        publicKey = configMap['mercadopago_public_key'];
+        webhookSecret = configMap['mercadopago_webhook_secret'];
+      }
+      
       // If we have access token in database, use it
-      if (configMap['mercadopago_access_token'] && 
-          configMap['mercadopago_access_token'] !== 'PROD_ACCESS_TOKEN_HERE') {
+      if (accessToken && 
+          accessToken !== 'PROD_ACCESS_TOKEN_HERE' && 
+          accessToken !== 'TEST_ACCESS_TOKEN_HERE') {
         return {
-          accessToken: configMap['mercadopago_access_token'],
-          publicKey: configMap['mercadopago_public_key'] || process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY,
-          testMode: configMap['mercadopago_test_mode'] === true || configMap['mercadopago_test_mode'] === 'true',
+          accessToken,
+          publicKey: publicKey || process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY,
+          webhookSecret,
+          testMode,
           paymentMethods: configMap['mercadopago_payment_methods'] || [],
           maxInstallments: configMap['mercadopago_max_installments'] || 12,
           autoReturn: configMap['mercadopago_auto_return'] ?? true,

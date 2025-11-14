@@ -59,9 +59,28 @@ export default function CheckoutPage() {
     notes: '',
   });
 
-  // Initialize Mercado Pago
+  // Initialize Mercado Pago with dynamic public key
   useEffect(() => {
-    initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY!);
+    const initializeMercadoPago = async () => {
+      try {
+        // Try to get public key from API (uses correct key based on test_mode)
+        const response = await fetch('/api/mercadopago/public-key');
+        const data = await response.json();
+        
+        if (data.publicKey) {
+          initMercadoPago(data.publicKey);
+        } else {
+          // Fallback to environment variable
+          initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY!);
+        }
+      } catch (error) {
+        console.warn('Failed to fetch dynamic public key, using env fallback:', error);
+        // Fallback to environment variable
+        initMercadoPago(process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY!);
+      }
+    };
+    
+    initializeMercadoPago();
   }, []);
 
   // Redirect if cart is empty

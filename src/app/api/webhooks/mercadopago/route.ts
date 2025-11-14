@@ -21,22 +21,35 @@ async function getWebhookSecret() {
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     );
     
-    const { data: config } = await supabase
+    // Get test_mode and webhook secrets
+    const { data: configs } = await supabase
       .from('system_config')
-      .select('config_value')
-      .eq('config_key', 'mercadopago_webhook_secret')
-      .single();
+      .select('config_key, config_value')
+      .in('config_key', [
+        'mercadopago_test_mode',
+        'mercadopago_webhook_secret',
+        'mercadopago_test_webhook_secret'
+      ]);
     
-    if (config && config.config_value) {
-      try {
-        const secret = JSON.parse(config.config_value);
-        if (secret && secret !== 'WEBHOOK_SECRET_HERE') {
-          return secret;
+    if (configs && configs.length > 0) {
+      const configMap: Record<string, any> = {};
+      configs.forEach(config => {
+        try {
+          configMap[config.config_key] = JSON.parse(config.config_value);
+        } catch {
+          configMap[config.config_key] = config.config_value;
         }
-      } catch {
-        if (config.config_value !== 'WEBHOOK_SECRET_HERE') {
-          return config.config_value;
-        }
+      });
+      
+      const testMode = configMap['mercadopago_test_mode'] === true || configMap['mercadopago_test_mode'] === 'true';
+      const webhookSecret = testMode 
+        ? configMap['mercadopago_test_webhook_secret']
+        : configMap['mercadopago_webhook_secret'];
+      
+      if (webhookSecret && 
+          webhookSecret !== 'WEBHOOK_SECRET_HERE' && 
+          webhookSecret !== 'TEST_WEBHOOK_SECRET_HERE') {
+        return webhookSecret;
       }
     }
   } catch (error) {

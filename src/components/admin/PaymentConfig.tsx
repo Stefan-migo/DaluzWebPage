@@ -78,7 +78,16 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
   // Initialize credential values from configs when they change
   useEffect(() => {
     const initialValues: Record<string, string> = {};
+    // Production credentials
     ['access_token', 'public_key', 'webhook_secret'].forEach(key => {
+      const config = configs.find(c => c.config_key === `mercadopago_${key}`);
+      const value = config?.config_value;
+      if (value) {
+        initialValues[key] = value;
+      }
+    });
+    // Test credentials
+    ['test_access_token', 'test_public_key', 'test_webhook_secret'].forEach(key => {
       const config = configs.find(c => c.config_key === `mercadopago_${key}`);
       const value = config?.config_value;
       if (value) {
@@ -208,15 +217,24 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
             Configura las credenciales de acceso a MercadoPago. Estas son sensibles y se almacenan de forma segura.
             <br />
             <span className="text-xs text-muted-foreground mt-2 block">
-              <strong>Nota:</strong> Estas credenciales se almacenan en la base de datos y pueden diferir de las variables de entorno (.env).
-              Las credenciales aquí configuradas tienen prioridad sobre las variables de entorno para mayor flexibilidad.
+              <strong>Nota:</strong> Las credenciales de producción se usan cuando "Modo de Prueba" está desactivado.
+              Las credenciales de prueba se usan cuando "Modo de Prueba" está activado. Puedes configurar ambas por separado.
             </span>
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Access Token */}
-          <div className="space-y-2">
-            <Label htmlFor="access_token">Access Token</Label>
+        <CardContent className="space-y-6">
+          {/* Production Credentials Section */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b">
+              <Badge variant="outline" className="font-semibold">Producción</Badge>
+              <p className="text-xs text-muted-foreground">
+                Usadas cuando "Modo de Prueba" está desactivado
+              </p>
+            </div>
+            
+            {/* Access Token */}
+            <div className="space-y-2">
+              <Label htmlFor="access_token">Access Token (Producción)</Label>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Input
@@ -247,14 +265,14 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Token de acceso de producción de MercadoPago
-            </p>
-          </div>
+              <p className="text-xs text-muted-foreground">
+                Token de acceso de producción de MercadoPago
+              </p>
+            </div>
 
-          {/* Public Key */}
-          <div className="space-y-2">
-            <Label htmlFor="public_key">Public Key</Label>
+            {/* Public Key */}
+            <div className="space-y-2">
+              <Label htmlFor="public_key">Public Key (Producción)</Label>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Input
@@ -285,14 +303,14 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Clave pública de MercadoPago (usada en el frontend)
-            </p>
-          </div>
+              <p className="text-xs text-muted-foreground">
+                Clave pública de producción de MercadoPago (usada en el frontend)
+              </p>
+            </div>
 
-          {/* Webhook Secret */}
-          <div className="space-y-2">
-            <Label htmlFor="webhook_secret">Webhook Secret</Label>
+            {/* Webhook Secret */}
+            <div className="space-y-2">
+              <Label htmlFor="webhook_secret">Webhook Secret (Producción)</Label>
             <div className="flex gap-2">
               <div className="relative flex-1">
                 <Input
@@ -323,9 +341,134 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
                 </Button>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Secreto para verificar la autenticidad de los webhooks
-            </p>
+              <p className="text-xs text-muted-foreground">
+                Secreto para verificar la autenticidad de los webhooks de producción
+              </p>
+            </div>
+          </div>
+
+          {/* Test Credentials Section */}
+          <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-dashed">
+            <div className="flex items-center gap-2 pb-2 border-b">
+              <Badge variant="secondary" className="font-semibold">Prueba (Sandbox)</Badge>
+              <p className="text-xs text-muted-foreground">
+                Usadas cuando "Modo de Prueba" está activado
+              </p>
+            </div>
+            
+            {/* Test Access Token */}
+            <div className="space-y-2">
+              <Label htmlFor="test_access_token">Access Token (Prueba)</Label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    id="test_access_token"
+                    type={showTokens.test_access_token ? 'text' : 'password'}
+                    value={showTokens.test_access_token 
+                      ? (credentialValues.test_access_token ?? getConfigValue('test_access_token') ?? '') 
+                      : (credentialValues.test_access_token ? maskValue(credentialValues.test_access_token) : maskValue(getConfigValue('test_access_token')))
+                    }
+                    onChange={(e) => handleCredentialChange('test_access_token', e.target.value)}
+                    onBlur={() => handleCredentialBlur('test_access_token')}
+                    placeholder="TEST_ACCESS_TOKEN_HERE"
+                    disabled={loading}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => handleToggleVisibility('test_access_token')}
+                  >
+                    {showTokens.test_access_token ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Token de acceso de prueba (sandbox) de MercadoPago
+              </p>
+            </div>
+
+            {/* Test Public Key */}
+            <div className="space-y-2">
+              <Label htmlFor="test_public_key">Public Key (Prueba)</Label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    id="test_public_key"
+                    type={showTokens.test_public_key ? 'text' : 'password'}
+                    value={showTokens.test_public_key 
+                      ? (credentialValues.test_public_key ?? getConfigValue('test_public_key') ?? '') 
+                      : (credentialValues.test_public_key ? maskValue(credentialValues.test_public_key) : maskValue(getConfigValue('test_public_key')))
+                    }
+                    onChange={(e) => handleCredentialChange('test_public_key', e.target.value)}
+                    onBlur={() => handleCredentialBlur('test_public_key')}
+                    placeholder="TEST_PUBLIC_KEY_HERE"
+                    disabled={loading}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => handleToggleVisibility('test_public_key')}
+                  >
+                    {showTokens.test_public_key ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Clave pública de prueba (sandbox) de MercadoPago
+              </p>
+            </div>
+
+            {/* Test Webhook Secret */}
+            <div className="space-y-2">
+              <Label htmlFor="test_webhook_secret">Webhook Secret (Prueba)</Label>
+              <div className="flex gap-2">
+                <div className="relative flex-1">
+                  <Input
+                    id="test_webhook_secret"
+                    type={showTokens.test_webhook_secret ? 'text' : 'password'}
+                    value={showTokens.test_webhook_secret 
+                      ? (credentialValues.test_webhook_secret ?? getConfigValue('test_webhook_secret') ?? '') 
+                      : (credentialValues.test_webhook_secret ? maskValue(credentialValues.test_webhook_secret) : maskValue(getConfigValue('test_webhook_secret')))
+                    }
+                    onChange={(e) => handleCredentialChange('test_webhook_secret', e.target.value)}
+                    onBlur={() => handleCredentialBlur('test_webhook_secret')}
+                    placeholder="TEST_WEBHOOK_SECRET_HERE"
+                    disabled={loading}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3"
+                    onClick={() => handleToggleVisibility('test_webhook_secret')}
+                  >
+                    {showTokens.test_webhook_secret ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Secreto para verificar la autenticidad de los webhooks de prueba
+              </p>
+            </div>
           </div>
 
           {/* Test Mode Toggle */}
@@ -333,12 +476,10 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
             <div className="space-y-0.5">
               <Label htmlFor="test_mode">Modo de Prueba (Sandbox)</Label>
               <p className="text-xs text-muted-foreground">
-                Activa el modo de prueba para usar credenciales de sandbox. 
+                <strong>¿Cómo funciona?</strong> Cuando está activado, el sistema automáticamente usará las credenciales de prueba configuradas arriba.
+                Cuando está desactivado, usará las credenciales de producción. Esto permite cambiar entre entornos sin modificar las credenciales manualmente.
                 <br />
-                <strong>¿Cómo funciona?</strong> Cuando está activado, el sistema usará las credenciales de prueba de MercadoPago.
-                Esto permite probar pagos sin procesar transacciones reales. Desactívalo para usar credenciales de producción.
-                <br />
-                <span className="text-amber-600 font-semibold">Estado actual: {getConfigValue('test_mode') ? 'Sandbox (Pruebas)' : 'Producción'}</span>
+                <span className="text-amber-600 font-semibold mt-1 block">Estado actual: {getConfigValue('test_mode') ? 'Sandbox (Pruebas) - Usando credenciales de prueba' : 'Producción - Usando credenciales de producción'}</span>
               </p>
             </div>
             <Switch

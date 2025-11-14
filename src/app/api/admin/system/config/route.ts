@@ -232,27 +232,36 @@ export async function PUT(request: NextRequest) {
           // Determine category and value type from config_key
           let category = 'general';
           let valueType = 'string';
+          let configIsSensitive = config_key.includes('token') || config_key.includes('secret') || config_key.includes('key');
           
           if (config_key.startsWith('mercadopago_')) {
             category = 'payments';
             if (config_key.includes('test_mode') || config_key.includes('auto_return') || config_key.includes('binary_mode')) {
               valueType = 'boolean';
+              configIsSensitive = false; // These are not sensitive
             } else if (config_key.includes('max_installments')) {
               valueType = 'number';
+              configIsSensitive = false;
             } else if (config_key.includes('payment_methods')) {
               valueType = 'array';
+              configIsSensitive = false;
+            }
+            // Test credentials are sensitive
+            if (config_key.includes('test_access_token') || config_key.includes('test_public_key') || config_key.includes('test_webhook_secret')) {
+              configIsSensitive = true;
             }
           }
 
-          // Create the config
-          const { data: newConfig, error: createError } = await dbClient
+          // Create the config (use service role client for sensitive configs)
+          const insertClient = configIsSensitive ? createServiceRoleClient() : supabase;
+          const { data: newConfig, error: createError } = await insertClient
             .from('system_config')
             .insert({
               config_key,
               config_value: JSON.stringify(config_value),
               category,
               value_type: valueType,
-              is_sensitive: isSensitive,
+              is_sensitive: configIsSensitive,
               last_modified_by: user.id
             })
             .select()

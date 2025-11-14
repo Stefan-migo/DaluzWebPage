@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
       .select('config_key, config_value')
       .in('config_key', [
         'mercadopago_access_token',
+        'mercadopago_test_access_token',
         'mercadopago_test_mode'
       ]);
 
@@ -38,14 +39,22 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    const accessToken = configMap['mercadopago_access_token'];
     const testMode = configMap['mercadopago_test_mode'] === true || configMap['mercadopago_test_mode'] === 'true';
+    
+    // Use test credentials if test mode is enabled, otherwise use production credentials
+    const accessToken = testMode 
+      ? configMap['mercadopago_test_access_token']
+      : configMap['mercadopago_access_token'];
 
-    if (!accessToken || accessToken === 'PROD_ACCESS_TOKEN_HERE') {
+    if (!accessToken || 
+        accessToken === 'PROD_ACCESS_TOKEN_HERE' || 
+        accessToken === 'TEST_ACCESS_TOKEN_HERE') {
       return NextResponse.json({ 
         success: false,
         error: 'MercadoPago Access Token no configurado',
-        message: 'Por favor, configura el Access Token de MercadoPago antes de probar la conexión'
+        message: testMode 
+          ? 'Por favor, configura el Access Token de prueba de MercadoPago antes de probar la conexión'
+          : 'Por favor, configura el Access Token de producción de MercadoPago antes de probar la conexión'
       });
     }
 
