@@ -154,12 +154,12 @@ export default function Header() {
                 />
               </div>
               
-              {/* Text Logo - Vertical Layout */}
-              <div className="flex flex-col items-start">
+              {/* Text Logo - Vertical Layout - Centered */}
+              <div className="flex flex-col justify-center items-start">
                 <div className="text-xl font-display font-normal transition-colors duration-300 leading-tight" style={{ color: '#FFF4B3' }}>
                   DA LUZ
                 </div>
-                <div className="text-xs font-caption leading-tight" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+                <div className="text-xs font-caption leading-tight mt-0.5" style={{ color: '#FFF4B3', opacity: 0.8 }}>
                   Alkimyas para alma y cuerpo
                 </div>
               </div>
@@ -177,16 +177,27 @@ export default function Header() {
                       <li className="row-span-3">
                         <NavigationMenuLink asChild>
                           <Link
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all"
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden"
                             href="/productos"
                           >
-                            <Sparkles className="h-6 w-6 text-brand-primary" />
-                            <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                              Tienda DA LUZ
+                            {/* Background Image */}
+                            <div className="absolute inset-0 opacity-20">
+                              <Image
+                                src="/images/header/tienda.png"
+                                alt="Tienda"
+                                fill
+                                className="object-cover"
+                              />
                             </div>
-                            <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                              Explora todas nuestras líneas de productos y alkimyas.
-                            </p>
+                            <div className="relative z-10">
+                              <Sparkles className="h-6 w-6 text-brand-primary mb-2" />
+                              <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                                Tienda DA LUZ
+                              </div>
+                              <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                Explora todas nuestras líneas de productos y alkimyas.
+                              </p>
+                            </div>
                           </Link>
                         </NavigationMenuLink>
                       </li>
@@ -211,75 +222,157 @@ export default function Header() {
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
-                {/* NEW ALKIMYA MENU ITEM */}
-                <NavigationMenuItem>
-                  <NavigationMenuButton
-                    className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium cursor-pointer"
-                    style={{ color: '#FFF4B3' }}
-                    onClick={() => window.location.href = '/alkimya'}
-                  >
-                    Alkimya
-                  </NavigationMenuButton>
-                </NavigationMenuItem>
-
+                {/* ALKIMYA DROPDOWN MENU */}
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
-                    Nosotros
+                    Alkimya
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#F6FBD6' }}>
-                    <ul className="grid gap-3 p-4 md:w-[400px] lg:w-[500px] lg:grid-cols-1">
-                      <li>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      <li className="row-span-3">
                         <NavigationMenuLink asChild>
                           <Link
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all"
-                            href="/nuestra-filosofia"
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden"
+                            href="/alkimya"
                           >
-                            <Leaf className="h-6 w-6 text-brand-primary" />
-                            <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                              Nuestra Filosofía
+                            {/* Background Image */}
+                            <div className="absolute inset-0 opacity-20">
+                              <Image
+                                src="/images/gallery/gallery-3.jpg"
+                                alt="Manifiesto"
+                                fill
+                                className="object-cover"
+                              />
                             </div>
-                            <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                              Nuestra visión y valores.
-                            </p>
+                            <div className="relative z-10">
+                              <Sparkles className="h-6 w-6 text-brand-primary mb-2" />
+                              <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                                Manifiesto
+                              </div>
+                              <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                Nuestra visión y propósito fundamental.
+                              </p>
+                            </div>
                           </Link>
                         </NavigationMenuLink>
                       </li>
-                      <NavigationMenuLink asChild>
-                        <Link href="/nuestra-historia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
-                          <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Nuestra Historia</div>
-                          <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                            El camino que nos trajo hasta aquí.
-                          </p>
-                        </Link>
-                      </NavigationMenuLink>
+                      <ListItem href="/alkimya/activos-origen" title="Activos y Origen">
+                        Ingredientes naturales y su procedencia
+                      </ListItem>
+                      <ListItem href="/alkimya/biotipos-doshas" title="Biotipos y Doshas">
+                        Personalización según tu naturaleza
+                      </ListItem>
+                    </ul>
+                    <ul className="grid grid-cols-2 gap-3 p-4 pt-0 md:w-[500px] lg:w-[600px]">
+                      <ListItem href="/alkimya/tu-ceremonia" title="Tu Ceremonia">
+                        Rituales y ceremonias personalizadas
+                      </ListItem>
+                      <ListItem href="/alkimya/tesoros-daluz" title="Tesoros Da Luz">
+                        Productos especiales y exclusivos
+                      </ListItem>
                     </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
-                    Servicios
+                    Raices Da Luz
+                  </NavigationMenuTrigger>
+                  <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#F6FBD6' }}>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+                      <li className="row-span-3">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden"
+                            href="/filosofia-proposito"
+                          >
+                            {/* Background Image */}
+                            <div className="absolute inset-0 opacity-20">
+                              <Image
+                                src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&h=300&fit=crop"
+                                alt="Filosofía y propósito"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="relative z-10">
+                              <Leaf className="h-6 w-6 text-brand-primary mb-2" />
+                              <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                                Filosofía y propósito
+                              </div>
+                              <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                Nuestra visión y valores fundamentales.
+                              </p>
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <li className="row-span-3">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden"
+                            href="/origen"
+                          >
+                            {/* Background Image */}
+                            <div className="absolute inset-0 opacity-20">
+                              <Image
+                                src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
+                                alt="Origen"
+                                fill
+                                className="object-cover"
+                              />
+                            </div>
+                            <div className="relative z-10">
+                              <Leaf className="h-6 w-6 text-brand-primary mb-2" />
+                              <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                                Origen
+                              </div>
+                              <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                El camino que nos trajo hasta aquí.
+                              </p>
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                    Procesos
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#F6FBD6' }}>
                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                        <li className="row-span-3">
                           <NavigationMenuLink asChild>
-                                                         <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all" href="/servicios">
-                                <ConciergeBell className="h-6 w-6 text-brand-primary" />
+                            <Link className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden" href="/servicios/procesos">
+                              {/* Background Image */}
+                              <div className="absolute inset-0 opacity-20">
+                                <Image
+                                  src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=400&h=300&fit=crop"
+                                  alt="Procesos"
+                                  fill
+                                  className="object-cover"
+                                />
+                              </div>
+                              <div className="relative z-10">
+                                <ConciergeBell className="h-6 w-6 text-brand-primary mb-2" />
                                 <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                                    Servicios Holísticos
+                                    Procesos
                                 </div>
                                 <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                                     Terapias para el bienestar integral.
                                 </p>
+                              </div>
                             </Link>
                           </NavigationMenuLink>
                        </li>
-                       <ListItem href="/servicios/sesiones-holisticas" title="Sesiones Holísticas">
-                           3 sesiones diferentes
+                       <ListItem href="/servicios/procesos/ciclos-alquimicos" title="Ciclos Alquímicos">
+                           Procesos transformadores cíclicos
                        </ListItem>
-                       <ListItem href="/servicios/procesos-integrativos" title="Procesos integrativos">
-                           2 procesos diferentes
+                       <ListItem href="/servicios/procesos/sesiones-integrales" title="Sesiones Integrales">
+                           Sesiones holísticas personalizadas
                        </ListItem>
                       </ul>
                   </NavigationMenuContent>
@@ -293,14 +386,25 @@ export default function Header() {
                      <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                         <li className="row-span-3">
                           <NavigationMenuLink asChild>
-                            <Link href="/blog" className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all">
-                              <PenSquare className="h-6 w-6 text-brand-primary" />
-                              <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                                Artículos y Novedades
+                            <Link href="/blog" className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden">
+                              {/* Background Image */}
+                              <div className="absolute inset-0 opacity-20">
+                                <Image
+                                  src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=300&fit=crop"
+                                  alt="Blog"
+                                  fill
+                                  className="object-cover"
+                                />
                               </div>
-                              <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                                Lee nuestras últimas publicaciones.
-                              </p>
+                              <div className="relative z-10">
+                                <PenSquare className="h-6 w-6 text-brand-primary mb-2" />
+                                <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                                  Artículos y Novedades
+                                </div>
+                                <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                  Lee nuestras últimas publicaciones.
+                                </p>
+                              </div>
                             </Link>
                           </NavigationMenuLink>
                         </li>
@@ -347,16 +451,27 @@ export default function Header() {
                       <div className="row-span-3">
                         <NavigationMenuLink asChild>
                           <Link
-                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all"
+                            className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden"
                             href="/programa-transformacion"
                           >
-                            <Users className="h-6 w-6 text-brand-primary" />
-                            <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                              Programa de 7 Meses
+                            {/* Background Image */}
+                            <div className="absolute inset-0 opacity-20">
+                              <Image
+                                src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop"
+                                alt="Programa Transformación"
+                                fill
+                                className="object-cover"
+                              />
                             </div>
-                            <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                              Transformación integral para alma y cuerpo
-                            </p>
+                            <div className="relative z-10">
+                              <Users className="h-6 w-6 text-brand-primary mb-2" />
+                              <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
+                                Programa de 7 Meses
+                              </div>
+                              <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                Transformación integral para alma y cuerpo
+                              </p>
+                            </div>
                           </Link>
                         </NavigationMenuLink>
                       </div>
@@ -369,7 +484,7 @@ export default function Header() {
                         </Link>
                       </NavigationMenuLink>
                       <NavigationMenuLink asChild>
-                        <Link href="/mi-membresia" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
+                        <Link href="/programa-transformacion" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-bg-light hover:text-brand-primary focus:bg-bg-light focus:text-brand-primary">
                           <div className="text-sm font-subtitle font-medium leading-none" style={{ color: '#1C1B1A' }}>Mi Membresía</div>
                           <p className="line-clamp-2 text-sm font-text leading-snug" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                             Accede a tu progreso y contenido
@@ -587,66 +702,103 @@ export default function Header() {
                         </div>
                       </div>
 
-                      {/* Alkimya */}
-                      <Link
-                        href="/alkimya"
-                        className="py-3 text-lg font-title font-medium hover:text-brand-primary transition-colors"
-                        style={{ color: '#AE0000' }}
-                        onClick={() => setMobileMenuOpen(false)}
-                      >
-                        Alkimya
-                      </Link>
-
-                      {/* Nosotros Section */}
+                      {/* Alkimya Section */}
                       <div className="mb-4">
-                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Nosotros</div>
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Alkimya</div>
                         <div className="ml-4 space-y-2">
                           <Link
-                            href="/nuestra-filosofia"
+                            href="/alkimya"
                             className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
                             style={{ color: '#1C1B1A' }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                            Nuestra Filosofía
-                    </Link>
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Manifiesto
+                          </Link>
                           <Link
-                            href="/nuestra-historia"
+                            href="/alkimya/activos-origen"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Nuestra Historia
+                            Activos y Origen
+                          </Link>
+                          <Link
+                            href="/alkimya/biotipos-doshas"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Biotipos y Doshas
+                          </Link>
+                          <Link
+                            href="/alkimya/tu-ceremonia"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Tu Ceremonia
+                          </Link>
+                          <Link
+                            href="/alkimya/tesoros-daluz"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Tesoros Da Luz
                           </Link>
                         </div>
                       </div>
 
-                      {/* Servicios Section */}
+                      {/* Raices Da Luz Section */}
                       <div className="mb-4">
-                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Servicios</div>
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Raices Da Luz</div>
                         <div className="ml-4 space-y-2">
-                    <Link
-                      href="/servicios"
+                          <Link
+                            href="/filosofia-proposito"
                             className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Servicios Holísticos
+                            Filosofía y propósito
                           </Link>
                           <Link
-                            href="/servicios/sesiones-holisticas"
+                            href="/origen"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Sesiones Holísticas
+                            Origen
+                          </Link>
+                        </div>
+                      </div>
+
+                      {/* Procesos Section */}
+                      <div className="mb-4">
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Procesos</div>
+                        <div className="ml-4 space-y-2">
+                          <Link
+                            href="/servicios/procesos"
+                            className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Procesos
                           </Link>
                           <Link
-                            href="/servicios/procesos-integrativos"
+                            href="/servicios/procesos/ciclos-alquimicos"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Procesos Integrativos
+                            Ciclos Alquímicos
+                          </Link>
+                          <Link
+                            href="/servicios/procesos/sesiones-integrales"
+                            className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Sesiones Integrales
                           </Link>
                         </div>
                       </div>

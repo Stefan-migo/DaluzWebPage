@@ -153,7 +153,7 @@ export default function CartSidebar() {
                 </div>
               </div>
 
-              <div className="border-t pt-4 space-y-4">
+              <div className="border-t pt-4 pb-6 px-1 space-y-4">
                 {/* Shipping Info */}
                 <div className="space-y-2">
                   {total < shippingThreshold ? (
