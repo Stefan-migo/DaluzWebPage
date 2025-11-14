@@ -226,7 +226,7 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
           {/* Production Credentials Section */}
           <div className="space-y-4">
             <div className="flex items-center gap-2 pb-2 border-b">
-              <Badge variant="outline" className="font-semibold">Producción</Badge>
+              <Badge variant="default" className="font-semibold">Producción</Badge>
               <p className="text-xs text-muted-foreground">
                 Usadas cuando "Modo de Prueba" está desactivado
               </p>
@@ -350,7 +350,7 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
           {/* Test Credentials Section */}
           <div className="space-y-4 p-4 bg-muted/30 rounded-lg border border-dashed">
             <div className="flex items-center gap-2 pb-2 border-b">
-              <Badge variant="secondary" className="font-semibold">Prueba (Sandbox)</Badge>
+              <Badge variant="default" className="font-semibold">Prueba (Sandbox)</Badge>
               <p className="text-xs text-muted-foreground">
                 Usadas cuando "Modo de Prueba" está activado
               </p>
@@ -538,7 +538,7 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
               <Label htmlFor="method_account_money" className="font-semibold">
                 Dinero en cuenta de Mercado Pago
               </Label>
-              <Badge variant="secondary" className="text-xs">Siempre disponible</Badge>
+              <Badge variant="default" className="text-xs">Siempre disponible</Badge>
             </div>
             <Switch
               id="method_account_money"
