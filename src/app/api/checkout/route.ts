@@ -111,6 +111,15 @@ export async function POST(req: NextRequest) {
   const mpConfig = await getMercadoPagoConfig();
   const accessToken = await getMercadoPagoAccessToken();
   
+  // Validate access token
+  if (!accessToken || accessToken === 'PROD_ACCESS_TOKEN_HERE' || accessToken.trim() === '') {
+    console.error('Invalid or missing MercadoPago access token');
+    return NextResponse.json({ 
+      error: 'MercadoPago configuration error',
+      details: 'Access token is not configured. Please configure MercadoPago credentials in the admin panel.'
+    }, { status: 500 });
+  }
+  
   // Create MercadoPago client
   const mpClientConfig = new MercadoPagoConfig({
     accessToken,
@@ -147,7 +156,8 @@ export async function POST(req: NextRequest) {
     paymentMethodsConfig.installments = mpConfig.maxInstallments;
   }
 
-  const result = await preference.create({
+  try {
+    const result = await preference.create({
       body: {
         items: preferenceItems,
         payer: {
@@ -173,6 +183,30 @@ export async function POST(req: NextRequest) {
       .eq('id', order.id);
 
     return NextResponse.json({ id: result.id, init_point: result.init_point });
+  } catch (mpError: any) {
+    console.error('MercadoPago preference creation error:', mpError);
+    console.error('MercadoPago error details:', {
+      message: mpError?.message,
+      status: mpError?.status,
+      cause: mpError?.cause,
+      response: mpError?.response
+    });
+    
+    // Return more specific error message
+    const errorMessage = mpError?.message || 'Error creating MercadoPago preference';
+    const errorStatus = mpError?.status || 500;
+    
+    return NextResponse.json({ 
+      error: 'Failed to create payment preference',
+      details: errorMessage,
+      mercadopagoError: process.env.NODE_ENV === 'development' ? {
+        status: mpError?.status,
+        cause: mpError?.cause,
+        response: mpError?.response
+      } : undefined
+    }, { status: errorStatus >= 400 && errorStatus < 600 ? errorStatus : 500 });
+  }
+
   } catch (error) {
     console.error('Checkout API error:', error);
     console.error('Error details:', {

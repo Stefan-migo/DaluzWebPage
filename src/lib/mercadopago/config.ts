@@ -55,8 +55,13 @@ export async function getMercadoPagoConfig() {
   }
 
   // Fallback to environment variables
+  const envAccessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
+  if (!envAccessToken) {
+    throw new Error('MercadoPago access token not configured in database or environment variables');
+  }
+  
   return {
-    accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
+    accessToken: envAccessToken,
     publicKey: process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY,
     testMode: process.env.NODE_ENV === 'development',
     paymentMethods: [],
