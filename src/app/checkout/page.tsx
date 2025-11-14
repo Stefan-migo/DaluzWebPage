@@ -145,7 +145,20 @@ export default function CheckoutPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create preference');
+        // Log detailed error information
+        console.error('Checkout API error response:', {
+          status: response.status,
+          statusText: response.statusText,
+          data: data
+        });
+        
+        // Create a more detailed error message
+        const errorMessage = data.details || data.error || 'Failed to create payment preference';
+        const fullError = data.mercadopagoResponse 
+          ? `${errorMessage}: ${JSON.stringify(data.mercadopagoResponse)}`
+          : errorMessage;
+        
+        throw new Error(fullError);
       }
 
       if (data.id) {
@@ -157,7 +170,8 @@ export default function CheckoutPage() {
 
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Error al procesar el pedido');
+      const errorMessage = error instanceof Error ? error.message : 'Error al procesar el pedido';
+      toast.error(errorMessage.length > 100 ? 'Error al procesar el pedido. Por favor, verifica los datos e intenta nuevamente.' : errorMessage);
       setLoading(false);
     }
   };

@@ -54,15 +54,40 @@ export async function POST(req: NextRequest) {
       }, { status: 401 });
     }
 
-    const { items, customerInfo } = await req.json();
-  if (!items || items.length === 0) {
-    return NextResponse.json({ error: 'No items in cart' }, { status: 400 });
-  }
+    const body = await req.json();
+    const { items, customerInfo } = body;
+    
+    console.log('Checkout request received:', {
+      itemsCount: items?.length,
+      hasCustomerInfo: !!customerInfo,
+      customerInfoKeys: customerInfo ? Object.keys(customerInfo) : []
+    });
+    
+    if (!items || items.length === 0) {
+      console.error('Checkout validation failed: No items in cart');
+      return NextResponse.json({ error: 'No items in cart' }, { status: 400 });
+    }
 
-  const streetNumber = parseInt(customerInfo.addressNumber, 10);
-  if (isNaN(streetNumber) || streetNumber <= 0) {
-    return NextResponse.json({ error: 'Invalid address number' }, { status: 400 });
-  }
+    // Validate customerInfo exists
+    if (!customerInfo) {
+      console.error('Checkout validation failed: Missing customerInfo');
+      return NextResponse.json({ error: 'Customer information is required' }, { status: 400 });
+    }
+
+    // Validate addressNumber - make it more flexible
+    if (!customerInfo.addressNumber) {
+      console.error('Checkout validation failed: Missing addressNumber');
+      return NextResponse.json({ error: 'Address number is required' }, { status: 400 });
+    }
+
+    const streetNumber = parseInt(customerInfo.addressNumber, 10);
+    if (isNaN(streetNumber) || streetNumber <= 0) {
+      console.error('Checkout validation failed: Invalid address number', customerInfo.addressNumber);
+      return NextResponse.json({ 
+        error: 'Invalid address number',
+        details: `Address number must be a positive number. Received: ${customerInfo.addressNumber}`
+      }, { status: 400 });
+    }
 
   const totalAmount = items.reduce((acc: number, item: any) => acc + item.price * item.quantity, 0);
   const { data: order, error: orderError } = await supabaseAdmin
@@ -189,21 +214,39 @@ export async function POST(req: NextRequest) {
       message: mpError?.message,
       status: mpError?.status,
       cause: mpError?.cause,
-      response: mpError?.response
+      response: mpError?.response,
+      stack: mpError?.stack
     });
     
-    // Return more specific error message
-    const errorMessage = mpError?.message || 'Error creating MercadoPago preference';
+    // Try to extract more detailed error information
+    let errorMessage = mpError?.message || 'Error creating MercadoPago preference';
+    let errorDetails: any = { message: errorMessage };
+    
+    // Check if there's a response with error details
+    if (mpError?.response) {
+      try {
+        const responseData = typeof mpError.response === 'string' 
+          ? JSON.parse(mpError.response) 
+          : mpError.response;
+        errorDetails = {
+          ...errorDetails,
+          mercadopagoResponse: responseData,
+          cause: responseData.cause || responseData.message || mpError.cause
+        };
+        if (responseData.message) {
+          errorMessage = responseData.message;
+        }
+      } catch (e) {
+        console.warn('Could not parse MercadoPago error response:', e);
+      }
+    }
+    
     const errorStatus = mpError?.status || 500;
     
     return NextResponse.json({ 
       error: 'Failed to create payment preference',
       details: errorMessage,
-      mercadopagoError: process.env.NODE_ENV === 'development' ? {
-        status: mpError?.status,
-        cause: mpError?.cause,
-        response: mpError?.response
-      } : undefined
+      ...(process.env.NODE_ENV === 'development' || errorStatus === 400 ? errorDetails : {})
     }, { status: errorStatus >= 400 && errorStatus < 600 ? errorStatus : 500 });
   }
 
