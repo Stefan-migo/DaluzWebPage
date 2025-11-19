@@ -2,6 +2,12 @@
 
 import { NextPage } from 'next';
 import Image from 'next/image';
+import {
+  EcologicaVeganaIcon,
+  PoderBotanicoIcon,
+  TransmutacionCoherenciaIcon,
+  NeurocosmeticaIcon
+} from "@/components/svg/SVGComponents";
 
 const AlkimyaPage: NextPage = () => {
   return (
@@ -251,6 +257,34 @@ const AlkimyaPage: NextPage = () => {
           
           
         
+        </div>
+      </div>
+
+      {/* Features Grid Section */}
+      <div className="relative z-30 mt-[1800px] p-8">
+        <div className="container mx-auto max-w-7xl">
+          <div className="grid md:grid-cols-4 gap-6">
+            <div className="card-enhanced p-6 text-center">
+              <EcologicaVeganaIcon size={48} className="mx-auto mb-4" />
+              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ecológica y Vegana</h3>
+              <p className="font-caption text-gray-600 text-sm"> <strong>Un Compromiso con el Planeta.</strong> Respetamos toda forma de vida. Por eso, elegimos ingredientes <strong>sostenibles</strong> y envases <strong>conscientes</strong> en cada paso, asegurando la protección de la Madre Tierra.</p>
+            </div>
+            <div className="card-enhanced p-6 text-center">
+              <PoderBotanicoIcon size={48} className="mx-auto mb-4" />
+              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Poder botánico y Natural</h3>
+              <p className="font-caption text-gray-600 text-sm"><strong>La Naturaleza a tu favor.</strong> Nuestras <strong>alquimias</strong> aprovechan el poder concentrado de las plantas para nutrir y promover tu <strong>bienestar integral</strong> de manera profunda.</p>
+            </div>
+            <div className="card-enhanced p-6 text-center">
+              <TransmutacionCoherenciaIcon size={48} className="mx-auto mb-4" />
+              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Transmutación y coherencia</h3>
+              <p className="font-caption text-gray-600 text-sm"><strong>Fórmulas para tu Bioequilibrio.</strong> Cada producto tiene una intención clara, combinando la sabiduría de las hierbas medicinales con activos vegetales. Creamos para catalizar la transformación que tu equilibrio necesita.</p>
+            </div>
+            <div className="card-enhanced p-6 text-center">
+              <NeurocosmeticaIcon size={48} className="mx-auto mb-4" />
+              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Neurocosmética Vibracional</h3>
+              <p className="font-caption text-gray-600 text-sm">La cosmética es lo que sentís, <strong>porque tu piel es un canal que afecta tu cuerpo y mente.</strong> Nuestras alquimias son una invitación a una <strong>ceremonia de conexión diaria</strong>, protegiendo tu equilibrio hormonal y emocional.</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

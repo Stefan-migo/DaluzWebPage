@@ -60,56 +60,358 @@ export const BotanicalElement: React.FC<SVGProps & { variant?: 1 | 2 | 3 | 4 }> 
 };
 
 
-// ✨ SOBRE NOSOTROS SECTION BACKGROUND
+// ✨ SOBRE NOSOTROS SECTION BACKGROUND (MANIFIESTO DA LUZ)
 export const SobreNosotrosBackground: React.FC<{
   bgColor?: string;
   waveColor?: string;
   className?: string;
 }> = ({ 
-  bgColor = "#F0EACE", 
-  waveColor = "#AE0000",
+  bgColor = "#F6FBD6", // Default theme background color
+  waveColor = "#AE0000", // Brand red wine color
   className = ""
 }) => {
   return (
     <div
       className={`absolute inset-0 w-full h-full ${className}`}
       style={{
-        '--bg-color': bgColor,
+        backgroundColor: bgColor,
         '--wave-color': waveColor,
-        transform: 'translateZ(0)', // Mobile performance optimization
-        willChange: 'transform' // GPU acceleration hint
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
       } as React.CSSProperties}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 1922.54 1070.29"
-        className="w-full h-full object-cover sm:object-cover md:object-cover"
-        preserveAspectRatio="xMidYMid slice"
-        style={{ minHeight: '100%' }}
+        viewBox="0 0 1922.91 1080.08"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          display: 'block',
+          transform: 'scaleX(-1)', // Horizontally mirror for Manifiesto section
+          transformOrigin: 'center'
+        }}
       >
         <defs>
           <style>{`
-            .background-fill { fill: var(--bg-color, #faf7ef); }
-            .wave-fill { fill: var(--wave-color, #920000); }
+            .wave-fill { fill: var(--wave-color, #AE0000); }
           `}</style>
         </defs>
-        <g id="Layer_2" data-name="Layer 2">
-          <g id="Capa_1" data-name="Capa 1">
-            <polyline 
-              points="0.92 0.09 0.92 1081.29 1920.77 1081.29 1920.77 0.1" 
-              className="background-fill"
-            />
-            <path 
-              id="OLITAS" 
-              d="M1921.29.09c.42,161.63.84,318.2,1.25,500.54-248.81-129.22-460.74-183-606.64-208.34C957.58,230,777.13,357.71,476.42,258.72,303.82,201.9,98,86.52.82,0" 
-              className="wave-fill"
-            />
-            <path 
-              id="OLITAS-2" 
-              d="M1921.72,1081.29v-145c-85.44,4.28-217.46,11.89-378.66,25.49-273.17,23-322.35,37.31-490.5,41.27-181.93,4.27-334.93-7.48-427.15-14.57C492.49,978.31,444.59,969.2,284.1,957,151.74,946.87,72.06,943.28.57,941,.38,990.35.19,1036.54,0,1081.29" 
-              className="wave-fill"
-            />
-          </g>
+        <g>
+          {/* Top wave */}
+          <path 
+            className="wave-fill" 
+            d="M1922.04,0c-97.13,86.58-303,202.04-475.6,258.9-300.72,99.06-481.16-28.7-839.49,33.59C461.06,317.85,249.12,371.67.31,500.97.73,319.47,0,.9,0,.02"
+          />
+          {/* Bottom wave */}
+          <path 
+            className="wave-fill" 
+            d="M1922.91,1080.08c0-65.27,0-130.55,0-195.82-85.4,4.03-217.34,11.21-378.45,24.03-273.02,21.73-322.18,35.19-490.24,38.91-181.83,4.03-334.74-7.05-426.91-13.73-132.85-9.63-180.72-18.22-341.12-29.76-132.28-9.52-212.72-12.64-284.18-14.81-.28,68.58.25,130.38-.03,191.17"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
+
+// ✨ ALKIMYA NEUROCOSMÉTICA SECTION BACKGROUND
+export const AlkimyaNeurocosmeticaBackground: React.FC<{
+  bgColor?: string;
+  waveColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F6FBD6", // Default theme background color
+  waveColor = "#AE0000", // Brand red wine color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        '--wave-color': waveColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1920.19 1080.18"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          display: 'block'
+        }}
+      >
+        <defs>
+          <style>{`
+            .wave-fill { fill: var(--wave-color, #AE0000); }
+          `}</style>
+        </defs>
+        <g>
+          {/* Top wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.16.06c-97.13,86.58-303,202.04-475.59,258.9-300.72,99.06-481.16-28.7-839.49,33.59C459.18,317.91,246.95,354.5.12,483.72V0s1920.04.06,1920.04.06Z"
+          />
+          {/* Bottom wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.19,1080.09l-.02-191.43s-150.87,5.53-283.09,15.04c-160.33,11.54-208.18,20.13-340.97,29.76-92.13,6.68-244.98,17.77-426.73,13.73-167.99-3.73-217.12-17.18-490.02-38.91C218.31,895.46.12,884.23.12,884.23l-.12,195.95,1920.19-.09Z"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
+
+// ✨ EXPLORÁ NUESTRAS 5 LINEAS SECTION BACKGROUND (Upper edge wave only)
+export const Explora5LineasBackground: React.FC<{
+  bgColor?: string;
+  waveColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F6FBD6", // Default theme background color
+  waveColor = "#AE0000", // Brand red wine color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        '--wave-color': waveColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1920.05 451.37"
+        preserveAspectRatio="xMidYMin meet"
+        style={{ 
+          width: '100%',
+          height: 'auto',
+          display: 'block',
+          position: 'absolute',
+          top: 0,
+          left: 0
+        }}
+      >
+        <defs>
+          <style>{`
+            .wave-fill { fill: var(--wave-color, #AE0000); }
+          `}</style>
+        </defs>
+        <g>
+          {/* Top wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.05.05c-75.07,29.18-1375.32,24.69-1617.37,105.69S7.71,385.46,0,451.37V0s1920.04.05,1920.04.05Z"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
+
+// ✨ VALOR Y CONFIANZA DA LUZ SECTION BACKGROUND
+export const ValorYConfianzaBackground: React.FC<{
+  bgColor?: string;
+  waveColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F6FBD6", // Default theme background color
+  waveColor = "#AE0000", // Brand red wine color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        '--wave-color': waveColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1920.07 1080.12"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          display: 'block'
+        }}
+      >
+        <defs>
+          <style>{`
+            .wave-fill { fill: var(--wave-color, #AE0000); }
+          `}</style>
+        </defs>
+        <g>
+          {/* Background rectangle to fill any gaps */}
+          <rect 
+            width="100%" 
+            height="100%" 
+            fill={bgColor}
+          />
+          {/* Top wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.05.06c-75.07,31.28-1375.32,26.46-1617.37,113.27S7.71,413.09,0,483.72V0s1920.04.06,1920.04.06Z"
+          />
+          {/* Bottom wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.07,1080.12l-.02-163.31s-150.87,4.77-283.09,12.97c-160.33,9.95-208.18,17.36-340.97,25.66-92.13,5.76-244.98,15.32-426.73,11.84-167.99-3.21-217.12-14.82-490.02-33.56C218.2,922.67,0,912.98,0,912.98v167.12s1920.07.01,1920.07.01Z"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
+
+// ✨ SERVICIOS HOLÍSTICOS SECTION BACKGROUND
+export const ServiciosHolisticosBackground: React.FC<{
+  bgColor?: string;
+  waveColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F6FBD6", // Default theme background color
+  waveColor = "#AE0000", // Brand red wine color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        '--wave-color': waveColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1920.23 1080.23"
+        preserveAspectRatio="xMidYMid meet"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          display: 'block'
+        }}
+      >
+        <defs>
+          <style>{`
+            .wave-fill { fill: var(--wave-color, #AE0000); }
+          `}</style>
+        </defs>
+        <g>
+          {/* Background rectangle to fill any gaps */}
+          <rect 
+            width="100%" 
+            height="100%" 
+            fill={bgColor}
+          />
+          {/* Top wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.2,0C1225.01,573.05,830.83,38.05,0,483.62V0h1920.2Z"
+          />
+          {/* Bottom wave */}
+          <path 
+            className="wave-fill" 
+            d="M1920.23,1080.23l-.04-191.58s-150.9,5.53-283.12,15.04c-160.33,11.54-208.18,20.13-340.97,29.76-92.13,6.68-244.98,17.77-426.73,13.73-167.99-3.73-217.12-17.18-490.02-38.91C218.31,895.46,0,884.17,0,884.17v196.01l1920.23.05Z"
+          />
+        </g>
+      </svg>
+    </div>
+  );
+};
+
+// ✨ BLOG SECTION BACKGROUND (Bottom edge wave only)
+export const BlogBackground: React.FC<{
+  bgColor?: string;
+  waveColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F0EACE", // Default theme background color
+  waveColor = "#AE0000", // Brand red wine color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        '--wave-color': waveColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1920 779.07"
+        preserveAspectRatio="xMidYMax meet"
+        style={{ 
+          width: '100%',
+          height: 'auto',
+          display: 'block',
+          position: 'absolute',
+          bottom: 0,
+          left: 0
+        }}
+      >
+        <defs>
+          <style>{`
+            .wave-fill { fill: var(--wave-color, #AE0000); }
+          `}</style>
+        </defs>
+        <g>
+          {/* Bottom wave */}
+          <path 
+            className="wave-fill" 
+            d="M0,778.84l1920,.23V2c-490.89,0-992.34-35.52-960,193.14,23,162.62,19.74,318.94,0,394.91-17.11,65.85-147.23,129.75-323.4,140.94C227.72,756.95,0,778.84,0,778.84Z"
+          />
         </g>
       </svg>
     </div>
@@ -137,9 +439,13 @@ export const NuestrosServiciosBackground: React.FC<{
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1921.75 1092.26"
-        className="w-full h-full object-cover sm:object-cover md:object-cover"
+        className="w-full h-full"
         preserveAspectRatio="xMidYMid slice"
-        style={{ minHeight: '100%' }}
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -171,15 +477,20 @@ export const NuestraFilosofiaBackground: React.FC<{
     <div 
       className={`absolute inset-0 w-full h-full ${className}`}
       style={{
+        backgroundColor: bgColor,
         '--bg-color': bgColor
       } as React.CSSProperties}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1920 1040.02"
-        className="w-full h-full object-cover sm:object-cover md:object-cover"
+        className="w-full h-full"
         preserveAspectRatio="xMidYMid slice"
-        style={{ minHeight: '100%' }}
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -217,9 +528,13 @@ export const AlkimyaBackground: React.FC<{
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1920 840.71"
-        className="w-full h-full object-cover sm:object-cover md:object-cover"
+        className="w-full h-full"
         preserveAspectRatio="xMidYMid slice"
-        style={{ minHeight: '100%' }}
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -259,9 +574,13 @@ export const ProcesosBackground: React.FC<{
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1920.03 1062.62"
-        className="w-full h-full object-cover sm:object-cover md:object-cover"
+        className="w-full h-full"
         preserveAspectRatio="xMidYMid slice"
-        style={{ minHeight: '100%' }}
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -303,9 +622,13 @@ export const SesionesBackground: React.FC<{
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1920.2 1080.87"
-        className="w-full h-full object-cover sm:object-cover md:object-cover"
+        className="w-full h-full"
         preserveAspectRatio="xMidYMid slice"
-        style={{ minHeight: '100%' }}
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -417,9 +740,13 @@ export const BlogComunidadBackground: React.FC<{
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1920 1080.21"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ minHeight: '100%' }}
+        className="absolute inset-0 w-full h-full"
         preserveAspectRatio="xMidYMid slice"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -467,9 +794,13 @@ export const GaleriaBackground: React.FC<{
     >
       <svg
         viewBox="0 0 1920 1080"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ minHeight: '100%' }}
+        className="absolute inset-0 w-full h-full"
         preserveAspectRatio="xMidYMid slice"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>
@@ -523,9 +854,13 @@ export const ContactoBackground: React.FC<{
       <svg
         xmlns="http://www.w3.org/2000/svg" 
         viewBox="0 0 1920.98 1085.64"
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{ minHeight: '100%' }}
+        className="absolute inset-0 w-full h-full"
         preserveAspectRatio="xMidYMid slice"
+        style={{ 
+          width: '100%',
+          height: '100%',
+          minHeight: '100%'
+        }}
       >
         <defs>
           <style>

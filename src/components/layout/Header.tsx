@@ -155,12 +155,12 @@ export default function Header() {
               </div>
               
               {/* Text Logo - Vertical Layout - Centered */}
-              <div className="flex flex-col justify-center items-start">
-                <div className="text-xl font-display font-normal transition-colors duration-300 leading-tight" style={{ color: '#FFF4B3' }}>
+              <div className="flex flex-col justify-center items-center">
+                <div className="text-xl font-display font-normal transition-colors duration-300 leading-tight text-center" style={{ color: '#FFF4B3' }}>
                   DA LUZ
                 </div>
-                <div className="text-xs font-caption leading-tight mt-0.5" style={{ color: '#FFF4B3', opacity: 0.8 }}>
-                  Alkimyas para alma y cuerpo
+                <div className="text-xs font-caption leading-tight mt-0.5 text-center" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+                  Alkimya Consciente
                 </div>
               </div>
             </Link>

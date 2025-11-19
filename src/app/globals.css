@@ -997,8 +997,8 @@ input[type="submit"]:not(.btn-no-radius) {
   svg[viewBox]:not(.lucide):not([width]):not([height]) {
     min-width: 100%;
     min-height: 100%;
-    object-fit: cover;
-    object-position: center;
+    width: 100%;
+    height: 100%;
   }
   
   /* Ensure large background SVGs scale properly */
@@ -1006,8 +1006,8 @@ input[type="submit"]:not(.btn-no-radius) {
   section svg[viewBox]:not(.lucide) {
     min-width: 100%;
     min-height: 100%;
-    object-fit: cover;
-    object-position: center;
+    width: 100%;
+    height: 100%;
   }
   
   /* Ensure icon SVGs stay properly sized */
@@ -1971,6 +1971,62 @@ input[type="submit"]:not(.btn-no-radius) {
 @media (max-width: 1023px) {
   .hero-mobile-clip {
     clip-path: polygon(100% 0%, 0% 0% , 0.00% 93.71%, 2.00% 94.72%, 4.00% 95.78%, 6.00% 96.82%, 8.00% 97.78%, 10.00% 98.60%, 12.00% 99.22%, 14.00% 99.61%, 16.00% 99.74%, 18.00% 99.60%, 20.00% 99.20%, 22.00% 98.58%, 24.00% 97.76%, 26.00% 96.80%, 28.00% 95.75%, 30.00% 94.69%, 32.00% 93.69%, 34.00% 92.79%, 36.00% 92.07%, 38.00% 91.56%, 40.00% 91.30%, 42.00% 91.31%, 44.00% 91.57%, 46.00% 92.09%, 48.00% 92.82%, 50.00% 93.71%, 52.00% 94.72%, 54.00% 95.78%, 56.00% 96.82%, 58.00% 97.78%, 60.00% 98.60%, 62.00% 99.22%, 64.00% 99.61%, 66.00% 99.74%, 68.00% 99.60%, 70.00% 99.20%, 72.00% 98.58%, 74.00% 97.76%, 76.00% 96.80%, 78.00% 95.75%, 80.00% 94.69%, 82.00% 93.69%, 84.00% 92.79%, 86.00% 92.07%, 88.00% 91.56%, 90.00% 91.30%, 92.00% 91.31%, 94.00% 91.57%, 96.00% 92.09%, 98.00% 92.82%, 100.00% 93.71%);
+  }
+}
+
+/* Desktop section aspect ratios - only apply on extra large screens */
+@media (min-width: 1280px) {
+  .section-manifiesto {
+    aspect-ratio: 1922.91 / 1080.08;
+  }
+  .section-neurocosmetica {
+    aspect-ratio: 1920.19 / 1080.18;
+  }
+  .section-valor-confianza {
+    aspect-ratio: 1920.07 / 1080.12;
+  }
+  .section-servicios {
+    aspect-ratio: 1920.23 / 1080.23;
+  }
+}
+
+/* SERVICIOS HOLÍSTICOS container margin adjustment */
+/* For screens >= 1650px: apply negative margin */
+@media (min-width: 1650px) {
+  .servicios-holisticos-container {
+    margin-top: -5rem; /* -80px / -mt-20 */
+  }
+}
+
+/* For screens < 1650px: no negative margin */
+@media (min-width: 1280px) and (max-width: 1649px) {
+  .servicios-holisticos-container {
+    margin-top: 0;
+  }
+}
+
+/* SER INTEGRAL title color adjustment */
+/* Below 1570px: red wine color */
+.ser-integral-title {
+  color: #AE0000;
+}
+
+/* At 1570px and above: cream color */
+@media (min-width: 1570px) {
+  .ser-integral-title {
+    color: #F0EACE;
+  }
+}
+
+/* SER INTEGRAL divider color adjustment */
+.ser-integral-divider {
+  background: linear-gradient(to right, transparent, #AE0000, transparent);
+}
+
+/* At 1570px and above: cream color divider */
+@media (min-width: 1570px) {
+  .ser-integral-divider {
+    background: linear-gradient(to right, transparent, #F0EACE, transparent);
   }
 }
 
