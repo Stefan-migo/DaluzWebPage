@@ -1,14 +1,32 @@
 'use client';
 
+import { useState } from "react";
 import { ArrowLeftSVG, ArrowRightSVG } from "@/components/svg/SVGComponents";
 import { Sparkles } from "lucide-react";
+import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function InteractiveGallery() {
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleImageClick = (index: number, e: React.MouseEvent) => {
+    // Only open dialog if not dragging
+    if (!isDragging) {
+      setSelectedImage(index);
+    }
+  };
+
   return (
     <div className="relative">
       {/* Navigation Arrows */}
       <button 
-        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-30 bg-white/10 backdrop-blur-md hover:bg-white/20 p-2 sm:p-4 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
+        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-30 transition-all duration-300 hover:scale-110 cursor-pointer"
         onClick={() => {
           const carousel = document.getElementById('gallery-carousel');
           if (carousel) {
@@ -16,13 +34,14 @@ export default function InteractiveGallery() {
             carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
           }
         }}
-        style={{ color: '#AE0000' }}
+        style={{ color: '#AE0000', background: 'none', border: 'none', padding: 0 }}
+        aria-label="Previous image"
       >
-        <ArrowLeftSVG className="w-8 h-8" color="#AE0000" />
+        <ArrowLeftSVG className="w-12 h-12 sm:w-16 sm:h-16" color="#AE0000" />
       </button>
       
       <button 
-        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-30 bg-white/10 backdrop-blur-md hover:bg-white/20 p-2 sm:p-4 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
+        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-30 transition-all duration-300 hover:scale-110 cursor-pointer"
         onClick={() => {
           const carousel = document.getElementById('gallery-carousel');
           if (carousel) {
@@ -30,9 +49,10 @@ export default function InteractiveGallery() {
             carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
           }
         }}
-        style={{ color: '#AE0000' }}
+        style={{ color: '#AE0000', background: 'none', border: 'none', padding: 0 }}
+        aria-label="Next image"
       >
-        <ArrowRightSVG className="w-8 h-8" color="#AE0000" />
+        <ArrowRightSVG className="w-12 h-12 sm:w-16 sm:h-16" color="#AE0000" />
       </button>
 
       {/* Gallery Container with Interactive Scroll */}
@@ -42,32 +62,57 @@ export default function InteractiveGallery() {
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
-          cursor: 'grab'
+          cursor: 'grab',
+          scrollBehavior: 'smooth',
+          willChange: 'scroll-position',
+          WebkitOverflowScrolling: 'touch'
         }}
         onMouseDown={(e) => {
           const carousel = e.currentTarget;
           let isDown = true;
           const startX = e.pageX - carousel.offsetLeft;
-          const scrollLeft = carousel.scrollLeft;
+          const startScrollLeft = carousel.scrollLeft;
           
+          setIsDragging(false);
           carousel.style.cursor = 'grabbing';
+          
+          let rafId: number | null = null;
           
           const handleMouseMove = (e: MouseEvent) => {
             if (!isDown) return;
             e.preventDefault();
+            
             const x = e.pageX - carousel.offsetLeft;
-            const walk = (x - startX) * 2;
-            carousel.scrollLeft = scrollLeft - walk;
+            const walk = Math.abs(x - startX);
+            
+            // If mouse moved more than 5px, consider it a drag
+            if (walk > 5) {
+              setIsDragging(true);
+            }
+            
+            if (rafId) {
+              cancelAnimationFrame(rafId);
+            }
+            
+            rafId = requestAnimationFrame(() => {
+              const walk = (x - startX) * 2;
+              carousel.scrollLeft = startScrollLeft - walk;
+            });
           };
           
           const handleMouseUp = () => {
             isDown = false;
+            if (rafId) {
+              cancelAnimationFrame(rafId);
+            }
             carousel.style.cursor = 'grab';
+            // Reset dragging state after a short delay
+            setTimeout(() => setIsDragging(false), 100);
             document.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseup', handleMouseUp);
           };
           
-          document.addEventListener('mousemove', handleMouseMove);
+          document.addEventListener('mousemove', handleMouseMove, { passive: false });
           document.addEventListener('mouseup', handleMouseUp);
         }}
       >
@@ -75,13 +120,25 @@ export default function InteractiveGallery() {
           {/* First Set of Images */}
           {[1, 2, 3, 4, 5, 6].map((i) => (
             <div key={`set1-${i}`} className="flex-shrink-0 group">
-              <div className="card-enhanced w-60 h-72 sm:w-72 sm:h-80 lg:w-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2">
-                <div className="relative h-full">
-                  {/* Gallery Image */}
-                  <img
+              <div 
+                className="card-enhanced w-60 h-72 sm:w-72 sm:h-80 lg:w-80 lg:h-96 rounded-2xl overflow-hidden shadow-2xl transform transition-all duration-500 group-hover:scale-105 group-hover:-translate-y-2 cursor-pointer"
+                onClick={(e) => handleImageClick(i, e)}
+              >
+                <div className="relative h-full w-full">
+                  {/* Gallery Image - Optimized with Next.js Image */}
+                  <Image
                     src={`/images/gallery/gallery-${i}.jpg`}
                     alt={`Galería DA LUZ ${i}`}
-                    className="w-full h-full object-cover"
+                    fill
+                    sizes="(max-width: 640px) 240px, (max-width: 1024px) 288px, 320px"
+                    className="object-cover"
+                    loading={i === 1 ? undefined : "lazy"}
+                    priority={i === 1}
+                    quality={85}
+                    style={{
+                      willChange: 'transform',
+                      transform: 'translateZ(0)'
+                    }}
                   />
 
                   {/* Fallback content when image is not available */}
@@ -107,6 +164,43 @@ export default function InteractiveGallery() {
           ))}
         </div>
       </div>
+
+      {/* Image Dialog */}
+      <Dialog open={selectedImage !== null} onOpenChange={(open) => !open && setSelectedImage(null)}>
+        <DialogContent 
+          className="max-w-7xl w-[95vw] h-[90vh] max-h-[90vh] p-0 border-2 shadow-2xl"
+          style={{
+            backgroundColor: '#F0EACE',
+            borderColor: '#AE0000',
+            borderRadius: '1rem'
+          }}
+        >
+          {/* Visually hidden title and description for accessibility */}
+          <DialogTitle className="sr-only">
+            Galería DA LUZ - Imagen {selectedImage}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Vista ampliada de la imagen {selectedImage} de la galería DA LUZ
+          </DialogDescription>
+          
+          {selectedImage !== null && (
+            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-8">
+              <div className="relative w-full h-full max-w-6xl max-h-[85vh] flex items-center justify-center bg-white/50 rounded-lg p-2 shadow-inner">
+                <Image
+                  src={`/images/gallery/gallery-${selectedImage}.jpg`}
+                  alt={`Galería DA LUZ ${selectedImage}`}
+                  width={1200}
+                  height={800}
+                  className="object-contain w-full h-full rounded-lg"
+                  quality={80}
+                  priority
+                  sizes="(max-width: 768px) 95vw, (max-width: 1200px) 90vw, 1200px"
+                />
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

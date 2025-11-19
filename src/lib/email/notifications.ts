@@ -284,8 +284,14 @@ Mensaje:
 ${data.message}
       `
       
+      // For Resend onboarding domain (resend.dev), we can only send to the registered email
+      // When proper domain is configured, use the business contact email
+      const recipientEmail = process.env.RESEND_FROM_EMAIL?.includes('resend.dev')
+        ? process.env.RESEND_FROM_EMAIL // Use the onboarding email (registered email with Resend)
+        : 'contacto@daluzconsciente.com' // Use business email when domain is configured
+      
       return await sendEmail({
-        to: 'contacto@daluzconsciente.com',
+        to: recipientEmail,
         subject: `Contacto: ${data.subject}`,
         html,
         text,
