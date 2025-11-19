@@ -62,7 +62,6 @@ import {
   Calendar,
   CreditCard,
   Truck,
-  Palette,
   Globe,
   Zap
 } from 'lucide-react';
@@ -71,7 +70,6 @@ import PaymentConfig from '@/components/admin/PaymentConfig';
 import EmailTemplatesManager from '@/components/admin/EmailTemplatesManager';
 import ShippingManager from '@/components/admin/ShippingManager';
 import WebhookMonitor from '@/components/admin/WebhookMonitor';
-import BrandingManager from '@/components/admin/BrandingManager';
 import SEOManager from '@/components/admin/SEOManager';
 
 interface SystemConfig {
@@ -772,10 +770,6 @@ export default function SystemAdministrationPage() {
             <Truck className="h-4 w-4 mr-1" />
             Envíos
           </TabsTrigger>
-          <TabsTrigger value="personalizacion" className="flex-1">
-            <Palette className="h-4 w-4 mr-1" />
-            Personalización
-          </TabsTrigger>
           <TabsTrigger value="seo" className="flex-1">
             <Globe className="h-4 w-4 mr-1" />
             SEO
@@ -815,10 +809,6 @@ export default function SystemAdministrationPage() {
                   <Button variant="outline" className="justify-start" onClick={() => setActiveTab('envios')}>
                     <Truck className="h-4 w-4 mr-2" />
                     Envíos
-                  </Button>
-                  <Button variant="outline" className="justify-start" onClick={() => setActiveTab('personalizacion')}>
-                    <Palette className="h-4 w-4 mr-2" />
-                    Personalización
                   </Button>
                   <Button variant="outline" className="justify-start" onClick={() => setActiveTab('seo')}>
                     <Globe className="h-4 w-4 mr-2" />
@@ -1108,10 +1098,6 @@ export default function SystemAdministrationPage() {
 
         <TabsContent value="envios" className="space-y-6">
           <ShippingManager />
-        </TabsContent>
-
-        <TabsContent value="personalizacion" className="space-y-6">
-          <BrandingManager />
         </TabsContent>
 
         <TabsContent value="seo" className="space-y-6">

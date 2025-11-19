@@ -44,10 +44,42 @@ export async function GET(request: NextRequest) {
       }
     });
 
-    // Get webhook URLs
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 
-      process.env.NEXT_PUBLIC_APP_URL || 
-      'https://daluzconsciente.com';
+    // Get webhook URLs - Auto-detect from request, then fallback to env vars
+    // Priority: 1. Request origin (most reliable), 2. VERCEL_URL (auto-provided by Vercel), 
+    // 3. Manual env vars, 4. Fallback
+    const getBaseUrl = () => {
+      // 1. Try to get from request headers (works in all environments)
+      const host = request.headers.get('host');
+      const protocol = request.headers.get('x-forwarded-proto') || 
+                       (request.url.startsWith('https') ? 'https' : 'http');
+      
+      if (host) {
+        // In production, use https; in development, use http
+        const isProduction = process.env.NODE_ENV === 'production' || 
+                            host.includes('vercel.app') || 
+                            host.includes('daluzconsciente.com');
+        return `${isProduction ? 'https' : protocol}://${host}`;
+      }
+
+      // 2. Use VERCEL_URL (automatically provided by Vercel)
+      if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`;
+      }
+
+      // 3. Use manual environment variables (if configured)
+      if (process.env.NEXT_PUBLIC_SITE_URL) {
+        return process.env.NEXT_PUBLIC_SITE_URL;
+      }
+      
+      if (process.env.NEXT_PUBLIC_APP_URL) {
+        return process.env.NEXT_PUBLIC_APP_URL;
+      }
+
+      // 4. Fallback to production domain
+      return 'https://daluzconsciente.com';
+    };
+
+    const baseUrl = getBaseUrl();
 
     return NextResponse.json({
       status,

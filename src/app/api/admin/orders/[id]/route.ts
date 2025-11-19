@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { EmailNotificationService } from '@/lib/email/notifications';
 
 export async function PATCH(
   request: NextRequest,
@@ -21,9 +22,16 @@ export async function PATCH(
     }
 
     const body = await request.json();
-    const { status, payment_status } = body;
+    const { status, payment_status, tracking_number, carrier } = body;
 
-    console.log('📝 Updating order with:', { status, payment_status });
+    console.log('📝 Updating order with:', { status, payment_status, tracking_number, carrier });
+
+    // Get current order to check status changes
+    const { data: currentOrder } = await supabase
+      .from('orders')
+      .select('status, shipped_at, delivered_at')
+      .eq('id', params.id)
+      .single();
 
     // Build update object dynamically to only update provided fields
     const updateData: any = {
@@ -32,10 +40,26 @@ export async function PATCH(
 
     if (status !== undefined) {
       updateData.status = status;
+      
+      // Set timestamps for status changes
+      if (status === 'shipped' && !currentOrder?.shipped_at) {
+        updateData.shipped_at = new Date().toISOString();
+      }
+      if (status === 'delivered' && !currentOrder?.delivered_at) {
+        updateData.delivered_at = new Date().toISOString();
+      }
     }
 
     if (payment_status !== undefined) {
       updateData.payment_status = payment_status;
+    }
+
+    if (tracking_number !== undefined) {
+      updateData.tracking_number = tracking_number;
+    }
+
+    if (carrier !== undefined) {
+      updateData.carrier = carrier;
     }
 
     // Update the order
@@ -43,7 +67,17 @@ export async function PATCH(
       .from('orders')
       .update(updateData)
       .eq('id', params.id)
-      .select()
+      .select(`
+        *,
+        order_items (
+          id,
+          product_name,
+          variant_title,
+          quantity,
+          unit_price,
+          total_price
+        )
+      `)
       .single();
 
     if (updateError) {
@@ -55,6 +89,76 @@ export async function PATCH(
     }
 
     console.log('✅ Order updated successfully');
+
+    // Send email notifications based on status changes
+    if (status && status !== currentOrder?.status) {
+      try {
+        const supabaseAdmin = createServiceRoleClient();
+        
+        // Get full order details for email
+        const { data: fullOrder } = await supabaseAdmin
+          .from('orders')
+          .select(`
+            *,
+            order_items (
+              id,
+              product_name,
+              variant_title,
+              quantity,
+              unit_price,
+              total_price
+            ),
+            profiles (
+              full_name,
+              email
+            )
+          `)
+          .eq('id', params.id)
+          .single();
+
+        if (fullOrder) {
+          // Prepare order data for email service
+          const emailOrder = {
+            id: fullOrder.id,
+            order_number: fullOrder.order_number,
+            user_email: fullOrder.email,
+            email: fullOrder.email,
+            customer_name: fullOrder.shipping_first_name && fullOrder.shipping_last_name
+              ? `${fullOrder.shipping_first_name} ${fullOrder.shipping_last_name}`
+              : fullOrder.profiles?.full_name || 'Cliente',
+            items: fullOrder.order_items?.map((item: any) => ({
+              id: item.id,
+              name: item.product_name,
+              quantity: item.quantity,
+              price: item.unit_price,
+              variant_title: item.variant_title
+            })) || [],
+            total_amount: fullOrder.total_amount,
+            payment_method: fullOrder.mp_payment_method || 'MercadoPago',
+            status: fullOrder.status,
+            created_at: fullOrder.created_at,
+            payment_id: fullOrder.mp_payment_id,
+            tracking_number: fullOrder.tracking_number,
+            carrier: fullOrder.carrier,
+            shipped_at: fullOrder.shipped_at,
+            delivered_at: fullOrder.delivered_at,
+            profiles: fullOrder.profiles
+          };
+
+          // Send appropriate email based on status
+          if (status === 'shipped') {
+            await EmailNotificationService.sendShippingNotification(emailOrder);
+            console.log('📧 Shipping notification email sent');
+          } else if (status === 'delivered') {
+            await EmailNotificationService.sendDeliveryConfirmation(emailOrder);
+            console.log('📧 Delivery confirmation email sent');
+          }
+        }
+      } catch (emailError) {
+        console.error('⚠️ Error sending status change email (non-critical):', emailError);
+        // Don't fail the request if email fails
+      }
+    }
 
     return NextResponse.json({
       success: true,
