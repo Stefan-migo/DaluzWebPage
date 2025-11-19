@@ -253,8 +253,16 @@ export async function POST(request: NextRequest) {
 
       console.log('✅ Customer profile created successfully:', newCustomer.email);
 
-      // Send password reset email so customer can set their own password
+      // Send welcome email and password reset email
       try {
+        const { EmailNotificationService } = await import('@/lib/email/notifications');
+        
+        // Send welcome email
+        const customerName = `${body.first_name || ''} ${body.last_name || ''}`.trim() || 'Cliente';
+        await EmailNotificationService.sendAccountWelcome(customerName, body.email);
+        console.log('✅ Welcome email sent successfully');
+
+        // Send password reset email so customer can set their own password
         console.log('📧 Sending password reset email to customer...');
         const { error: resetError } = await supabaseServiceRole.auth.resetPasswordForEmail(
           body.email,

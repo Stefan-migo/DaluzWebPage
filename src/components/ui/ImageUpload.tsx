@@ -13,13 +13,15 @@ interface ImageUploadProps {
   onChange: (url: string) => void;
   placeholder?: string;
   className?: string;
+  folder?: string;
 }
 
 export default function ImageUpload({ 
   value, 
   onChange, 
   placeholder = "Seleccionar imagen...",
-  className = ""
+  className = "",
+  folder = "products"
 }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
@@ -47,7 +49,7 @@ export default function ImageUpload({
       // Create FormData
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('folder', 'products');
+      formData.append('folder', folder);
 
       // Upload to Supabase Storage
       const response = await fetch('/api/upload', {

@@ -35,7 +35,7 @@ import {
   Plus, 
   Edit, 
   Trash2, 
-  TestTube,
+  Send,
   Eye,
   CheckCircle,
   XCircle
@@ -64,8 +64,10 @@ export default function EmailTemplatesManager() {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+  const [showTestDialog, setShowTestDialog] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null);
   const [testing, setTesting] = useState<string | null>(null);
+  const [testEmail, setTestEmail] = useState('');
 
   useEffect(() => {
     fetchTemplates();
@@ -141,13 +143,21 @@ export default function EmailTemplatesManager() {
     }
   };
 
-  const handleTestEmail = async (template: EmailTemplate) => {
-    const testEmail = prompt('Ingresa el email de prueba:');
-    if (!testEmail) return;
+  const handleTestEmail = (template: EmailTemplate) => {
+    setSelectedTemplate(template);
+    setTestEmail('');
+    setShowTestDialog(true);
+  };
+
+  const confirmTestEmail = async () => {
+    if (!selectedTemplate || !testEmail) {
+      toast.error('Por favor ingresa un email válido');
+      return;
+    }
 
     try {
-      setTesting(template.id);
-      const response = await fetch(`/api/admin/system/email-templates/${template.id}/test`, {
+      setTesting(selectedTemplate.id);
+      const response = await fetch(`/api/admin/system/email-templates/${selectedTemplate.id}/test`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ testEmail })
@@ -156,6 +166,8 @@ export default function EmailTemplatesManager() {
       const data = await response.json();
       if (data.success) {
         toast.success(data.message || 'Email de prueba enviado');
+        setShowTestDialog(false);
+        setTestEmail('');
       } else {
         toast.error(data.error || 'Error al enviar email de prueba');
       }
@@ -202,7 +214,7 @@ export default function EmailTemplatesManager() {
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardContent className="p-4">
           <div className="flex gap-4 items-center">
             <Label>Filtrar por tipo:</Label>
@@ -228,7 +240,7 @@ export default function EmailTemplatesManager() {
       </Card>
 
       {/* Templates Table */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardContent className="p-0">
           {loading ? (
             <div className="p-8 text-center text-tierra-media">Cargando...</div>
@@ -272,6 +284,7 @@ export default function EmailTemplatesManager() {
                             setSelectedTemplate(template);
                             setShowPreviewDialog(true);
                           }}
+                          title="Ver plantilla"
                         >
                           <Eye className="h-4 w-4" />
                         </Button>
@@ -282,6 +295,7 @@ export default function EmailTemplatesManager() {
                             setSelectedTemplate(template);
                             setShowEditDialog(true);
                           }}
+                          title="Editar plantilla"
                         >
                           <Edit className="h-4 w-4" />
                         </Button>
@@ -290,8 +304,9 @@ export default function EmailTemplatesManager() {
                           size="sm"
                           onClick={() => handleTestEmail(template)}
                           disabled={testing === template.id}
+                          title="Enviar email de prueba"
                         >
-                          <TestTube className={`h-4 w-4 ${testing === template.id ? 'animate-spin' : ''}`} />
+                          <Send className={`h-4 w-4 ${testing === template.id ? 'animate-spin' : ''}`} />
                         </Button>
                         {!template.is_system && (
                           <Button
@@ -356,11 +371,77 @@ export default function EmailTemplatesManager() {
               <div>
                 <Label>Contenido:</Label>
                 <div 
-                  className="border rounded-lg p-4 bg-white"
+                  className="border rounded-lg p-4 bg-admin-bg-primary"
                   dangerouslySetInnerHTML={{ __html: selectedTemplate.content }}
                 />
               </div>
             </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowPreviewDialog(false)}>
+                Cerrar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Test Email Dialog */}
+      {showTestDialog && selectedTemplate && (
+        <Dialog open={showTestDialog} onOpenChange={setShowTestDialog}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Send className="h-5 w-5" />
+                Enviar Email de Prueba
+              </DialogTitle>
+              <DialogDescription>
+                Envía un email de prueba de la plantilla "{selectedTemplate.name}" a una dirección de correo.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="test-email">Email de destino *</Label>
+                <Input
+                  id="test-email"
+                  type="email"
+                  value={testEmail}
+                  onChange={(e) => setTestEmail(e.target.value)}
+                  placeholder="ejemplo@email.com"
+                  required
+                />
+                <p className="text-xs text-muted-foreground">
+                  El email se enviará con variables de ejemplo reemplazadas.
+                </p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setShowTestDialog(false);
+                  setTestEmail('');
+                }}
+                disabled={testing === selectedTemplate.id}
+              >
+                Cancelar
+              </Button>
+              <Button 
+                onClick={confirmTestEmail}
+                disabled={!testEmail || testing === selectedTemplate.id}
+              >
+                {testing === selectedTemplate.id ? (
+                  <>
+                    <Send className="h-4 w-4 mr-2 animate-spin" />
+                    Enviando...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 mr-2" />
+                    Enviar Prueba
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
           </DialogContent>
         </Dialog>
       )}

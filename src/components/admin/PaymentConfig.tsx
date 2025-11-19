@@ -206,6 +206,10 @@ export default function PaymentConfig({ configs, onUpdate }: PaymentConfigProps)
 
   return (
     <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold text-azul-profundo">Configuración de Pagos</h2>
+        <p className="text-tierra-media">Gestiona la configuración de pagos con MercadoPago</p>
+      </div>
       {/* Credentials Section */}
       <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardHeader>

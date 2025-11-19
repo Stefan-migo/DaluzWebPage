@@ -106,6 +106,8 @@ export async function POST(request: NextRequest) {
       'membership_welcome',
       'membership_reminder',
       'low_stock_alert',
+      'payment_success',
+      'payment_failed',
       'marketing',
       'custom'
     ];

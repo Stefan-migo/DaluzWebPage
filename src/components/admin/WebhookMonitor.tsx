@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -21,6 +21,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { 
   Zap, 
   Copy, 
@@ -28,7 +36,9 @@ import {
   XCircle, 
   Clock,
   RefreshCw,
-  TestTube
+  TestTube,
+  Eye,
+  AlertCircle
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -39,22 +49,22 @@ interface WebhookLog {
   status: string;
   response_code: number;
   error_message?: string;
+  payload?: any;
   created_at: string;
   processed_at?: string;
 }
 
+interface WebhookStats {
+  total: number;
+  success: number;
+  failed: number;
+  last_delivery: string | null;
+}
+
 interface WebhookStatus {
-  mercadopago: {
-    total: number;
-    success: number;
-    failed: number;
-    last_delivery: string | null;
-  };
-  sanity: {
-    total: number;
-    success: number;
-    failed: number;
-    last_delivery: string | null;
+  status: {
+    mercadopago: WebhookStats;
+    sanity: WebhookStats;
   };
   urls: {
     mercadopago: string;
@@ -68,14 +78,10 @@ export default function WebhookMonitor() {
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [selectedLog, setSelectedLog] = useState<WebhookLog | null>(null);
+  const [showDetailsDialog, setShowDetailsDialog] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-    const interval = setInterval(fetchData, 30000); // Refresh every 30 seconds
-    return () => clearInterval(interval);
-  }, [typeFilter, statusFilter]);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       const params = new URLSearchParams();
@@ -83,26 +89,48 @@ export default function WebhookMonitor() {
       if (statusFilter !== 'all') params.set('status', statusFilter);
 
       const [logsRes, statusRes] = await Promise.all([
-        fetch(`/api/admin/system/webhooks/logs?${params}`),
-        fetch('/api/admin/system/webhooks/status')
+        fetch(`/api/admin/system/webhooks/logs?${params}`).catch(() => ({ ok: false })),
+        fetch('/api/admin/system/webhooks/status').catch(() => ({ ok: false }))
       ]);
 
       if (logsRes.ok) {
-        const logsData = await logsRes.json();
-        setLogs(logsData.logs || []);
+        try {
+          const logsData = await logsRes.json();
+          setLogs(logsData.logs || []);
+        } catch (error) {
+          console.error('Error parsing logs response:', error);
+          setLogs([]);
+        }
+      } else {
+        setLogs([]);
       }
 
       if (statusRes.ok) {
-        const statusData = await statusRes.json();
-        setStatus(statusData);
+        try {
+          const statusData = await statusRes.json();
+          setStatus(statusData);
+        } catch (error) {
+          console.error('Error parsing status response:', error);
+          setStatus(null);
+        }
+      } else {
+        setStatus(null);
       }
     } catch (error) {
       console.error('Error fetching webhook data:', error);
       toast.error('Error al cargar datos de webhooks');
+      setLogs([]);
+      setStatus(null);
     } finally {
       setLoading(false);
     }
-  };
+  }, [typeFilter, statusFilter]);
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // Refresh every 30 seconds
+    return () => clearInterval(interval);
+  }, [fetchData]);
 
   const handleCopyUrl = (url: string, type: string) => {
     navigator.clipboard.writeText(url);
@@ -130,6 +158,11 @@ export default function WebhookMonitor() {
     }
   };
 
+  const handleViewDetails = (log: WebhookLog) => {
+    setSelectedLog(log);
+    setShowDetailsDialog(true);
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'success':
@@ -142,6 +175,9 @@ export default function WebhookMonitor() {
         return <Badge variant="outline">{status}</Badge>;
     }
   };
+
+  const mercadopagoStats = status?.status?.mercadopago || { total: 0, success: 0, failed: 0, last_delivery: null };
+  const sanityStats = status?.status?.sanity || { total: 0, success: 0, failed: 0, last_delivery: null };
 
   return (
     <div className="space-y-6">
@@ -159,47 +195,95 @@ export default function WebhookMonitor() {
       {/* Webhook URLs */}
       {status?.urls && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
             <CardHeader>
-              <CardTitle className="text-sm">MercadoPago Webhook</CardTitle>
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Zap className="h-4 w-4" />
+                MercadoPago Webhook
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Recibe notificaciones de pagos de MercadoPago
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
-                <Input value={status.urls.mercadopago} readOnly className="font-mono text-xs" />
-                <Button variant="outline" size="sm" onClick={() => handleCopyUrl(status.urls.mercadopago, 'MercadoPago')}>
+                <Input 
+                  value={status.urls.mercadopago} 
+                  readOnly 
+                  className="font-mono text-xs" 
+                />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleCopyUrl(status.urls.mercadopago, 'MercadoPago')}
+                  title="Copiar URL"
+                >
                   <Copy className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleTestWebhook('mercadopago')}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleTestWebhook('mercadopago')}
+                  title="Probar webhook"
+                >
                   <TestTube className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="mt-2 text-xs text-tierra-media">
-                <p>Total (24h): {status.mercadopago.total} | Exitosos: {status.mercadopago.success} | Fallidos: {status.mercadopago.failed}</p>
-                {status.mercadopago.last_delivery && (
-                  <p>Última entrega: {new Date(status.mercadopago.last_delivery).toLocaleString('es-AR')}</p>
+              <div className="mt-2 text-xs text-tierra-media space-y-1">
+                <p>
+                  Total (24h): <span className="font-semibold">{mercadopagoStats.total}</span> | 
+                  Exitosos: <span className="font-semibold text-green-600">{mercadopagoStats.success}</span> | 
+                  Fallidos: <span className="font-semibold text-red-600">{mercadopagoStats.failed}</span>
+                </p>
+                {mercadopagoStats.last_delivery && (
+                  <p>Última entrega: {new Date(mercadopagoStats.last_delivery).toLocaleString('es-AR')}</p>
                 )}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
             <CardHeader>
-              <CardTitle className="text-sm">Sanity Webhook</CardTitle>
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Zap className="h-4 w-4" />
+                Sanity Webhook
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Revalida el cache cuando se actualiza contenido en Sanity
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex gap-2">
-                <Input value={status.urls.sanity} readOnly className="font-mono text-xs" />
-                <Button variant="outline" size="sm" onClick={() => handleCopyUrl(status.urls.sanity, 'Sanity')}>
+                <Input 
+                  value={status.urls.sanity} 
+                  readOnly 
+                  className="font-mono text-xs" 
+                />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleCopyUrl(status.urls.sanity, 'Sanity')}
+                  title="Copiar URL"
+                >
                   <Copy className="h-4 w-4" />
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleTestWebhook('sanity')}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleTestWebhook('sanity')}
+                  title="Probar webhook"
+                >
                   <TestTube className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="mt-2 text-xs text-tierra-media">
-                <p>Total (24h): {status.sanity.total} | Exitosos: {status.sanity.success} | Fallidos: {status.sanity.failed}</p>
-                {status.sanity.last_delivery && (
-                  <p>Última entrega: {new Date(status.sanity.last_delivery).toLocaleString('es-AR')}</p>
+              <div className="mt-2 text-xs text-tierra-media space-y-1">
+                <p>
+                  Total (24h): <span className="font-semibold">{sanityStats.total}</span> | 
+                  Exitosos: <span className="font-semibold text-green-600">{sanityStats.success}</span> | 
+                  Fallidos: <span className="font-semibold text-red-600">{sanityStats.failed}</span>
+                </p>
+                {sanityStats.last_delivery && (
+                  <p>Última entrega: {new Date(sanityStats.last_delivery).toLocaleString('es-AR')}</p>
                 )}
               </div>
             </CardContent>
@@ -208,7 +292,7 @@ export default function WebhookMonitor() {
       )}
 
       {/* Filters */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardContent className="p-4">
           <div className="flex gap-4 items-center">
             <div>
@@ -243,16 +327,20 @@ export default function WebhookMonitor() {
       </Card>
 
       {/* Logs Table */}
-      <Card>
+      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.4)]">
         <CardHeader>
           <CardTitle>Registro de Webhooks</CardTitle>
-          <CardDescription>Últimas entregas de webhooks</CardDescription>
+          <CardDescription>Últimas entregas de webhooks (últimos 50 registros)</CardDescription>
         </CardHeader>
         <CardContent>
           {loading ? (
             <div className="p-8 text-center text-tierra-media">Cargando...</div>
           ) : logs.length === 0 ? (
-            <div className="p-8 text-center text-tierra-media">No hay registros de webhooks</div>
+            <div className="p-8 text-center text-tierra-media">
+              <Zap className="h-12 w-12 mx-auto mb-4 opacity-50" />
+              <p>No hay registros de webhooks</p>
+              <p className="text-xs mt-2">Los webhooks aparecerán aquí cuando se reciban</p>
+            </div>
           ) : (
             <Table>
               <TableHeader>
@@ -262,7 +350,7 @@ export default function WebhookMonitor() {
                   <TableHead>Estado</TableHead>
                   <TableHead>Código</TableHead>
                   <TableHead>Fecha</TableHead>
-                  <TableHead>Error</TableHead>
+                  <TableHead className="text-right">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -273,12 +361,28 @@ export default function WebhookMonitor() {
                     </TableCell>
                     <TableCell className="font-mono text-xs">{log.event_type || 'N/A'}</TableCell>
                     <TableCell>{getStatusBadge(log.status)}</TableCell>
-                    <TableCell>{log.response_code || 'N/A'}</TableCell>
+                    <TableCell>
+                      <span className={log.response_code && log.response_code >= 400 ? 'text-red-600 font-semibold' : ''}>
+                        {log.response_code || 'N/A'}
+                      </span>
+                    </TableCell>
                     <TableCell className="text-xs">
                       {new Date(log.created_at).toLocaleString('es-AR')}
                     </TableCell>
-                    <TableCell className="text-xs text-red-600 max-w-xs truncate">
-                      {log.error_message || '-'}
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleViewDetails(log)}
+                          title="Ver detalles"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        {log.error_message && (
+                          <AlertCircle className="h-4 w-4 text-red-500" title="Tiene error" />
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -287,7 +391,106 @@ export default function WebhookMonitor() {
           )}
         </CardContent>
       </Card>
+
+      {/* Details Dialog */}
+      <Dialog open={showDetailsDialog} onOpenChange={setShowDetailsDialog}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Zap className="h-5 w-5" />
+              Detalles del Webhook
+            </DialogTitle>
+            <DialogDescription>
+              Información completa del webhook recibido
+            </DialogDescription>
+          </DialogHeader>
+          {selectedLog && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-sm font-semibold">Tipo de Webhook</Label>
+                  <p className="text-sm mt-1">
+                    <Badge variant="outline">{selectedLog.webhook_type}</Badge>
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold">Tipo de Evento</Label>
+                  <p className="text-sm mt-1 font-mono">{selectedLog.event_type || 'N/A'}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold">Estado</Label>
+                  <p className="text-sm mt-1">{getStatusBadge(selectedLog.status)}</p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold">Código de Respuesta</Label>
+                  <p className={`text-sm mt-1 ${selectedLog.response_code && selectedLog.response_code >= 400 ? 'text-red-600 font-semibold' : ''}`}>
+                    {selectedLog.response_code || 'N/A'}
+                  </p>
+                </div>
+                <div>
+                  <Label className="text-sm font-semibold">Fecha de Recepción</Label>
+                  <p className="text-sm mt-1">
+                    {new Date(selectedLog.created_at).toLocaleString('es-AR')}
+                  </p>
+                </div>
+                {selectedLog.processed_at && (
+                  <div>
+                    <Label className="text-sm font-semibold">Fecha de Procesamiento</Label>
+                    <p className="text-sm mt-1">
+                      {new Date(selectedLog.processed_at).toLocaleString('es-AR')}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {selectedLog.error_message && (
+                <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                  <div className="flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <Label className="text-sm font-semibold text-red-800 dark:text-red-300">Mensaje de Error</Label>
+                      <p className="text-sm text-red-700 dark:text-red-400 mt-1">
+                        {selectedLog.error_message}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {selectedLog.payload && (
+                <div>
+                  <Label className="text-sm font-semibold">Payload (Datos Recibidos)</Label>
+                  <div className="mt-2 p-4 bg-admin-bg-tertiary rounded-lg border overflow-x-auto">
+                    <pre className="text-xs font-mono whitespace-pre-wrap break-words">
+                      {JSON.stringify(selectedLog.payload, null, 2)}
+                    </pre>
+                  </div>
+                </div>
+              )}
+
+              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                <div className="flex items-start gap-2">
+                  <Zap className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <Label className="text-sm font-semibold text-blue-800 dark:text-blue-300">Información</Label>
+                    <ul className="text-xs text-blue-700 dark:text-blue-400 mt-1 space-y-1 list-disc list-inside">
+                      <li>Los webhooks se registran automáticamente cuando se reciben</li>
+                      <li>El estado se actualiza después de procesar el webhook</li>
+                      <li>Los webhooks fallidos pueden indicar problemas de configuración o de red</li>
+                      <li>Los webhooks pendientes están siendo procesados</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowDetailsDialog(false)}>
+              Cerrar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
