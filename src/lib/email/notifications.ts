@@ -10,6 +10,7 @@ import {
   getDefaultVariables
 } from './template-utils'
 import { ARGENTINA_PAYMENT_LABELS } from '../mercadopago'
+import { createServiceRoleClient } from '@/utils/supabase/server'
 
 // Helper function to format currency
 function formatCurrency(amount: number): string {
