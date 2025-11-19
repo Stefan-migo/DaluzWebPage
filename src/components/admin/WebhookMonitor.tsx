@@ -89,13 +89,13 @@ export default function WebhookMonitor() {
       if (statusFilter !== 'all') params.set('status', statusFilter);
 
       const [logsRes, statusRes] = await Promise.all([
-        fetch(`/api/admin/system/webhooks/logs?${params}`).catch(() => ({ ok: false })),
-        fetch('/api/admin/system/webhooks/status').catch(() => ({ ok: false }))
+        fetch(`/api/admin/system/webhooks/logs?${params}`).catch(() => ({ ok: false } as Response)),
+        fetch('/api/admin/system/webhooks/status').catch(() => ({ ok: false } as Response))
       ]);
 
       if (logsRes.ok) {
         try {
-          const logsData = await logsRes.json();
+          const logsData = await (logsRes as Response).json();
           setLogs(logsData.logs || []);
         } catch (error) {
           console.error('Error parsing logs response:', error);
@@ -107,7 +107,7 @@ export default function WebhookMonitor() {
 
       if (statusRes.ok) {
         try {
-          const statusData = await statusRes.json();
+          const statusData = await (statusRes as Response).json();
           setStatus(statusData);
         } catch (error) {
           console.error('Error parsing status response:', error);
@@ -380,7 +380,9 @@ export default function WebhookMonitor() {
                           <Eye className="h-4 w-4" />
                         </Button>
                         {log.error_message && (
-                          <AlertCircle className="h-4 w-4 text-red-500" title="Tiene error" />
+                          <div title="Tiene error">
+                            <AlertCircle className="h-4 w-4 text-red-500" />
+                          </div>
                         )}
                       </div>
                     </TableCell>

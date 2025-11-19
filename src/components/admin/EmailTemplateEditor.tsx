@@ -287,7 +287,6 @@ export default function EmailTemplateEditor({
   const applyTemplate = (templateKey: keyof typeof emailTemplates) => {
     const selectedTemplate = emailTemplates[templateKey];
     setFormData({ ...formData, content: selectedTemplate.html });
-    setVisualContent(extractBodyContent(selectedTemplate.html));
     toast.success(`Plantilla "${selectedTemplate.name}" aplicada`);
   };
 
