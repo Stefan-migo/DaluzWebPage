@@ -24,9 +24,33 @@ export default function InteractiveGallery() {
 
   return (
     <div className="relative">
+      {/* Mobile-specific arrow styles */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @media (max-width: 767px) {
+          .gallery-arrow-left svg,
+          .gallery-arrow-right svg {
+            width: 12px !important;
+            height: 12px !important;
+          }
+        }
+        @media (min-width: 768px) and (max-width: 1279px) {
+          .gallery-arrow-left svg,
+          .gallery-arrow-right svg {
+            width: 24px !important;
+            height: 24px !important;
+          }
+        }
+        @media (min-width: 1280px) {
+          .gallery-arrow-left svg,
+          .gallery-arrow-right svg {
+            width: 32px !important;
+            height: 32px !important;
+          }
+        }
+      `}} />
       {/* Navigation Arrows */}
       <button 
-        className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-30 transition-all duration-300 hover:scale-110 cursor-pointer"
+        className="gallery-arrow-left absolute left-2 md:left-4 top-1/2 transform -translate-y-1/2 z-30 transition-all duration-300 hover:scale-110 cursor-pointer"
         onClick={() => {
           const carousel = document.getElementById('gallery-carousel');
           if (carousel) {
@@ -37,11 +61,11 @@ export default function InteractiveGallery() {
         style={{ color: '#AE0000', background: 'none', border: 'none', padding: 0 }}
         aria-label="Previous image"
       >
-        <ArrowLeftSVG className="w-12 h-12 sm:w-16 sm:h-16" color="#AE0000" />
+        <ArrowLeftSVG className="" color="#AE0000" />
       </button>
       
       <button 
-        className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-30 transition-all duration-300 hover:scale-110 cursor-pointer"
+        className="gallery-arrow-right absolute right-2 md:right-4 top-1/2 transform -translate-y-1/2 z-30 transition-all duration-300 hover:scale-110 cursor-pointer"
         onClick={() => {
           const carousel = document.getElementById('gallery-carousel');
           if (carousel) {
@@ -52,7 +76,7 @@ export default function InteractiveGallery() {
         style={{ color: '#AE0000', background: 'none', border: 'none', padding: 0 }}
         aria-label="Next image"
       >
-        <ArrowRightSVG className="w-12 h-12 sm:w-16 sm:h-16" color="#AE0000" />
+        <ArrowRightSVG className="" color="#AE0000" />
       </button>
 
       {/* Gallery Container with Interactive Scroll */}

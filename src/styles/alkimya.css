@@ -1,0 +1,2436 @@
+/* ===========================
+   ALKIMYA & MANIFIESTO STYLES
+   ===========================
+   
+   This file contains all styles specific to the alkimya section,
+   including the manifiesto page and its sub-pages.
+   =========================== */
+
+/* Enhanced DA LUZ Custom Classes - Alkimya */
+.alkimya-gradient {
+  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+}
+
+.alkimya-hero {
+  background: linear-gradient(135deg, rgba(174, 0, 0, 0.8), rgba(220, 54, 0, 0.6));
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.alkimya-text-shadow {
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced Card Hover Effects */
+.alkimya-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.alkimya-card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(174, 0, 0, 0.2);
+}
+
+/* Custom animations for style tester */
+@keyframes alkimya-float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.alkimya-float {
+  animation: alkimya-float 3s ease-in-out infinite;
+}
+
+@keyframes alkimya-pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.alkimya-pulse {
+  animation: alkimya-pulse 2s ease-in-out infinite;
+}
+
+@keyframes alkimya-shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+.alkimya-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background-size: 200px 100%;
+  animation: alkimya-shimmer 2s infinite;
+}
+
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+
+  .alkimya-float,
+  .alkimya-pulse,
+  .alkimya-shimmer,
+  .alkimya-card-hover {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .alkimya-hero {
+    background: var(--color-brand-primary);
+    color: white;
+  }
+
+  .alkimya-gradient {
+    background: var(--color-brand-primary);
+  }
+}
+
+/* ===========================
+   MANIFIESTO SECTION 1 - MOBILE OPTIMIZATIONS
+   =========================== */
+
+/* Manifiesto section 1 - very small mobile screens (below 480px) */
+@media (max-width: 480px) {
+  .section-manifiesto-1 {
+    overflow-x: hidden !important;
+    position: relative !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  /* Mobile SVG for very small screens */
+  .section-manifiesto-1 img[src*="manifiesto-section1-mobile-background"],
+  .section-manifiesto-1 img[src*="manifiesto-section1-background"] {
+    object-fit: cover !important;
+    object-position: center center !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    transform: translateZ(0) !important;
+    -webkit-transform: translateZ(0) !important;
+  }
+
+  /* Ensure container doesn't overflow */
+  .section-manifiesto-1>div[class*="absolute"] {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow: hidden !important;
+    left: 0 !important;
+    right: 0 !important;
+  }
+}
+
+/* Extra small screens (320px and below) */
+@media (max-width: 320px) {
+  .section-manifiesto-1 {
+    min-height: 700px !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+
+  /* Mobile SVG for extra small screens */
+  .section-manifiesto-1 img[src*="manifiesto-section1-mobile-background"],
+  .section-manifiesto-1 img[src*="manifiesto-section1-background"] {
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+}
+
+/* ===========================
+   MANIFIESTO SECTION 1 STYLES
+   =========================== */
+
+/* Mobile section 1 - Gradient background */
+@media (max-width: 767px) {
+  .section-manifiesto-1 {
+    /* Gradient background - height based on content */
+    min-height: auto;
+    height: auto;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  /* Remove special card styles on mobile for manifiesto section - use default card styles */
+  .section-manifiesto-1 .card-enhanced {
+    margin: 0;
+    /* Remove the mobile margin from general styles */
+  }
+
+  /* Manifiesto Section 1 - Cards Styling */
+  .section-manifiesto-1-cards {
+    /* Cards container stays at bottom */
+    flex-shrink: 0;
+  }
+
+  /* Manifiesto Cards - Responsive sizing (Mobile) */
+  .manifiesto-card {
+    /* Mobile: Smaller padding */
+    padding: 1rem;
+    min-height: auto;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+    border-radius: 0px 15px !important;
+  }
+
+  .manifiesto-card-icon {
+    width: 3rem !important;
+    /* 48px */
+    height: 3rem !important;
+  }
+
+  .manifiesto-card-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .manifiesto-card-title {
+    font-size: 1rem;
+    /* 16px */
+    line-height: 1.4;
+  }
+
+  .manifiesto-card-text {
+    font-size: 0.75rem;
+    /* 12px */
+    line-height: 1.6;
+  }
+
+}
+
+/* Tablet section - Improved layout for better UX */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .section-manifiesto-1 {
+    /* Gradient background - height based on content */
+    min-height: auto;
+    height: auto;
+    overflow-x: hidden !important;
+    position: relative !important;
+    padding: 3rem 2rem;
+  }
+
+  /* Better content spacing */
+  .section-manifiesto-1-content {
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Title improvements */
+  .manifiesto-title {
+    font-size: 3rem;
+    margin-bottom: 3.5rem;
+    max-width: 80%;
+    padding: 0;
+  }
+
+  /* Text cards - 2 column grid for better use of space */
+  .section-manifiesto-1-text-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 0 0 3rem 0;
+    padding-top: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .manifiesto-text-card {
+    max-width: 100%;
+    padding: 2rem 2.25rem;
+    min-height: auto;
+  }
+
+  .manifiesto-text-card-text {
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+
+  /* Feature cards - 2x2 grid instead of 4 columns */
+  .section-manifiesto-1-cards {
+    max-width: 1200px;
+    margin: 3rem auto 0 auto;
+    padding: 0;
+  }
+
+  .section-manifiesto-1-cards .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  .manifiesto-card {
+    padding: 2rem;
+  }
+
+  .manifiesto-card-icon {
+    width: 4.5rem !important;
+    height: 4.5rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .manifiesto-card-title {
+    font-size: 1.375rem;
+    margin-bottom: 1rem;
+  }
+
+  .manifiesto-card-text {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  /* Manifiesto Image - Tablet */
+  .manifiesto-image-element {
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    margin: 2rem auto 2.5rem auto;
+    clip-path: ellipse(39% 42% at 50% 50%);
+    object-fit: cover;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    z-index: 5;
+  }
+}
+
+/* Desktop section - SVG background, height matches SVG exactly */
+@media (min-width: 1280px) {
+  .section-manifiesto-1 {
+    /* SVG height (matches SVG aspect ratio exactly) - no extra space */
+    /* Desktop SVG: 1920.08 width / 3140.34 height = aspect ratio 0.611 */
+    /* SVG height = viewport width * (3140.34 / 1920.08) */
+    aspect-ratio: 1920.08 / 3140.34;
+    min-height: auto;
+    /* Let aspect-ratio control the height */
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  /* Ensure desktop SVG container matches section SVG height calculation */
+  .section-manifiesto-1 .svg-container-desktop {
+    height: calc(100vw * (3140.34 / 1920.08)) !important;
+    min-height: calc(100vw * (3140.34 / 1920.08)) !important;
+    max-height: calc(100vw * (3140.34 / 1920.08)) !important;
+  }
+
+  /* Manifiesto Section 1 - Cards Styling (Desktop) */
+  .section-manifiesto-1-cards {
+    /* Cards container stays at bottom */
+    flex-shrink: 0;
+  }
+
+  /* Manifiesto Cards - Desktop: Larger sizing */
+  .manifiesto-card {
+    padding: 1.5rem;
+    /* 24px */
+    min-height: auto;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+    border-radius: 0px 15px !important;
+  }
+
+  .manifiesto-card-icon {
+    width: 4rem !important;
+    /* 64px */
+    height: 4rem !important;
+  }
+
+  .manifiesto-card-icon svg {
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  .manifiesto-card-title {
+    font-size: 1.25rem;
+    /* 20px */
+    line-height: 1.4;
+  }
+
+  .manifiesto-card-text {
+    font-size: 0.875rem;
+    /* 14px */
+    line-height: 1.6;
+  }
+
+  /* Large screens: Even bigger */
+  @media (min-width: 1024px) {
+    .manifiesto-card {
+      padding: 2rem;
+      /* 32px */
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+      border-radius: 0px 15px !important;
+    }
+
+    .manifiesto-card-icon {
+      width: 5rem !important;
+      /* 80px */
+      height: 5rem !important;
+    }
+
+    .manifiesto-card-title {
+      font-size: 1.5rem;
+      /* 24px */
+    }
+
+    .manifiesto-card-text {
+      font-size: 1rem;
+      /* 16px */
+    }
+  }
+
+  /* Extra large screens: Maximum size */
+  @media (min-width: 1280px) {
+    .manifiesto-card {
+      padding: 2.5rem;
+      /* 40px */
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+      border-radius: 0px 15px !important;
+    }
+
+    .manifiesto-card-icon {
+      width: 6rem !important;
+      /* 96px */
+      height: 6rem !important;
+    }
+
+    .manifiesto-card-title {
+      font-size: 1.75rem;
+      /* 28px */
+    }
+
+    .manifiesto-card-text {
+      font-size: 1.125rem;
+      /* 18px */
+    }
+  }
+}
+
+/* ===========================
+   MANIFIESTO SECTION 2 MERGED STYLES (Sections 2 & 3 combined)
+   =========================== */
+
+/* Mobile section 2 merged - SVG background, height adapts to content */
+@media (max-width: 767px) {
+  .section-manifiesto-2-merged {
+    /* Height adapts to content */
+    min-height: auto;
+    height: auto;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+}
+
+/* Tablet section 2 merged - Improved layout for better UX */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .section-manifiesto-2-merged {
+    /* Full width, height adapts to content */
+    min-height: auto;
+    height: auto;
+    width: 100%;
+    overflow-x: hidden !important;
+    position: relative !important;
+    padding: 3rem 2rem;
+  }
+
+  /* Ensure tablet SVG container covers full width and adapts to content height */
+  .section-manifiesto-2-merged .svg-container-tablet {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+  }
+
+  .section-manifiesto-2-merged .svg-container-tablet img {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100% !important;
+    object-fit: cover !important;
+    object-position: center top !important;
+  }
+
+  /* Better content spacing */
+  .section-manifiesto-2-merged-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* Title improvements */
+  .manifiesto-section2-merged-title {
+    font-size: 2.75rem;
+    margin-bottom: 3.5rem;
+    max-width: 85%;
+    padding: 0;
+  }
+
+  /* Cards - 2 column grid for better readability */
+  .manifiesto-section2-merged-mobile-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card {
+    position: relative;
+    max-width: 100%;
+    padding: 2.25rem 2.5rem;
+    margin: 0;
+    aspect-ratio: auto;
+    min-height: auto;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    border-radius: 0px 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hide SVG background on tablet */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-bg {
+    display: none;
+  }
+
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    font-family: var(--font-subtitle);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-brand-primary);
+    margin-bottom: 1.25rem;
+    line-height: 1.4;
+  }
+
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    font-family: var(--font-text);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+  }
+
+  /* Remove margin from last text element */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Better spacing for cards with multiple elements */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Desktop section 2 merged - SVG background, height matches SVG exactly */
+@media (min-width: 1280px) {
+  .section-manifiesto-2-merged {
+    /* SVG height (matches SVG aspect ratio exactly) - no extra space */
+    /* Desktop SVG: 1924.37 width / 5362.08 height = aspect ratio 0.359 */
+    /* SVG height = viewport width * (5362.08 / 1924.37) */
+    aspect-ratio: 1924.37 / 5362.08;
+    min-height: auto;
+    /* Let aspect-ratio control the height */
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  /* Ensure desktop SVG container matches section SVG height calculation */
+  .section-manifiesto-2-merged .svg-container-desktop {
+    height: calc(100vw * (5362.08 / 1924.37)) !important;
+    min-height: calc(100vw * (5362.08 / 1924.37)) !important;
+    max-height: calc(100vw * (5362.08 / 1924.37)) !important;
+  }
+}
+
+/* Mobile/Tablet - Section 2 Merged Content Area */
+@media (max-width: 1279px) {
+  .section-manifiesto-2-merged-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 1rem 1rem;
+    gap: 0;
+    width: 100%;
+  }
+}
+
+/* ===========================
+   MANIFIESTO SECTION 2 MERGED - TEXT POSITIONING SYSTEM
+   =========================== */
+
+/* Base styles for all text elements in section 2 merged - Same as section 1 */
+
+.inTitleText {
+  top: 11.5%;
+  max-width: 80%;
+  text-align: center;
+}
+
+.manifiesto-section2-merged-text-element {
+  position: absolute;
+  z-index: 10;
+  /* Use CSS custom properties for easy positioning */
+  /* Modify --pos-top, --pos-left, --pos-right, --pos-bottom to position */
+  top: var(--pos-top, 50%);
+  left: var(--pos-left, 50%);
+  right: var(--pos-right, auto);
+  bottom: var(--pos-bottom, auto);
+  transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
+  width: var(--pos-width, 90%);
+  max-width: var(--pos-max-width, 800px);
+}
+
+/* Main Title Section 2 Merged */
+.manifiesto-section2-merged-title {
+  font-family: var(--font-malisha);
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.2;
+  --pos-top: 5%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 90%;
+  --pos-max-width: 100%;
+}
+
+/* Secondary Titles */
+.manifiesto-section2-merged-subtitle-1,
+.manifiesto-section2-merged-subtitle-1a,
+.manifiesto-section2-merged-subtitle-1b,
+.manifiesto-section2-merged-subtitle-2,
+.manifiesto-section2-merged-subtitle-3,
+.manifiesto-section2-merged-subtitle-4,
+.manifiesto-section2-merged-subtitle-5,
+.manifiesto-section2-merged-subtitle-6 {
+  font-family: var(--font-malisha);
+  font-size: 1.5rem;
+  color: var(--color-brand-primary);
+  text-align: left;
+  line-height: 1.3;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+.manifiesto-section2-merged-subtitle-1 {
+  --pos-top: 12%;
+}
+
+.manifiesto-section2-merged-subtitle-2 {
+  --pos-top: 32%;
+}
+
+.manifiesto-section2-merged-subtitle-3 {
+  --pos-top: 52%;
+}
+
+.manifiesto-section2-merged-subtitle-4 {
+  --pos-top: 72%;
+}
+
+.manifiesto-section2-merged-subtitle-5 {
+  --pos-top: 88%;
+}
+
+.manifiesto-section2-merged-subtitle-6 {
+  --pos-top: 106%;
+}
+
+/* Text paragraphs */
+.manifiesto-section2-merged-text-1,
+.manifiesto-section2-merged-text-1a,
+.manifiesto-section2-merged-text-1b,
+.manifiesto-section2-merged-text-2,
+.manifiesto-section2-merged-text-3,
+.manifiesto-section2-merged-text-4,
+.manifiesto-section2-merged-text-5,
+.manifiesto-section2-merged-text-6 {
+  font-family: var(--font-malisha);
+  font-size: 0.875rem;
+  color: var(--color-text-primary);
+  text-align: left;
+  line-height: 1.7;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+.manifiesto-section2-merged-text-1 {
+  --pos-top: 18%;
+}
+
+.manifiesto-section2-merged-text-2 {
+  --pos-top: 38%;
+}
+
+.manifiesto-section2-merged-text-3 {
+  --pos-top: 58%;
+}
+
+.manifiesto-section2-merged-text-4 {
+  --pos-top: 78%;
+}
+
+.manifiesto-section2-merged-text-5 {
+  --pos-top: 92%;
+}
+
+.manifiesto-section2-merged-text-6 {
+  --pos-top: 106%;
+}
+
+/* Desktop: Show text elements, hide mobile cards */
+@media (min-width: 1280px) {
+
+  /* Hide mobile cards container */
+  .manifiesto-section2-merged-mobile-cards {
+    display: none !important;
+  }
+
+  /* Show desktop text elements */
+  .manifiesto-section2-merged-title,
+  .manifiesto-section2-merged-subtitle-1,
+  .manifiesto-section2-merged-subtitle-1a,
+  .manifiesto-section2-merged-subtitle-1b,
+  .manifiesto-section2-merged-subtitle-2,
+  .manifiesto-section2-merged-subtitle-3,
+  .manifiesto-section2-merged-subtitle-4,
+  .manifiesto-section2-merged-subtitle-5,
+  .manifiesto-section2-merged-text-1,
+  .manifiesto-section2-merged-text-1a,
+  .manifiesto-section2-merged-text-1b,
+  .manifiesto-section2-merged-text-2,
+  .manifiesto-section2-merged-text-3,
+  .manifiesto-section2-merged-text-4,
+  .manifiesto-section2-merged-text-5,
+  .manifiesto-section2-merged-text-6 {
+    display: block;
+  }
+
+  /* Responsive font sizes for desktop */
+  .manifiesto-section2-merged-title {
+    font-size: 3.5rem;
+    top: 1%;
+    left: 44%;
+  }
+
+  .manifiesto-section2-merged-subtitle-1 {
+    font-size: 2.2rem;
+    max-width: 100%;
+    top: 4.8%;
+    color: #fff2db;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-subtitle-1a {
+    top: 11.5%;
+    max-width: 80%;
+    text-align: center;
+    font-size: 2.2rem;
+    color: #920000;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-subtitle-1b {
+    top: 15.5%;
+    max-width: 80%;
+    text-align: center;
+    font-size: 2.2rem;
+    color: #920000;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-subtitle-2 {
+    font-size: 2.2rem;
+    top: 23.2%;
+    max-width: 100%;
+    color: #fff2db;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-subtitle-3 {
+    font-size: 2.2rem;
+    color: #fff2db;
+    top: 42%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .manifiesto-section2-merged-subtitle-4 {
+    font-size: 2.2rem;
+    color: #920000;
+    top: 57.5%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .manifiesto-section2-merged-subtitle-5 {
+    font-size: 2.2rem;
+    color: #fff2db;
+    top: 67.5%;
+    text-align: center;
+    max-width: 70%;
+  }
+
+  .manifiesto-section2-merged-subtitle-6 {
+    font-size: 2.2rem;
+    color: #fff2db;
+    top: 80%;
+    text-align: center;
+    max-width: 70%;
+  }
+
+  .manifiesto-section2-merged-text-1 {
+    font-size: 1.3rem;
+    color: #920000;
+    top: 8%;
+    max-width: 80%;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-text-1a {
+    font-size: 1.5rem;
+    color: #920000;
+    top: 13%;
+    max-width: 75%;
+    text-align: center;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-text-1b {
+    font-size: 1.5rem;
+    color: #920000;
+    top: 17%;
+    max-width: 75%;
+    text-align: center;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-text-2 {
+    font-size: 1.8rem;
+    top: 28%;
+    max-width: 60%;
+    text-align: center;
+    color: #920000;
+  }
+
+  .manifiesto-section2-merged-text-3 {
+    font-size: 1.7rem;
+    top: 44%;
+    max-width: 60%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-section2-merged-text-4 {
+    font-size: 1.55rem;
+    top: 60.5%;
+    max-width: 65%;
+    text-align: center;
+    color: #920000;
+  }
+
+  .manifiesto-section2-merged-text-5 {
+    font-size: 1.5rem;
+    top: 70.5%;
+    max-width: 78%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-section2-merged-text-6 {
+    font-size: 1.8rem;
+    top: 83%;
+    max-width: 60%;
+    text-align: center;
+    color: #fff2db;
+  }
+}
+
+@media (min-width: 1450px) {
+  .manifiesto-section2-merged-title {
+    font-size: 3.5rem;
+    top: 1%;
+    left: 45%;
+  }
+
+  .manifiesto-section2-merged-subtitle-1 {
+    font-size: 2.5rem;
+    max-width: 100%;
+    top: 4.8%;
+    color: #fff2db;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-subtitle-1a {
+    top: 11.5%;
+    max-width: 80%;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #920000;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-subtitle-1b {
+    top: 15.5%;
+    max-width: 80%;
+    text-align: center;
+    font-size: 2.5rem;
+    color: #920000;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-subtitle-2 {
+    font-size: 2.7rem;
+    top: 23.2%;
+    max-width: 100%;
+    color: #fff2db;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-subtitle-3 {
+    font-size: 2.7rem;
+    color: #fff2db;
+    top: 42%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .manifiesto-section2-merged-subtitle-4 {
+    font-size: 2.7rem;
+    color: #920000;
+    top: 58%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .manifiesto-section2-merged-subtitle-5 {
+    font-size: 2.7rem;
+    color: #fff2db;
+    top: 68%;
+    text-align: center;
+    max-width: 70%;
+  }
+
+  .manifiesto-section2-merged-subtitle-6 {
+    font-size: 2.7rem;
+    color: #fff2db;
+    top: 80%;
+    text-align: center;
+    max-width: 70%;
+  }
+
+  .manifiesto-section2-merged-text-1 {
+    font-size: 1.5rem;
+    color: #920000;
+    top: 8%;
+    max-width: 75%;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-text-1a {
+    font-size: 1.55rem;
+    color: #920000;
+    top: 13%;
+    max-width: 75%;
+    text-align: center;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-text-1b {
+    font-size: 1.55rem;
+    color: #920000;
+    top: 17%;
+    max-width: 75%;
+    text-align: center;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-text-2 {
+    font-size: 2rem;
+    top: 28%;
+    max-width: 50%;
+    text-align: center;
+    color: #920000;
+  }
+
+  .manifiesto-section2-merged-text-3 {
+    font-size: 2rem;
+    top: 45%;
+    max-width: 70%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-section2-merged-text-4 {
+    font-size: 1.8rem;
+    top: 61%;
+    max-width: 70%;
+    text-align: center;
+    color: #920000;
+  }
+
+  .manifiesto-section2-merged-text-5 {
+    font-size: 1.8rem;
+    top: 71%;
+    max-width: 80%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-section2-merged-text-6 {
+    font-size: 2rem;
+    top: 83.5%;
+    max-width: 56%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+
+  .manifiesto-image-element {
+    display: block;
+    --img-top: 56%;
+    --img-left: 14%;
+    --img-translate-x: -50%;
+    --img-translate-y: -50%;
+    --img-width: auto;
+    --img-max-width: 585px;
+  }
+}
+
+@media (min-width: 1550px) {
+  .manifiesto-section2-merged-title {
+    font-size: 4rem;
+    top: 1%;
+    left: 45%;
+  }
+
+  .manifiesto-section2-merged-subtitle-1 {
+    font-size: 2.8rem;
+    max-width: 100%;
+    top: 4.8%;
+    color: #fff2db;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-subtitle-1a {
+    top: 11.5%;
+    max-width: 80%;
+    text-align: center;
+    font-size: 3rem;
+    color: #920000;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-subtitle-1b {
+    top: 15.5%;
+    max-width: 80%;
+    text-align: center;
+    font-size: 3rem;
+    color: #920000;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-subtitle-2 {
+    font-size: 3rem;
+    top: 23.2%;
+    max-width: 100%;
+    color: #fff2db;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-subtitle-3 {
+    font-size: 3rem;
+    color: #fff2db;
+    top: 42%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .manifiesto-section2-merged-subtitle-4 {
+    font-size: 4rem;
+    color: #920000;
+    top: 58%;
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .manifiesto-section2-merged-subtitle-5 {
+    font-size: 4rem;
+    color: #fff2db;
+    top: 68%;
+    text-align: center;
+    max-width: 70%;
+  }
+
+  .manifiesto-section2-merged-subtitle-6 {
+    font-size: 4rem;
+    color: #fff2db;
+    top: 80%;
+    text-align: center;
+    max-width: 70%;
+  }
+
+  .manifiesto-section2-merged-text-1 {
+    font-size: 1.65rem;
+    color: #920000;
+    top: 8%;
+    max-width: 80%;
+    text-align: center;
+  }
+
+  .manifiesto-section2-merged-text-1a {
+    font-size: 1.85rem;
+    color: #920000;
+    top: 13%;
+    max-width: 75%;
+    text-align: center;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-text-1b {
+    font-size: 1.85rem;
+    color: #920000;
+    top: 17.5%;
+    max-width: 75%;
+    text-align: center;
+    font-family: var(--font-malisha);
+  }
+
+  .manifiesto-section2-merged-text-2 {
+    font-size: 2rem;
+    top: 28%;
+    max-width: 50%;
+    text-align: center;
+    color: #920000;
+  }
+
+  .manifiesto-section2-merged-text-3 {
+    font-size: 2rem;
+    top: 45%;
+    max-width: 56%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-section2-merged-text-4 {
+    font-size: 2rem;
+    top: 61.5%;
+    max-width: 75%;
+    text-align: center;
+    color: #920000;
+  }
+
+  .manifiesto-section2-merged-text-5 {
+    font-size: 1.8rem;
+    top: 71.5%;
+    max-width: 80%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-section2-merged-text-6 {
+    font-size: 2rem;
+    top: 83.5%;
+    max-width: 56%;
+    text-align: center;
+    color: #fff2db;
+  }
+
+  .manifiesto-image-element {
+    display: block;
+    --img-top: 56%;
+    --img-left: 14%;
+    --img-translate-x: -50%;
+    --img-translate-y: -50%;
+    --img-width: auto;
+    --img-max-width: 585px;
+  }
+}
+
+/* Mobile/Tablet: Hide desktop text, show cards and title */
+@media (max-width: 1279px) {
+
+  /* Hide desktop text elements (but keep title visible) */
+  .manifiesto-section2-merged-subtitle-1,
+  .manifiesto-section2-merged-subtitle-1a,
+  .manifiesto-section2-merged-subtitle-1b,
+  .manifiesto-section2-merged-subtitle-2,
+  .manifiesto-section2-merged-subtitle-3,
+  .manifiesto-section2-merged-subtitle-4,
+  .manifiesto-section2-merged-subtitle-5,
+  .manifiesto-section2-merged-subtitle-6,
+  .manifiesto-section2-merged-text-1,
+  .manifiesto-section2-merged-text-1a,
+  .manifiesto-section2-merged-text-1b,
+  .manifiesto-section2-merged-text-2,
+  .manifiesto-section2-merged-text-3,
+  .manifiesto-section2-merged-text-4,
+  .manifiesto-section2-merged-text-5,
+  .manifiesto-section2-merged-text-6 {
+    display: none !important;
+  }
+
+  /* Show title on mobile/tablet */
+  .manifiesto-section2-merged-title {
+    display: block !important;
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 90% !important;
+    max-width: 100% !important;
+    margin: 0 auto 2rem auto;
+    text-align: center;
+    font-size: 1.75rem;
+  }
+
+  /* Show mobile cards */
+  .manifiesto-section2-merged-mobile-cards {
+    display: block;
+  }
+
+  .section-manifiesto-2-merged-content {
+    position: relative;
+    padding: 2rem 1rem 1rem 1rem;
+    width: 100%;
+    min-height: auto;
+    /* Height adapts to content */
+  }
+
+  .manifiesto-section2-merged-text-element {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 90% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+  }
+
+  /* Cards container - normal flow */
+  .manifiesto-section2-merged-mobile-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 1.5rem;
+    padding-bottom: 2rem;
+    /* Ensure space at bottom */
+  }
+
+  /* Simple cards for mobile (no SVG shape) */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0;
+    aspect-ratio: auto;
+    /* Remove fixed aspect ratio */
+    min-height: auto;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    border-radius: 0px 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hide SVG background on mobile */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-bg {
+    display: none;
+  }
+
+  /* Card content - normal flow on mobile */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-content {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
+
+  /* Card titles - normal flow */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    margin: 0 0 1rem 0;
+    font-family: var(--font-subtitle);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-brand-primary);
+    line-height: 1.4;
+  }
+
+  /* Card text - normal flow */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    margin: 0 0 1rem 0;
+    font-family: var(--font-text);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+  }
+
+  /* Remove margin from last text element */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text:last-child {
+    margin-bottom: 0;
+  }
+
+}
+
+/* Tablet: Larger title */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .manifiesto-section2-merged-title {
+    font-size: 2.5rem;
+    margin-bottom: 2.5rem;
+    color: #fff2db;
+  }
+
+  /* Simple cards for tablet (no SVG shape) - same as mobile */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0;
+    aspect-ratio: auto;
+    /* Remove fixed aspect ratio */
+    min-height: auto;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    border-radius: 0px 15px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hide SVG background on tablet */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-bg {
+    display: none;
+  }
+
+  /* Card content - normal flow on tablet */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-content {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: auto;
+    padding: 0;
+  }
+
+  /* Card titles - normal flow */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    margin: 0 0 1rem 0;
+    font-family: var(--font-subtitle);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-brand-primary);
+    line-height: 1.4;
+  }
+
+  /* Card text - normal flow */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: left;
+    margin: 0 0 1rem 0;
+    font-family: var(--font-text);
+    font-size: 0.9375rem;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+  }
+
+  /* Remove margin from last text element */
+  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ===========================
+   CARD CONTENT POSITIONING SYSTEM
+   =========================== 
+   
+   HOW TO POSITION TITLE AND TEXT ELEMENTS WITHIN CARDS:
+   
+   1. Each title and text element uses CSS custom properties for positioning
+   2. To move an element, modify the --card-title-* or --card-text-* variables
+   
+   POSITIONING OPTIONS FOR TITLES:
+   - --card-title-top: Distance from top (e.g., "10%", "50px")
+   - --card-title-left: Distance from left (e.g., "50%", "10%")
+   - --card-title-translate-x: Horizontal offset (e.g., "-50%", "0")
+   - --card-title-translate-y: Vertical offset (e.g., "0", "20px")
+   - --card-title-width: Element width (e.g., "85%", "90%")
+   - --card-title-align: Text alignment (e.g., "center", "left", "right")
+   
+   POSITIONING OPTIONS FOR TEXTS:
+   - --card-text-top: Distance from top
+   - --card-text-left: Distance from left
+   - --card-text-translate-x: Horizontal offset
+   - --card-text-translate-y: Vertical offset
+   - --card-text-width: Element width
+   - --card-text-align: Text alignment
+   
+   FOR MULTIPLE ELEMENTS:
+   - Use nth-of-type selectors: --card-title-2-top, --card-text-2-top, etc.
+   - Or add specific classes to each element
+   
+   =========================== */
+
+  /* Card Title - Positionable within card */
+  .manifiesto-shaped-card-title {
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-subtitle);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-bg-light);
+    line-height: 1.3;
+    /* Use CSS custom properties for positioning within the card */
+    /* Modify --card-title-top, --card-title-left, etc. to position */
+    top: var(--card-title-top, 7%);
+    left: var(--card-title-left, 50%);
+    right: var(--card-title-right, auto);
+    bottom: var(--card-title-bottom, auto);
+    transform: translate(var(--card-title-translate-x, -50%), var(--card-title-translate-y, 0));
+    width: var(--card-title-width, 85%);
+    max-width: var(--card-title-max-width, 100%);
+    text-align: var(--card-title-align, center);
+    margin: 0;
+  }
+
+  /* Card Text - Positionable within card */
+  .manifiesto-shaped-card-text {
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-text);
+    font-size: 0.6875rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    /* Use CSS custom properties for positioning within the card */
+    /* Modify --card-text-top, --card-text-left, etc. to position */
+    top: var(--card-text-top, 25%);
+    left: var(--card-text-left, 50%);
+    right: var(--card-text-right, auto);
+    bottom: var(--card-text-bottom, auto);
+    transform: translate(var(--card-text-translate-x, -50%), var(--card-text-translate-y, 0));
+    width: var(--card-text-width, 85%);
+    max-width: var(--card-text-max-width, 100%);
+    text-align: var(--card-text-align, center);
+    margin: 0;
+  }
+
+  /* Support for multiple titles and texts within a card */
+  /* Each element can be positioned individually using CSS custom properties */
+  /* For cards with multiple titles/texts, use nth-of-type selectors or add specific classes */
+
+  /* Second title in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(2) {
+    top: var(--card-title-2-top, 46%);
+    left: var(--card-title-2-left, 50%);
+    transform: translate(var(--card-title-2-translate-x, -50%), var(--card-title-2-translate-y, 0));
+    width: var(--card-title-2-width, 85%);
+    color: var(--color-brand-primary);
+  }
+
+  /* Third title in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(3) {
+    top: var(--card-title-3-top, 71%);
+    left: var(--card-title-3-left, 50%);
+    transform: translate(var(--card-title-3-translate-x, -50%), var(--card-title-3-translate-y, 0));
+    width: var(--card-title-3-width, 85%);
+    color: var(--color-brand-primary);
+  }
+
+  /* Second text in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(2) {
+    top: var(--card-text-2-top, 55%);
+    left: var(--card-text-2-left, 50%);
+    transform: translate(var(--card-text-2-translate-x, -50%), var(--card-text-2-translate-y, 0));
+    width: var(--card-text-2-width, 85%);
+  }
+
+  /* Third text in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(3) {
+    top: var(--card-text-3-top, 80%);
+    left: var(--card-text-3-left, 50%);
+    transform: translate(var(--card-text-3-translate-x, -50%), var(--card-text-3-translate-y, 0));
+    width: var(--card-text-3-width, 85%);
+  }
+
+  .manifiesto-shaped-card-text2 {
+    position: relative;
+  }
+
+  .manifiesto-shaped-card-text3 {
+    position: relative;
+  }
+
+  .manifiesto-shaped-card-text4 {
+    position: relative;
+  }
+
+  .manifiesto-shaped-card-text5 {
+    position: relative;
+  }
+
+  .manifiesto-shaped-card-text6 {
+    position: relative;
+  }
+
+}
+
+@media (max-width: 767px) {
+  .manifiesto-section2-merged-title {
+    font-size: 1.75rem;
+    margin-bottom: 2.5rem;
+    color: #fff2db;
+  }
+
+
+  /* ===========================
+   MANIFIESTO SHAPED CARDS - SVG Background Shape
+   =========================== */
+
+  /* Shaped Card Container */
+  .manifiesto-shaped-card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 1.5rem auto;
+    /* Aspect ratio matches SVG: 1776.61 / 845.82 ≈ 2.1 */
+    aspect-ratio: 1776.61 / 845.82;
+  }
+
+  /* SVG Background Shape */
+  .manifiesto-shaped-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/svg/card-shape-background.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  /* Card Content - Positioned over the shape, allows absolute positioning of children */
+  .manifiesto-shaped-card-content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    /* Content inside can be positioned absolutely */
+  }
+
+  /* ===========================
+   CARD CONTENT POSITIONING SYSTEM
+   =========================== 
+   
+   HOW TO POSITION TITLE AND TEXT ELEMENTS WITHIN CARDS:
+   
+   1. Each title and text element uses CSS custom properties for positioning
+   2. To move an element, modify the --card-title-* or --card-text-* variables
+   
+   POSITIONING OPTIONS FOR TITLES:
+   - --card-title-top: Distance from top (e.g., "10%", "50px")
+   - --card-title-left: Distance from left (e.g., "50%", "10%")
+   - --card-title-translate-x: Horizontal offset (e.g., "-50%", "0")
+   - --card-title-translate-y: Vertical offset (e.g., "0", "20px")
+   - --card-title-width: Element width (e.g., "85%", "90%")
+   - --card-title-align: Text alignment (e.g., "center", "left", "right")
+   
+   POSITIONING OPTIONS FOR TEXTS:
+   - --card-text-top: Distance from top
+   - --card-text-left: Distance from left
+   - --card-text-translate-x: Horizontal offset
+   - --card-text-translate-y: Vertical offset
+   - --card-text-width: Element width
+   - --card-text-align: Text alignment
+   
+   FOR MULTIPLE ELEMENTS:
+   - Use nth-of-type selectors: --card-title-2-top, --card-text-2-top, etc.
+   - Or add specific classes to each element
+   
+   =========================== */
+
+  /* Card Title - Positionable within card */
+  .manifiesto-shaped-card-title {
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-subtitle);
+    font-size: 0.9875rem;
+    font-weight: 600;
+    color: var(--color-bg-light);
+    line-height: 1.3;
+    /* Use CSS custom properties for positioning within the card */
+    /* Modify --card-title-top, --card-title-left, etc. to position */
+    top: var(--card-title-top, 7%);
+    left: var(--card-title-left, 50%);
+    right: var(--card-title-right, auto);
+    bottom: var(--card-title-bottom, auto);
+    transform: translate(var(--card-title-translate-x, -50%), var(--card-title-translate-y, 0));
+    width: var(--card-title-width, 85%);
+    max-width: var(--card-title-max-width, 100%);
+    text-align: var(--card-title-align, center);
+    margin: 0;
+  }
+
+  /* Card Text - Positionable within card */
+  .manifiesto-shaped-card-text {
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-text);
+    font-size: 0.79rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    /* Use CSS custom properties for positioning within the card */
+    /* Modify --card-text-top, --card-text-left, etc. to position */
+    top: var(--card-text-top, 22%);
+    left: var(--card-text-left, 50%);
+    right: var(--card-text-right, auto);
+    bottom: var(--card-text-bottom, auto);
+    transform: translate(var(--card-text-translate-x, -50%), var(--card-text-translate-y, 0));
+    width: var(--card-text-width, 85%);
+    max-width: var(--card-text-max-width, 100%);
+    text-align: var(--card-text-align, center);
+    margin: 0;
+  }
+
+  /* Support for multiple titles and texts within a card */
+  /* Each element can be positioned individually using CSS custom properties */
+  /* For cards with multiple titles/texts, use nth-of-type selectors or add specific classes */
+
+  /* Second title in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(2) {
+    top: var(--card-title-2-top, 50%);
+    left: var(--card-title-2-left, 50%);
+    transform: translate(var(--card-title-2-translate-x, -50%), var(--card-title-2-translate-y, 0));
+    width: var(--card-title-2-width, 85%);
+    color: var(--color-brand-primary);
+  }
+
+  /* Third title in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(3) {
+    top: var(--card-title-3-top, 72%);
+    left: var(--card-title-3-left, 50%);
+    transform: translate(var(--card-title-3-translate-x, -50%), var(--card-title-3-translate-y, 0));
+    width: var(--card-title-3-width, 85%);
+    color: var(--color-brand-primary);
+  }
+
+  /* Second text in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(2) {
+    top: var(--card-text-2-top, 57%);
+    left: var(--card-text-2-left, 50%);
+    transform: translate(var(--card-text-2-translate-x, -50%), var(--card-text-2-translate-y, 0));
+    width: var(--card-text-2-width, 85%);
+  }
+
+  /* Third text in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(3) {
+    top: var(--card-text-3-top, 80%);
+    left: var(--card-text-3-left, 50%);
+    transform: translate(var(--card-text-3-translate-x, -50%), var(--card-text-3-translate-y, 0));
+    width: var(--card-text-3-width, 85%);
+  }
+
+
+}
+
+
+
+@media (max-width: 450px) {
+  .manifiesto-section2-merged-title {
+    font-size: 1.75rem;
+    margin-bottom: 2.5rem;
+    color: #fff2db;
+  }
+
+
+  /* ===========================
+   MANIFIESTO SHAPED CARDS - SVG Background Shape
+   =========================== */
+
+  /* Shaped Card Container - Taller for small mobile */
+  .manifiesto-shaped-card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 1.5rem auto;
+    /* Taller aspect ratio for small mobile: makes cards taller */
+    /* Original: 1776.61 / 845.82 ≈ 2.1, New: ~1.4 for taller cards */
+    aspect-ratio: 1776.61 / 1268.73;
+    /* Alternative: use min-height if aspect-ratio doesn't work well */
+    min-height: 400px;
+  }
+
+  /* SVG Background Shape - Scaled to fit taller card */
+  .manifiesto-shaped-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/svg/card-shape-background.svg');
+    background-size: 100% 150%;
+    /* Makes SVG 50% taller to fit the taller card */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  /* Card Content - Positioned over the shape, allows absolute positioning of children */
+  .manifiesto-shaped-card-content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0;
+    /* Content inside can be positioned absolutely */
+  }
+
+  /* ===========================
+   CARD CONTENT POSITIONING SYSTEM
+   =========================== 
+   
+   HOW TO POSITION TITLE AND TEXT ELEMENTS WITHIN CARDS:
+   
+   1. Each title and text element uses CSS custom properties for positioning
+   2. To move an element, modify the --card-title-* or --card-text-* variables
+   
+   POSITIONING OPTIONS FOR TITLES:
+   - --card-title-top: Distance from top (e.g., "10%", "50px")
+   - --card-title-left: Distance from left (e.g., "50%", "10%")
+   - --card-title-translate-x: Horizontal offset (e.g., "-50%", "0")
+   - --card-title-translate-y: Vertical offset (e.g., "0", "20px")
+   - --card-title-width: Element width (e.g., "85%", "90%")
+   - --card-title-align: Text alignment (e.g., "center", "left", "right")
+   
+   POSITIONING OPTIONS FOR TEXTS:
+   - --card-text-top: Distance from top
+   - --card-text-left: Distance from left
+   - --card-text-translate-x: Horizontal offset
+   - --card-text-translate-y: Vertical offset
+   - --card-text-width: Element width
+   - --card-text-align: Text alignment
+   
+   FOR MULTIPLE ELEMENTS:
+   - Use nth-of-type selectors: --card-title-2-top, --card-text-2-top, etc.
+   - Or add specific classes to each element
+   
+   =========================== */
+
+  /* Card Title - Positionable within card */
+  .manifiesto-shaped-card-title {
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-subtitle);
+    font-size: 0.9875rem;
+    font-weight: 600;
+    color: var(--color-bg-light);
+    line-height: 1.3;
+    /* Use CSS custom properties for positioning within the card */
+    /* Modify --card-title-top, --card-title-left, etc. to position */
+    top: var(--card-title-top, 6%);
+    left: var(--card-title-left, 50%);
+    right: var(--card-title-right, auto);
+    bottom: var(--card-title-bottom, auto);
+    transform: translate(var(--card-title-translate-x, -50%), var(--card-title-translate-y, 0));
+    width: var(--card-title-width, 85%);
+    max-width: var(--card-title-max-width, 100%);
+    text-align: var(--card-title-align, center);
+    margin: 0;
+  }
+
+  /* Card Text - Positionable within card */
+  .manifiesto-shaped-card-text {
+    position: absolute;
+    z-index: 2;
+    font-family: var(--font-text);
+    font-size: 0.79rem;
+    color: var(--color-text-primary);
+    line-height: 1.5;
+    /* Use CSS custom properties for positioning within the card */
+    /* Modify --card-text-top, --card-text-left, etc. to position */
+    top: var(--card-text-top, 22%);
+    left: var(--card-text-left, 50%);
+    right: var(--card-text-right, auto);
+    bottom: var(--card-text-bottom, auto);
+    transform: translate(var(--card-text-translate-x, -50%), var(--card-text-translate-y, 0));
+    width: var(--card-text-width, 85%);
+    max-width: var(--card-text-max-width, 100%);
+    text-align: var(--card-text-align, center);
+    margin: 0;
+  }
+
+  /* Support for multiple titles and texts within a card */
+  /* Each element can be positioned individually using CSS custom properties */
+  /* For cards with multiple titles/texts, use nth-of-type selectors or add specific classes */
+
+  /* Second title in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(2) {
+    top: var(--card-title-2-top, 50%);
+    left: var(--card-title-2-left, 50%);
+    transform: translate(var(--card-title-2-translate-x, -50%), var(--card-title-2-translate-y, 0));
+    width: var(--card-title-2-width, 85%);
+    color: var(--color-brand-primary);
+  }
+
+  /* Third title in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(3) {
+    top: var(--card-title-3-top, 72%);
+    left: var(--card-title-3-left, 50%);
+    transform: translate(var(--card-title-3-translate-x, -50%), var(--card-title-3-translate-y, 0));
+    width: var(--card-title-3-width, 85%);
+    color: var(--color-brand-primary);
+  }
+
+  /* Second text in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(2) {
+    top: var(--card-text-2-top, 57%);
+    left: var(--card-text-2-left, 50%);
+    transform: translate(var(--card-text-2-translate-x, -50%), var(--card-text-2-translate-y, 0));
+    width: var(--card-text-2-width, 85%);
+  }
+
+  /* Third text in a card */
+  .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(3) {
+    top: var(--card-text-3-top, 80%);
+    left: var(--card-text-3-left, 50%);
+    transform: translate(var(--card-text-3-translate-x, -50%), var(--card-text-3-translate-y, 0));
+    width: var(--card-text-3-width, 85%);
+  }
+
+
+}
+
+
+/* Tablet styles consolidated in main tablet media query above */
+
+/* Hide on desktop */
+@media (min-width: 1280px) {
+  .manifiesto-shaped-card {
+    display: none;
+  }
+}
+
+/* ===========================
+   MANIFIESTO SECTION 1 - TEXT POSITIONING SYSTEM
+   =========================== 
+   
+   HOW TO POSITION TEXT ELEMENTS:
+   
+   1. Each text element uses CSS custom properties (CSS variables) for positioning
+   2. To move an element, modify the --pos-* variables in the CSS below
+   
+   POSITIONING OPTIONS:
+   - --pos-top: Distance from top (e.g., "10%", "100px", "2rem")
+   - --pos-left: Distance from left (e.g., "50%", "100px", "2rem")
+   - --pos-right: Distance from right (e.g., "10%", "100px", "2rem")
+   - --pos-bottom: Distance from bottom (e.g., "10%", "100px", "2rem")
+   - --pos-translate-x: Horizontal offset for centering (e.g., "-50%", "0", "20px")
+   - --pos-translate-y: Vertical offset for centering (e.g., "-50%", "0", "20px")
+   - --pos-width: Element width (e.g., "85%", "600px", "90vw")
+   - --pos-max-width: Maximum width (e.g., "700px", "800px", "90%")
+   
+   EXAMPLES:
+   
+   To center an element horizontally:
+     --pos-left: 50%;
+     --pos-translate-x: -50%;
+   
+   To position at top-left:
+     --pos-top: 10%;
+     --pos-left: 10%;
+     --pos-translate-x: 0;
+     --pos-translate-y: 0;
+   
+   To position at bottom-right:
+     --pos-bottom: 10%;
+     --pos-right: 10%;
+     --pos-translate-x: 0;
+     --pos-translate-y: 0;
+   
+   To make element wider:
+     --pos-width: 95%;
+     --pos-max-width: 1200px;
+   
+   =========================== */
+
+/* Base styles for all text elements in section 1 */
+.manifiesto-text-element {
+  position: absolute;
+  z-index: 10;
+  /* Use CSS custom properties for easy positioning */
+  /* Modify --pos-top, --pos-left, --pos-right, --pos-bottom to position */
+  top: var(--pos-top, 50%);
+  left: var(--pos-left, 50%);
+  right: var(--pos-right, auto);
+  bottom: var(--pos-bottom, auto);
+  transform: translate(var(--pos-translate-x, -50%),
+      var(--pos-translate-y, -50%));
+  width: var(--pos-width, 90%);
+  max-width: var(--pos-max-width, 800px);
+}
+
+/* ===========================
+   MANIFIESTO IMAGE - DESKTOP ONLY
+   =========================== 
+   
+   POSITIONING SYSTEM:
+   The image uses CSS custom properties for easy positioning, similar to text elements.
+   
+   HOW TO POSITION THE IMAGE:
+   1. Modify CSS custom properties in the desktop media query or inline styles
+   2. Available properties:
+      - --img-top: Distance from top (e.g., "20%", "100px")
+      - --img-left: Distance from left (e.g., "50%", "10%")
+      - --img-right: Distance from right (e.g., "10%", "auto")
+      - --img-bottom: Distance from bottom (e.g., "10%", "auto")
+      - --img-translate-x: Horizontal offset (e.g., "-50%", "0", "20px")
+      - --img-translate-y: Vertical offset (e.g., "-50%", "0", "-20px")
+      - --img-width: Image width (e.g., "400px", "30%", "auto")
+      - --img-max-width: Maximum width (e.g., "600px", "50%")
+   
+   EXAMPLE:
+   To position the image at top-left:
+   --img-top: 10%;
+   --img-left: 10%;
+   --img-translate-x: 0;
+   --img-translate-y: 0;
+   
+   =========================== */
+
+.manifiesto-image-element {
+  position: absolute;
+  z-index: 5;
+  /* Use CSS custom properties for easy positioning */
+  /* Modify --img-top, --img-left, --img-right, --img-bottom to position */
+  top: var(--img-top, 50%);
+  left: var(--img-left, 50%);
+  right: var(--img-right, auto);
+  bottom: var(--img-bottom, auto);
+  transform: translate(var(--img-translate-x, -50%), var(--img-translate-y, -50%));
+  width: var(--img-width, auto);
+  max-width: var(--img-max-width, 600px);
+  height: auto;
+  /* Clip path: ellipse(39% 42% at 50% 50%) */
+  clip-path: ellipse(39% 42% at 50% 50%);
+  object-fit: cover;
+  display: none;
+  /* Hidden by default, shown on mobile/tablet/desktop with appropriate styles */
+}
+
+/* Main Title */
+.manifiesto-title {
+  font-family: var(--font-title);
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.2;
+  /* Default position - adjust these values to move the title */
+  --pos-top: 10%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: auto;
+  --pos-max-width: 90%;
+}
+
+/* Text paragraphs - Each has its own positioning */
+.manifiesto-text-1 {
+  font-family: var(--font-malisha);
+  font-size: 0.875rem;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.7;
+  /* Position: Adjust --pos-top to move vertically, --pos-left for horizontal */
+  --pos-top: 20%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+.manifiesto-text-2 {
+  font-family: var(--font-malisha);
+  font-size: 0.875rem;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.7;
+  --pos-top: 35%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+.manifiesto-text-3 {
+  font-family: var(--font-malisha);
+  font-size: 0.875rem;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.7;
+  --pos-top: 50%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+.manifiesto-text-4 {
+  font-family: var(--font-malisha);
+  font-size: 0.875rem;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.7;
+  --pos-top: 65%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+.manifiesto-text-5 {
+  font-family: var(--font-malisha);
+  font-size: 0.875rem;
+  color: var(--color-brand-primary);
+  text-align: center;
+  line-height: 1.7;
+  --pos-top: 80%;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: 85%;
+  --pos-max-width: 700px;
+}
+
+/* Mobile/Tablet - Center all text elements with relative positioning */
+@media (max-width: 1279px) {
+  .section-manifiesto-1-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 1rem 1rem;
+    gap: 0;
+    width: 100%;
+  }
+
+  /* Hide text elements on mobile/tablet - they'll be in cards, except the title */
+  .manifiesto-text-element {
+    display: none;
+  }
+
+  /* Show main title on mobile/tablet - Better positioning with UX best practices */
+  .manifiesto-title {
+    display: block !important;
+    color: #F0EACE !important;
+    margin: 0 auto 2.5rem auto;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    padding: 0 1rem;
+    font-size: 3rem;
+    line-height: 1.2;
+    font-weight: 400;
+  }
+
+  /* Show cards container for mobile/tablet */
+  .section-manifiesto-1-text-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 1.25rem;
+    padding: 0 1rem 2.5rem 1rem;
+    padding-top: 10rem;
+  }
+
+  .manifiesto-text-card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    border-radius: 0px 15px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .manifiesto-text-card-title {
+    font-family: var(--font-title);
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--color-brand-primary);
+    text-align: center;
+    margin: 0;
+  }
+
+  .manifiesto-text-card-text {
+    font-family: var(--font-malisha);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    text-align: left;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .manifiesto-text-1 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .manifiesto-text-2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .manifiesto-text-3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .manifiesto-text-4 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .manifiesto-text-5 {
+    margin-top: 0;
+    margin-bottom: 2rem;
+  }
+
+}
+
+/* Tablet text sizing - Consolidated in main tablet media query above */
+
+/* Desktop: Hide text cards, show text elements and image */
+@media (min-width: 1280px) {
+  .section-manifiesto-1-text-cards {
+    display: none;
+  }
+
+  .manifiesto-text-element {
+    display: block;
+  }
+
+  /* Show and position the manifiesto image */
+  .manifiesto-image-element {
+    display: block;
+    --img-top: 65%;
+    --img-left: 14%;
+    --img-translate-x: -50%;
+    --img-translate-y: -50%;
+    --img-width: auto;
+    --img-max-width: 450px;
+  }
+}
+
+
+@media (min-width: 1450px) {
+
+  /* Show and position the manifiesto image */
+  .manifiesto-image-element {
+    display: block;
+    --img-top: 60%;
+    --img-left: 13%;
+    --img-translate-x: -50%;
+    --img-translate-y: -50%;
+    --img-width: auto;
+    --img-max-width: 490px;
+  }
+
+}
+
+
+@media (min-width: 1550px) {
+
+  /* Show and position the manifiesto image */
+  .manifiesto-image-element {
+    display: block;
+    --img-top: 55%;
+    --img-left: 14%;
+    --img-translate-x: -50%;
+    --img-translate-y: -50%;
+    --img-width: auto;
+    --img-max-width: 615px;
+  }
+
+}
+
+
+
+/* Desktop positioning starts at 1280px - see below */
+
+@media (min-width: 1280px) {
+  .manifiesto-title {
+    top: 1rem;
+    width: 100%;
+    font-size: 6rem;
+    left: 43%;
+
+  }
+
+  .manifiesto-text-1 {
+    top: 21%;
+    font-size: 1.4rem;
+    max-width: 80%;
+  }
+
+  .manifiesto-text-2 {
+    top: 31%;
+    font-size: 1.15rem;
+    max-width: 80%;
+    left: 52%;
+  }
+
+  .manifiesto-text-3 {
+    top: 59.5%;
+    font-size: 1.35rem;
+    left: 67%;
+    max-width: 41%;
+  }
+
+  .manifiesto-text-4 {
+    top: 81.5%;
+    font-size: 1.2rem;
+    max-width: 100%;
+  }
+
+  .manifiesto-text-5 {
+    top: 96%;
+    font-size: 1.35rem;
+    max-width: 100%;
+  }
+
+}
+
+@media (min-width: 1450px) {
+  .manifiesto-title {
+    top: 2%;
+    width: 100%;
+    font-size: 6rem;
+    left: 42%;
+
+  }
+
+  .manifiesto-text-1 {
+    top: 20%;
+    font-size: 1.65rem;
+    max-width: 80%;
+  }
+
+  .manifiesto-text-2 {
+    top: 28.5%;
+    font-size: 1.35rem;
+    max-width: 80%;
+    left: 52%;
+  }
+
+  .manifiesto-text-3 {
+    top: 56%;
+    font-size: 1.45rem;
+    left: 67%;
+  }
+
+  .manifiesto-text-4 {
+    top: 76%;
+    font-size: 1.37rem;
+    max-width: 82%;
+  }
+
+  .manifiesto-text-5 {
+    top: 90%;
+    font-size: 1.65rem;
+    max-width: 100%;
+  }
+
+}
+
+@media (min-width: 1550px) {
+
+
+  .manifiesto-text-1 {
+    top: 18.5%;
+    font-size: 1.8rem;
+    max-width: 75%;
+  }
+
+  .manifiesto-text-2 {
+    top: 27%;
+    font-size: 1.4rem;
+    max-width: 100%;
+    left: 52%;
+  }
+
+  .manifiesto-text-3 {
+    top: 52.5%;
+    font-size: 1.65rem;
+    left: 67%;
+  }
+
+  .manifiesto-text-4 {
+    top: 70%;
+    font-size: 1.6rem;
+    max-width: 80%;
+
+  }
+
+  .manifiesto-text-5 {
+    top: 82.5%;
+    font-size: 1.8rem;
+    max-width: 100%;
+  }
+
+}
+
+/* Mobile adjustments */
+@media (max-width: 767px) {
+
+  .section-manifiesto-1-text-cards {
+
+    padding-top: 3rem;
+  }
+
+  .manifiesto-text-element {
+    width: 95%;
+    padding: 0 1rem;
+  }
+
+  .manifiesto-title {
+    font-size: 1.8rem;
+    top: 2%;
+
+  }
+
+  .manifiesto-text-1 {
+    font-size: 0.8125rem;
+    max-width: 100%;
+    top: 17%;
+  }
+
+  .manifiesto-text-2 {
+    font-size: 0.8125rem;
+  }
+
+  .manifiesto-text-3 {
+    font-size: 0.8125rem;
+  }
+
+  .manifiesto-text-4 {
+    font-size: 0.8125rem;
+  }
+
+  .manifiesto-text-5 {
+    font-size: 0.8125rem;
+  }
+
+    /* Manifiesto Image - Mobile */
+    .manifiesto-image-element {
+      display: block;
+      position: relative;
+      width: 100%;
+      max-width: 280px;
+      margin: 1.5rem auto 2rem auto;
+      clip-path: ellipse(39% 42% at 50% 50%);
+      object-fit: cover;
+      top: 3rem;
+      left: auto;
+      right: auto;
+      bottom: auto;
+      transform: none;
+      z-index: 5;
+    }
+}
+

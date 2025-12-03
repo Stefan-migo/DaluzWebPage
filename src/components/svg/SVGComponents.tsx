@@ -1158,3 +1158,200 @@ export const NeurocosmeticaIcon: React.FC<SVGProps> = ({
     </div>
   );
 };
+
+// ✨ MANIFIESTO SECTION 1 BACKGROUND
+export const ManifiestoSection1Background: React.FC<{
+  bgColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F6FBD6", // Default theme background color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      {/* Mobile/Tablet SVG Background - Height adapts to content */}
+      <div
+        className="xl:hidden absolute inset-0 w-full overflow-hidden"
+        style={{
+          width: '100%',
+          height: '100%',
+          minHeight: '100%',
+          zIndex: 0
+        }}
+      >
+        <img
+          src="/svg/manifiesto-section1-mobile-tablet-background.svg"
+          alt=""
+          className="w-full h-full"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%'
+          }}
+        />
+      </div>
+      
+      {/* Desktop SVG Background - Fixed height based on aspect ratio */}
+      <div 
+        className="hidden xl:block absolute top-0 left-0 w-full overflow-hidden svg-container-desktop" 
+        style={{ 
+          maxWidth: '100%',
+          width: '100%',
+          aspectRatio: '1920.08 / 3140.34', // Desktop SVG aspect ratio
+          height: 'auto',
+          minHeight: 'calc(100vw * (3140.34 / 1920.08))',
+          zIndex: 0
+        }}
+      >
+        <img
+          src="/svg/manifiesto-section1-background.svg"
+          alt=""
+          className="w-full h-full"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            display: 'block',
+            height: '100%',
+            width: '100%',
+            minWidth: '100%',
+            minHeight: '100%',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// ✨ MANIFIESTO SECTION 2 MERGED BACKGROUND (Sections 2 & 3 combined)
+export const ManifiestoSection2MergedBackground: React.FC<{
+  bgColor?: string;
+  className?: string;
+}> = ({ 
+  bgColor = "#F6FBD6", // Default theme background color
+  className = ""
+}) => {
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full ${className}`}
+      style={{
+        backgroundColor: bgColor,
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+        minHeight: '100%',
+        minWidth: '100%',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
+      } as React.CSSProperties}
+    >
+      {/* Mobile SVG Background - Height adapts to content */}
+      <div
+        className="md:hidden absolute top-0 left-0 w-full overflow-hidden"
+        style={{
+          maxWidth: '100%',
+          width: '100%',
+          height: '100%', // Adapts to section height
+          minHeight: '100%',
+          zIndex: 0
+        }}
+      >
+        <img
+          src="/svg/manifiesto-section2-mobile-background.svg"
+          alt=""
+          className="w-full h-full"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%'
+          }}
+        />
+      </div>
+
+      {/* Tablet SVG Background - Full width, height adapts to content */}
+      <div
+        className="hidden md:block xl:hidden absolute top-0 left-0 w-full overflow-hidden svg-container-tablet"
+        style={{
+          maxWidth: '100%',
+          width: '100%',
+          height: '100%',
+          minHeight: '100%',
+          zIndex: 0
+        }}
+      >
+        <img
+          src="/svg/manifiesto-section2-mobile-background.svg"
+          alt=""
+          className="w-full h-full"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center top',
+            display: 'block',
+            width: '100%',
+            height: '100%',
+            minHeight: '100%'
+          }}
+        />
+      </div>
+      
+      {/* Desktop SVG Background - Fixed height based on aspect ratio */}
+      <div 
+        className="hidden xl:block absolute top-0 left-0 w-full overflow-hidden svg-container-desktop" 
+        style={{ 
+          maxWidth: '100%',
+          width: '100%',
+          aspectRatio: '1924.37 / 5362.08', // Desktop SVG aspect ratio
+          height: 'auto',
+          minHeight: 'calc(100vw * (5362.08 / 1924.37))',
+          zIndex: 0
+        }}
+      >
+        <img
+          src="/svg/manifiesto-section2-merged-background.svg"
+          alt=""
+          className="w-full h-full"
+          style={{
+            objectFit: 'cover',
+            objectPosition: 'center',
+            display: 'block',
+            height: '100%',
+            width: '100%',
+            minWidth: '100%',
+            minHeight: '100%',
+            maxWidth: '100%',
+            maxHeight: '100%',
+            transform: 'translateZ(0)',
+            WebkitTransform: 'translateZ(0)',
+            backfaceVisibility: 'hidden',
+            WebkitBackfaceVisibility: 'hidden'
+          }}
+        />
+      </div>
+    </div>
+  );
+};
