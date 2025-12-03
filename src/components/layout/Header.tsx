@@ -142,8 +142,8 @@ export default function Header() {
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
             <Link href="/" className="flex items-center space-x-3">
-              {/* SVG Logo - Hidden on mobile */}
-              <div className="flex-shrink-0 hidden md:block">
+              {/* SVG Logo - Hidden on mobile/tablet */}
+              <div className="flex-shrink-0 hidden xl:block">
                 <Image 
                   src="/svg/logo.svg" 
                   alt="DA LUZ Logo" 
@@ -166,7 +166,7 @@ export default function Header() {
             </Link>
 
             {/* Desktop Navigation - REORDERED: Tienda, Alkimya, Nosotros, Servicios, Blog, Membresia */}
-            <NavigationMenu className="hidden md:flex">
+            <NavigationMenu className="hidden xl:flex">
               <NavigationMenuList>
                 <NavigationMenuItem>
                   <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
@@ -498,7 +498,7 @@ export default function Header() {
             </NavigationMenu>
 
             {/* User Menu / Auth Buttons - DESKTOP ONLY */}
-            <div className="hidden md:flex items-center space-x-4">
+            <div className="hidden xl:flex items-center space-x-4">
               {/* Shopping Cart - Available for all users */}
               <Button 
                 variant="ghost" 
@@ -610,8 +610,8 @@ export default function Header() {
               )}
             </div>
 
-            {/* MOBILE MENU - Enhanced with Cart and User Auth at bottom */}
-            <div className="flex md:hidden items-center space-x-3">
+            {/* MOBILE/TABLET MENU - Enhanced with Cart and User Auth at bottom */}
+            <div className="flex xl:hidden items-center space-x-3">
               {/* Mobile Shopping Cart */}
               <Button 
                 variant="ghost" 

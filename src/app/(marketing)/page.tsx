@@ -498,7 +498,7 @@ export default async function HomePage() {
       {/* ✨ ENHANCED LÍNEA ECOS */}
       <Link href="/categorias/linea-ecos" className="block group">
       <section
-          className="section-enhanced relative py-12 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
+          className="relative py-12 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#12406F' }}
       >
         {/* Enhanced Background */}
@@ -559,7 +559,7 @@ export default async function HomePage() {
       {/* ✨ ENHANCED LÍNEA UMBRAL */}
       <Link href="/categorias/linea-umbral" className="block group">
       <section
-          className="section-enhanced relative py-12 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
+          className="relative py-12 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
         style={{ backgroundColor: '#EA4F12' }}
       >
         {/* Enhanced Background */}

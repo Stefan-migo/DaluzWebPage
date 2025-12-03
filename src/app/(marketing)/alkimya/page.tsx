@@ -1,292 +1,320 @@
 'use client';
 
 import { NextPage } from 'next';
-import Image from 'next/image';
 import {
   EcologicaVeganaIcon,
   PoderBotanicoIcon,
   TransmutacionCoherenciaIcon,
-  NeurocosmeticaIcon
+  NeurocosmeticaIcon,
+  ManifiestoSection1Background,
+  ManifiestoSection2MergedBackground
 } from "@/components/svg/SVGComponents";
 
 const AlkimyaPage: NextPage = () => {
   return (
-    <div className="relative" style={{ minHeight: '200vh' }}>
-      {/* Background Pattern */}
-      <div className="absolute top-[-36rem] inset-0 z-0">
-        {/* First Block - Normal */}
-        <div className="absolute top-0 left-0 w-full h-[2160px]">
-          {/* Layer 1: Background Pattern */}
-          <div 
-            className="absolute inset-0"
-            style={{
-              top: '-65rem',
-              backgroundImage: 'url(/svg/bgMirrowed.svg)',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center top'
-            }}
-          />
-          {/* Layer 2: 01.svg */}
-          <div 
-            className="absolute inset-0"
-            style={{
-              top: '-65rem',
-              backgroundImage: 'url(/svg/001.svg)',
-              backgroundRepeat: 'no-repeat',
-              backgroundPosition: 'center top'
-            }}
-          />
-        </div>
-        
-        {/* Second Block - Flipped Vertically */}
-        <div 
-          className="absolute top-[2160px] left-0 w-full h-[2160px]"
-          style={{
-            backgroundImage: 'url(/svg/bgMirrowed.svg)',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center top',
-            transform: 'scaleY(-1)',
-            top: '14.3rem',
-          }}
-        />
-        
-        {/* Third Block - Normal */}
-        <div 
-          className="absolute top-[4320px] left-0 w-full h-[2160px]"
-          style={{
-            backgroundImage: 'url(/svg/bgMirrowed.svg)',
-            backgroundSize: '1920px 2160px',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center top'
-          }}
-        />
-        
-        {/* Fourth Block - Flipped Vertically */}
-        <div 
-          className="absolute top-[6480px] left-0 w-full h-[2160px]"
-          style={{
-            backgroundImage: 'url(/svg/bgMirrowed.svg)',
-            backgroundSize: '1920px 2160px',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center top',
-            transform: 'scaleY(-1)'
-          }}
-        />
-        
-        {/* Additional blocks for very long pages */}
-        <div 
-          className="absolute top-[8640px] left-0 w-full h-[2160px]"
-          style={{
-            backgroundImage: 'url(/svg/bgMirrowed.svg)',
-            backgroundSize: '1920px 2160px',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center top'
-          }}
-        />
-        
-        <div 
-          className="absolute top-[10800px] left-0 w-full h-[2160px]"
-          style={{
-            backgroundImage: 'url(/svg/bgMirrowed.svg)',
-            backgroundSize: '1920px 2160px',
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'center top',
-            transform: 'scaleY(-1)'
-          }}
-        />
-      </div>
-
-      {/* Third Layer: Text Content - Easily Positionable */}
-      <div 
-      className="absolute inset-0 z-20 pointer-events-none"
-      style={{
-        top: '-101rem',
-      }}
+    <div className="relative">
+      {/* Section 1 - Features Grid with Background */}
+      {/* Section height adapts to SVG aspect ratio: Mobile (1170 / 3950.83 ≈ 0.296) | Desktop (1920.08 / 3140.34 ≈ 0.611) */}
+      <section
+        className="relative px-6 overflow-hidden flex flex-col section-manifiesto-1"
       >
-        
-        {/* Text1: Main Title */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '3.5rem',
-            left: '8rem',
-            right: '8rem'
-          }}
-        >
-          <h1 className="text-6xl md:text-8xl lg:text-7xl font-bold text-line-primary font-velista tracking-wider drop-shadow-2xl">
-            Alkimya Da Luz
+        {/* Background - Full section */}
+        <ManifiestoSection1Background
+          bgColor="#F6FBD6"
+          className="opacity-100"
+        />
+
+        {/* Content Area - Flexible area for adding text and other elements */}
+        <div className="relative z-10 flex-1 section-manifiesto-1-content">
+          {/* Main Title */}
+          <h1 className="manifiesto-text-element manifiesto-title">
+            Manifiesto Alkimyco
           </h1>
+
+          {/* Text 1 */}
+          <p className="manifiesto-text-element manifiesto-text-1">
+            Neurocosmética que Transforma: una fusión entre los saberes ancestrales y la química moderna. Creada para quienes buscan ir más allá de la cosmética, deseando una experiencia de transformación genuina
+          </p>
+
+          {/* Text 2 */}
+          <p className="manifiesto-text-element manifiesto-text-2">
+            Sabemos que la verdadera belleza radica en la armonía integral; por eso, inspirada en la sabiduría de las medicinas ancestrales que transformaron la conexión con mi cuerpo, he creado alquimias diversas con el sincero deseo de acompañarte a equilibrar no sólo la salud de tu piel, sino también la armonía de tus emociones y la claridad de tus pensamientos.
+          </p>
+
+          {/* Text 3 */}
+          <p className="manifiesto-text-element manifiesto-text-3">
+            Como la naturaleza misma, nuestros cuerpos hablan, y Da Luz es el puente para escucharlos, para que a través de cada aroma, cada toque, cada gota, y cada sonido puedas reconectar con lo más profundo de tu Ser.
+          </p>
+
+          {/* Text 4 */}
+          <p className="manifiesto-text-element manifiesto-text-4">
+            Nuestras fórmulas se elaboran con materias primas de alta calidad, ecológicas y libres de crueldad animal. Utilizamos aceites esenciales puros, aceites vegetales prensados en frío, hierbas medicinales y otros ingredientes cosméticos cuidadosamente seleccionados, que honran la integridad de tu cuerpo y la vitalidad de nuestro ecosistema, conscientes de la influencia mutua de nuestras elecciones.
+          </p>
+
+          {/* Text 5 */}
+          <p className="manifiesto-text-element manifiesto-text-5">
+            Te propongo una conexión Alquímica con tu propio cuerpo, tus sentidos y vos: una ceremonia de conexión.
+          </p>
+
+          {/* Manifiesto Image - Responsive (Mobile, Tablet, Desktop) */}
+          <img 
+            src="/images/manifiesto-image.png" 
+            alt="Manifiesto Alkimyco"
+            className="manifiesto-image-element"
+          />
+
+          {/* Mobile/Tablet Text Cards - Hidden on desktop */}
+          <div className="section-manifiesto-1-text-cards">
+            {/* Card 1: Neurocosmética que Transforma */}
+            <div className="manifiesto-text-card">
+              <p className="manifiesto-text-card-text">
+                Neurocosmética que Transforma: una fusión entre los saberes ancestrales y la química moderna. Creada para quienes buscan ir más allá de la cosmética, deseando una experiencia de transformación genuina
+              </p>
         </div>
 
-        {/* Text2: Secondary Title */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '16rem',
-            left: '80px',
-            right: '80px',
-            textAlign: 'center'
-          }}
-        >
-          <h2 className="text-2xl md:text-3xl lg:text-3xl text-line-primary font-heading leading-relaxed drop-shadow-lg">
-            <strong>Neurocosmética que Transforma:</strong> una fusión entre los saberes ancestrales y la química moderna.
-          </h2>
-        </div>
-
-        {/* Text3: Subtitle */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '21.5rem',
-            left: '100px',
-            right: '100px',
-            textAlign: 'center'
-          }}
-        >
-          <h3 className="text-lg md:text-xl lg:text-1xl font-medium text-line-primary font-body leading-relaxed drop-shadow-md">
-            Creada para quienes buscan ir más allá de la cosmética, deseando una experiencia de transformación genuina.
-          </h3>
-        </div>
-
-        {/* Text4: First Paragraph */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '30.6rem',
-            left: '12rem',
-            right: '8rem'
-          }}
-        >
-          <p className="text-base md:text-lg lg:text-xl text-line-primary font-body leading-relaxed drop-shadow-sm">
-            Sabemos que la verdadera belleza radica en la armonía integral; por eso Inspirada en la sabiduría de las medicinas ancestrales que transformaron la conexión con mi cuerpo, he creado alquimias diversas con el sincero deseo de acompañarte a equilibrar no sólo la salud de tu piel, sino también la armonía de tus emociones y la claridad de tus pensamientos.
+            {/* Card 3: Armonía integral */}
+            <div className="manifiesto-text-card">
+              <p className="manifiesto-text-card-text">
+                Sabemos que la verdadera belleza radica en la armonía integral; por eso, inspirada en la sabiduría de las medicinas ancestrales que transformaron la conexión con mi cuerpo, he creado alquimias diversas con el sincero deseo de acompañarte a equilibrar no sólo la salud de tu piel, sino también la armonía de tus emociones y la claridad de tus pensamientos.
           </p>
         </div>
 
-        {/* Text5: Second Paragraph */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '61rem',
-            left: '41rem',
-            right: '11rem',
-            maxWidth: '43rem',
-            textAlign: 'center'
-          }}
-        >
-          <p className="text-base md:text-lg lg:text-xl text-line-primary font-body leading-relaxed drop-shadow-sm">
+            {/* Card 4: Nuestros cuerpos hablan */}
+            <div className="manifiesto-text-card">
+              <p className="manifiesto-text-card-text">
             Como la naturaleza misma, nuestros cuerpos hablan, y Da Luz es el puente para escucharlos, para que a través de cada aroma, cada toque, cada gota, y cada sonido puedas reconectar con lo más profundo de tu Ser.
           </p>
         </div>
 
-        {/* Text6: Third Paragraph */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '84rem',
-            left: '6rem',
-            right: '2rem',
-            maxWidth: '80rem',
-            textAlign: 'center'
-          }}
-        >
-          <p className="text-sm md:text-base lg:text-lg text-line-primary font-body leading-relaxed drop-shadow-sm">
-            Nuestras fórmulas se elaboran con materias primas de alta calidad y libres de crueldad animal. Utilizamos aceites esenciales puros, aceites vegetales prensados en frío, hierbas medicinales, ácidos grasos, y otros activos cuidadosamente seleccionados, que honran la integridad de tu cuerpo y la vitalidad de nuestro ecosistema, conscientes de la influencia mutua de nuestras elecciones.
+            {/* Card 5: Materias primas */}
+            <div className="manifiesto-text-card">
+              <p className="manifiesto-text-card-text">
+                Nuestras fórmulas se elaboran con materias primas de alta calidad, ecológicas y libres de crueldad animal. Utilizamos aceites esenciales puros, aceites vegetales prensados en frío, hierbas medicinales y otros ingredientes cosméticos cuidadosamente seleccionados, que honran la integridad de tu cuerpo y la vitalidad de nuestro ecosistema, conscientes de la influencia mutua de nuestras elecciones.
           </p>
         </div>
 
-        {/* Text7: Fourth Paragraph */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '99.5rem',
-            left: '6rem',
-            right: '2rem',
-            maxWidth: '84rem',
-            textAlign: 'center'
-          }}
-        >
-        <p className="text-base md:text-lg lg:text-xl text-line-primary font-body leading-relaxed drop-shadow-md font-medium">
-            Te propongo algo mucho más allá de la belleza física, de tu equilibrio físico…
-            Te propongo una conexión Alquimica con tu propio cuerpo,<br/>
-            Tus sentidos y vos, una ceremonia de conexión.
+            {/* Card 6: Conexión Alquímica */}
+            <div className="manifiesto-text-card">
+              <p className="manifiesto-text-card-text">
+                Te propongo una conexión Alquímica con tu propio cuerpo, tus sentidos y vos: una ceremonia de conexión.
           </p>
         </div>
-
+          </div>
       </div>
 
-      {/* Fourth Layer: Image Content - Easily Positionable */}
-      <div 
-        className="absolute inset-0 z-25 pointer-events-none"
-        style={{
-          top: '-101rem',
-        }}
+        {/* Cards Container - Always positioned at the bottom */}
+        <div className="relative z-10 container px-0 mx-auto max-w-7xl mb-[3rem] md:mb-[3rem] lg:mb-[8rem] xl:mb-[15rem] mt-auto section-manifiesto-1-cards">
+          {/* Mobile: 2x2 grid (2 rows, 2 columns) | Desktop: 4 columns */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 lg:gap-6">
+            <div className="card-enhanced manifiesto-card text-center">
+              <EcologicaVeganaIcon size={48} className="mx-auto mb-4 md:mb-6 manifiesto-card-icon" />
+              <h3 className="font-subtitle text-brand-primary mb-3 md:mb-4 manifiesto-card-title">Ecológica y Vegana</h3>
+              <p className="font-caption text-gray-600 manifiesto-card-text">Ecología y Consciencia: Respetamos toda forma de vida, eligiendo ingredientes sostenibles y envases conscientes en cada paso, asegurando la protección de la Madre Tierra.</p>
+            </div>
+            <div className="card-enhanced manifiesto-card text-center">
+              <PoderBotanicoIcon size={48} className="mx-auto mb-4 md:mb-6 manifiesto-card-icon" />
+              <h3 className="font-subtitle text-brand-primary mb-3 md:mb-4 manifiesto-card-title">Poder Botánico y Natural</h3>
+              <p className="font-caption text-gray-600 manifiesto-card-text">Poder Botánico y Natural: Honramos el poder concentrado de las plantas (Fitoterapia, tradición herbolaria) y creamos con ellas para promover tu bienestar integral.</p>
+            </div>
+            <div className="card-enhanced manifiesto-card text-center">
+              <TransmutacionCoherenciaIcon size={48} className="mx-auto mb-4 md:mb-6 manifiesto-card-icon" />
+              <h3 className="font-subtitle text-brand-primary mb-3 md:mb-4 manifiesto-card-title">Transmutación y Coherencia</h3>
+              <p className="font-caption text-gray-600 manifiesto-card-text">Coherencia y Transmutación: Fórmulas para tu Bioequilibrio. Fusionamos la sabiduría botánica con activos biotecnológicos conscientes para crear sinergias potenciadoras.</p>
+            </div>
+            <div className="card-enhanced manifiesto-card text-center">
+              <NeurocosmeticaIcon size={48} className="mx-auto mb-4 md:mb-6 manifiesto-card-icon" />
+              <h3 className="font-subtitle text-brand-primary mb-3 md:mb-4 manifiesto-card-title">Neurocosmética Vibracional</h3>
+              <p className="font-caption text-gray-600 manifiesto-card-text">Neurocosmética Vibracional: Honramos la comunicación entre tu piel y tu mente. El uso intencionado de aceites esenciales refuerza tu bioequilibrio integralmente.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 2 Merged */}
+      <section
+        className="relative px-6 overflow-hidden flex flex-col section-manifiesto-2-merged"
       >
-        {/* Image Layer */}
-        <div 
-          className="absolute pointer-events-auto"
-          style={{
-            top: '53.5rem',
-            left: '42%',
-            transform: 'translateX(-121%)',
-            width: '590px',
-            height: '404px'
-          }}
-        >
-          <div 
-            className="w-full h-full"
-            style={{
-              clipPath: 'ellipse(32% 49% at 50% 50%)',
-              overflow: 'hidden'
-            }}
-          >
-            <Image
-              src="/images/alkimya/image.png"
-              alt="Alkimya Da Luz - Meditative Practice"
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
-            />
+        {/* Background - Full section */}
+        <ManifiestoSection2MergedBackground
+          bgColor="#F6FBD6"
+          className="opacity-100"
+        />
+
+        {/* Content Area - Flexible area for adding text and other elements */}
+        <div className="relative z-10 flex-1 section-manifiesto-2-merged-content">
+          {/* Main Title */}
+          <h1 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-title">
+            NUESTROS VALORES: COMPROMISO DETALLADO
+          </h1>
+
+          {/* Secondary Title 1: Ecología y Conciencia */}
+          <h2 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-1">
+            Ecología y Conciencia: Honrando el Planeta y toda forma de vida
+          </h2>
+
+          {/* Text 1 */}
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-1">
+            Creemos que es innecesario dañar la Madre Tierra, nuestro propio cuerpo y/o los seres vivos con los que convivimos para cuidarnos. Por eso rechazamos el uso de cualquier ingrediente o subproducto de origen animal en nuestras formulaciones., así como tampoco realizamos pruebas en animales. y nos comprometemos a:
+          </p>
+
+          <h3 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-1a">
+            Envases Conscientes:
+          </h3>
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-1a">
+            Nuestros envases son elegidos por su capacidad de ser reutilizados, reciclados o biodegradados. Te invitamos a darles una segunda vida.
+          </p>
+          <h3 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-1b">
+            Balance en la Formulación:
+          </h3>
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-1b">
+            Buscamos un equilibrio consciente, utilizando activos sintéticos de origen vegetal cuando es la opción más responsable que evita agotar la naturaleza
+          </p>
+
+          {/* Secondary Title 2: Poder Botánico y Natural */}
+          <h2 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-2">
+            Poder Botánico y Natural: La Naturaleza a tu favor
+          </h2>
+
+          {/* Text 2 */}
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-2">
+            La naturaleza es nuestra farmacia más sabia. Basándonos en la tradición herbolaria y en mi formación en fitoterapia, seleccionamos extractos, aceites esenciales, hidrolatos, aceites vegetales y tinturas madre por sus beneficios específicos para los diversos biotipos de piel, las emociones y la función de los diversos órganos.
+          </p>
+
+          {/* Secondary Title 3: Coherencia y Transmutación */}
+          <h2 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-3">
+            Coherencia y Transmutación: Fórmulas para tu Bioequilibrio
+          </h2>
+
+          {/* Text 3 */}
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-3">
+            Cada producto está diseñado con una intención clara, fusionando la sabiduría botánica con activos biotecnológicos conscientes. Con base en la individualidad formulamos con consciencia de los diferentes tipos de piel y cabellos (biotipos y doshas) que existen, por eso mismo creamos sinergias potenciadoras que te invitan a nutrir tu Ser en coherencia con lo que tu cuerpo necesita, desde el Amor y la Presencia.
+          </p>
+
+          {/* Secondary Title 4: Neurocosmética Vibracional */}
+          <h2 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-4">
+            Neurocosmética Vibracional
+          </h2>
+
+          {/* Text 4 */}
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-4">
+            Nuestra cosmética es una invitación a potenciar y honrar la comunicación entre tu piel y tu mente, usando tus Sentidos como un canal a tu favor. El uso intencionado de aceites esenciales no solo tiene beneficios físicos, sino que también crea una resonancia emocional y sensorial que refuerza tu bioequilibrio integralmente.
+          </p>
+
+          {/* Secondary Title 5: Nuestro compromiso sustentable */}
+          <h2 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-5">
+            Nuestro compromiso sustentable
+          </h2>
+
+          {/* Text 5 */}
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-5">
+          En Da Luz, creemos en la importancia de ser conscientes de nuestros consumos y responsables con nuestros residuos. Por eso, nuestros envases son de vidrio color ámbar o transparente, lo que asegura una mejor conservación del producto y evita la liberación de sustancias tóxicas si las Alquimias quedan expuestas al sol o a altas temperaturas. Además, nuestros envases te invitan a la consciencia del re-ciclo y a la creatividad de re-utilizar.
+          </p>
+
+          {/* Secondary Title 6: Reutilizalos! */}
+          <h2 className="manifiesto-section2-merged-text-element manifiesto-section2-merged-subtitle-6">
+            Reutilizalos!
+          </h2>
+
+          {/* Text 6 */}
+          <p className="manifiesto-section2-merged-text-element manifiesto-section2-merged-text-6">
+            Podés devolver tus envases limpios y lavados para acceder a descuentos. <strong>Puntos de reciclaje:</strong> Si no te interesan las opciones anteriores, podes dejar tus envases (y todos los residuos que generes) en un punto cercano de reciclaje. Te dejamos 2 sitios para que encuentres la mejor opción y ubicación para hacerte cargo de tus consumos de forma consciente
+          </p>
+
+
+          {/* Mobile/Tablet Cards - Hidden on desktop */}
+          <div className="manifiesto-section2-merged-mobile-cards">
+            {/* Card 1: Ecología y Conciencia */}
+            <div className="manifiesto-shaped-card manifiesto-section2-merged-card-1">
+              <div className="manifiesto-shaped-card-bg"></div>
+              <div className="manifiesto-shaped-card-content">
+                <h2 className="manifiesto-shaped-card-title">
+                  Ecología y Conciencia: Honrando el Planeta y toda forma de vida
+                </h2>
+                <p className="manifiesto-shaped-card-text">
+                  Creemos que es innecesario dañar la Madre Tierra, nuestro propio cuerpo y/o los seres vivos con los que convivimos para cuidarnos. Por eso rechazamos el uso de cualquier ingrediente o subproducto de origen animal en nuestras formulaciones., así como tampoco realizamos pruebas en animales. y nos comprometemos a:
+                </p>
+                <h2 className="manifiesto-shaped-card-title mt-3">
+                  Envases Conscientes:
+                </h2>
+                <p className="manifiesto-shaped-card-text">
+                  Nuestros envases son elegidos por su capacidad de ser reutilizados, reciclados o biodegradados. Te invitamos a darles una segunda vida.
+                </p>
+                <h2 className="manifiesto-shaped-card-title mt-3">
+                  Balance en la Formulación:
+                </h2>
+                <p className="manifiesto-shaped-card-text">
+                  Buscamos un equilibrio consciente, utilizando activos sintéticos de origen vegetal cuando es la opción más responsable que evita agotar la naturaleza
+                </p>
           </div>
         </div>
 
+            {/* Card 2: Poder Botánico y Natural */}
+            <div className="manifiesto-shaped-card manifiesto-section2-merged-card-2">
+              <div className="manifiesto-shaped-card-bg"></div>
+              <div className="manifiesto-shaped-card-content">
+                <h2 className="manifiesto-shaped-card-title">
+                  Poder Botánico y Natural: La Naturaleza a tu favor
+                </h2>
+                <p className="manifiesto-shaped-card-text2">
+                  La naturaleza es nuestra farmacia más sabia. Basándonos en la tradición herbolaria y en mi formación en fitoterapia, seleccionamos extractos, aceites esenciales, hidrolatos, aceites vegetales y tinturas madre por sus beneficios específicos para los diversos biotipos de piel, las emociones y la función de los diversos órganos.
+                </p>
+              </div>
       </div>
 
-      {/* Additional content to test scrolling */}
-      <div className="relative z-30 mt-[1600px] p-8">
-        <div className="container mx-auto">
-          
-          
-        
+            {/* Card 3: Coherencia y Transmutación */}
+            <div className="manifiesto-shaped-card manifiesto-section2-merged-card-3">
+              <div className="manifiesto-shaped-card-bg"></div>
+              <div className="manifiesto-shaped-card-content">
+                <h2 className="manifiesto-shaped-card-title">
+                  Coherencia y Transmutación: Fórmulas para tu Bioequilibrio
+                </h2>
+                <p className="manifiesto-shaped-card-text3">
+                  Cada producto está diseñado con una intención clara, fusionando la sabiduría botánica con activos biotecnológicos conscientes. Con base en la individualidad formulamos con consciencia de los diferentes tipos de piel y cabellos (biotipos y doshas) que existen, por eso mismo creamos sinergias potenciadoras que te invitan a nutrir tu Ser en coherencia con lo que tu cuerpo necesita, desde el Amor y la Presencia.
+                </p>
+              </div>
+            </div>
+
+            {/* Card 4: Neurocosmética Vibracional */}
+            <div className="manifiesto-shaped-card manifiesto-section2-merged-card-4">
+              <div className="manifiesto-shaped-card-bg"></div>
+              <div className="manifiesto-shaped-card-content">
+                <h2 className="manifiesto-shaped-card-title">
+                  Neurocosmética Vibracional
+                </h2>
+                <p className="manifiesto-shaped-card-text4">
+                  Nuestra cosmética es una invitación a potenciar y honrar la comunicación entre tu piel y tu mente, usando tus Sentidos como un canal a tu favor. El uso intencionado de aceites esenciales no solo tiene beneficios físicos, sino que también crea una resonancia emocional y sensorial que refuerza tu bioequilibrio integralmente.
+                </p>
         </div>
       </div>
 
-      {/* Features Grid Section */}
-      <div className="relative z-30 mt-[1800px] p-8">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="card-enhanced p-6 text-center">
-              <EcologicaVeganaIcon size={48} className="mx-auto mb-4" />
-              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Ecológica y Vegana</h3>
-              <p className="font-caption text-gray-600 text-sm"> <strong>Un Compromiso con el Planeta.</strong> Respetamos toda forma de vida. Por eso, elegimos ingredientes <strong>sostenibles</strong> y envases <strong>conscientes</strong> en cada paso, asegurando la protección de la Madre Tierra.</p>
+            {/* Card 5: Nuestro compromiso sustentable */}
+            <div className="manifiesto-shaped-card manifiesto-section2-merged-card-5">
+              <div className="manifiesto-shaped-card-bg"></div>
+              <div className="manifiesto-shaped-card-content">
+                <h2 className="manifiesto-shaped-card-title">
+                  Nuestro compromiso sustentable
+                </h2>
+                <p className="manifiesto-shaped-card-text5">
+                  En Da Luz, creemos en la importancia de ser conscientes de nuestros consumos y responsables con nuestros residuos. Por eso, nuestros envases son de vidrio color ámbar o transparente, lo que asegura una mejor conservación del producto y evita la liberación de sustancias tóxicas si las Alquimias quedan expuestas al sol o a altas temperaturas. Además, nuestros envases te invitan a la consciencia del re-ciclo y a la creatividad de re-utilizar.
+                </p>
             </div>
-            <div className="card-enhanced p-6 text-center">
-              <PoderBotanicoIcon size={48} className="mx-auto mb-4" />
-              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Poder botánico y Natural</h3>
-              <p className="font-caption text-gray-600 text-sm"><strong>La Naturaleza a tu favor.</strong> Nuestras <strong>alquimias</strong> aprovechan el poder concentrado de las plantas para nutrir y promover tu <strong>bienestar integral</strong> de manera profunda.</p>
             </div>
-            <div className="card-enhanced p-6 text-center">
-              <TransmutacionCoherenciaIcon size={48} className="mx-auto mb-4" />
-              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Transmutación y coherencia</h3>
-              <p className="font-caption text-gray-600 text-sm"><strong>Fórmulas para tu Bioequilibrio.</strong> Cada producto tiene una intención clara, combinando la sabiduría de las hierbas medicinales con activos vegetales. Creamos para catalizar la transformación que tu equilibrio necesita.</p>
-            </div>
-            <div className="card-enhanced p-6 text-center">
-              <NeurocosmeticaIcon size={48} className="mx-auto mb-4" />
-              <h3 className="font-subtitle text-lg text-brand-primary mb-2">Neurocosmética Vibracional</h3>
-              <p className="font-caption text-gray-600 text-sm">La cosmética es lo que sentís, <strong>porque tu piel es un canal que afecta tu cuerpo y mente.</strong> Nuestras alquimias son una invitación a una <strong>ceremonia de conexión diaria</strong>, protegiendo tu equilibrio hormonal y emocional.</p>
+
+            {/* Card 6: Reutilizalos! */}
+            <div className="manifiesto-shaped-card manifiesto-section2-merged-card-6">
+              <div className="manifiesto-shaped-card-bg"></div>
+              <div className="manifiesto-shaped-card-content">
+                <h2 className="manifiesto-shaped-card-title">
+                  Reutilizalos!
+                </h2>
+                <p className="manifiesto-shaped-card-text6">
+                  Podés devolver tus envases limpios y lavados para acceder a descuentos. <strong>Puntos de reciclaje:</strong> Si no te interesan las opciones anteriores, podes dejar tus envases (y todos los residuos que generes) en un punto cercano de reciclaje. Te dejamos 2 sitios para que encuentres la mejor opción y ubicación para hacerte cargo de tus consumos de forma consciente
+                </p>
             </div>
           </div>
         </div>
       </div>
+      </section>
     </div>
   );
 };
