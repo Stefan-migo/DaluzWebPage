@@ -2434,3 +2434,513 @@
     }
 }
 
+/* ===========================
+   ACTIVOS Y ORIGEN PAGE STYLES
+   =========================== */
+
+/* Base section styles */
+.section-activos-origen {
+  min-height: auto;
+  height: auto;
+  overflow-x: hidden !important;
+  position: relative !important;
+}
+
+/* Mobile/Tablet - Gradient background, height adapts to content */
+@media (max-width: 767px) {
+  .section-activos-origen {
+    min-height: auto;
+    height: auto;
+    padding: 2rem 1rem;
+  }
+
+  .section-activos-origen-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem 1rem 1rem;
+    gap: 0;
+    width: 100%;
+    min-height: auto;
+  }
+
+  /* Text elements - relative positioning for mobile/tablet */
+  .activos-origen-text-element {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    width: 90% !important;
+    max-width: 100% !important;
+    margin: 0 auto;
+  }
+
+  /* Main Title - Mobile */
+  .activos-origen-title {
+    display: block !important;
+    color: #F0EACE !important;
+    margin: 0 auto 2.5rem auto;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    padding: 0 1rem;
+    font-size: 2rem;
+    line-height: 1.2;
+    font-weight: 400;
+    font-family: var(--font-title);
+  }
+
+  /* Subtitle - Mobile */
+  .activos-origen-subtitle {
+    display: block !important;
+    color: var(--color-bg-light);
+    top: 20%;
+    margin: 0 auto 2rem auto;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    padding: 0 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    font-family: var(--font-malisha);
+    padding-top: 3rem;
+  }
+
+  /* Content */
+  .activos-origen-content {
+    display: block !important;
+    color: var(--color-text-primary) !important;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    padding: 0 1rem 2rem 1rem;
+  }
+
+  .activos-origen-text {
+    font-family: var(--font-malisha);
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    text-align: left;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Main Card - Mobile */
+  .activos-origen-main-card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    /* mobileVersion.svg aspect ratio: 995.74 / 1161.54 */
+    aspect-ratio: 995.74 / 1161.54;
+    margin: 2rem 0;
+    min-height: 250px;
+  }
+
+  .activos-origen-main-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/svg/mobileVersion.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  .activos-origen-main-card-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem 2rem;
+    z-index: 1;
+  }
+
+  .activos-origen-main-card-text {
+    font-family: var(--font-malisha);
+    font-size: 0.875rem;
+    color: #fff2db;
+    text-align: center;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 95%;
+  }
+
+  /* Buttons - Mobile */
+  .activos-origen-button {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+    font-family: var(--font-malisha);
+    font-weight: 500;
+    padding: 1rem 1.5rem;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
+    color: #fff2db;
+    border: none;
+    border-radius: 0px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: block;
+  }
+
+  .activos-origen-button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(174, 0, 0, 0.3);
+    background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
+    filter: brightness(1.1);
+  }
+}
+
+/* Tablet - Improved layout */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .section-activos-origen {
+    padding: 3rem 2rem;
+  }
+
+  .section-activos-origen-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  /* Main Title - Tablet */
+  .activos-origen-title {
+    font-size: 3rem;
+    margin-bottom: 3.5rem;
+    color: var(--color-bg-light);
+    text-align: center;
+  }
+
+  /* Subtitle - Tablet */
+  .activos-origen-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+    color: var(--color-bg-light);
+    text-align: center;
+  }
+
+
+
+  .activos-origen-content {
+    max-width: 100%;
+    padding: 0 0 3rem 0;
+  }
+
+  .activos-origen-text {
+    font-size: 1rem;
+    line-height: 1.75;
+    text-align: center;
+  }
+
+  /* Main Card - Tablet */
+  .activos-origen-main-card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    /* TabletMobile.svg aspect ratio: 1114.62 / 543.64 */
+    aspect-ratio: 1114.62 / 543.64;
+    margin: 2.5rem 0;
+    min-height: 300px;
+  }
+
+  .activos-origen-main-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/svg/TabletMobile.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  .activos-origen-main-card-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 3rem;
+    z-index: 1;
+  }
+
+  .activos-origen-main-card-text {
+    font-family: var(--font-malisha);
+    font-size: 1rem;
+    color: #fff2db;
+    text-align: center;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 90%;
+  }
+
+  /* Buttons - Tablet */
+  .activos-origen-button {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 1.25rem 0;
+    font-size: 1rem;
+    font-family: var(--font-malisha);
+    font-weight: 500;
+    padding: 1.125rem 2rem;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
+    color: #fff2db;
+    border: none;
+    border-radius: 0px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: block;
+  }
+
+  .activos-origen-button:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 12px rgba(174, 0, 0, 0.3);
+    background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
+    filter: brightness(1.1);
+  }
+}
+
+/* Desktop - SVG background, height matches SVG exactly */
+@media (min-width: 1280px) {
+  .section-activos-origen {
+    /* SVG height (matches SVG aspect ratio exactly) */
+    /* Desktop SVG: 1920.21 width / 1080 height = aspect ratio 1.778 */
+    aspect-ratio: 1920.21 / 1080;
+    min-height: auto;
+    overflow-x: hidden !important;
+    position: relative !important;
+  }
+
+  /* Ensure desktop SVG container matches section SVG height calculation */
+  .section-activos-origen .svg-container-desktop {
+    height: calc(100vw * (1080 / 1920.21)) !important;
+    min-height: calc(100vw * (1080 / 1920.21)) !important;
+    max-height: calc(100vw * (1080 / 1920.21)) !important;
+  }
+
+  /* Content area */
+  .section-activos-origen-content {
+    position: relative;
+    min-height: 100%;
+    width: 100%;
+  }
+
+  /* Base styles for all text elements - absolute positioning */
+  .activos-origen-text-element {
+    position: absolute;
+    z-index: 10;
+    /* Use CSS custom properties for easy positioning */
+    top: var(--pos-top, 50%);
+    left: var(--pos-left, 50%);
+    right: var(--pos-right, auto);
+    bottom: var(--pos-bottom, auto);
+    transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
+    width: var(--pos-width, 90%);
+    max-width: var(--pos-max-width, 800px);
+  }
+
+  /* Main Title */
+  .activos-origen-title {
+    font-family: var(--font-title);
+    font-size: 4rem;
+    font-weight: 400;
+    color: var(--color-bg-light);
+    text-align: center;
+    line-height: 1.2;
+    --pos-top: 3%;
+    --pos-left: 50%;
+    --pos-translate-x: -50%;
+    --pos-translate-y: 0;
+    --pos-width: auto;
+    --pos-max-width: 90%;
+  }
+
+  /* Subtitle */
+  .activos-origen-subtitle {
+    display: block !important;
+    color: var(--color-bg-light);
+    margin: 0 auto 2rem auto;
+    text-align: center;
+    width: 100%;
+    max-width: 90%;
+    padding: 0 1rem;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    font-family: var(--font-malisha);
+  }
+
+  /* Content */
+  .activos-origen-content {
+    --pos-top: 40%;
+    --pos-left: 50%;
+    --pos-translate-x: -50%;
+    --pos-translate-y: 0;
+    --pos-width: 85%;
+    --pos-max-width: 800px;
+  }
+
+  .activos-origen-text {
+    font-family: var(--font-malisha);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    text-align: center;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Main Card with SVG Background */
+  .activos-origen-main-card {
+    position: absolute; /* Use absolute positioning for desktop */
+    width: var(--pos-width, 80%);
+    max-width: var(--pos-max-width, 1400px);
+    aspect-ratio: 1865.04 / 336.89; /* SVG aspect ratio */
+    --pos-top: 50%;
+    --pos-left: 50%;
+    --pos-translate-x: -50%;
+    --pos-translate-y: -50%;
+    z-index: 10;
+  }
+
+  .activos-origen-main-card-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/svg/ActivosYOrigenmaincardDesktop.svg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  .activos-origen-main-card-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 4rem;
+    z-index: 1;
+  }
+
+  .activos-origen-main-card-text {
+    font-family: var(--font-malisha);
+    font-size: 1.35rem;
+    color: #fff2db;
+    text-align: center;
+    line-height: 1.7;
+    margin: 0;
+    max-width: 90%;
+  }
+
+  /* Buttons */
+  .activos-origen-button {
+    position: absolute;
+    z-index: 10;
+    background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
+    color: #fff2db;
+    font-family: var(--font-malisha);
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 0px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: var(--pos-width, auto);
+    max-width: var(--pos-max-width, 280px);
+    min-width: 200px;
+  }
+
+  .activos-origen-button:hover {
+    transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0)) scale(1.05);
+    box-shadow: 0 8px 20px rgba(174, 0, 0, 0.4);
+    background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
+    filter: brightness(1.1);
+  }
+
+  .activos-origen-button-1 {
+    --pos-top: 70%;
+    --pos-left: 20%;
+    --pos-translate-x: 0;
+    --pos-translate-y: 0;
+    --pos-width: auto;
+    --pos-max-width: 280px;
+  }
+
+  .activos-origen-button-2 {
+    --pos-top: 80%;
+    --pos-left: 50%;
+    --pos-translate-x: -50%;
+    --pos-translate-y: 0;
+    --pos-width: auto;
+    --pos-max-width: 280px;
+  }
+
+  .activos-origen-button-3 {
+    --pos-top: 70%;
+    --pos-left: 80%;
+    --pos-translate-x: -100%;
+    --pos-translate-y: 0;
+    --pos-width: auto;
+    --pos-max-width: 280px;
+  }
+}
+
+/* Large screens - Adjust font sizes */
+@media (min-width: 1450px) {
+  .activos-origen-title {
+    font-size: 5rem;
+  }
+
+  .activos-origen-subtitle {
+    font-size: 1.75rem;
+    top: 21%;
+    z-index: 20;
+  }
+
+  .activos-origen-text {
+    font-size: 1.125rem;
+  }
+}
+
+@media (min-width: 1550px) {
+  .activos-origen-title {
+    font-size: 6rem;
+  }
+
+  .activos-origen-subtitle {
+    font-size: 2rem;
+    top: 21%;
+    z-index: 20;
+  }
+
+  .activos-origen-text {
+    font-size: 1.25rem;
+  }
+}
+
