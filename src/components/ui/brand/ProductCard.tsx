@@ -53,37 +53,49 @@ const lineThemeClasses = {
     accent: 'text-alma-primary',
     badge: 'bg-alma-primary/10 text-alma-primary border-alma-primary/20',
     button: 'bg-alma-primary hover:bg-alma-primary/90 text-white',
-    star: 'fill-alma-secondary text-alma-secondary'
+    star: 'fill-alma-secondary text-alma-secondary',
+    background: '#FFEFC6', // alma-lightest
+    border: '#9B201A' // alma-primary
   },
   'ecos': {
     accent: 'text-ecos-primary',
     badge: 'bg-ecos-primary/10 text-ecos-primary border-ecos-primary/20',
     button: 'bg-ecos-primary hover:bg-ecos-primary/90 text-white',
-    star: 'fill-ecos-secondary text-ecos-secondary'
+    star: 'fill-ecos-secondary text-ecos-secondary',
+    background: '#B7DFE5', // ecos-lightest
+    border: '#12406F' // ecos-primary
   },
   'jade-ritual': {
     accent: 'text-jade-primary',
     badge: 'bg-jade-primary/10 text-jade-primary border-jade-primary/20',
     button: 'bg-jade-primary hover:bg-jade-primary/90 text-white',
-    star: 'fill-jade-secondary text-jade-secondary'
+    star: 'fill-jade-secondary text-jade-secondary',
+    background: '#D3E1BE', // jade-lightest
+    border: '#04412D' // jade-primary
   },
   'umbral': {
     accent: 'text-umbral-primary',
     badge: 'bg-umbral-primary/10 text-umbral-primary border-umbral-primary/20',
     button: 'bg-umbral-primary hover:bg-umbral-primary/90 text-white',
-    star: 'fill-umbral-secondary text-umbral-secondary'
+    star: 'fill-umbral-secondary text-umbral-secondary',
+    background: '#FFF2DB', // umbral-lightest
+    border: '#EA4F12' // umbral-primary
   },
   'utopica': {
     accent: 'text-utopica-primary',
     badge: 'bg-utopica-primary/10 text-utopica-primary border-utopica-primary/20',
     button: 'bg-utopica-primary hover:bg-utopica-primary/90 text-white',
-    star: 'fill-utopica-secondary text-utopica-secondary'
+    star: 'fill-utopica-secondary text-utopica-secondary',
+    background: '#F9F5C5', // utopica-lightest
+    border: '#392E13' // utopica-primary
   },
   'default': {
     accent: 'text-brand-primary',
     badge: 'bg-brand-primary/10 text-brand-primary border-brand-primary/20',
     button: 'bg-brand-primary hover:bg-brand-primary/90 text-white',
-    star: 'fill-gold-500 text-gold-500'
+    star: 'fill-gold-500 text-gold-500',
+    background: '#FFFFFF',
+    border: 'hsl(var(--border))'
   }
 };
 
@@ -156,13 +168,19 @@ export default function ProductCard({
       className={cn(
         "group relative overflow-hidden transition-all duration-500 h-full flex flex-col",
         "hover:shadow-xl",
-        cardVariants[variant],
+        lineTheme === 'default' ? cardVariants[variant] : '',
         className
       )}
+      style={{ 
+        pointerEvents: 'auto',
+        borderRadius: '0px 15px',
+        backgroundColor: lineTheme !== 'default' ? theme.background : undefined,
+        borderColor: lineTheme !== 'default' ? `${theme.border}33` : undefined,
+        borderWidth: lineTheme !== 'default' ? '1px' : undefined
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={() => console.log('Card clicked for product:', id)}
-      style={{ pointerEvents: 'auto' }}
     >
       <div className="relative flex-1 flex flex-col">
         {/* Product Image */}

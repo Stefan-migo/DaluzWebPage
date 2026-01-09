@@ -360,6 +360,7 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
               lineTheme={selectedLine.id as any}
               onAddToCart={handleAddToCart}
               variant="elegant"
+              className="p-[0]"
             />
           ))}
         </div>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 904.56 260.43">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff2db;
+      }
+    </style>
+  </defs>
+  <g id="Capa_1" data-name="Capa 1">
+    <path class="cls-1" d="M0,0h780.02c68.74,0,124.54,55.8,124.54,124.54v135.88H124.54C55.8,260.43,0,204.62,0,135.88V0H0Z" transform="translate(904.56 260.43) rotate(180)"/>
+  </g>
+</svg>

@@ -1,4 +1,5 @@
 import '@/styles/alkimya.css'
+import '@/styles/biotipos.css'
 
 export default function AlkimyaLayout({
   children,

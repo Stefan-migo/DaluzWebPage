@@ -1,0 +1,412 @@
+/* Ceremonia Capilar Page Styles */
+/* Following DA LUZ CONSCIENTE color structure from globals.css */
+/* 
+ * POSITIONING GUIDE:
+ * All elements use absolute positioning and can be repositioned using inline styles:
+ * - Main Title: className="ceremonia-capilar-main-title" - use top, left, right, bottom
+ * - Secondary Title: className="ceremonia-capilar-secondary-title" - use top, left, right, bottom
+ * - Text Card 1: className="ceremonia-capilar-text-card ceremonia-capilar-text-card-1" - use top, left, right, bottom
+ * - Text Card 2: className="ceremonia-capilar-text-card ceremonia-capilar-text-card-2" - use top, left, right, bottom
+ * - Buttons: className="ceremonia-capilar-buttons" - use top, left, right, bottom
+ * 
+ * Example: <h1 className="ceremonia-capilar-main-title" style={{ top: '15%', left: '10%' }}>
+ */
+
+.ceremonia-capilar-page {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  background-color: var(--color-bg-cream, #F6FBD6);
+}
+
+/* SVG Background Container - Height determined by content */
+.ceremonia-capilar-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.ceremonia-capilar-bg-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Page Content Container - Height determines section height */
+.ceremonia-capilar-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: auto;
+  height: auto;
+  min-height: calc(68rem + 4rem + 2rem);
+  padding-bottom: 2rem;
+}
+
+/* Main Title */
+.ceremonia-capilar-main-title {
+  position: absolute;
+  font-family: var(--font-velista, 'VELISTA', serif);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: normal;
+  color: var(--color-brand-primary, #AE0000);
+  text-align: center;
+  z-index: 20;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Secondary Title */
+.ceremonia-capilar-secondary-title {
+  position: absolute;
+  font-family: var(--font-subtitle, 'Playfair Display', serif);
+  font-size: clamp(1.25rem, 3vw, 4rem);
+  font-weight: normal;
+  color: var(--color-bg-light, #F0EACE);
+  text-align: center;
+  z-index: 20;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Text Card Container */
+.ceremonia-capilar-text-card {
+  position: absolute;
+  z-index: 20;
+  width: 85%;
+  height: 100%;
+  aspect-ratio: auto;
+  margin: 0;
+}
+
+.ceremonia-capilar-text-card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/svg/ceremonias/CardText.svg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.ceremonia-capilar-text-card-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  z-index: 1;
+}
+
+.ceremonia-capilar-text-card-text {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-primary, #1C1B1A);
+  text-align: left;
+  margin: 0;
+  max-width: 90%;
+}
+
+/* Text Card 1 */
+.ceremonia-capilar-text-card-1 {
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Text Card 2 */
+.ceremonia-capilar-text-card-2 {
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Buttons Container */
+.ceremonia-capilar-buttons {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Button Base Styles */
+.ceremonia-capilar-button {
+  position: absolute;
+  z-index: 10;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 600;
+  color: var(--color-brand-primary, #AE0000);
+  background-color: var(--color-bg-light, #F0EACE);
+  border: 2px solid var(--color-brand-primary, #AE0000);
+  border-radius: 0px 15px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+  top: var(--pos-top, auto);
+  left: var(--pos-left, auto);
+  right: var(--pos-right, auto);
+  bottom: var(--pos-bottom, auto);
+  transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0));
+  width: var(--pos-width, auto);
+  max-width: var(--pos-max-width, 300px);
+  min-width: 150px;
+}
+
+/* Button hover animation - matching landing page btn-enhanced style */
+.ceremonia-capilar-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
+  transition: left 0.5s ease;
+  z-index: -1;
+}
+
+.ceremonia-capilar-button:hover::before {
+  left: 100%;
+}
+
+.ceremonia-capilar-button:hover {
+  background-color: var(--color-brand-primary, #AE0000);
+  color: var(--color-text-inverse, #FFFFFF);
+  transform: translate(var(--pos-translate-x, 0), calc(var(--pos-translate-y, 0) - 2px));
+  box-shadow:
+    0 10px 25px rgba(174, 0, 0, 0.4),
+    0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.ceremonia-capilar-button:active {
+  transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0));
+}
+
+/* Mobile/Tablet: Height determined by content */
+@media (max-width: 1279px) {
+  .ceremonia-capilar-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .ceremonia-capilar-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .ceremonia-capilar-content {
+    min-height: auto;
+    height: auto;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ceremonia-capilar-text-card {
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .ceremonia-capilar-text-card-1 {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .ceremonia-capilar-text-card-2 {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .ceremonia-capilar-buttons {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    margin: 2rem auto;
+  }
+  
+  .ceremonia-capilar-button {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+  }
+  
+  .ceremonia-capilar-button:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Desktop: Height determined by content */
+@media (min-width: 1280px) {
+  .ceremonia-capilar-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .ceremonia-capilar-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .ceremonia-capilar-content {
+    min-height: auto;
+    height: auto;
+    min-height: calc(68rem + 4rem + 4rem);
+    padding-bottom: 4rem;
+  }
+
+  .ceremonia-capilar-main-title {
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ceremonia-capilar-secondary-title {
+    top: 25%;
+  }
+
+  .ceremonia-capilar-text-card-1 {
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .ceremonia-capilar-text-card-2 {
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1450px) {
+  .ceremonia-capilar-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .ceremonia-capilar-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .ceremonia-capilar-content {
+    min-height: calc(68rem + 4rem + 4rem);
+    padding-bottom: 4rem;
+  }
+
+  .ceremonia-capilar-main-title {
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ceremonia-capilar-secondary-title {
+    top: 25%;
+  }
+
+  .ceremonia-capilar-text-card-1 {
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .ceremonia-capilar-text-card-2 {
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1550px) {
+  .ceremonia-capilar-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .ceremonia-capilar-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .ceremonia-capilar-content {
+    min-height: calc(68rem + 4rem + 4rem);
+    padding-bottom: 4rem;
+  }
+
+  .ceremonia-capilar-main-title {
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    margin: 0;
+    padding: 0;
+  }
+
+  .ceremonia-capilar-secondary-title {
+    top: 25%;
+  }
+
+  .ceremonia-capilar-text-card-1 {
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .ceremonia-capilar-text-card-2 {
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
