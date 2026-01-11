@@ -10,6 +10,17 @@ import { ArrowLeft, Grid3X3, Grid2X2 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 
+// Map category slugs to product line themes
+const getLineThemeFromSlug = (slug: string): 'alma-terra' | 'ecos' | 'jade-ritual' | 'umbral' | 'utopica' | 'default' => {
+  const slugLower = slug.toLowerCase();
+  if (slugLower.includes('alma-terra')) return 'alma-terra';
+  if (slugLower.includes('ecos')) return 'ecos';
+  if (slugLower.includes('jade-ritual')) return 'jade-ritual';
+  if (slugLower.includes('umbral')) return 'umbral';
+  if (slugLower.includes('utopica')) return 'utopica';
+  return 'default';
+};
+
 interface Product {
   id: string;
   name: string;
@@ -49,6 +60,9 @@ export default function CategoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [gridCols, setGridCols] = useState(3);
+  
+  // Detect product line theme from slug
+  const lineTheme = params.slug ? getLineThemeFromSlug(params.slug as string) : 'default';
 
   useEffect(() => {
     async function fetchCategoryAndProducts() {
@@ -135,32 +149,63 @@ export default function CategoryPage() {
     );
   }
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Breadcrumb */}
-      <nav className="mb-6">
-        <ol className="flex items-center space-x-2 text-sm text-gray-500">
-          <li><Link href="/" className="hover:text-azul-profundo">Inicio</Link></li>
-          <li>/</li>
-          <li><Link href="/productos" className="hover:text-azul-profundo">Productos</Link></li>
-          <li>/</li>
-          <li className="text-azul-profundo font-medium">{category.name}</li>
-        </ol>
-      </nav>
+  // Get line-specific colors
+  const getLineColors = () => {
+    switch (lineTheme) {
+      case 'alma-terra':
+        return { primary: '#9B201A', secondary: '#BD311C', light: '#FFE58D', lightest: '#FFEFC6' };
+      case 'ecos':
+        return { primary: '#12406F', secondary: '#005180', light: '#81CCD7', lightest: '#B7DFE5' };
+      case 'jade-ritual':
+        return { primary: '#04412D', secondary: '#286939', light: '#7BC38E', lightest: '#D3E1BE' };
+      case 'umbral':
+        return { primary: '#EA4F12', secondary: '#F17E06', light: '#FFD18A', lightest: '#FFF2DB' };
+      case 'utopica':
+        return { primary: '#392E13', secondary: '#72571C', light: '#F8EE76', lightest: '#F9F5C5' };
+      default:
+        return { primary: '#AE0000', secondary: '#C70000', light: '#F0EACE', lightest: '#F6FBD6' };
+    }
+  };
 
-      {/* Category Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-3xl font-bold text-azul-profundo mb-2">
-              {category.name}
-            </h1>
-            {category.description && (
-              <p className="text-gray-600 max-w-2xl">
-                {category.description}
-              </p>
-            )}
-          </div>
+  const lineColors = getLineColors();
+
+  return (
+    <div className="min-h-screen overflow-hidden" style={{ backgroundColor: lineColors.lightest }}>
+      {/* Background Image with 60% opacity */}
+      <div 
+        className="fixed inset-0 w-full h-full opacity-60 pointer-events-none z-0"
+        style={{
+          backgroundImage: "url('/svg/backgrounds/tienda-background.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        }}
+      />
+      <div className="container mx-auto px-4 py-8 relative z-10">
+        {/* Breadcrumb */}
+        <nav className="mb-6">
+          <ol className="flex items-center space-x-2 text-sm" style={{ color: lineColors.primary }}>
+            <li><Link href="/" className="hover:opacity-80 transition-opacity">Inicio</Link></li>
+            <li>/</li>
+            <li><Link href="/productos" className="hover:opacity-80 transition-opacity">Productos</Link></li>
+            <li>/</li>
+            <li className="font-medium">{category.name}</li>
+          </ol>
+        </nav>
+
+        {/* Category Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h1 className="text-3xl font-title font-bold mb-2" style={{ color: lineColors.primary }}>
+                {category.name}
+              </h1>
+              {category.description && (
+                <p className="max-w-2xl" style={{ color: lineColors.primary, opacity: 0.8 }}>
+                  {category.description}
+                </p>
+              )}
+            </div>
 
           {/* Grid Controls */}
           <div className="flex border rounded-md">
@@ -185,11 +230,11 @@ export default function CategoryPage() {
 
         {/* Category Stats */}
         <div className="flex items-center gap-4">
-          <Badge variant="outline">
+          <Badge variant="outline" style={{ borderColor: lineColors.primary, color: lineColors.primary }}>
             {products.length} productos
           </Badge>
           {products.some(p => p.is_featured) && (
-            <Badge variant="secondary" className="bg-dorado/20 text-dorado">
+            <Badge variant="secondary" style={{ backgroundColor: `${lineColors.primary}20`, color: lineColors.primary, borderColor: `${lineColors.primary}40` }}>
               Incluye productos destacados
             </Badge>
           )}
@@ -198,24 +243,24 @@ export default function CategoryPage() {
 
       {/* Category Image */}
       {category.image_url && (
-        <div className="mb-8 aspect-[3/1] relative overflow-hidden rounded-lg">
+        <div className="mb-8 aspect-[3/1] relative overflow-hidden rounded-lg" style={{ borderRadius: '0px 15px' }}>
           <img
             src={category.image_url}
             alt={category.name}
             className="object-cover w-full h-full"
           />
-          <div className="absolute inset-0 bg-azul-profundo/20" />
+          <div className="absolute inset-0" style={{ backgroundColor: `${lineColors.primary}20` }} />
         </div>
       )}
 
       {/* Products Grid */}
       {products.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-gray-500 mb-4">
+          <p className="mb-4" style={{ color: lineColors.primary, opacity: 0.8 }}>
             No hay productos disponibles en esta categoría
           </p>
           <Link href="/productos">
-            <Button variant="outline">
+            <Button variant="outline" style={{ borderColor: lineColors.primary, color: lineColors.primary }} className="hover:opacity-80">
               Ver todos los productos
             </Button>
           </Link>
@@ -244,6 +289,7 @@ export default function CategoryPage() {
               stock={product.inventory_quantity}
               size={product.product_variants?.find(v => v.is_default)?.option1}
               onAddToCart={handleAddToCart}
+              lineTheme={lineTheme}
             />
           ))}
         </div>
@@ -252,11 +298,12 @@ export default function CategoryPage() {
       {/* Back to Products */}
       <div className="mt-12 text-center">
         <Link href="/productos">
-          <Button variant="outline">
+          <Button variant="outline" style={{ borderColor: lineColors.primary, color: lineColors.primary }} className="hover:opacity-80">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Ver todos los productos
           </Button>
         </Link>
+      </div>
       </div>
     </div>
   );

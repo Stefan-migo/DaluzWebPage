@@ -1,0 +1,476 @@
+/* Tu Ceremonia Page Styles */
+/* Following DA LUZ CONSCIENTE color structure from globals.css */
+/* 
+ * POSITIONING GUIDE:
+ * All elements use absolute positioning and can be repositioned using inline styles:
+ * - Main Title: className="tu-ceremonia-main-title" - use top, left, right, bottom
+ * - Secondary Title: className="tu-ceremonia-secondary-title" - use top, left, right, bottom
+ * - Text Card 1: className="tu-ceremonia-text-card tu-ceremonia-text-card-1" - use top, left, right, bottom
+ * - Text Card 2: className="tu-ceremonia-text-card tu-ceremonia-text-card-2" - use top, left, right, bottom
+ * - Buttons: className="tu-ceremonia-buttons" - use top, left, right, bottom
+ * 
+ * Example: <h1 className="tu-ceremonia-main-title" style={{ top: '15%', left: '10%' }}>
+ */
+
+.tu-ceremonia-page {
+  position: relative;
+  width: 100%;
+  min-height: auto;
+  height: auto;
+  overflow-x: hidden;
+  overflow-y: hidden; /* Hide extra SVG, no scrollbar */
+  background-color: var(--color-bg-cream, #F6FBD6);
+}
+
+/* SVG Background Container - Height determined by content */
+.tu-ceremonia-bg-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden; /* Hide extra SVG parts */
+}
+
+.tu-ceremonia-bg-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
+
+/* Page Content Container - Height determines section height */
+.tu-ceremonia-content {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: auto;
+  height: auto;
+  /* Height will be determined by absolutely positioned children */
+  /* Calculate min-height based on bottommost element (buttons at ~68rem + button height ~4rem + padding) */
+  min-height: calc(68rem + 4rem + 2rem); /* Adjust based on your button positions */
+  padding-bottom: 2rem; /* Add some bottom padding for spacing */
+}
+
+/* Main Title */
+.tu-ceremonia-main-title {
+  position: absolute;
+  font-family: var(--font-velista, 'VELISTA', serif);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: normal;
+  color: var(--color-brand-primary, #AE0000);
+  text-align: center;
+  z-index: 20;
+  /* Default positioning - can be adjusted via inline styles */
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  /* Allow override with inline styles */
+  margin: 0;
+  padding: 0;
+}
+
+/* Secondary Title */
+.tu-ceremonia-secondary-title {
+  position: absolute;
+  font-family: var(--font-subtitle, 'Playfair Display', serif);
+  font-size: clamp(1.25rem, 3vw, 4rem);
+  font-weight: normal;
+  color: var(--color-bg-light, #F0EACE);
+  text-align: center;
+  z-index: 20;
+  /* Default positioning - can be adjusted via inline styles */
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+  /* Allow override with inline styles */
+  margin: 0;
+  padding: 0;
+}
+
+/* Text Card Container */
+.tu-ceremonia-text-card {
+  position: absolute;
+  z-index: 20;
+  width: 85%;
+  height: 100%;
+  aspect-ratio: auto;
+  margin: 0;
+}
+
+.tu-ceremonia-text-card-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/svg/ceremonias/CardText.svg');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.tu-ceremonia-text-card-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  z-index: 1;
+}
+
+.tu-ceremonia-text-card-text {
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-primary, #1C1B1A);
+  text-align: left;
+  margin: 0;
+  max-width: 90%;
+}
+
+/* Text Card 1 */
+.tu-ceremonia-text-card-1 {
+  /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Text Card 2 */
+.tu-ceremonia-text-card-2 {
+  /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Buttons Container */
+.tu-ceremonia-buttons {
+  position: relative;
+  z-index: 20;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Button Base Styles */
+.tu-ceremonia-button {
+  position: absolute;
+  z-index: 10;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+  font-family: var(--font-text, 'Inter', sans-serif);
+  font-size: clamp(0.875rem, 1.5vw, 1rem);
+  font-weight: 600;
+  color: var(--color-brand-primary, #AE0000);
+  background-color: var(--color-bg-light, #F0EACE);
+  border: 2px solid var(--color-brand-primary, #AE0000);
+  border-radius: 0px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  transform-origin: center center;
+  /* Use CSS custom properties for easy positioning */
+  top: var(--pos-top, auto);
+  left: var(--pos-left, auto);
+  right: var(--pos-right, auto);
+  bottom: var(--pos-bottom, auto);
+  transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0));
+  width: var(--pos-width, auto);
+  max-width: var(--pos-max-width, 300px);
+  min-width: 150px;
+}
+
+/* Button hover animation - matching landing page btn-enhanced style */
+.tu-ceremonia-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
+  transition: left 0.5s ease;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.tu-ceremonia-button:hover::before {
+  left: 100%;
+}
+
+/* Button 1 - IR A CEREMONIA FACIAL */
+.tu-ceremonia-button-1 {
+  --pos-top: 60rem;
+  --pos-left: 50%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: auto;
+  --pos-max-width: 280px;
+}
+
+/* Button 2 - IR A CEREMONIA CAPILAR */
+.tu-ceremonia-button-2 {
+  --pos-top: 68rem;
+  --pos-left: 35%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: auto;
+  --pos-max-width: 280px;
+}
+
+/* Button 3 - IR A CEREMONIA CORPORAL */
+.tu-ceremonia-button-3 {
+  --pos-top: 68rem;
+  --pos-left: 65%;
+  --pos-translate-x: -50%;
+  --pos-translate-y: 0;
+  --pos-width: auto;
+  --pos-max-width: 280px;
+}
+
+.tu-ceremonia-button:hover {
+  background-color: var(--color-brand-primary, #AE0000);
+  color: var(--color-text-inverse, #FFFFFF);
+  box-shadow:
+    0 10px 25px rgba(174, 0, 0, 0.4),
+    0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tu-ceremonia-button:active {
+  transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0));
+}
+
+
+/* Mobile/Tablet: Height determined by content */
+@media (max-width: 1279px) {
+  .tu-ceremonia-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .tu-ceremonia-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .tu-ceremonia-content {
+    min-height: auto;
+    height: auto;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .tu-ceremonia-text-card {
+    width: 90%;
+    max-width: 500px;
+  }
+  
+  .tu-ceremonia-text-card-1 {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .tu-ceremonia-text-card-2 {
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .tu-ceremonia-buttons {
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    margin: 2rem auto;
+  }
+  
+  .tu-ceremonia-button {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+  }
+  
+  .tu-ceremonia-button:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* Desktop: Height determined by content */
+@media (min-width: 1280px) {
+  .tu-ceremonia-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden; /* Hide extra SVG, no scrollbar */
+  }
+  
+  .tu-ceremonia-bg-container {
+    min-height: 100%;
+    height: 100%;
+    /* Height will match content height */
+  }
+  
+  .tu-ceremonia-content {
+    min-height: auto;
+    height: auto;
+    /* Calculate height based on absolutely positioned children */
+    /* Bottommost buttons are at ~68rem, add button height and padding */
+    min-height: calc(68rem + 4rem + 4rem);
+    padding-bottom: 4rem; /* Extra padding for buttons at bottom */
+  }
+
+  .tu-ceremonia-main-title {
+    /* Default positioning - can be adjusted via inline styles */
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    /* Allow override with inline styles */
+    margin: 0;
+    padding: 0;
+  }
+
+  .tu-ceremonia-secondary-title {
+    /* Default positioning - can be adjusted via inline styles */
+    top: 25%;
+  }
+
+  .tu-ceremonia-text-card-1 {
+    /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .tu-ceremonia-text-card-2 {
+    /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  
+}
+
+@media (min-width: 1450px) {
+  .tu-ceremonia-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .tu-ceremonia-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .tu-ceremonia-content {
+    min-height: calc(68rem + 4rem + 4rem);
+    padding-bottom: 4rem;
+  }
+
+  .tu-ceremonia-main-title {
+    /* Default positioning - can be adjusted via inline styles */
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    /* Allow override with inline styles */
+    margin: 0;
+    padding: 0;
+  }
+
+  .tu-ceremonia-secondary-title {
+    /* Default positioning - can be adjusted via inline styles */
+    top: 25%;
+  }
+
+  .tu-ceremonia-text-card-1 {
+    /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .tu-ceremonia-text-card-2 {
+    /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+}
+
+@media (min-width: 1550px) {
+  .tu-ceremonia-page {
+    min-height: auto;
+    height: auto;
+    overflow-y: hidden;
+  }
+  
+  .tu-ceremonia-bg-container {
+    min-height: 100%;
+    height: 100%;
+  }
+  
+  .tu-ceremonia-content {
+    min-height: calc(68rem + 4rem + 4rem);
+    padding-bottom: 4rem;
+  }
+
+  .tu-ceremonia-main-title {
+    /* Default positioning - can be adjusted via inline styles */
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 1200px;
+    /* Allow override with inline styles */
+    margin: 0;
+    padding: 0;
+  }
+
+  .tu-ceremonia-secondary-title {
+    /* Default positioning - can be adjusted via inline styles */
+    top: 25%;
+  }
+
+  .tu-ceremonia-text-card-1 {
+    /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  .tu-ceremonia-text-card-2 {
+    /* Default positioning - can be adjusted via inline styles (top, left, right, bottom) */
+    top: 18%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+}
+
