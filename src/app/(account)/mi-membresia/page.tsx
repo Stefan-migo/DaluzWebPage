@@ -164,7 +164,13 @@ export default function MembershipPage() {
         </div>
 
         {/* No Active Membership */}
-        <Card className="text-center py-16">
+        <Card 
+          className="text-center py-16 shadow-alkimya border-0 overflow-hidden"
+          style={{ 
+            borderRadius: '0px 15px',
+            backgroundColor: 'var(--admin-accent-primary)'
+          }}
+        >
           <CardContent>
             <Sparkles className="h-20 w-20 text-dorado mx-auto mb-6" />
             <h3 className="text-2xl font-bold text-azul-profundo mb-4">
@@ -239,7 +245,13 @@ export default function MembershipPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Current Module */}
           <div className="lg:col-span-2">
-            <Card>
+            <Card 
+              className="shadow-alkimya border-0 overflow-hidden"
+              style={{ 
+                borderRadius: '0px 15px',
+                backgroundColor: 'var(--admin-accent-primary)'
+              }}
+            >
               <CardHeader>
                 <CardTitle className="text-azul-profundo">Módulo Actual</CardTitle>
               </CardHeader>
@@ -292,7 +304,13 @@ export default function MembershipPage() {
             </Card>
 
             {/* Recent Progress */}
-            <Card className="mt-6">
+            <Card 
+              className="mt-6 shadow-alkimya border-0 overflow-hidden"
+              style={{ 
+                borderRadius: '0px 15px',
+                backgroundColor: 'var(--admin-accent-primary)'
+              }}
+            >
               <CardHeader>
                 <CardTitle className="text-azul-profundo">Actividad Reciente</CardTitle>
               </CardHeader>
@@ -320,7 +338,13 @@ export default function MembershipPage() {
           {/* Sidebar */}
           <div className="space-y-6">
             {/* Progress Summary */}
-            <Card>
+            <Card 
+              className="shadow-alkimya border-0 overflow-hidden"
+              style={{ 
+                borderRadius: '0px 15px',
+                backgroundColor: 'var(--admin-accent-primary)'
+              }}
+            >
               <CardHeader>
                 <CardTitle className="text-azul-profundo">Tu Progreso</CardTitle>
               </CardHeader>
@@ -335,7 +359,10 @@ export default function MembershipPage() {
                   </p>
                 </div>
 
-                <div className="space-y-3 pt-4 border-t">
+                <div 
+                  className="space-y-3 pt-4 border-t"
+                  style={{ borderTopColor: 'var(--admin-text-primary)' }}
+                >
                   <div className="flex justify-between">
                     <span className="text-sm text-tierra-media">Semana actual:</span>
                     <span className="font-semibold text-azul-profundo">
@@ -353,7 +380,13 @@ export default function MembershipPage() {
             </Card>
 
             {/* Upcoming Content */}
-            <Card>
+            <Card 
+              className="shadow-alkimya border-0 overflow-hidden"
+              style={{ 
+                borderRadius: '0px 15px',
+                backgroundColor: 'var(--admin-accent-primary)'
+              }}
+            >
               <CardHeader>
                 <CardTitle className="text-azul-profundo">Próximamente</CardTitle>
               </CardHeader>
@@ -395,7 +428,13 @@ export default function MembershipPage() {
 
       {activeTab === 'content' && (
         <div className="space-y-6">
-          <Card>
+          <Card 
+            className="shadow-alkimya border-0 overflow-hidden"
+            style={{ 
+              borderRadius: '0px 15px',
+              backgroundColor: 'var(--admin-accent-primary)'
+            }}
+          >
             <CardHeader>
               <CardTitle className="text-azul-profundo">Biblioteca de Contenido</CardTitle>
               <p className="text-tierra-media">

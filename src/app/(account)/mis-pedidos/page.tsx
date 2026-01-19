@@ -195,7 +195,13 @@ export default function OrdersPage() {
 
       {orders.length === 0 ? (
         /* Empty State */
-        <Card className="text-center py-12">
+        <Card 
+          className="text-center py-12 shadow-alkimya border-0 overflow-hidden" 
+          style={{ 
+            borderRadius: '0px 15px',
+            backgroundColor: 'var(--admin-accent-primary)'
+          }}
+        >
           <CardContent>
             <Package className="h-16 w-16 text-tierra-media mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-azul-profundo mb-2">
@@ -213,7 +219,14 @@ export default function OrdersPage() {
         /* Orders List */
         <div className="space-y-4">
           {orders.map((order) => (
-            <Card key={order.id} className="transition-all duration-200 hover:shadow-md">
+            <Card 
+              key={order.id} 
+              className="transition-all duration-200 hover:shadow-md shadow-alkimya border-0 overflow-hidden"
+              style={{ 
+                borderRadius: '0px 15px',
+                backgroundColor: 'var(--admin-accent-primary)'
+              }}
+            >
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -245,7 +258,15 @@ export default function OrdersPage() {
                 <div className="space-y-2">
                   <h4 className="font-semibold text-azul-profundo">Productos:</h4>
                   {order.order_items.map((item, index) => (
-                    <div key={index} className="flex justify-between items-center bg-gray-50 p-3 rounded-lg">
+                    <div 
+                      key={index} 
+                      className="flex justify-between items-center bg-gray-50 p-3 rounded-lg"
+                      style={{
+                        backgroundColor: 'var(--admin-bg-tertiary)',
+                        borderWidth: '1px',
+                        borderColor: 'var(--admin-text-primary)'
+                      }}
+                    >
                       <div>
                         <p className="font-medium text-azul-profundo">{item.product_name}</p>
                         {item.variant_title && (
@@ -286,7 +307,7 @@ export default function OrdersPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-azul-profundo text-azul-profundo hover:bg-azul-profundo hover:text-white"
+                    className="border-0 border-azul-profundo text-azul-profundo hover:bg-[var(--admin-accent-tertiary)] hover:text-[var(--alma-text-inverse)]"
                     onClick={() => setSelectedOrder(selectedOrder === order.id ? null : order.id)}
                   >
                     <Eye className="h-4 w-4 mr-2" />
@@ -357,7 +378,13 @@ export default function OrdersPage() {
 
       {/* Reorder Section */}
       {orders.length > 0 && (
-        <Card>
+        <Card 
+          className="shadow-alkimya border-0 overflow-hidden"
+          style={{ 
+            borderRadius: '0px 15px',
+            backgroundColor: 'var(--admin-accent-primary)'
+          }}
+        >
           <CardHeader>
             <CardTitle className="text-azul-profundo">¿Necesitas algo más?</CardTitle>
           </CardHeader>

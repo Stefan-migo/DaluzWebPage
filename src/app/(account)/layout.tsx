@@ -92,12 +92,22 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <div className="min-h-screen bg-gradient-to-b from-white to-verde-suave/10">
+        <div 
+          className="min-h-screen" 
+          style={{
+            backgroundColor: 'var(--admin-bg-tertiary)',
+            background: 'linear-gradient(180deg, rgba(240, 234, 206, 1) 0%, rgba(255, 244, 179, 0.5) 100%)',
+            backgroundImage: 'none'
+          }}
+        >
           <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Sidebar Navigation */}
               <div className="lg:col-span-1">
-                <Card className="sticky top-24">
+                <Card 
+                  className="sticky top-24" 
+                  style={{ backgroundColor: 'var(--admin-accent-primary)' }}
+                >
                   <CardContent className="p-6">
                     {/* User Info */}
                     <div className="text-center mb-6">

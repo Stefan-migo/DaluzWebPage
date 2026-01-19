@@ -510,13 +510,13 @@ function ProductsContent() {
                     return (
                       <Button
                         key={page}
-                        variant={currentPage === page ? "default" : "outline"}
+                        variant="outline"
                         onClick={() => {
                           setCurrentPage(page);
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
-                        className={currentPage === page ? "bg-azul-profundo text-white" : "bg-white hover:bg-gray-100"}
-                        style={{ opacity: 1, backgroundColor: currentPage === page ? '#2C3E50' : '#ffffff' }}
+                        className={currentPage === page ? "pagination-current-page bg-[var(--admin-accent-secondary)] hover:text-[var(--admin-accent-primary)] border-2 border-input" : "bg-white hover:bg-gray-100"}
+                        style={{ opacity: 1, backgroundColor: currentPage === page ? undefined : '#ffffff', color: currentPage === page ? 'var(--admin-bg-secondary)' : undefined }}
                       >
                         {page}
                       </Button>
@@ -541,16 +541,16 @@ function ProductsContent() {
                     return (
                       <Button
                         key={page}
-                        variant={currentPage === page ? "default" : "outline"}
+                        variant="outline"
                         onClick={() => {
                           setCurrentPage(page);
                           window.scrollTo({ top: 0, behavior: 'smooth' });
                         }}
                         className={cn(
                           "text-xs px-2 py-1 h-8 min-w-[2rem]",
-                          currentPage === page ? "bg-azul-profundo text-white" : "bg-white hover:bg-gray-100"
+                          currentPage === page ? "pagination-current-page bg-[var(--admin-accent-secondary)] hover:text-[var(--admin-accent-primary)] border-2 border-input" : "bg-white hover:bg-gray-100"
                         )}
-                        style={{ opacity: 1, backgroundColor: currentPage === page ? '#2C3E50' : '#ffffff' }}
+                        style={{ opacity: 1, backgroundColor: currentPage === page ? undefined : '#ffffff', color: currentPage === page ? 'var(--admin-bg-secondary)' : undefined }}
                       >
                         {page}
                       </Button>

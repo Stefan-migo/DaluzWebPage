@@ -181,7 +181,13 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Security Settings */}
-        <Card>
+        <Card 
+          className="shadow-alkimya border-0 overflow-hidden"
+          style={{ 
+            borderRadius: '0px 15px',
+            backgroundColor: 'var(--admin-accent-primary)'
+          }}
+        >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-azul-profundo">
               <Shield className="h-5 w-5" />
@@ -200,7 +206,7 @@ export default function SettingsPage() {
                   <CheckCircle className="h-4 w-4 text-verde-suave" />
                   <span className="text-sm">Email verificado</span>
                 </div>
-                <Badge className="bg-verde-suave text-white">Activo</Badge>
+                <Badge className="bg-verde-suave" style={{ color: 'var(--admin-bg-secondary)' }}>Activo</Badge>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -228,6 +234,7 @@ export default function SettingsPage() {
                       type={showPasswords.current ? "text" : "password"}
                       {...register("currentPassword")}
                       className={errors.currentPassword ? "border-red-500" : ""}
+                      style={!errors.currentPassword ? { borderColor: 'var(--admin-text-primary)' } : undefined}
                     />
                     <Button
                       type="button"
@@ -255,6 +262,7 @@ export default function SettingsPage() {
                       type={showPasswords.new ? "text" : "password"}
                       {...register("newPassword")}
                       className={errors.newPassword ? "border-red-500" : ""}
+                      style={!errors.newPassword ? { borderColor: 'var(--admin-text-primary)' } : undefined}
                     />
                     <Button
                       type="button"
@@ -282,6 +290,7 @@ export default function SettingsPage() {
                       type={showPasswords.confirm ? "text" : "password"}
                       {...register("confirmPassword")}
                       className={errors.confirmPassword ? "border-red-500" : ""}
+                      style={!errors.confirmPassword ? { borderColor: 'var(--admin-text-primary)' } : undefined}
                     />
                     <Button
                       type="button"
@@ -305,6 +314,11 @@ export default function SettingsPage() {
                   type="submit"
                   disabled={isChangingPassword}
                   className="w-full bg-dorado hover:bg-dorado/90 text-azul-profundo"
+                  style={{ 
+                    backgroundColor: 'var(--admin-bg-secondary)',
+                    color: 'var(--admin-accent-primary)',
+                    fontWeight: 600
+                  }}
                 >
                   {isChangingPassword ? "Cambiando..." : "Cambiar Contraseña"}
                 </Button>
@@ -314,7 +328,13 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notification Settings */}
-        <Card>
+        <Card 
+          className="shadow-alkimya border-0 overflow-hidden"
+          style={{ 
+            borderRadius: '0px 15px',
+            backgroundColor: 'var(--admin-accent-primary)'
+          }}
+        >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-azul-profundo">
               <Bell className="h-5 w-5" />
@@ -400,7 +420,13 @@ export default function SettingsPage() {
         </Card>
 
         {/* Account Management */}
-        <Card className="lg:col-span-2">
+        <Card 
+          className="lg:col-span-2 shadow-alkimya border-0 overflow-hidden"
+          style={{ 
+            borderRadius: '0px 15px',
+            backgroundColor: 'var(--admin-accent-primary)'
+          }}
+        >
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-azul-profundo">
               <Settings className="h-5 w-5" />

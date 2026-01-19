@@ -883,6 +883,30 @@ export default function ProductsPage() {
                 Stock Bajo
               </Button>
             </div>
+
+            {/* View Toggle Button */}
+            <div className="w-full sm:w-auto">
+              <div className="flex items-center border rounded-md overflow-hidden">
+                <Button
+                  variant={viewMode === 'grid' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleViewModeChange('grid')}
+                  className="rounded-none border-0"
+                  title="Vista de tarjetas"
+                >
+                  <Grid3X3 className="h-4 w-4" />
+                </Button>
+                <Button
+                  variant={viewMode === 'table' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleViewModeChange('table')}
+                  className="rounded-none border-0"
+                  title="Vista de lista"
+                >
+                  <List className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -1011,74 +1035,103 @@ export default function ProductsPage() {
       {/* Products Display */}
       {viewMode === 'grid' ? (
         /* Grid View */
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((product) => (
-          <Card key={product.id} className="transition-all duration-200 hover:shadow-md">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={selectedProducts.includes(product.id)}
-                        onChange={() => handleSelectProduct(product.id)}
-                        className="rounded border-gray-300"
-                      />
-                  <CardTitle className="text-lg text-azul-profundo line-clamp-2">
-                    {product.name || product.title}
-                  </CardTitle>
-                    </div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <Badge variant="outline" className="text-xs">
-                      {product.categories?.name || product.category?.name || (typeof product.category === 'string' ? product.category : '') || 'Sin categoría'}
-                    </Badge>
-                  </div>
-                </div>
-                {(product.featured || product.is_featured) && (
-                  <Badge className="bg-dorado text-azul-profundo ml-2">
-                    Destacado
-                  </Badge>
-                )}
+          <Card key={product.id} className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1 group relative overflow-hidden">
+            {/* Selection Checkbox - Top Right */}
+            <div className="absolute top-3 right-3 z-10">
+              <input
+                type="checkbox"
+                checked={selectedProducts.includes(product.id)}
+                onChange={() => handleSelectProduct(product.id)}
+                className="w-5 h-5 rounded border-2 border-gray-300 cursor-pointer bg-white/90 backdrop-blur-sm transition-all hover:scale-110"
+              />
+            </div>
+
+            {/* Featured Badge - Top Left */}
+            {(product.featured || product.is_featured) && (
+              <div className="absolute top-3 left-3 z-10">
+                <Badge className="bg-dorado text-azul-profundo shadow-md">
+                  ⭐ Destacado
+                </Badge>
+              </div>
+            )}
+
+            <CardHeader className="pb-3 pt-6">
+              {/* Product Name */}
+              <CardTitle className="text-lg font-semibold text-azul-profundo line-clamp-2 pr-8 min-h-[3rem]">
+                {product.name || product.title}
+              </CardTitle>
+              
+              {/* Category Badge */}
+              <div className="mt-2">
+                <Badge variant="outline" className="text-xs font-normal">
+                  {product.categories?.name || product.category?.name || (typeof product.category === 'string' ? product.category : '') || 'Sin categoría'}
+                </Badge>
               </div>
             </CardHeader>
             
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-2xl font-bold text-verde-suave">
-                  {formatPrice(product.price || 0)}
-                </p>
-                {getStatusBadge(product.status || 'active')}
+            <CardContent className="space-y-4 pt-0">
+              {/* Price and Status Section */}
+              <div className="flex items-center justify-between pt-2 border-t border-gray-200">
+                <div>
+                  <p className="text-2xl font-bold text-verde-suave">
+                    {formatPrice(product.price || 0)}
+                  </p>
+                </div>
+                <div>
+                  {getStatusBadge(product.status || 'active')}
+                </div>
               </div>
 
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-tierra-media">Stock:</span>
-                <span className={`font-medium ${(product.inventory_quantity || 0) <= 5 ? 'text-red-500' : 'text-verde-suave'}`}>
-                  {product.inventory_quantity || 0} unidades
+              {/* Stock Information */}
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50/50 border border-gray-100">
+                <div className="flex items-center gap-2">
+                  <Package className={`h-4 w-4 ${(product.inventory_quantity || 0) <= 5 ? 'text-red-500' : 'text-verde-suave'}`} />
+                  <span className="text-sm font-medium text-gray-700">Stock</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className={`text-sm font-semibold ${(product.inventory_quantity || 0) <= 5 ? 'text-red-500' : 'text-gray-700'}`}>
+                    {product.inventory_quantity || 0}
+                  </span>
+                  <span className="text-xs text-gray-500">unidades</span>
                   {(product.inventory_quantity || 0) <= 5 && (
-                    <AlertTriangle className="h-4 w-4 inline ml-1" />
+                    <AlertTriangle className="h-4 w-4 text-red-500 ml-1" />
                   )}
-                </span>
+                </div>
               </div>
 
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1" asChild>
+              {/* Action Buttons */}
+              <div className="flex gap-2 pt-2">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 group/btn hover:bg-verde-suave/10 hover:border-verde-suave transition-colors" 
+                  asChild
+                >
                   <Link href={`/productos/${product.slug}`} target="_blank">
-                    <Eye className="h-4 w-4 mr-2" />
-                    Ver
+                    <Eye className="h-4 w-4 mr-1.5 group-hover/btn:text-verde-suave" />
+                    <span className="hidden sm:inline">Ver</span>
                   </Link>
                 </Button>
-                <Button variant="outline" size="sm" className="flex-1" asChild>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="flex-1 group/btn hover:bg-azul-profundo/10 hover:border-azul-profundo transition-colors" 
+                  asChild
+                >
                   <Link href={`/admin/products/edit/${product.id}`}>
-                    <Edit className="h-4 w-4 mr-2" />
-                    Editar
+                    <Edit className="h-4 w-4 mr-1.5 group-hover/btn:text-azul-profundo" />
+                    <span className="hidden sm:inline">Editar</span>
                   </Link>
                 </Button>
                 <Button 
                   variant="outline" 
                   size="sm"
+                  className="group/btn hover:bg-red-50 hover:border-red-300 transition-colors"
                   onClick={() => openDeleteDialog(product)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-4 w-4 group-hover/btn:text-red-500" />
                 </Button>
               </div>
             </CardContent>
