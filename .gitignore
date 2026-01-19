@@ -92,3 +92,5 @@ pids
 # srs directory
 srs/
 
+# .env.example
+.env.example
