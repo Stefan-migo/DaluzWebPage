@@ -172,7 +172,7 @@ export default function AdminDashboard() {
   const getOrderStatusBadge = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Badge className="bg-verde-suave text-white text-xs"><CheckCircle className="h-3 w-3 mr-1" />Completado</Badge>;
+        return <Badge className="bg-[var(--admin-bg-tertiary)] text-[var(--admin-bg-secondary)] text-xs"><CheckCircle className="h-3 w-3 mr-1" />Completado</Badge>;
       case 'pending':
         return <Badge className="bg-dorado text-azul-profundo text-xs"><Clock className="h-3 w-3 mr-1" />Pendiente</Badge>;
       case 'processing':

@@ -9,9 +9,9 @@ const badgeVariants = cva(
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-[#AE0000] shadow hover:bg-primary/80 hover:text-white",
+          "border-transparent bg-primary text-[var(--admin-accent-primary)] shadow hover:bg-primary/80",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
+          "border-transparent bg-[var(--admin-bg-tertiary)] text-[var(--admin-accent-tertiary)] hover:bg-secondary/80",
         destructive:
           "border-transparent bg-destructive text-destructive-foreground shadow hover:bg-destructive/80",
         outline: "text-foreground",
@@ -29,8 +29,17 @@ export interface BadgeProps
     VariantProps<typeof badgeVariants> {}
 
 function Badge({ className, variant, ...props }: BadgeProps) {
+  const isDefaultVariant = variant === "default" || variant === undefined;
+  
   return (
-    <div className={cn(badgeVariants({ variant }), className)} {...props} />
+    <div 
+      className={cn(
+        badgeVariants({ variant }), 
+        isDefaultVariant && "badge-default-hover",
+        className
+      )} 
+      {...props} 
+    />
   )
 }
 

@@ -1223,6 +1223,38 @@ input[type="submit"]:not(.btn-no-radius) {
   transform: translateY(-1px);
 }
 
+/* Override Card component styles in admin pages */
+.admin-layout .bg-card,
+[class*="admin"] .bg-card {
+  background-color: var(--admin-bg-tertiary) !important;
+}
+
+.admin-layout .border-border,
+[class*="admin"] .border-border {
+  border-color: var(--admin-border-primary) !important;
+}
+
+/* Enhanced Product Cards in Admin */
+.admin-layout .group:hover {
+  border-color: var(--admin-accent-primary) !important;
+}
+
+/* Smooth card transitions */
+.admin-layout [class*="Card"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Better checkbox styling in cards */
+.admin-layout input[type="checkbox"] {
+  accent-color: var(--admin-accent-primary);
+  cursor: pointer;
+}
+
+.admin-layout input[type="checkbox"]:checked {
+  background-color: var(--admin-accent-primary);
+  border-color: var(--admin-accent-primary);
+}
+
 .admin-card-header {
   padding: 1.5rem 1.5rem 0 1.5rem;
   border-bottom: 1px solid var(--admin-border-primary);
@@ -1350,6 +1382,16 @@ input[type="submit"]:not(.btn-no-radius) {
   background-color: rgba(174, 0, 0, 0.1);
   color: var(--admin-accent-primary);
   border: 1px solid rgba(174, 0, 0, 0.2);
+}
+
+/* Badge default variant hover text color */
+.badge-default-hover:hover {
+  color: var(--admin-accent-primary) !important;
+}
+
+/* Badge with bg-azul-profundo text color */
+.inline-flex.bg-azul-profundo {
+  color: var(--admin-bg-secondary) !important;
 }
 
 /* Admin Tables */
@@ -1636,6 +1678,11 @@ input[type="submit"]:not(.btn-no-radius) {
 .admin-pagination-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* Pagination button hover effect for current page */
+button.pagination-current-page:hover {
+  color: var(--admin-accent-primary) !important;
 }
 
 /* Admin Search */

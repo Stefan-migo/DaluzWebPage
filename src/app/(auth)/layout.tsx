@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import Link from "next/link";
 
 interface AuthLayoutProps {
   children: ReactNode;
@@ -6,15 +7,17 @@ interface AuthLayoutProps {
 
 export default function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-verde-suave to-turquesa-claro">
-      <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="min-h-screen bg-bg-light">
+      <div className="flex min-h-screen items-center justify-center p-4 md:p-8">
         <div className="w-full max-w-md">
           {/* DA LUZ Brand Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-azul-profundo mb-2">
-              DA LUZ CONSCIENTE
-            </h1>
-            <p className="text-tierra-media text-sm">
+            <Link href="/" className="inline-block">
+              <h1 className="text-4xl font-display font-bold text-brand-primary mb-2 transition-colors hover:text-brand-secondary">
+                DA LUZ CONSCIENTE
+              </h1>
+            </Link>
+            <p className="text-text-primary/70 text-sm font-text">
               Alkimyas para alma y cuerpo
             </p>
           </div>

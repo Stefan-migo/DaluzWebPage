@@ -166,7 +166,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      console.log('🔍 Admin layout useEffect triggered:', { loading, user: !!user, profile: !!profile });
+      console.log('🔍 Admin layout useEffect triggered:', { loading, user: !!user, userId: user?.id });
       
       // Don't check admin status if auth is still loading
       if (loading) {
@@ -176,7 +176,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       }
 
       // Wait a bit longer after auth loads to ensure auth state is stable
-      if (!user) {
+      if (!user || !user.id) {
         console.log('🔍 No user found, setting admin state to false');
         setAdminState({
           isChecking: false,
@@ -188,15 +188,15 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       }
 
       // Additional check: ensure we have a valid user with email
+      // But don't wait for email - we can check admin with just user ID
       if (!user.email) {
-        console.log('🔍 User found but no email, waiting...');
-        setAdminState({
-          isChecking: false,
-          isAdmin: false,
-          hasChecked: false, // Don't mark as checked yet
-          checkedUserId: null
-        });
-        return;
+        console.log('🔍 User found but no email yet, waiting briefly...');
+        // Give it a small delay for email to populate, but don't block forever
+        setTimeout(() => {
+          if (!user.email) {
+            console.log('⚠️ User still has no email after delay, proceeding with admin check anyway');
+          }
+        }, 500);
       }
 
       // 🚀 KEY FIX: Skip admin check if we already checked this exact user ID
@@ -234,10 +234,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         const { createClient } = await import('@/utils/supabase/client');
         const supabase = createClient();
 
-        // Add timeout to admin check to prevent infinite loading
+        // Add timeout to admin check - reduced to 5 seconds for faster response
         const adminCheckPromise = supabase.rpc('is_admin', { user_id: user.id });
         const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Admin check timeout')), 10000)
+          setTimeout(() => reject(new Error('Admin check timeout')), 5000) // Reduced to 5 seconds
         );
 
         const { data, error } = await Promise.race([adminCheckPromise, timeoutPromise]) as any;

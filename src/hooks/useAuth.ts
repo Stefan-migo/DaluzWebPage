@@ -48,29 +48,27 @@ export function useAuth() {
       }
 
       if (session?.user) {
-        // Fetch user profile with error handling
+        // Set user immediately - don't wait for profile
+        setAuthState({
+          user: session.user,
+          profile: null, // Will be loaded in background
+          session,
+          loading: false, // Set loading false immediately
+          error: null
+        })
+        
+        // Fetch profile in background (non-blocking)
         fetchProfile(session.user.id)
           .then(profile => {
             if (!mounted) return
-            setAuthState({
-              user: session.user,
-              profile,
-              session,
-              loading: false,
-              error: null
-            })
+            setAuthState(prev => ({
+              ...prev,
+              profile
+            }))
           })
           .catch(profileError => {
-            console.error('Profile fetch error:', profileError)
-            // Still set user data even if profile fails
-            if (!mounted) return
-            setAuthState({
-              user: session.user,
-              profile: null,
-              session,
-              loading: false,
-              error: null
-            })
+            console.warn('Background profile fetch error:', profileError)
+            // Don't update state on error - profile will be null
           })
       } else {
         setAuthState(prev => ({ ...prev, loading: false }))
@@ -89,14 +87,28 @@ export function useAuth() {
         if (!mounted) return
 
         if (event === 'SIGNED_IN' && session?.user) {
-          const profile = await fetchProfile(session.user.id)
+          // Set user immediately - don't wait for profile
           setAuthState({
             user: session.user,
-            profile,
+            profile: null, // Will be loaded in background
             session,
-            loading: false,
+            loading: false, // Set loading false immediately
             error: null
           })
+          
+          // Fetch profile in background (non-blocking)
+          fetchProfile(session.user.id)
+            .then(profile => {
+              if (!mounted) return
+              setAuthState(prev => ({
+                ...prev,
+                profile
+              }))
+            })
+            .catch(error => {
+              console.warn('Background profile fetch failed:', error)
+              // Don't update state on error - profile will be null
+            })
         } else if (event === 'SIGNED_OUT') {
           setAuthState({
             user: null,
@@ -122,52 +134,100 @@ export function useAuth() {
     }
   }, [])
 
-  const fetchProfile = async (userId: string): Promise<Profile | null> => {
+  const fetchProfile = async (userId: string, retries = 1): Promise<Profile | null> => {
     const supabase = createClient()
-    try {
-      // Add timeout to profile fetch with more graceful handling
-      const profilePromise = supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single()
+    
+    for (let attempt = 0; attempt <= retries; attempt++) {
+      try {
+        // Reduced timeout to 5 seconds for faster login
+        const profilePromise = supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single()
 
-      const timeoutPromise = new Promise((_, reject) => 
-        setTimeout(() => reject(new Error('Profile fetch timeout')), 8000) // Increased to 8s for admin flows
-      )
+        const timeoutPromise = new Promise((_, reject) => 
+          setTimeout(() => reject(new Error('Profile fetch timeout')), 5000) // 5 seconds
+        )
 
-      const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any
+        const { data, error } = await Promise.race([profilePromise, timeoutPromise]) as any
 
-      if (error) {
-        // Handle different error types more gracefully
+        if (error) {
+          // Handle different error types more gracefully
+          if (error.message === 'Profile fetch timeout') {
+            if (attempt < retries) {
+              console.log(`⏱️ Profile fetch timed out, retrying... (${attempt + 1}/${retries})`)
+              await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))) // Exponential backoff
+              continue
+            }
+            console.warn('⏱️ Profile fetch timed out after retries - this is normal for new users or slow connections')
+            return null
+          }
+          
+          if (error.code === 'PGRST116') {
+            // Profile doesn't exist - try to create it with basic info from auth user
+            console.log('📝 Profile not found - attempting to create basic profile')
+            try {
+              const { data: authData } = await supabase.auth.getUser()
+              if (authData?.user) {
+                const { error: insertError } = await supabase
+                  .from('profiles')
+                  .insert({
+                    id: userId,
+                    email: authData.user.email || '',
+                    first_name: authData.user.user_metadata?.first_name || authData.user.user_metadata?.full_name?.split(' ')[0] || '',
+                    last_name: authData.user.user_metadata?.last_name || authData.user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || '',
+                    avatar_url: authData.user.user_metadata?.avatar_url || authData.user.user_metadata?.picture || null,
+                  })
+                
+                if (!insertError) {
+                  // Retry fetch after creation
+                  const { data: newProfile } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .eq('id', userId)
+                    .single()
+                  
+                  if (newProfile) {
+                    console.log('✅ Profile created and loaded successfully')
+                    return newProfile
+                  }
+                }
+              }
+            } catch (createError) {
+              console.warn('⚠️ Could not auto-create profile:', createError)
+            }
+            return null
+          }
+
+          // Only log actual errors, not expected cases
+          if (error.code !== '42P01') { // Table doesn't exist
+            console.error('❌ Profile fetch error:', error)
+          }
+          return null
+        }
+
+        if (data) {
+          console.log('✅ Profile loaded successfully')
+          return data
+        }
+      } catch (error: any) {
+        // More specific error handling
         if (error.message === 'Profile fetch timeout') {
-          console.warn('⏱️ Profile fetch timed out - this is normal for new users or slow connections')
-          return null
+          if (attempt < retries) {
+            console.log(`⏱️ Profile fetch timeout, retrying... (${attempt + 1}/${retries})`)
+            await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1)))
+            continue
+          }
+          console.warn('⏱️ Profile fetch timeout after retries - continuing without profile data')
+        } else {
+          console.error('❌ Unexpected profile fetch error:', error)
         }
-        
-        if (error.code === 'PGRST116') {
-          console.log('📝 Profile not found for user - will be created automatically on first update')
-          return null
-        }
-
-        // Only log actual errors, not expected cases
-        if (error.code !== '42P01') { // Table doesn't exist
-          console.error('❌ Profile fetch error:', error)
-        }
-        return null
+        if (attempt === retries) return null
       }
-
-      console.log('✅ Profile loaded successfully')
-      return data
-    } catch (error: any) {
-      // More specific error handling
-      if (error.message === 'Profile fetch timeout') {
-        console.warn('⏱️ Profile fetch timeout - continuing without profile data')
-      } else {
-        console.error('❌ Unexpected profile fetch error:', error)
-      }
-      return null
     }
+    
+    return null
   }
 
   const signUp = async (email: string, password: string, userData?: {
@@ -319,6 +379,42 @@ export function useAuth() {
     }
   }
 
+  const signInWithGoogle = async () => {
+    const supabase = createClient()
+    setAuthState(prev => ({ ...prev, loading: true, error: null }))
+
+    try {
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      })
+
+      if (error) {
+        setAuthState(prev => ({ ...prev, error, loading: false }))
+        throw error
+      }
+
+      // The redirect will happen automatically, so we don't set loading to false here
+      // The auth state change handler will handle the session update
+      return { data, error: null }
+
+    } catch (error: any) {
+      setAuthState(prev => ({ ...prev, error, loading: false }))
+      throw error
+    }
+  }
+
+  const signUpWithGoogle = async () => {
+    // For OAuth, sign up and sign in are the same - it creates an account if one doesn't exist
+    return signInWithGoogle()
+  }
+
   return {
     ...authState,
     signUp,
@@ -326,6 +422,8 @@ export function useAuth() {
     signOut,
     updateProfile,
     resetPassword,
+    signInWithGoogle,
+    signUpWithGoogle,
     refetchProfile: () => authState.user ? fetchProfile(authState.user.id) : null
   }
 } 
