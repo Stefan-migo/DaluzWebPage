@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
+import './ceremonia.css'
 
 export const metadata: Metadata = {
   title: 'Tu Ceremonia | ALKIMYA | DA LUZ CONSCIENTE',
@@ -8,33 +9,45 @@ export const metadata: Metadata = {
 
 export default function TuCeremoniaPage() {
   return (
-    <div className="min-h-screen py-20 px-6">
-      <div className="container mx-auto max-w-4xl">
-        <div className="text-center mb-12">
-          <h1 className="font-velista text-4xl md:text-6xl font-bold mb-6 text-brand-primary">
-            Tu Ceremonia
-          </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Rituales y ceremonias personalizadas
+    <div className="ceremonia-page">
+
+      {/* Intro Section */}
+      <section className="ceremonia-intro-section">
+        <div className="ceremonia-intro-header">
+          <h1 className="ceremonia-intro-title">TU CEREMONIA DIARIA</h1>
+        </div>
+
+        <h2 className="ceremonia-intro-subtitle">
+          ¡Transformá tu Rutina<br />en un Ritual Consciente!
+        </h2>
+
+        <div className="ceremonia-intro-card">
+          <p className="ceremonia-intro-text">
+            El cuidado personal es una extensión de tu bienestar interno.<br />
+            En DA LUZ Alkimya, no solo aplicamos productos, creamos una Ceremonia
+            para conectar la intención, el cuerpo y la mente.
           </p>
         </div>
 
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="font-title text-2xl">Contenido en Desarrollo</CardTitle>
-            <CardDescription>
-              Esta sección está en construcción. Próximamente encontrarás guías para crear tus propios rituales y ceremonias.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600">
-              Estamos trabajando en crear contenido completo sobre cómo crear rituales y ceremonias personalizadas 
-              que te ayuden a conectar profundamente con tus alkimyas y tu bienestar consciente.
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+        <div className="ceremonia-intro-card">
+          <p className="ceremonia-intro-text">
+            Antes de comenzar el paso a paso,<br />
+            te invitamos a frenar y recordar que la coherencia en la rutina<br />
+            no solo transforma la piel o el cabello; ancla la intención en tu materia.
+          </p>
+        </div>
+
+        <div className="ceremonia-intro-buttons">
+          <button className="ceremonia-button">IR A CEREMONIA FACIAL</button>
+          <Link href="#ceremonia-capilar" className="ceremonia-button">
+            IR A CEREMONIA CAPILAR
+          </Link>
+          <button className="ceremonia-button">IR A CEREMONIA CORPORAL</button>
+        </div>
+      </section>
+
+
+
     </div>
   )
 }
-

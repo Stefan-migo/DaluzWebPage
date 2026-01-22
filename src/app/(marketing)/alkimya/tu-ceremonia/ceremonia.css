@@ -1,0 +1,175 @@
+/* Ceremonia Capilar Page Styles */
+
+/* Header Section */
+.ceremonia-header {
+    width: 100%;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 2rem;
+    /* Removed specific background as it is now part of the main page background */
+}
+
+
+/* Responsive title */
+@media (min-width: 768px) {
+    .ceremonia-title {
+        font-size: 3rem;
+    }
+}
+
+/* Content Section */
+.ceremonia-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 5rem 1.5rem;
+}
+
+.ceremonia-subtitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-velista);
+}
+
+.ceremonia-heading-3 {
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+@media (min-width: 768px) {
+    .ceremonia-subtitle {
+        font-size: 3.5rem;
+    }
+
+    .ceremonia-heading-3 {
+        font-size: 2rem;
+    }
+}
+
+.ceremonia-text {
+    color: #FFFFFF;
+    line-height: 1.75;
+}
+
+/* General container */
+.ceremonia-page {
+    min-height: 100vh;
+    background-image: url('/images/ceremonia-combined-bg.jpg');
+    background-size: 100% auto;
+    /* Fit width, scroll vertically */
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-color: #9F2212;
+    /* Fallback/Extension color matching the bottom of the image */
+}
+
+/* --- Intro Section Styles --- */
+
+.ceremonia-intro-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 4rem;
+}
+
+.ceremonia-intro-header {
+    width: 100%;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* Removed specific wave background */
+    padding-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.ceremonia-intro-title {
+    font-family: var(--font-velista);
+    font-size: 3.5rem;
+    color: #ac100a;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+    margin-top: -6rem;
+}
+
+.ceremonia-intro-subtitle {
+    font-size: 1.8rem;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-align: center;
+    margin-top: -3rem;
+    margin-bottom: 2rem;
+    z-index: 10;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.ceremonia-intro-card {
+    background-color: rgba(246, 235, 219, 0.95);
+    border-radius: 1.5rem;
+    padding: 1.5rem 2rem;
+    margin: 1rem 1.5rem;
+    max-width: 900px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.ceremonia-intro-text {
+    color: #ac100a;
+    font-weight: 600;
+    font-size: 1.1rem;
+    line-height: 1.4;
+}
+
+.ceremonia-intro-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
+    max-width: 1000px;
+}
+
+.ceremonia-button {
+    background-color: #F5EFE0;
+    color: #ac100a;
+    border: 2px solid #F5EFE0;
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    min-width: 200px;
+    text-align: center;
+}
+
+.ceremonia-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    background-color: #ffffff;
+}
+
+@media (min-width: 768px) {
+    .ceremonia-intro-title {
+        font-size: 5rem;
+    }
+
+    .ceremonia-intro-subtitle {
+        font-size: 2.5rem;
+    }
+
+    .ceremonia-intro-text {
+        font-size: 1.25rem;
+    }
+}
