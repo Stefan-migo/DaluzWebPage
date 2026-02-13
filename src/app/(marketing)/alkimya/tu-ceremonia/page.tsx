@@ -38,11 +38,15 @@ export default function TuCeremoniaPage() {
         </div>
 
         <div className="ceremonia-intro-buttons">
-          <button className="ceremonia-button">IR A CEREMONIA FACIAL</button>
-          <Link href="#ceremonia-capilar" className="ceremonia-button">
+          <Link href="/alkimya/tu-ceremonia/ceremonia-facial" className="ceremonia-button">
+            IR A CEREMONIA FACIAL
+          </Link>
+          <Link href="/alkimya/tu-ceremonia/ceremonia-capilar" className="ceremonia-button">
             IR A CEREMONIA CAPILAR
           </Link>
-          <button className="ceremonia-button">IR A CEREMONIA CORPORAL</button>
+          <Link href="/alkimya/tu-ceremonia/ceremonia-corporal" className="ceremonia-button">
+            IR A CEREMONIA CORPORAL
+          </Link>
         </div>
       </section>
 

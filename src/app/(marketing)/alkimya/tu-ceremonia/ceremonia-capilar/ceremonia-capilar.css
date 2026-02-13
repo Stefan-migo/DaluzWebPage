@@ -1,0 +1,29 @@
+/* src/app/(marketing)/alkimya/tu-ceremonia/ceremonia-capilar/ceremonia-capilar.css */
+
+.ceremonia-capilar-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    background-color: #f8f8f8;
+    /* Example light background */
+    font-family: var(--font-primary);
+    /* Assuming a font variable exists, or fallback */
+}
+
+.ceremonia-capilar-title {
+    font-family: var(--font-velista), serif;
+    font-size: 3.5rem;
+    margin-bottom: 2rem;
+    color: #ac100a;
+    text-align: center;
+}
+
+.ceremonia-capilar-content {
+    max-width: 800px;
+    line-height: 1.6;
+    text-align: center;
+    color: #555;
+}
