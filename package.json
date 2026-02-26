@@ -18,7 +18,8 @@
     "supabase:stop": "npx supabase stop",
     "supabase:status": "npx supabase status",
     "supabase:reset": "npx supabase db reset",
-    "admin:setup": "node setup-admin.js"
+    "admin:setup": "node setup-admin.js",
+    "notebooklm:upload": "bash scripts/upload-docs-to-notebooklm.sh"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",

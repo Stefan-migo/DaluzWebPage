@@ -4,7 +4,7 @@ import { client, queries } from "@/lib/sanity/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BlurText from "@/components/ui/BlurText";
-import { ArrowRight, Sparkles, Leaf, Heart, Star, Zap, Calendar } from "lucide-react";
+import { ArrowRight, Sparkles, Leaf, Heart, Star, Zap, Calendar, BookOpen } from "lucide-react";
 import {
   AnimatedBackground,
   SobreNosotrosBackground,
@@ -1477,17 +1477,16 @@ export default async function HomePage() {
             </div>
           )}
 
-          {/* Enhanced CTA */}
-          <div className="text-center mt-8 sm:mt-10 md:mt-12">
-            <Link href="/blog" className="inline-block">
-              <Button
-                variant="outline"
-                className="group/btn text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300 px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 lg:px-7 lg:py-3.5 xl:px-8 xl:py-4 text-xs sm:text-sm md:text-sm lg:text-base xl:text-base"
-                style={{ borderRadius: '0px 15px' }}
-              >
-                EXPLORAR LA COMUNIDAD DA LUZ
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2 group-hover/btn:translate-x-1 transition-transform duration-300" />
-              </Button>
+          {/* Enhanced CTA - Blog button with BookOpen icon */}
+          <div className="flex flex-col items-center gap-4 mt-8 sm:mt-10 md:mt-12">
+            <Link
+              href="/blog"
+              className="group inline-flex items-center justify-center gap-3 px-6 py-3 sm:px-8 sm:py-4 bg-[var(--color-brand-primary)] hover:bg-[var(--color-brand-secondary)] text-white font-title uppercase tracking-wider transition-all duration-300"
+              style={{ borderRadius: "0 15px" }}
+              aria-label="Ir al blog"
+            >
+              <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
+              <span className="text-sm sm:text-base">Ir al blog</span>
             </Link>
           </div>
         </div>

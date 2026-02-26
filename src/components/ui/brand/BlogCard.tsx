@@ -119,7 +119,7 @@ export default function BlogCard({
       <Link href={`/blog/${slug}`}>
         <div className="relative">
           {/* Blog Image */}
-          <div className="relative aspect-[16/10] overflow-hidden bg-verde-suave/10">
+          <div className="relative aspect-[16/10] overflow-hidden bg-[var(--color-bg-light)]/50">
             {hasValidImage() ? (
               <Image
                 src={getImageUrl()}
@@ -131,8 +131,8 @@ export default function BlogCard({
                 }}
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-verde-suave/20 to-turquesa-claro/20 flex items-center justify-center">
-                <div className="text-center text-tierra-media/60">
+              <div className="w-full h-full bg-gradient-to-br from-[var(--color-bg-light)]/80 to-[var(--color-bg-cream)]/50 flex items-center justify-center">
+                <div className="text-center text-[var(--color-text-primary)]/50">
                   <BookOpen className="w-12 h-12 mx-auto mb-2 opacity-50" />
                   <span className="text-sm font-medium">Sin imagen</span>
                 </div>
@@ -142,7 +142,7 @@ export default function BlogCard({
             {/* Featured Badge */}
             {featured && (
               <div className="absolute top-4 left-4">
-                <Badge className="bg-dorado text-azul-profundo font-semibold">
+                <Badge className="bg-[var(--color-highlight)] text-[var(--color-text-primary)] font-semibold font-caption">
                   <BookOpen className="h-3 w-3 mr-1" />
                   Destacado
                 </Badge>
@@ -156,7 +156,7 @@ export default function BlogCard({
                   <Badge 
                     key={index}
                     variant="secondary" 
-                    className="bg-white/90 text-azul-profundo text-xs"
+                    className="bg-white/90 text-[var(--color-text-primary)] text-xs font-caption"
                     style={{ 
                       backgroundColor: category.color ? `${category.color}20` : undefined,
                       color: category.color || undefined 
@@ -181,7 +181,7 @@ export default function BlogCard({
                 >
                   <Heart 
                     className={`h-4 w-4 ${
-                      isFavorite ? 'fill-coral-suave text-coral-suave' : 'text-tierra-media'
+                      isFavorite ? 'fill-[var(--color-brand-primary)] text-[var(--color-brand-primary)]' : 'text-[var(--color-text-primary)]/60'
                     }`}
                   />
                 </Button>
@@ -193,7 +193,7 @@ export default function BlogCard({
                   className="h-8 w-8 p-0 bg-white/90 hover:bg-white"
                   onClick={handleShare}
                 >
-                  <Share2 className="h-4 w-4 text-tierra-media" />
+                  <Share2 className="h-4 w-4 text-[var(--color-text-primary)]/60" />
                 </Button>
               )}
             </div>
@@ -201,8 +201,8 @@ export default function BlogCard({
             {/* Reading Time */}
             <div className="absolute bottom-4 left-4">
               <div className="bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-                <Clock className="h-3 w-3 text-tierra-media" />
-                <span className="text-xs text-tierra-media font-medium">
+                <Clock className="h-3 w-3 text-[var(--color-text-primary)]/70" />
+                <span className="text-xs text-[var(--color-text-primary)]/70 font-medium font-caption">
                   {estimatedReadingTime || 5} min
                 </span>
               </div>
@@ -212,25 +212,25 @@ export default function BlogCard({
           {/* Blog Content */}
           <CardContent className="p-6">
             {/* Publication Date */}
-            <div className="flex items-center gap-2 text-sm text-tierra-media mb-3">
+            <div className="flex items-center gap-2 text-sm text-[var(--color-text-primary)]/70 mb-3 font-caption">
               <Calendar className="h-4 w-4" />
               <span>{formatDate(publishedAt)}</span>
             </div>
 
             {/* Title */}
-            <h3 className="text-xl font-semibold text-azul-profundo line-clamp-2 mb-3 hover:text-azul-profundo/80 transition-colors">
+            <h3 className="font-subtitle italic text-xl text-[var(--color-text-primary)] line-clamp-2 mb-3 hover:text-[var(--color-brand-primary)] transition-colors">
               {title}
             </h3>
 
             {/* Excerpt */}
-            <p className="text-tierra-media line-clamp-3 mb-4 leading-relaxed">
+            <p className="font-text text-[var(--color-text-primary)]/80 line-clamp-3 mb-4 leading-relaxed text-lg">
               {excerpt}
             </p>
 
             {/* Author */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="relative h-8 w-8 rounded-full overflow-hidden bg-verde-suave/20">
+                <div className="relative h-8 w-8 rounded-full overflow-hidden bg-[var(--color-bg-light)]/80">
                   {hasValidAuthorImage() ? (
                     <Image
                       src={getAuthorImageUrl()}
@@ -242,20 +242,20 @@ export default function BlogCard({
                       }}
                     />
                   ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-azul-profundo/20 to-verde-suave/20 flex items-center justify-center">
-                      <User className="w-4 h-4 text-tierra-media/60" />
+                    <div className="w-full h-full bg-gradient-to-br from-[var(--color-brand-primary)]/10 to-[var(--color-bg-light)] flex items-center justify-center">
+                      <User className="w-4 h-4 text-[var(--color-text-primary)]/50" />
                     </div>
                   )}
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-azul-profundo">
+                  <div className="text-sm font-medium text-[var(--color-text-primary)] font-caption">
                     {author?.name || "Autor desconocido"}
                   </div>
                 </div>
               </div>
 
               {/* Read More */}
-              <div className="flex items-center gap-1 text-sm text-azul-profundo group-hover:text-dorado transition-colors">
+              <div className="flex items-center gap-1 text-sm text-[var(--color-brand-primary)] group-hover:text-[var(--color-brand-secondary)] transition-colors font-caption uppercase tracking-wider">
                 <span className="font-medium">Leer más</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </div>

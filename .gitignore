@@ -30,6 +30,10 @@ yarn-error.log*
 .env
 .env.production
 
+# NotebookLM auth (sensitive)
+cookies.json
+cookies_nlm.json
+
 # vercel
 .vercel
 

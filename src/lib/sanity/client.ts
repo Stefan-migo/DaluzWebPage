@@ -55,7 +55,7 @@ export const queries = {
       "image": {"asset": {"url": image.asset->url}}, 
       bio
     },
-    categories[]->{title, color},
+    categories[]->{title, "color": colorHex},
     featured,
     "estimatedReadingTime": round(length(pt::text(content)) / 5 / 200)
   }`,
@@ -89,18 +89,18 @@ export const queries = {
       bio, 
       socialLinks
     },
-    categories[]->{title, color},
+    categories[]->{title, "color": colorHex},
     seo,
     featured,
     "estimatedReadingTime": round(length(pt::text(content)) / 5 / 200)
   }`,
 
-  // Categories
+  // Categories (colorHex from schema mapped as color)
   allCategories: `*[_type == "category"] | order(title asc) {
     _id,
     title,
     description,
-    color
+    "color": colorHex
   }`,
 
   // Products
@@ -112,7 +112,7 @@ export const queries = {
     mainImage,
     price,
     isAvailable,
-    categories[]->{title, color},
+    categories[]->{title, "color": colorHex},
     certifications
   }`,
 
@@ -130,7 +130,7 @@ export const queries = {
     benefits,
     howToUse,
     certifications,
-    categories[]->{title, color},
+    categories[]->{title, "color": colorHex},
     seo
   }`,
 

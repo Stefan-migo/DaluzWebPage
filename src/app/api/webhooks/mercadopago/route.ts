@@ -237,14 +237,24 @@ export async function POST(req: NextRequest) {
                   
                   if (stockError) {
                     console.warn('RPC function failed, updating inventory directly:', stockError);
-                    // Fallback: direct inventory update
-                    await supabaseAdmin
+                    // Fallback: fetch product, decrement, and update
+                    const { data: product } = await supabaseAdmin
                       .from('products')
-                      .update({ 
-                        inventory_quantity: supabaseAdmin.raw('GREATEST(0, inventory_quantity - ?)', [item.quantity]),
-                        stock_quantity: supabaseAdmin.raw('GREATEST(0, stock_quantity - ?)', [item.quantity])
-                      })
-                      .eq('id', item.product_id);
+                      .select('inventory_quantity, stock_quantity')
+                      .eq('id', item.product_id)
+                      .single();
+                    if (product) {
+                      const newInventory = Math.max(0, (product.inventory_quantity ?? 0) - item.quantity);
+                      const newStock = Math.max(0, (product.stock_quantity ?? product.inventory_quantity ?? 0) - item.quantity);
+                      await supabaseAdmin
+                        .from('products')
+                        .update({ 
+                          inventory_quantity: newInventory,
+                          stock_quantity: newStock,
+                          updated_at: new Date().toISOString()
+                        })
+                        .eq('id', item.product_id);
+                    }
                   }
                 } catch (err) {
                   console.error(`Failed to update inventory for product ${item.product_id}:`, err);

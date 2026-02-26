@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { useTheme } from "@/contexts/ThemeContext";
+
+/* Procesos pages: green theme matching page background */
+const PROCESOS_BG = '#011f18';
+const PROCESOS_BORDER = '#093123';
+const isProcesosPage = (pathname: string) =>
+  pathname === '/servicios/procesos' ||
+  pathname.startsWith('/servicios/procesos/');
 import { 
   Mail, 
   Phone, 
@@ -18,7 +26,11 @@ import {
 
 export default function Footer() {
   const { currentLine } = useTheme();
+  const pathname = usePathname();
   const currentYear = new Date().getFullYear();
+
+  const footerBg = isProcesosPage(pathname ?? '') ? PROCESOS_BG : '#AE0000';
+  const footerBorder = isProcesosPage(pathname ?? '') ? PROCESOS_BORDER : '#C70000';
 
   const footerSections = [
     {
@@ -67,8 +79,8 @@ export default function Footer() {
     <footer 
       className="border-t transition-all duration-300 z-30"
       style={{
-        backgroundColor: '#AE0000',
-        borderTopColor: '#C70000',
+        backgroundColor: footerBg,
+        borderTopColor: footerBorder,
         borderTopWidth: '2px',
         borderTopStyle: 'solid'
       }}

@@ -3,6 +3,38 @@
 
 ---
 
+## 📐 ESPECIFICACIONES OFICIALES DE DISEÑO (Actualizadas Febrero 2025)
+
+### 1. PALETA DE COLORES (TIPOGRAFÍA)
+
+| Uso | Color | Código HEX | Nota |
+|-----|-------|------------|------|
+| **Color principal textos** | Bordó Profundo | `#601010` (o `#800020`) | Eliminar negros y grises genéricos en cuerpos de texto |
+
+### 2. JERARQUÍA TIPOGRÁFICA (CSS GLOBAL)
+
+| Nivel | Uso | Fuente | Estilo |
+|-------|-----|--------|--------|
+| **A. Títulos principales (H1, H2)** | Encabezados de secciones | **VELISTA** | — |
+| **B. Subtítulos (H3, destacados)** | Subsections, card titles | **Playfair Display** (Medium o Semi-Bold) | **Italic (cursiva)** |
+| **B. Alternativa** | Donde ya esté aplicado | Malisha | Solo **Sentence case**; evitar mayúsculas sostenidas |
+| **C. Cuerpo de texto / párrafos** | Body text | **EB Garamond** (ideal) o Times New Roman | Mín. 18px, line-height 1.5–1.6 |
+| — | Reemplazar | Bloques largos en Malisha | Usar font-text (EB Garamond/Times) |
+
+### 3. ESTILO DE BOTONES (GLOBAL)
+
+| Propiedad | Especificación |
+|-----------|----------------|
+| **Tipografía** | Velista o Playfair Display Bold Italic |
+| **Transformación** | Todo en **MAYÚSCULAS** |
+| **Letter-spacing** | 1px o 2px |
+| **Color de fondo** | Según variante (brand-primary, line-primary, etc.) |
+| **Bordes** | Eliminar sombras extrañas; esquinas ligeramente redondeadas o rectas, **consistentes en toda la web** |
+
+**Objetivo:** Unificar todos los botones de la web (actualmente tienen tipografías diferentes y de baja calidad).
+
+---
+
 ## 🎯 PROJECT OVERVIEW
 
 **DA LUZ CONSCIENTE** presents "Alkimyas para alma y cuerpo" - a sophisticated artisanal botanical biocosmetic e-commerce platform unified with holistic services and transformational programs for conscious living.
@@ -74,10 +106,12 @@ web/
   --color-bg-light: #F0EACE;           /* Warm cream - Product cards, sections */
   --color-bg-lighter: #FFF4B3;         /* Light cream - Subtle backgrounds */
   --color-bg-cream: #F6FBD6;           /* Soft green-cream - Hero backdrop */
-  --color-text-primary: #1C1B1A;       /* Dark brown - Body text */
+  --color-text-primary: #601010;       /* Bordó Profundo - Body text (OFICIAL) */
+  --color-text-primary-alt: #800020;   /* Alternativa Bordó Profundo */
   --color-text-inverse: #FFFFFF;       /* White - Text on dark backgrounds */
 }
 ```
+**Nota:** Evitar negros y grises genéricos en cuerpos de texto. Usar `--color-text-primary` (#601010).
 
 #### **Dynamic Product Line Palettes**
 Each product line has its own visual identity that activates contextually:
@@ -135,14 +169,15 @@ Playfair Display: Sophisticated serif for content headers
 
 /* SECONDARY FONTS (Google Fonts - Fallbacks) */
 --font-heading: "Playfair Display", serif;    /* Main headings, article titles */
---font-body: "Inter", sans-serif;             /* Body text, UI, navigation */
+--font-body: "EB Garamond", "Times New Roman", serif;  /* Body text (OFICIAL) */
+--font-body-legacy: "Inter", sans-serif;      /* UI, labels, captions */
 
 /* FONT HIERARCHY SYSTEM */
 --font-display: var(--font-malisha);          /* Hero displays, brand elements */
---font-title: var(--font-velista);            /* Page/section titles */
---font-subtitle: var(--font-heading);         /* Subsections, card titles */
---font-text: var(--font-body);                /* Paragraphs, forms, buttons */
---font-caption: var(--font-body);             /* Small text, captions, labels */
+--font-title: var(--font-velista);            /* Page/section titles (H1, H2) */
+--font-subtitle: var(--font-heading);         /* Subsections, card titles (H3 - Italic) */
+--font-text: var(--font-body);                /* Paragraphs, body (Mín 18px, line-height 1.5-1.6) */
+--font-caption: var(--font-body-legacy);     /* Small text, captions, labels */
 ```
 
 #### **Typography Implementation Guidelines**
@@ -152,15 +187,17 @@ Playfair Display: Sophisticated serif for content headers
 // Brand Identity (Malisha)
 <h1 className="font-display text-4xl">DA LUZ CONSCIENTE</h1>
 
-// Section Headers (VELISTA)  
+// Section Headers (VELISTA) - H1, H2
 <h2 className="font-title text-3xl">NUESTROS SERVICIOS</h2>
 
-// Content Headers (Playfair Display)
-<h3 className="font-subtitle text-2xl">Los Beneficios de la Alkimia</h3>
+// Content Headers (Playfair Display Italic) - H3, destacados
+<h3 className="font-subtitle text-2xl italic">Los Beneficios de la Alkimia</h3>
 
-// UI Elements (Inter)
-<button className="font-text">Agregar al Carrito</button>
-<p className="font-text">Descripción del producto...</p>
+// Body Text (EB Garamond / Times) - Mín 18px, line-height 1.5-1.6
+<p className="font-text text-lg leading-relaxed">Descripción del producto...</p>
+
+// Botones (Velista o Playfair Bold Italic, UPPERCASE, letter-spacing)
+<button className="font-title uppercase tracking-[1px]">AGREGAR AL CARRITO</button>
 
 // Small Text (Inter)
 <span className="font-caption text-sm">Publicado el 15 enero</span>
@@ -724,24 +761,29 @@ export const [SectionName]Background: React.FC<{
 
 ### 1. Visual Hierarchy
 ```css
-/* Typography Hierarchy */
-h1 (Logo): Malisha, 48px+ - Hero branding
-h2 (Section Titles): VELISTA, 36px - Major sections  
-h3 (Subsections): Playfair Display, 24px - Content areas
-h4 (Cards): Playfair Display, 20px - Component titles
-Body: Inter, 16px - Content text
+/* Typography Hierarchy (Especificación Oficial) */
+h1, h2: VELISTA - Títulos principales
+h3, destacados: Playfair Display Italic (Medium/Semi-Bold)
+Body: EB Garamond o Times New Roman, 18px mínimo, line-height 1.5-1.6
 Captions: Inter, 14px - Supporting text
+Logo/Hero: Malisha - Brand moments
 ```
 
 ### 2. Component Patterns
 ```css
 /* Design Standards */
 Cards: Subtle shadows, rounded corners, hover animations
-Buttons: Primary (filled), Secondary (outline), Ghost variants
+Buttons: Velista o Playfair Bold Italic, UPPERCASE, letter-spacing 1-2px; bordes consistentes
 Forms: Clean inputs with validation states and feedback
 Modals: Backdrop blur with elegant animations
 Navigation: Sophisticated burgundy with theme-aware highlights
 ```
+
+### 3. Estilo de Botones (Especificación Oficial)
+- **Tipografía:** Velista o Playfair Display Bold Italic
+- **Transformación:** MAYÚSCULAS
+- **Letter-spacing:** 1px o 2px
+- **Bordes:** Sin sombras extrañas; esquinas ligeramente redondeadas o rectas, todas iguales
 
 ### 3. Responsive Design Strategy
 ```css

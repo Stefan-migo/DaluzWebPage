@@ -117,7 +117,7 @@
     --color-bg-light: #F0EACE;
     --color-bg-lighter: #FFF4B3;
     --color-bg-cream: #F6FBD6;
-    --color-text-primary: #1C1B1A;
+    --color-text-primary: #601010; /* Bordó Profundo - Especificación oficial */
     --color-text-inverse: #FFFFFF;
 
     /* Complete Line-Specific Palettes */

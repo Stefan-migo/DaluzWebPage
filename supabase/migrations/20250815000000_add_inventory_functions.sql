@@ -1,3 +1,10 @@
+-- Ensure stock_quantity exists (may be added by later migration)
+ALTER TABLE products ADD COLUMN IF NOT EXISTS stock_quantity INTEGER;
+UPDATE products SET stock_quantity = COALESCE(inventory_quantity, 0) WHERE stock_quantity IS NULL;
+
+-- Drop 2-param overload if exists (idempotent for re-runs)
+DROP FUNCTION IF EXISTS decrease_product_stock(UUID, INTEGER);
+
 -- Function to safely decrease product stock
 CREATE OR REPLACE FUNCTION decrease_product_stock(product_id UUID, quantity INTEGER)
 RETURNS void
@@ -68,14 +75,14 @@ CREATE POLICY "Admins can insert stock movements" ON stock_movements
     )
   );
 
--- Grant permissions
-GRANT EXECUTE ON FUNCTION decrease_product_stock TO service_role;
-GRANT EXECUTE ON FUNCTION decrease_product_stock TO authenticated;
+-- Grant permissions (specify full signature to avoid ambiguity with overloaded function)
+GRANT EXECUTE ON FUNCTION decrease_product_stock(UUID, INTEGER) TO service_role;
+GRANT EXECUTE ON FUNCTION decrease_product_stock(UUID, INTEGER) TO authenticated;
 
 -- Add some helpful indexes
 CREATE INDEX IF NOT EXISTS idx_stock_movements_product_id ON stock_movements(product_id);
 CREATE INDEX IF NOT EXISTS idx_stock_movements_created_at ON stock_movements(created_at DESC);
 
 -- Comment the function
-COMMENT ON FUNCTION decrease_product_stock IS 'Safely decreases product stock and logs the movement for audit purposes';
+COMMENT ON FUNCTION decrease_product_stock(UUID, INTEGER) IS 'Safely decreases product stock and logs the movement for audit purposes';
 COMMENT ON TABLE stock_movements IS 'Audit trail for all product stock changes';

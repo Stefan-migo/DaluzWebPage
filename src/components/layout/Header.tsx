@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -94,14 +94,23 @@ const BlogListItem = ({ href, title, subtitle }: { href: string, title: string, 
   );
 };
 
+/* Procesos pages: /servicios/procesos, ciclos-alquimicos, sesiones-integrales */
+const PROCESOS_BG = '#011f18';
+const isProcesosPage = (pathname: string) =>
+  pathname === '/servicios/procesos' ||
+  pathname.startsWith('/servicios/procesos/');
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, profile, signOut } = useAuthContext();
   const { itemCount, toggleCart } = useCart();
   const { currentTheme, currentLine } = useTheme();
   const router = useRouter();
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [latestPosts, setLatestPosts] = useState<BlogPost[]>([]);
+
+  const headerBg = isProcesosPage(pathname ?? '') ? PROCESOS_BG : '#AE0000';
 
   // Fetch latest blog posts
   useEffect(() => {
@@ -137,7 +146,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full transition-all duration-300" style={{ backgroundColor: '#AE0000' }}>
+      <header className="sticky top-0 z-50 w-full transition-all duration-300" style={{ backgroundColor: headerBg }}>
         <div className="container mx-auto px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
@@ -803,15 +812,29 @@ export default function Header() {
                         </div>
                       </div>
 
-                      {/* Blog */}
-                    <Link
-                      href="/blog"
-                        className="py-3 text-lg font-title font-medium hover:text-brand-primary transition-colors"
-                        style={{ color: '#AE0000' }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Blog
-                    </Link>
+                      {/* Blog Section - Icon button + link */}
+                      <div className="mb-4">
+                        <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Blog</div>
+                        <div className="ml-4 flex items-center gap-3">
+                          <Link
+                            href="/blog"
+                            className="flex items-center justify-center w-12 h-12 rounded-xl bg-[var(--color-brand-primary)]/15 hover:bg-[var(--color-brand-primary)]/25 transition-colors border border-[var(--color-brand-primary)]/30 shrink-0"
+                            style={{ color: '#AE0000' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                            aria-label="Ir al blog"
+                          >
+                            <BookOpen className="w-6 h-6" />
+                          </Link>
+                          <Link
+                            href="/blog"
+                            className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
+                            style={{ color: '#1C1B1A' }}
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
+                            Artículos y novedades
+                          </Link>
+                        </div>
+                      </div>
 
                       {/* Membresía Section */}
                       <div className="mb-4">
