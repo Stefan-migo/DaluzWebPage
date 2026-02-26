@@ -72,16 +72,22 @@ export function BlogPageClient({ posts, categories }: BlogPageClientProps) {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative py-16 md:py-20 px-6 bg-gradient-to-br from-[var(--color-brand-primary)] via-[var(--color-brand-secondary)] to-[var(--color-brand-primary)]/90">
+      <section className="relative py-16 md:py-20 px-6 overflow-hidden">
+        {/* Background image */}
         <div
-          className="absolute inset-0 pointer-events-none opacity-[0.15]"
+          className="absolute inset-0 pointer-events-none"
           aria-hidden
           style={{
-            backgroundImage: "url('/svg/blog/BlogBackground.svg')",
+            backgroundImage: "url('/svg/blog/blogbg.webp')",
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
           }}
+        />
+        {/* Gradient overlay for text readability */}
+        <div
+          className="absolute inset-0 pointer-events-none bg-gradient-to-br from-[var(--color-brand-primary)]/85 via-[var(--color-brand-secondary)]/75 to-[var(--color-brand-primary)]/90"
+          aria-hidden
         />
         <div className="relative container mx-auto text-center text-white max-w-4xl">
           <div className="flex items-center justify-center gap-3 mb-6">
