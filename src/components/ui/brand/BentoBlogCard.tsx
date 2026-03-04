@@ -68,13 +68,16 @@ export function BentoBlogCard({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 md:p-8 h-full">
             <div className="flex flex-col justify-between order-2 md:order-1">
               <div>
-                <span className="font-caption text-sm text-[var(--color-text-primary)]/70">
+                <span className="font-subtitle italic text-xs text-[var(--color-text-primary)]/70">
+                  Post
+                </span>
+                <span className="font-caption text-sm text-[var(--color-text-primary)]/70 ml-2">
                   {formatDate(publishedAt)}
                 </span>
-                <h2 className="font-title text-2xl md:text-3xl text-[var(--color-text-primary)] mt-2 mb-3 group-hover:text-[var(--color-brand-primary)] transition-colors">
+                <h2 className="font-heading font-bold text-2xl md:text-3xl text-[var(--color-text-primary)] mt-2 mb-3 group-hover:text-[var(--color-brand-primary)] transition-colors">
                   {title}
                 </h2>
-                <p className="font-subtitle italic text-lg text-[var(--color-text-primary)]/90 mb-2">
+                <p className="font-text text-lg text-[var(--color-text-primary)]/90 mb-2 line-clamp-2">
                   {excerpt.split(".")[0]}.
                 </p>
                 <p className="font-text text-lg text-[var(--color-text-primary)]/80 line-clamp-3 leading-relaxed">
@@ -135,10 +138,13 @@ export function BentoBlogCard({
               }`}
             >
               <div>
-                <span className="font-caption text-xs text-[var(--color-text-primary)]/70">
+                <span className="font-subtitle italic text-xs text-[var(--color-text-primary)]/70">
+                  Post
+                </span>
+                <span className="font-caption text-xs text-[var(--color-text-primary)]/70 ml-2">
                   {formatDate(publishedAt)}
                 </span>
-                <h3 className="font-subtitle italic text-lg text-[var(--color-text-primary)] mt-1 mb-2 group-hover:text-[var(--color-brand-primary)] transition-colors line-clamp-2">
+                <h3 className="font-heading font-bold text-lg text-[var(--color-text-primary)] mt-1 mb-2 group-hover:text-[var(--color-brand-primary)] transition-colors line-clamp-2">
                   {title}
                 </h3>
                 <p className="font-text text-base text-[var(--color-text-primary)]/80 line-clamp-2 leading-relaxed">
@@ -160,10 +166,13 @@ export function BentoBlogCard({
         {variant === "small" && (
           <div className="p-5 h-full flex flex-col justify-between">
             <div>
-              <span className="font-caption text-xs text-[var(--color-text-primary)]/70">
+              <span className="font-subtitle italic text-xs text-[var(--color-text-primary)]/70">
+                Post
+              </span>
+              <span className="font-caption text-xs text-[var(--color-text-primary)]/70 ml-2">
                 {formatDate(publishedAt)}
               </span>
-              <h3 className="font-subtitle italic text-lg text-[var(--color-text-primary)] mt-1 mb-2 group-hover:text-[var(--color-brand-primary)] transition-colors line-clamp-2">
+              <h3 className="font-heading font-bold text-lg text-[var(--color-text-primary)] mt-1 mb-2 group-hover:text-[var(--color-brand-primary)] transition-colors line-clamp-2">
                 {title}
               </h3>
               <p className="font-text text-base text-[var(--color-text-primary)]/80 line-clamp-3 leading-relaxed">
@@ -185,10 +194,13 @@ export function BentoBlogCard({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 h-full">
             <div className="md:col-span-2 flex flex-col justify-between">
               <div>
-                <span className="font-caption text-sm text-[var(--color-text-primary)]/70">
+                <span className="font-subtitle italic text-xs text-[var(--color-text-primary)]/70">
+                  Post
+                </span>
+                <span className="font-caption text-sm text-[var(--color-text-primary)]/70 ml-2">
                   {formatDate(publishedAt)}
                 </span>
-                <h3 className="font-subtitle italic text-xl text-[var(--color-text-primary)] mt-2 mb-3 group-hover:text-[var(--color-brand-primary)] transition-colors line-clamp-2">
+                <h3 className="font-heading font-bold text-xl text-[var(--color-text-primary)] mt-2 mb-3 group-hover:text-[var(--color-brand-primary)] transition-colors line-clamp-2">
                   {title}
                 </h3>
                 <p className="font-text text-lg text-[var(--color-text-primary)]/80 line-clamp-2 leading-relaxed">

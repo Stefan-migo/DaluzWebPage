@@ -12,6 +12,12 @@ const PROCESOS_BORDER = '#093123';
 const isProcesosPage = (pathname: string) =>
   pathname === '/servicios/procesos' ||
   pathname.startsWith('/servicios/procesos/');
+
+/* Raíces & Filosofía pages: blue theme */
+const RAICES_BG = '#0f3460';
+const RAICES_BORDER = '#1a4a7a';
+const isRaicesPage = (pathname: string) =>
+  pathname === '/raices' || pathname === '/filosofia-proposito';
 import { 
   Mail, 
   Phone, 
@@ -29,8 +35,12 @@ export default function Footer() {
   const pathname = usePathname();
   const currentYear = new Date().getFullYear();
 
-  const footerBg = isProcesosPage(pathname ?? '') ? PROCESOS_BG : '#AE0000';
-  const footerBorder = isProcesosPage(pathname ?? '') ? PROCESOS_BORDER : '#C70000';
+  const footerBg = isRaicesPage(pathname ?? '') ? RAICES_BG
+    : isProcesosPage(pathname ?? '') ? PROCESOS_BG
+    : '#AE0000';
+  const footerBorder = isRaicesPage(pathname ?? '') ? RAICES_BORDER
+    : isProcesosPage(pathname ?? '') ? PROCESOS_BORDER
+    : '#C70000';
 
   const footerSections = [
     {

@@ -106,6 +106,172 @@
 }
 
 /* ===========================
+   TESOROS DA LUZ PAGE
+   =========================== */
+
+.tesoros-page {
+  background-image: url('/svg/alkimia/tesoros/BgTesoros.webp');
+  background-repeat: repeat-y;
+  background-position: top center;
+  background-size: 100% auto;
+  background-attachment: scroll;
+}
+
+/* Ensure content legibility over background */
+.tesoros-page .tesoros-container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Full-width title band (like sesiones-integrales) */
+.tesoros-header-band {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-brand-primary) 0%, #8a0000 50%, var(--color-brand-secondary) 100%);
+  padding: 2rem 1.5rem;
+  margin: 0;
+}
+
+.tesoros-header-band-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tesoros-page-title {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  font-weight: 400;
+  color: var(--color-bg-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Subtitle - larger, brand primary color */
+.tesoros-subtitle {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  color: var(--color-brand-primary);
+}
+
+/* Content cards for Tesoros - red background variant (overrides Card variant) */
+.tesoros-page .tesoros-content-card {
+  background: linear-gradient(135deg, var(--color-brand-primary) 0%, #8a0000 50%, var(--color-brand-secondary) 100%) !important;
+  border-radius: 0 15px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(240, 234, 206, 0.2);
+}
+
+.tesoros-content-card .tesoros-card-text {
+  color: var(--color-bg-light);
+}
+
+.tesoros-content-card .tesoros-card-title {
+  color: var(--color-bg-light);
+}
+
+.tesoros-content-card a {
+  color: var(--color-bg-light);
+}
+
+.tesoros-content-card a:hover {
+  color: var(--color-bg-lighter);
+  text-decoration: underline;
+}
+
+.tesoros-content-card strong {
+  color: var(--color-bg-light);
+}
+
+/* Bento grid for 5 portal cards - Layout: A|B|C / D|E (3 top, 2 bottom centered) */
+.tesoros-bento-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .tesoros-bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: auto auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .tesoros-bento-grid {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: auto auto;
+    grid-template-areas:
+      "a a b b c c"
+      ". d d e e .";
+  }
+}
+
+/* Place cards in bento layout - only on desktop (lg+) */
+@media (min-width: 1024px) {
+  .tesoros-bento-grid > *:nth-child(1) { grid-area: a; }
+  .tesoros-bento-grid > *:nth-child(2) { grid-area: b; }
+  .tesoros-bento-grid > *:nth-child(3) { grid-area: c; }
+  .tesoros-bento-grid > *:nth-child(4) { grid-area: d; }
+  .tesoros-bento-grid > *:nth-child(5) { grid-area: e; }
+}
+
+/* Tesoros - Mobile responsive */
+@media (max-width: 639px) {
+  .tesoros-header-band {
+    padding: 1.5rem 1rem;
+  }
+
+  .tesoros-page .tesoros-container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+  }
+
+  .tesoros-page .tesoros-content-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .tesoros-subtitle {
+    font-size: clamp(1.25rem, 5vw, 1.5rem);
+  }
+
+  .tesoros-bento-grid {
+    gap: 0.75rem;
+  }
+}
+
+/* Tesoros CTA - project default button style with borders (0 15px radius) */
+.tesoros-page .tesoros-cta-link {
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3rem;
+  border-radius: 0 15px;
+  border: 2px solid rgba(96, 16, 16, 0.4);
+}
+
+.tesoros-page .tesoros-cta-link:hover {
+  text-decoration: none;
+  border-color: rgba(96, 16, 16, 0.8);
+}
+
+/* Print: hide background for Tesoros */
+@media print {
+  .tesoros-page {
+    background-image: none;
+    background-color: var(--color-bg-light);
+  }
+}
+
+/* ===========================
    MANIFIESTO SECTION 1 - MOBILE OPTIMIZATIONS
    =========================== */
 
@@ -2438,509 +2604,251 @@
    ACTIVOS Y ORIGEN PAGE STYLES
    =========================== */
 
-/* Base section styles */
-.section-activos-origen {
-  min-height: auto;
-  height: auto;
-  overflow-x: hidden !important;
-  position: relative !important;
+.activos-origen-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* Mobile/Tablet - Gradient background, height adapts to content */
-@media (max-width: 767px) {
-  .section-activos-origen {
-    min-height: auto;
-    height: auto;
-    padding: 2rem 1rem;
-  }
-
-  .section-activos-origen-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem 1rem 1rem;
-    gap: 0;
-    width: 100%;
-    min-height: auto;
-  }
-
-  /* Text elements - relative positioning for mobile/tablet */
-  .activos-origen-text-element {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    width: 90% !important;
-    max-width: 100% !important;
-    margin: 0 auto;
-  }
-
-  /* Main Title - Mobile */
-  .activos-origen-title {
-    display: block !important;
-    color: #F0EACE !important;
-    margin: 0 auto 2.5rem auto;
-    text-align: center;
-    width: 100%;
-    max-width: 90%;
-    padding: 0 1rem;
-    font-size: 2rem;
-    line-height: 1.2;
-    font-weight: 400;
-    font-family: var(--font-title);
-  }
-
-  /* Subtitle - Mobile */
-  .activos-origen-subtitle {
-    display: block !important;
-    color: var(--color-bg-light);
-    top: 20%;
-    margin: 0 auto 2rem auto;
-    text-align: center;
-    width: 100%;
-    max-width: 90%;
-    padding: 0 1rem;
-    font-size: 1.25rem;
-    line-height: 1.5;
-    font-family: var(--font-malisha);
-    padding-top: 3rem;
-  }
-
-  /* Content */
-  .activos-origen-content {
-    display: block !important;
-    color: var(--color-text-primary) !important;
-    margin: 0 auto;
-    text-align: center;
-    width: 100%;
-    max-width: 90%;
-    padding: 0 1rem 2rem 1rem;
-  }
-
-  .activos-origen-text {
-    font-family: var(--font-malisha);
-    font-size: 0.875rem;
-    color: var(--color-text-primary);
-    text-align: left;
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  /* Main Card - Mobile */
-  .activos-origen-main-card {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    /* mobileVersion.svg aspect ratio: 995.74 / 1161.54 */
-    aspect-ratio: 995.74 / 1161.54;
-    margin: 2rem 0;
-    min-height: 250px;
-  }
-
-  .activos-origen-main-card-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/svg/mobileVersion.svg');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 0;
-  }
-
-  .activos-origen-main-card-content {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem 2rem;
-    z-index: 1;
-  }
-
-  .activos-origen-main-card-text {
-    font-family: var(--font-malisha);
-    font-size: 0.875rem;
-    color: #fff2db;
-    text-align: center;
-    line-height: 1.7;
-    margin: 0;
-    max-width: 95%;
-  }
-
-  /* Buttons - Mobile */
-  .activos-origen-button {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    margin: 1rem 0;
-    font-size: 0.875rem;
-    font-family: var(--font-malisha);
-    font-weight: 500;
-    padding: 1rem 1.5rem;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
-    color: #fff2db;
-    border: none;
-    border-radius: 0px 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: block;
-  }
-
-  .activos-origen-button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 12px rgba(174, 0, 0, 0.3);
-    background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
-    filter: brightness(1.1);
-  }
+.activos-origen-section {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Tablet - Improved layout */
-@media (min-width: 768px) and (max-width: 1279px) {
-  .section-activos-origen {
-    padding: 3rem 2rem;
-  }
+/* Full bleed bands - AYOTitle.svg and AYOband.svg */
+.ayo-title-band,
+.ayo-band-section {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+}
 
-  .section-activos-origen-content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0;
-  }
+.ayo-title-band {
+  background-image: url('/svg/alkimia/activosyorigen/AYOTitle.svg');
+  min-height: 280px;
+}
 
-  /* Main Title - Tablet */
-  .activos-origen-title {
-    font-size: 3rem;
-    margin-bottom: 3.5rem;
-    color: var(--color-bg-light);
-    text-align: center;
-  }
+.ayo-band-section {
+  background-image: url('/svg/alkimia/activosyorigen/AYOband.svg');
+  min-height: 275px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -4rem;
+}
 
-  /* Subtitle - Tablet */
-  .activos-origen-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 2.5rem;
-    color: var(--color-bg-light);
-    text-align: center;
-  }
+.ayo-title-text,
+.ayo-band-title {
+  color: #fdfcf0;
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-weight: 400;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
 
+.ayo-title-text {
+  font-size: clamp(1.75rem, 4vw, 3rem);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
 
+.ayo-band-title {
+  font-size: clamp(1.1rem, 2.5vw, 2.5rem);
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-style: italic;
+}
 
-  .activos-origen-content {
-    max-width: 100%;
-    padding: 0 0 3rem 0;
-  }
+/* Content wrap */
+.activos-origen-content-wrap {
+  padding: 2rem 0;
+}
 
-  .activos-origen-text {
-    font-size: 1rem;
-    line-height: 1.75;
-    text-align: center;
-  }
+.ayo-blockquote {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.15rem, 2vw, 1.35rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  border-left: 4px solid #921a1c;
+  padding: 1rem 1.5rem;
+  margin: 0 0 1.5rem;
+  background: rgba(253, 252, 240, 0.5);
+  border-radius: 0 8px;
+}
 
-  /* Main Card - Tablet */
-  .activos-origen-main-card {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    /* TabletMobile.svg aspect ratio: 1114.62 / 543.64 */
-    aspect-ratio: 1114.62 / 543.64;
-    margin: 2.5rem 0;
-    min-height: 300px;
-  }
+.ayo-paragraph {
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem;
+}
 
-  .activos-origen-main-card-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/svg/TabletMobile.svg');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 0;
-  }
+/* Transparency card - reuses existing card styling */
+.ayo-transparency-card {
+  background: linear-gradient(135deg, rgba(146, 26, 28, 0.08) 0%, rgba(174, 0, 0, 0.06) 100%);
+  border: 1px solid rgba(146, 26, 28, 0.2);
+  border-radius: 0 15px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
 
-  .activos-origen-main-card-content {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 3rem;
-    z-index: 1;
-  }
+.ayo-card-text {
+  font-family: var(--font-malisha), var(--font-text), serif;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  margin: 0 0 1rem;
+}
 
-  .activos-origen-main-card-text {
-    font-family: var(--font-malisha);
-    font-size: 1rem;
-    color: #fff2db;
-    text-align: center;
-    line-height: 1.7;
-    margin: 0;
-    max-width: 90%;
-  }
+.ayo-card-text:last-child {
+  margin-bottom: 0;
+}
 
-  /* Buttons - Tablet */
-  .activos-origen-button {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    margin: 1.25rem 0;
-    font-size: 1rem;
-    font-family: var(--font-malisha);
-    font-weight: 500;
-    padding: 1.125rem 2rem;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
-    color: #fff2db;
-    border: none;
-    border-radius: 0px 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: block;
-  }
+/* Bullet list */
+.ayo-bullet-list {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
 
-  .activos-origen-button:hover {
-    transform: scale(1.02);
-    box-shadow: 0 6px 12px rgba(174, 0, 0, 0.3);
-    background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
-    filter: brightness(1.1);
+.ayo-bullet-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(0.95rem, 1.5vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--color-text-primary);
+}
+
+.ayo-bullet-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #921a1c;
+  font-weight: 700;
+}
+
+/* Section 3 - Cards */
+.ayo-section-cards {
+  padding-top: 3rem;
+}
+
+.ayo-section-title {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-primary);
+  text-align: center;
+  margin: 0 0 0.5rem;
+}
+
+.ayo-section-subtitle {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-style: italic;
+  color: var(--color-text-primary);
+  text-align: center;
+  margin: 0 0 2rem;
+}
+
+.ayo-cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+@media (min-width: 768px) {
+  .ayo-cards-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-/* Desktop - SVG background, height matches SVG exactly */
-@media (min-width: 1280px) {
-  .section-activos-origen {
-    /* SVG height (matches SVG aspect ratio exactly) */
-    /* Desktop SVG: 1920.21 width / 1080 height = aspect ratio 1.778 */
-    aspect-ratio: 1920.21 / 1080;
-    min-height: auto;
-    overflow-x: hidden !important;
-    position: relative !important;
-  }
-
-  /* Ensure desktop SVG container matches section SVG height calculation */
-  .section-activos-origen .svg-container-desktop {
-    height: calc(100vw * (1080 / 1920.21)) !important;
-    min-height: calc(100vw * (1080 / 1920.21)) !important;
-    max-height: calc(100vw * (1080 / 1920.21)) !important;
-  }
-
-  /* Content area */
-  .section-activos-origen-content {
-    position: relative;
-    min-height: 100%;
-    width: 100%;
-  }
-
-  /* Base styles for all text elements - absolute positioning */
-  .activos-origen-text-element {
-    position: absolute;
-    z-index: 10;
-    /* Use CSS custom properties for easy positioning */
-    top: var(--pos-top, 50%);
-    left: var(--pos-left, 50%);
-    right: var(--pos-right, auto);
-    bottom: var(--pos-bottom, auto);
-    transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
-    width: var(--pos-width, 90%);
-    max-width: var(--pos-max-width, 800px);
-  }
-
-  /* Main Title */
-  .activos-origen-title {
-    font-family: var(--font-title);
-    font-size: 4rem;
-    font-weight: 400;
-    color: var(--color-bg-light);
-    text-align: center;
-    line-height: 1.2;
-    --pos-top: 3%;
-    --pos-left: 50%;
-    --pos-translate-x: -50%;
-    --pos-translate-y: 0;
-    --pos-width: auto;
-    --pos-max-width: 90%;
-  }
-
-  /* Subtitle */
-  .activos-origen-subtitle {
-    display: block !important;
-    color: var(--color-bg-light);
-    margin: 0 auto 2rem auto;
-    text-align: center;
-    width: 100%;
-    max-width: 90%;
-    padding: 0 1rem;
-    font-size: 1.25rem;
-    line-height: 1.5;
-    font-family: var(--font-malisha);
-  }
-
-  /* Content */
-  .activos-origen-content {
-    --pos-top: 40%;
-    --pos-left: 50%;
-    --pos-translate-x: -50%;
-    --pos-translate-y: 0;
-    --pos-width: 85%;
-    --pos-max-width: 800px;
-  }
-
-  .activos-origen-text {
-    font-family: var(--font-malisha);
-    font-size: 1rem;
-    color: var(--color-text-primary);
-    text-align: center;
-    line-height: 1.7;
-    margin: 0;
-  }
-
-  /* Main Card with SVG Background */
-  .activos-origen-main-card {
-    position: absolute; /* Use absolute positioning for desktop */
-    width: var(--pos-width, 80%);
-    max-width: var(--pos-max-width, 1400px);
-    aspect-ratio: 1865.04 / 336.89; /* SVG aspect ratio */
-    --pos-top: 50%;
-    --pos-left: 50%;
-    --pos-translate-x: -50%;
-    --pos-translate-y: -50%;
-    z-index: 10;
-  }
-
-  .activos-origen-main-card-bg {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/svg/ActivosYOrigenmaincardDesktop.svg');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    z-index: 0;
-  }
-
-  .activos-origen-main-card-content {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 4rem;
-    z-index: 1;
-  }
-
-  .activos-origen-main-card-text {
-    font-family: var(--font-malisha);
-    font-size: 1.35rem;
-    color: #fff2db;
-    text-align: center;
-    line-height: 1.7;
-    margin: 0;
-    max-width: 90%;
-  }
-
-  /* Buttons */
-  .activos-origen-button {
-    position: absolute;
-    z-index: 10;
-    background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
-    color: #fff2db;
-    font-family: var(--font-malisha);
-    font-size: 1.25rem;
-    font-weight: 500;
-    padding: 1rem 2rem;
-    border: none;
-    border-radius: 0px 15px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    white-space: normal;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: var(--pos-width, auto);
-    max-width: var(--pos-max-width, 280px);
-    min-width: 200px;
-  }
-
-  .activos-origen-button:hover {
-    transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0)) scale(1.05);
-    box-shadow: 0 8px 20px rgba(174, 0, 0, 0.4);
-    background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
-    filter: brightness(1.1);
-  }
-
-  .activos-origen-button-1 {
-    --pos-top: 70%;
-    --pos-left: 20%;
-    --pos-translate-x: 0;
-    --pos-translate-y: 0;
-    --pos-width: auto;
-    --pos-max-width: 280px;
-  }
-
-  .activos-origen-button-2 {
-    --pos-top: 80%;
-    --pos-left: 50%;
-    --pos-translate-x: -50%;
-    --pos-translate-y: 0;
-    --pos-width: auto;
-    --pos-max-width: 280px;
-  }
-
-  .activos-origen-button-3 {
-    --pos-top: 70%;
-    --pos-left: 80%;
-    --pos-translate-x: -100%;
-    --pos-translate-y: 0;
-    --pos-width: auto;
-    --pos-max-width: 280px;
-  }
+.ayo-card {
+  background: var(--color-bg-light);
+  border: 1px solid rgba(146, 26, 28, 0.15);
+  border-radius: 0 15px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease;
 }
 
-/* Large screens - Adjust font sizes */
-@media (min-width: 1450px) {
-  .activos-origen-title {
-    font-size: 5rem;
-  }
-
-  .activos-origen-subtitle {
-    font-size: 1.75rem;
-    top: 24%;
-    z-index: 20;
-  }
-
-  .activos-origen-text {
-    font-size: 1.125rem;
-  }
+.ayo-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-@media (min-width: 1550px) {
-  .activos-origen-title {
-    font-size: 6rem;
-  }
+.ayo-card-heading {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  color: #921a1c;
+  margin: 0 0 1rem;
+  line-height: 1.3;
+}
 
-  .activos-origen-subtitle {
-    font-size: 2rem;
-    top: 24%;
-    z-index: 20;
-  }
+.ayo-card-desc {
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin: 0 0 1.5rem;
+  flex: 1;
+}
 
-  .activos-origen-text {
-    font-size: 1.25rem;
-  }
+.ayo-card-button {
+  display: inline-block;
+  text-align: center;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
+  color: #fff2db;
+  font-family: var(--font-malisha), var(--font-title), serif;
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  border: none;
+  border-radius: 0 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ayo-card-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(174, 0, 0, 0.3);
+  background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
+  filter: brightness(1.1);
+}
+
+/* Footer */
+.ayo-footer {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+  text-align: center;
+}
+
+.ayo-footer p {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  margin: 0;
 }
 

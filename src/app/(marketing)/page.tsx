@@ -181,7 +181,7 @@ export default async function HomePage() {
                   as="div"
                   className="text-1xl md:text-2xl lg:text-3xl opacity-95 max-w-4xl mx-auto leading-relaxed tracking-wide group-hover:text-yellow-50 transition-colors duration-500"
                   style={{
-                    fontFamily: 'malisha, Inter, sans-serif',
+                    fontFamily: 'Malisha, var(--font-malisha), cursive',
                     fontWeight: '300',
                     letterSpacing: '0.05em'
                   }}

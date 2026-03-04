@@ -1,4 +1,7 @@
+"use client";
+
 import { ReactNode } from "react";
+import { usePathname } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
@@ -7,8 +10,13 @@ interface MarketingLayoutProps {
 }
 
 export default function MarketingLayout({ children }: MarketingLayoutProps) {
+  const pathname = usePathname();
+  const isFullBleedPage = pathname === "/raices" || pathname === "/filosofia-proposito" || pathname === "/alkimya/activos-origen";
+
   return (
-    <div className="flex flex-col min-h-screen w-full overflow-x-hidden">
+    <div
+      className={`flex flex-col min-h-screen w-full ${!isFullBleedPage ? "overflow-x-hidden" : ""}`}
+    >
       <Header />
       <main className="flex-grow w-full min-w-0">{children}</main>
       <Footer />

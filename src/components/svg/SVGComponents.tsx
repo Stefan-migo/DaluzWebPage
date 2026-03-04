@@ -1379,71 +1379,18 @@ export const ActivosOrigenBackground: React.FC<{
         bottom: 0
       } as React.CSSProperties}
     >
-      {/* Mobile/Tablet - SVG Background (using desktop SVG) */}
+      {/* Full page background - covers entire scrollable content */}
       <div
-        className="xl:hidden absolute inset-0 w-full h-full overflow-hidden"
+        className="absolute inset-0 w-full min-h-full"
         style={{
-          width: '100%',
-          height: '100%',
+          backgroundImage: 'url(/svg/alkimia/tesoros/BgTesoros.webp)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
           minHeight: '100%',
           zIndex: 0
         }}
-      >
-        <img
-          src="/svg/ActivosYorigendesktopBackground.svg"
-          alt="Activos y Origen Mobile/Tablet Background"
-          className="w-full h-full"
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center',
-            display: 'block',
-            height: '100%',
-            width: '100%',
-            minWidth: '100%',
-            minHeight: '100%',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
-          }}
-        />
-      </div>
-      
-      {/* Desktop SVG Background - Fixed height based on aspect ratio */}
-      <div 
-        className="hidden xl:block absolute top-0 left-0 w-full overflow-hidden svg-container-desktop" 
-        style={{ 
-          maxWidth: '100%',
-          width: '100%',
-          aspectRatio: '1920.21 / 1080', // Desktop SVG aspect ratio
-          height: 'auto',
-          minHeight: 'calc(100vw * (1080 / 1920.21))',
-          zIndex: 0
-        }}
-      >
-        <img
-          src="/svg/ActivosYorigendesktopBackground.svg"
-          alt=""
-          className="w-full h-full"
-          style={{
-            objectFit: 'cover',
-            objectPosition: 'center',
-            display: 'block',
-            height: '100%',
-            width: '100%',
-            minWidth: '100%',
-            minHeight: '100%',
-            maxWidth: '100%',
-            maxHeight: '100%',
-            transform: 'translateZ(0)',
-            WebkitTransform: 'translateZ(0)',
-            backfaceVisibility: 'hidden',
-            WebkitBackfaceVisibility: 'hidden'
-          }}
-        />
-      </div>
+      />
     </div>
   );
 };

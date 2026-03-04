@@ -10,13 +10,13 @@ import './procesos-pages.css';
 const PROCESOS_WRAPPER = 'procesos-pages';
 
 export const metadata: Metadata = {
-  title: 'Procesos Holísticos | DA LUZ CONSCIENTE',
+  title: 'Procesos DA LUZ: La Alquimia de tu Soberanía | DA LUZ CONSCIENTE',
   description:
-    'Acompañamiento desde el Ser: plantas medicinales, esencias florales, alquimias y herramientas para tu recorrido hacia adentro. El Botiquín Alquímico y Cofre DA LUZ.',
+    'En Da Luz, el cuerpo refleja el funcionamiento del Alma. Herramientas de autogestión, Ciclos Alquímicos y Sesiones de Regulación para tu transformación profunda.',
   openGraph: {
-    title: 'Procesos Holísticos - DA LUZ CONSCIENTE',
+    title: 'Procesos DA LUZ - La Alquimia de tu Soberanía',
     description:
-      'Terapias para el bienestar integral. Descubre el Botiquín Alquímico y el Cofre DA LUZ.',
+      'Botiquín Alquímico, Cofre DA LUZ, Ciclos Alquímicos y Sesiones de Regulación. Abordamos la causa raíz para reequilibrar tus cuerpos.',
     type: 'website',
   },
 };
@@ -27,84 +27,175 @@ export default function ProcesosPage() {
       <div className="procesos-page-container">
         <ProcesosBackground variant="general" />
 
-        {/* Cabecera - mismo estilo que Sesiones */}
+        {/* Cabecera */}
         <section className="procesos-header-band" aria-labelledby="procesos-title">
           <div className="procesos-header-band-inner">
             <h1 id="procesos-title" className="procesos-band-title">
-              Procesos
+              PROCESOS DA LUZ: LA ALQUIMÍA DE TU SOBERANÍA
             </h1>
           </div>
         </section>
 
-        {/* Central content - Z composition */}
-        <section className="procesos-central-content">
-          <div className="procesos-z-grid">
-            {/* Top-left: Imagen 1 - meditación */}
-            <div className="procesos-cell-oval-1">
-              <ProcesosOvalPlaceholder
-                src="/svg/procesos/image1%20Procesos.png"
-                alt="Meditación y transformación consciente en un espacio alquímico"
-              />
-            </div>
+        {/* Intro quote */}
+        <section className="procesos-intro-quote" aria-label="Introducción">
+          <p className="procesos-intro-quote-text">
+            &ldquo;En Da Luz, el cuerpo refleja el funcionamiento del Alma. Abordamos la causa raíz para reequilibrar tus cuerpos físico, energético, emocional y mental.&rdquo;
+          </p>
+        </section>
 
-            {/* Top-right: Text box 1 */}
-            <div className="procesos-cell-text-1">
-              <ProcesosOrganicBox>
-                Acompaño desde mi Ser, desde mis saberes, desde las plantas
-                medicinales, las esencias florales, las alquimias y las diversas
-                herramientas adquiridas en mi Recorrido hacia adentro.
-              </ProcesosOrganicBox>
-            </div>
-
-            {/* Bottom-left: Text box 2 */}
-            <div className="procesos-cell-text-2">
-              <ProcesosOrganicBox>
-                <p className="mb-4">
-                  <strong>EL BOTIQUÍN ALQUÍMICO:</strong> Tu farmacia natural
-                  para la autogestión diaria. (Tinturas, Microdosis, Elixires y
-                  Aromaterapia).{' '}
-                  <Link href="/servicios/procesos/ciclos-alquimicos" className="font-bold">
-                    EXPLORAR EL BOTIQUÍN
-                  </Link>
+        {/* Herramientas de Autogestión */}
+        <section className="procesos-section procesos-herramientas" aria-labelledby="herramientas-title">
+          <h2 id="herramientas-title" className="procesos-section-title">
+            HERRAMIENTAS DE AUTOGESTIÓN
+          </h2>
+          <div className="procesos-herramientas-grid">
+            <div className="procesos-herramienta-card">
+              <div className="procesos-herramienta-image">
+                <ProcesosOvalPlaceholder
+                  src="/svg/procesos/image1%20Procesos.png"
+                  alt="Botiquín Alquímico - tinturas, microdosis y elixires"
+                />
+              </div>
+              <div className="procesos-herramienta-content">
+                <h3 className="procesos-herramienta-name">EL BOTIQUÍN ALQUÍMICO</h3>
+                <p className="procesos-herramienta-desc">
+                  Tu farmacia natural para la autogestión diaria. (Tinturas, Microdosis, Elixires y Aromaterapia).
                 </p>
-                <p>
-                  <strong>COFRE DA LUZ:</strong> Tecnologías vibracionales que
-                  sostienen el campo de sanación. (Sonidos Ancestrales,
-                  Péndulo, Reiki y Mapeos de Personalidad).{' '}
-                  <Link href="/servicios/procesos/sesiones-integrales" className="font-bold">
-                    ABRIR EL COFRE DE ALIADOS
-                  </Link>
+                <Link href="/productos" className="procesos-btn-cream">
+                  EXPLORAR EL BOTIQUÍN
+                </Link>
+              </div>
+            </div>
+            <div className="procesos-herramienta-card">
+              <div className="procesos-herramienta-image">
+                <ProcesosOvalPlaceholder
+                  src="/svg/procesos/image2%20Procesos.png"
+                  alt="Cofre DA LUZ - tecnologías vibracionales"
+                />
+              </div>
+              <div className="procesos-herramienta-content">
+                <h3 className="procesos-herramienta-name">COFRE DA LUZ</h3>
+                <p className="procesos-herramienta-desc">
+                  Tecnologías vibracionales que sostienen el campo de sanación. (Sonidos Ancestrales, Péndulo, Reiki y Mapeos de Personalidad).
                 </p>
-              </ProcesosOrganicBox>
+                <Link href="/servicios/procesos/sesiones-integrales" className="procesos-btn-cream">
+                  ABRIR EL COFRE DE ALIADOS
+                </Link>
+              </div>
             </div>
+          </div>
+        </section>
 
-            {/* Bottom-right: Imagen 2 - tinturas */}
-            <div className="procesos-cell-oval-2">
-              <ProcesosOvalPlaceholder
-                src="/svg/procesos/image2%20Procesos.png"
-                alt="Cofre con tinturas y elixires naturales"
-              />
+        {/* 1. Ciclos Alquímicos */}
+        <section className="procesos-section procesos-ciclos" aria-labelledby="ciclos-title">
+          <h2 id="ciclos-title" className="procesos-section-title">
+            1. CICLOS ALQUÍMICOS: Tu Transformación Profunda
+          </h2>
+
+          <article className="procesos-ciclo-card">
+            <div className="procesos-ciclo-header">
+              <h3 className="procesos-ciclo-name">OASIS (Personalización Total)</h3>
             </div>
+            <ProcesosOrganicBox className="procesos-ciclo-body">
+              <ul className="procesos-ciclo-list">
+                <li><strong>Foco:</strong> Mapear y restaurar tu bioequilibrio inicial.</li>
+                <li><strong>Herramientas:</strong> Mapeo Astrológico, Flores de Bach y Aromaterapia.</li>
+                <li><strong>Ideal para:</strong> Quien busca una ruta de sanación 100% a medida para comenzar.</li>
+              </ul>
+              <Link href="/servicios/procesos/ciclos-alquimicos#ciclos-oasis-title" className="procesos-btn-cream procesos-btn-inline">
+                DESCUBRIR MI OASIS PERSONAL
+              </Link>
+            </ProcesosOrganicBox>
+          </article>
+
+          <article className="procesos-ciclo-card">
+            <div className="procesos-ciclo-header">
+              <h3 className="procesos-ciclo-name">GÉNESIS (Suelo y Filtros)</h3>
+            </div>
+            <ProcesosOrganicBox className="procesos-ciclo-body">
+              <ul className="procesos-ciclo-list">
+                <li><strong>Foco:</strong> Depuración biológica y reconstrucción del Suelo (Eje 1). Limpieza de filtros orgánicos para permitir el flujo vital y re-programación vibracional con Elixires asistentes.</li>
+                <li><strong>Herramientas:</strong> Medicina Herbal, Chamanismo y Elixires.</li>
+              </ul>
+              <Link href="/servicios/procesos/ciclos-alquimicos#ciclos-genesis-title" className="procesos-btn-cream procesos-btn-inline">
+                INICIAR MI GÉNESIS
+              </Link>
+            </ProcesosOrganicBox>
+          </article>
+
+          <article className="procesos-ciclo-card procesos-ciclo-featured">
+            <div className="procesos-ciclo-header">
+              <h3 className="procesos-ciclo-name">EXPERIENCIA METAMORFOSIS (Membresía Premium)</h3>
+            </div>
+            <ProcesosOrganicBox className="procesos-ciclo-body">
+              <ul className="procesos-ciclo-list">
+                <li><strong>El Programa:</strong> Acceso paulatino al recorrido de los 6 Ejes para una purificación orgánica y psíquica total.</li>
+                <li><strong>La Diferencia:</strong> Incluye sesiones individuales mensuales (1h 15min) para ajustar el proceso a tu pulso único + Elixir aromático-floral personalizado diseñado específicamente para asistir lo abordado en cada encuentro.</li>
+                <li><strong>Incluye:</strong> Ejercicios semanales y el acompañamiento individual más profundo de Da Luz.</li>
+              </ul>
+              <Link href="/membresia" className="procesos-btn-cream procesos-btn-inline">
+                SOLICITAR MI ACCESO A METAMORFOSIS
+              </Link>
+            </ProcesosOrganicBox>
+          </article>
+        </section>
+
+        {/* 2. Sintonía Inmediata - Sesiones */}
+        <section className="procesos-section procesos-sesiones" aria-labelledby="sesiones-title">
+          <h2 id="sesiones-title" className="procesos-section-title">
+            2. SINTONÍA INMEDIATA: Sesiones de Regulación
+          </h2>
+
+          <div className="procesos-sesiones-grid">
+            <article className="procesos-sesion-card">
+              <h3 className="procesos-sesion-title">Sesión PAUSA VITAL (60 min)</h3>
+              <p className="procesos-sesion-desc">
+                Reiki Usui + Cuencos. El alivio necesario para el estrés y la ansiedad. Una recarga vital y calma profunda para resetear tu sistema y re-equilibrar tus centros energéticos.
+              </p>
+              <Link href="/servicios/procesos/sesiones-integrales" className="procesos-btn-cream">
+                AGENDAR MI PAUSA VITAL
+              </Link>
+            </article>
+
+            <article className="procesos-sesion-card">
+              <h3 className="procesos-sesion-title">Sesión REPROGRAMACIÓN CONSCIENTE (75 min)</h3>
+              <p className="procesos-sesion-desc">
+                Chamanismo + Péndulo. Disolución de nudos y transformación de creencias limitantes a nivel profundo. <em>Incluye: Mapeo de lo abordado + Elixir personalizado.</em>
+              </p>
+              <Link href="/servicios/procesos/sesiones-integrales" className="procesos-btn-cream">
+                RESERVAR MI REPROGRAMACIÓN
+              </Link>
+            </article>
+
+            <article className="procesos-sesion-card">
+              <h3 className="procesos-sesion-title">Sesión VISIÓN Y PRESENCIA (90 min)</h3>
+              <p className="procesos-sesion-desc">
+                Reiki + Chamanismo + Baño Sonoro. Nuestra sesión más completa para armonizar cuerpo y espíritu. Una integración total de tus cuerpos físico, mental y sutil. <em>Incluye: Elixir personalizado + Protocolo de Anclaje Somático post-sesión.</em>
+              </p>
+              <Link href="/servicios/procesos/sesiones-integrales" className="procesos-btn-cream">
+                SOLICITAR VISIÓN Y PRESENCIA
+              </Link>
+            </article>
           </div>
         </section>
 
         {/* Footer CTA */}
         <footer className="procesos-page-footer">
           <p className="procesos-page-cta-text">
-            Obtené más info haciendo click en uno de estos botones
+            ¿No sabés por dónde empezar? Escribinos y te orientamos hacia el proceso que tu cuerpo está pidiendo hoy.
           </p>
           <div className="procesos-page-buttons">
-            <Link
-              href="/servicios/procesos/sesiones-integrales"
+            <a
+              href="mailto:contacto@daluzconsciente.com"
               className="procesos-btn-cream"
             >
-              Sesiones
+              ESCRIBINOS
+            </a>
+            <Link href="/servicios/procesos/ciclos-alquimicos" className="procesos-btn-cream">
+              CICLOS ALQUÍMICOS
             </Link>
-            <Link
-              href="/servicios/procesos/ciclos-alquimicos"
-              className="procesos-btn-cream"
-            >
-              Ciclos
+            <Link href="/servicios/procesos/sesiones-integrales" className="procesos-btn-cream">
+              SESIONES INTEGRALES
             </Link>
           </div>
         </footer>

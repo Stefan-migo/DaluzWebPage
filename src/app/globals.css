@@ -53,8 +53,10 @@
     /* SECONDARY FONTS (Google Fonts - Fallbacks) */
     --font-heading: "Playfair Display", serif;
     /* Main headings, article titles */
-    --font-body: "Inter", sans-serif;
-    /* Body text, UI, navigation */
+    --font-body: var(--font-eb-garamond), "EB Garamond", "Times New Roman", serif;
+    /* Body text, paragraphs (OFICIAL - Especificación DA LUZ) */
+    --font-body-legacy: var(--font-inter), "Inter", sans-serif;
+    /* UI, labels, captions */
 
     /* FONT HIERARCHY SYSTEM */
     --font-display: var(--font-malisha);
@@ -64,9 +66,9 @@
     --font-subtitle: var(--font-heading);
     /* Subsections, card titles */
     --font-text: var(--font-body);
-    /* Paragraphs, forms, buttons */
-    --font-caption: var(--font-body);
-    /* Small text, captions, labels */
+    /* Paragraphs, body (EB Garamond - mín 18px, line-height 1.5-1.6) */
+    --font-caption: var(--font-body-legacy);
+    /* Small text, captions, labels (Inter) */
 
     /* Typography Scale */
     --text-xs: 0.75rem;

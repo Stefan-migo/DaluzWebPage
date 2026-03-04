@@ -117,6 +117,10 @@ const config = {
           light: "var(--utopica-light)",
           lightest: "var(--utopica-lightest)",
         },
+        // Admin / UI accent colors (azul profundo #1E3A8A, dorado)
+        "azul-profundo": "#1E3A8A",
+        dorado: "#F8D794",
+        "tierra-media": "#8B7355",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -182,17 +186,17 @@ const config = {
         "fade-in-down": "fade-in-down 0.6s ease-out",
       },
       fontFamily: {
-        // ENHANCED FONT HIERARCHY - DA LUZ CONSCIENTE
+        // ENHANCED FONT HIERARCHY - DA LUZ CONSCIENTE (Especificación oficial)
         display: ["var(--font-display)", "Malisha", "cursive"],
         title: ["var(--font-title)", "VELISTA", "serif"],
         subtitle: ["var(--font-subtitle)", "Playfair Display", "serif"],
-        text: ["var(--font-text)", "Inter", "sans-serif"],
+        text: ["var(--font-text)", "EB Garamond", "Times New Roman", "serif"],
         caption: ["var(--font-caption)", "Inter", "sans-serif"],
         
         // LEGACY SUPPORT (existing)
         heading: ["var(--font-heading)", "Playfair Display", "serif"],
-        body: ["var(--font-body)", "Inter", "sans-serif"],
-        sans: ["var(--font-body)", "Inter", "sans-serif"],
+        body: ["var(--font-body)", "EB Garamond", "Times New Roman", "serif"],
+        sans: ["var(--font-caption)", "Inter", "sans-serif"],
         serif: ["var(--font-heading)", "Playfair Display", "serif"],
         malisha: ["var(--font-malisha)", "Malisha", "cursive"],
         velista: ["var(--font-velista)", "VELISTA", "serif"],

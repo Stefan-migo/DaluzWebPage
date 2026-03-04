@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Inter, Playfair_Display } from 'next/font/google'
+import { Inter, Playfair_Display, EB_Garamond } from 'next/font/google'
 import localFont from 'next/font/local'
 import { ThemeProvider as NextThemeProvider } from '@/components/theme-provider'
 import { ThemeProvider as ProductLineThemeProvider } from '@/contexts/ThemeContext'
@@ -18,6 +18,12 @@ const inter = Inter({
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
   variable: '--font-playfair',
+  display: 'swap',
+})
+
+const ebGaramond = EB_Garamond({ 
+  subsets: ['latin'],
+  variable: '--font-eb-garamond',
   display: 'swap',
 })
 
@@ -91,7 +97,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable} ${malisha.variable} ${velista.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} ${ebGaramond.variable} ${malisha.variable} ${velista.variable} font-text antialiased`}>
         <NextThemeProvider
           attribute="class"
           defaultTheme="light"

@@ -149,14 +149,14 @@ export default function BlogCard({
               </div>
             )}
 
-            {/* Categories */}
+            {/* Categories - Playfair Italic small */}
             {categories && categories.length > 0 && (
               <div className="absolute top-4 right-4 flex flex-wrap gap-1">
                 {categories.slice(0, 2).map((category, index) => (
                   <Badge 
                     key={index}
                     variant="secondary" 
-                    className="bg-white/90 text-[var(--color-text-primary)] text-xs font-caption"
+                    className="bg-white/90 text-[var(--color-text-primary)] text-xs font-subtitle italic"
                     style={{ 
                       backgroundColor: category.color ? `${category.color}20` : undefined,
                       color: category.color || undefined 
@@ -217,12 +217,12 @@ export default function BlogCard({
               <span>{formatDate(publishedAt)}</span>
             </div>
 
-            {/* Title */}
-            <h3 className="font-subtitle italic text-xl text-[var(--color-text-primary)] line-clamp-2 mb-3 hover:text-[var(--color-brand-primary)] transition-colors">
+            {/* Title - Playfair Bold azul */}
+            <h3 className="font-heading font-bold text-xl text-[var(--color-text-primary)] line-clamp-2 mb-3 hover:text-[var(--color-brand-primary)] transition-colors">
               {title}
             </h3>
 
-            {/* Excerpt */}
+            {/* Excerpt - Garamond */}
             <p className="font-text text-[var(--color-text-primary)]/80 line-clamp-3 mb-4 leading-relaxed text-lg">
               {excerpt}
             </p>

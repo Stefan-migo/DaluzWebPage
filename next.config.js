@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [
+      { source: '/origen', destination: '/raices', permanent: true },
+    ];
+  },
   experimental: {
     // typedRoutes: true, // Temporarily disabled
   },

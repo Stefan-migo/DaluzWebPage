@@ -100,6 +100,11 @@ const isProcesosPage = (pathname: string) =>
   pathname === '/servicios/procesos' ||
   pathname.startsWith('/servicios/procesos/');
 
+/* Raíces & Filosofía pages: /raices, /filosofia-proposito */
+const RAICES_BG = '#0f3460';
+const isRaicesPage = (pathname: string) =>
+  pathname === '/raices' || pathname === '/filosofia-proposito';
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, profile, signOut } = useAuthContext();
@@ -110,7 +115,9 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [latestPosts, setLatestPosts] = useState<BlogPost[]>([]);
 
-  const headerBg = isProcesosPage(pathname ?? '') ? PROCESOS_BG : '#AE0000';
+  const headerBg = isRaicesPage(pathname ?? '') ? RAICES_BG
+    : isProcesosPage(pathname ?? '') ? PROCESOS_BG
+    : '#AE0000';
 
   // Fetch latest blog posts
   useEffect(() => {
@@ -320,13 +327,13 @@ export default function Header() {
                         <NavigationMenuLink asChild>
                           <Link
                             className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-brand-primary/10 to-brand-primary/20 p-6 no-underline outline-none shadow-md hover:shadow-lg hover:from-brand-primary/20 hover:to-brand-primary/30 transition-all relative overflow-hidden"
-                            href="/origen"
+                            href="/raices"
                           >
                             {/* Background Image */}
                             <div className="absolute inset-0 opacity-20">
                               <Image
                                 src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop"
-                                alt="Origen"
+                                alt="Raíces"
                                 fill
                                 className="object-cover"
                               />
@@ -334,10 +341,10 @@ export default function Header() {
                             <div className="relative z-10">
                               <Leaf className="h-6 w-6 text-brand-primary mb-2" />
                               <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                                Origen
+                                Raíces
                               </div>
                               <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                                El camino que nos trajo hasta aquí.
+                                Filosofía, propósito y los 4 pilares.
                               </p>
                             </div>
                           </Link>
@@ -408,7 +415,7 @@ export default function Header() {
                               <div className="relative z-10">
                                 <PenSquare className="h-6 w-6 text-brand-primary mb-2" />
                                 <div className="mb-2 mt-4 text-lg font-title font-medium" style={{ color: '#1C1B1A' }}>
-                                  Artículos y Novedades
+                                  BLOG
                                 </div>
                                 <p className="text-sm font-text leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
                                   Lee nuestras últimas publicaciones.
@@ -771,12 +778,12 @@ export default function Header() {
                             Filosofía y propósito
                           </Link>
                           <Link
-                            href="/origen"
+                            href="/raices"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Origen
+                            Raíces
                           </Link>
                         </div>
                       </div>

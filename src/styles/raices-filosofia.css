@@ -1,0 +1,875 @@
+/**
+ * Raíces & Filosofía Pages - Shared Styles
+ * Used by: /raices, /filosofia-proposito
+ * Design: Blue theme, bgRaices.webp background
+ */
+
+/* ===========================
+   COLOR VARIABLES & WRAPPER
+   =========================== */
+.raices-filosofia-pages {
+  --raices-bg: #0f3460;
+  --raices-cream: #fdfcf0;
+  --raices-text-on-cream: #0f3460;
+  --raices-accent: #ffffff;
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
+
+.raices-page {
+  overflow: visible;
+}
+
+/* ===========================
+   MAIN CONTAINER
+   =========================== */
+.raices-page-container {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--raices-bg);
+  overflow: visible;
+}
+
+/* Background - full viewport coverage, repeats vertically */
+.raices-page-bg {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  min-width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-color: var(--raices-bg);
+  z-index: 0;
+  overflow: hidden;
+}
+
+.raices-bg-general {
+  background-image: url('/svg/filosofia/bgRaices.webp');
+  /* background-repeat: repeat-y; */
+  /* background-size: 100% auto; */
+  background-position: top center;
+}
+
+/* ===========================
+   HEADER BAND
+   =========================== */
+.raices-header-band {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  background-color: rgba(253, 252, 240, 0.12);
+  padding: 2rem 1.5rem;
+  margin: 0;
+}
+
+.raices-header-band-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.raices-band-title {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1.75rem, 5vw, 3rem);
+  font-weight: 400;
+  color: var(--raices-accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.raices-band-subtitle {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-style: italic;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  letter-spacing: 0.03em;
+}
+
+/* ===========================
+   RAÍCES PAGE - Desktop vs Mobile toggle
+   =========================== */
+.raices-page .raices-hero-desktop-only {
+  display: none;
+}
+
+.raices-page .raices-hero-mobile-only {
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .raices-page .raices-hero-desktop-only {
+    display: block;
+  }
+
+  .raices-page .raices-hero-mobile-only {
+    display: none !important;
+  }
+}
+
+/* Mobile hero - simple band + stacked content, no SVGs */
+.raices-page .raices-hero-mobile-band {
+  background-color: rgba(253, 252, 240, 0.12);
+}
+
+.raices-page .raices-hero-mobile-content {
+  padding-top: 0;
+}
+
+/* ===========================
+   RAÍCES PAGE - Desktop: Title band, main text section, small quote (SVGs)
+   =========================== */
+.raices-page .raices-header-band.raices-title-band {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  background-color: transparent;
+  background-image: url('/svg/filosofia/raices/RaicesTitle.svg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.raices-page .raices-band-title-deep {
+  color: var(--raices-text-on-cream);
+}
+
+/* Subtitle between title band and main text section - white for contrast */
+.raices-page .raices-band-subtitle-white {
+  position: relative;
+  z-index: 10;
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-style: italic;
+  font-weight: 500;
+  color: #ffffff;
+  letter-spacing: 0.03em;
+  text-align: center;
+  margin: 0;
+  padding: 1rem 1.5rem;
+}
+
+.raices-main-text-section {
+  position: relative;
+  z-index: 10;
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  min-height: 580px;
+  background-image: url('/svg/filosofia/raices/RaicesMainTextBg.svg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 3rem 1.5rem 4rem;
+}
+
+/* Paragraphs - position: absolute for manual placement. Ajustar top/left/width según necesites. */
+.raices-main-text-section .raices-intro-deep {
+  position: absolute;
+  color: var(--raices-text-on-cream);
+  margin: 0;
+  z-index: 1;
+  box-sizing: border-box;
+}
+
+.raices-main-text-section .raices-intro-1 {
+  top: 11%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.raices-main-text-section .raices-intro-2 {
+  top: 19%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.raices-main-text-section .raices-intro-3 {
+  top: 40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.raices-main-text-section .raices-intro-4 {
+  top: 75%;
+  left: 64%;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 1200px;
+  text-align: center;
+}
+
+.raices-small-quote-wrap {
+  position: absolute;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  top: 68%;
+  left: 15%;
+  transform: translate(-50%, -50%);
+  padding: 3rem 4rem;
+  background-image: url('/svg/filosofia/raices/RaicesSmallText.svg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 2;
+}
+
+.raices-small-quote-text {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.25rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--raices-text-on-cream);
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===========================
+   DESKTOP HERO - filosofia-proposito only (>= 1024px)
+   Mobile/tablet: raices-hero-mobile visible
+   Desktop: raices-hero-desktop visible
+   =========================== */
+.raices-hero-mobile {
+  display: block;
+}
+
+.raices-hero-desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .raices-hero-mobile {
+    display: none;
+  }
+
+  .raices-hero-desktop {
+    display: block;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    padding: 3rem 2rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .raices-hero-desktop-grid {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .raices-hero-desktop-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 1.5rem;
+    max-width: 720px;
+  }
+
+  .raices-hero-title-wrap {
+    position: relative;
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 0.75rem;
+    width: fit-content;
+    padding: 0.5rem;
+    background-image: url('/svg/filosofia/filo/TitleCard.svg');
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .raices-hero-title {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-title), var(--font-velista), serif;
+    font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+    font-weight: 400;
+    color: var(--raices-accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 1.25rem 1.75rem 0.5rem;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .raices-hero-arrow {
+    align-self: center;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .raices-hero-arrow-svg {
+    width: 48px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .raices-hero-paragraph-wrap {
+    margin-left: 0;
+    padding-left: 0.5rem;
+  }
+
+  .raices-hero-paragraph {
+    font-family: var(--font-text), var(--font-body), serif;
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--raices-accent);
+    margin: 0 0 0.25rem;
+    padding-right: 1rem;
+  }
+
+  .raices-hero-underline {
+    margin-top: 1.65rem;
+    align-self: flex-start;
+    max-width: 100%;
+    margin-left: 3rem;
+  }
+
+  .raices-hero-underline-svg {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    -o-object-fit: contain;
+    object-fit: contain;
+    -o-object-position: left top;
+    object-position: left top;
+  }
+
+  .raices-hero-desktop-right {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 1rem;
+  }
+
+  .raices-hero-image-placeholder {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 1;
+  }
+
+  .raices-hero-image-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(253, 252, 240, 0.25) 0%, rgba(190, 226, 233, 0.35) 100%);
+    border: 2px solid rgba(253, 252, 240, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .raices-hero-placeholder-text {
+    font-family: var(--font-caption), "Inter", sans-serif;
+    font-size: 0.875rem;
+    color: rgba(253, 252, 240, 0.5);
+    letter-spacing: 0.05em;
+  }
+}
+
+/* ===========================
+   CONTENT SECTIONS
+   =========================== */
+.raices-content {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 2rem;
+}
+
+.raices-intro {
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  line-height: 1.6;
+  color: var(--raices-accent);
+  margin-bottom: 2rem;
+}
+
+.raices-intro em {
+  font-style: italic;
+  opacity: 0.95;
+}
+
+/* ===========================
+   QUOTE BLOCK
+   =========================== */
+.raices-quote {
+  background-color: rgba(253, 252, 240, 0.15);
+  border-left: 4px solid var(--raices-cream);
+  padding: 1.5rem 2rem;
+  margin: 2rem 0;
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--raices-accent);
+  border-radius: 0 15px;
+}
+
+/* ===========================
+   CARDS
+   =========================== */
+.raices-card {
+  background-color: var(--raices-cream);
+  color: var(--raices-text-on-cream);
+  padding: 2rem;
+  border-radius: 0 15px;
+  border: 1px solid rgba(15, 52, 96, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  line-height: 1.6;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.raices-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.raices-card-title {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 600;
+  font-style: italic;
+  margin-bottom: 1rem;
+  color: var(--raices-text-on-cream);
+}
+
+.raices-card-subtitle {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(0.95rem, 2vw, 1.05rem);
+  font-weight: 400;
+  font-style: italic;
+  margin-bottom: 1rem;
+  color: var(--raices-text-on-cream);
+  opacity: 0.9;
+}
+
+.raices-card strong {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-weight: 600;
+}
+
+.raices-card em {
+  font-style: italic;
+}
+
+/* ===========================
+   PILARES GRID
+   =========================== */
+.raices-pilares-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+@media (min-width: 640px) {
+  .raices-pilares-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .raices-pilares-grid {
+    gap: 2rem;
+  }
+}
+
+.pilares-section-title {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 400;
+  color: var(--raices-accent);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.pilares-section-subtitle {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-style: italic;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* ===========================
+   CTA SECTION
+   =========================== */
+.raices-cta-section {
+  text-align: center;
+  margin-top: 3rem;
+  padding: 2rem 1rem;
+}
+
+.raices-cta-text {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--raices-accent);
+  margin-bottom: 1.5rem;
+}
+
+.raices-cta-button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--raices-cream);
+  color: var(--raices-text-on-cream);
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-decoration: none;
+  border-radius: 0 15px;
+  border: 1px solid rgba(15, 52, 96, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.raices-cta-button:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  background-color: #fff8e0;
+}
+
+/* Dual CTA buttons (side by side) */
+.raices-cta-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.raices-cta-buttons .raices-cta-button {
+  margin: 0;
+}
+
+/* List styling for formaciones/saberes */
+.raices-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 1rem 0;
+}
+
+.raices-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  line-height: 1.6;
+}
+
+.raices-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--raices-text-on-cream);
+  font-weight: 600;
+}
+
+.raices-list-title {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 600;
+  font-style: italic;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--raices-text-on-cream);
+}
+
+/* Section spacing between cards */
+.raices-section-card {
+  margin-bottom: 2rem;
+}
+
+.raices-section-card:last-child {
+  margin-bottom: 0;
+}
+
+/* ===========================
+   SECTION TITLE BAND (full-width, like main header)
+   =========================== */
+.raices-section-band {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  background-color: rgba(253, 252, 240, 0.12);
+  padding: 1.5rem 1.5rem;
+  margin: 2rem 0 0;
+}
+
+.raices-section-band-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.raices-section-band-title {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--raices-accent);
+  letter-spacing: 0.03em;
+}
+
+/* Elongated oval with border only (no fill) */
+.raices-oval-quote {
+  width: 100%;
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1.5rem 2rem;
+  border: 2px solid rgba(253, 252, 240, 0.6);
+  border-radius: 9999px;
+  background-color: transparent;
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--raices-accent);
+  text-align: center;
+  line-height: 1.5;
+  position: relative;
+  z-index: 10;
+}
+
+/* Filosofía: 2-card grid (Formaciones | Saberes) */
+.raices-herramientas-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.raices-herramientas-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.raices-herramientas-col-title {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2vw, 1.125rem);
+  font-weight: 600;
+  font-style: italic;
+  color: var(--raices-accent);
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+/* Title with border only (like default button style) */
+.raices-herramientas-col-title-bordered {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--raices-accent);
+  text-align: center;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  background-color: transparent;
+  border: 1px solid rgba(253, 252, 240, 0.6);
+  border-radius: 0 15px;
+}
+
+@media (max-width: 768px) {
+  .raices-herramientas-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CTA section outside card */
+.raices-cta-standalone {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 2rem 1rem 4rem;
+  margin-top: 0;
+}
+
+/* ===========================
+   FILOSOFÍA - Desktop/Mobile Toggle Classes
+   =========================== */
+.filo-mobile-only {
+  display: block;
+}
+
+.filo-desktop-only {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .filo-mobile-only {
+    display: none !important;
+  }
+
+  .filo-desktop-only {
+    display: block;
+  }
+
+  /* Section title with TitleCard.svg bg (De la Sombra) */
+  .filo-section-title-desktop {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1.5rem 0;
+    margin-top: 2rem;
+  }
+
+  .filo-section-title-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+  }
+
+  .filo-section-title-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .filo-section-title-card {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
+
+  .filo-section-title-text {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-title), var(--font-velista), serif;
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    font-weight: 400;
+    color: var(--raices-accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 2rem 4rem;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  /* Section title without bg (El Cuerpo) */
+  .filo-section-title-nobg {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1.5rem 0;
+    margin-top: 2rem;
+  }
+
+  .filo-section-title-plain {
+    font-family: var(--font-title), var(--font-velista), serif;
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+    font-weight: 400;
+    color: var(--raices-accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  /* Quote with CircularCardBorder.svg */
+  .filo-circular-quote-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    z-index: 10;
+  }
+
+  .filo-circular-quote-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .filo-circular-quote-svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .filo-circular-quote-text {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-subtitle), var(--font-heading), serif;
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--raices-accent);
+    text-align: center;
+    line-height: 1.5;
+    padding: 4rem 4rem;
+    margin: 0;
+  }
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 640px) {
+  .raices-content {
+    padding: 1.5rem 1rem 3rem;
+  }
+
+  .raices-card {
+    padding: 1.5rem;
+  }
+
+  .raices-quote {
+    padding: 1rem 1.5rem;
+  }
+
+  .raices-cta-buttons {
+    flex-direction: column;
+  }
+
+  .raices-cta-buttons .raices-cta-button {
+    width: 100%;
+    text-align: center;
+  }
+}

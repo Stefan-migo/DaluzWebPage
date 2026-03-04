@@ -211,7 +211,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-malisha, 'Inter', sans-serif);
+  font-family: var(--font-malisha, 'Malisha', cursive);
   font-size: clamp(0.875rem, 3.5vw, 3.25rem);
   font-weight: 500;
   color: var(--color-bg-light, #F0EACE);
@@ -270,7 +270,7 @@
 }
 
 .ceremonia-facial-section1-text1-text {
-  font-family: var(--font-malisha, 'Inter', sans-serif);
+  font-family: var(--font-malisha, 'Malisha', cursive);
   font-size: clamp(0.875rem, 3.2vw, 3.125rem);
   font-weight: 500;
   color: var(--color-bg-main, #AE0000);
@@ -309,7 +309,7 @@
 }
 
 .ceremonia-facial-section1-text2-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.75rem, 1vw, 2rem);
   line-height: 1.6;
   color: var(--color-text-inverse, #FFFFFF);
@@ -347,7 +347,7 @@
 }
 
 .ceremonia-facial-section1-text3-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.75rem, 1vw, 2rem);
   line-height: 1.6;
   color: var(--color-text-inverse, #FFFFFF);
@@ -549,7 +549,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-malisha, 'Inter', sans-serif);
+  font-family: var(--font-malisha, 'Malisha', cursive);
   font-size: clamp(0.875rem, 3.5vw, 3.25rem);
   font-weight: 500;
   color: var(--color-bg-main, #AE0000);
@@ -608,7 +608,7 @@
 }
 
 .ceremonia-facial-section2-text1-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.75rem, 1.5vw, 2.5rem);
   line-height: 1.6;
   color: var(--color-bg-light, #FFFFFF);
@@ -647,7 +647,7 @@
 }
 
 .ceremonia-facial-section2-text2-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.75rem, 1.5vw, 2.5rem);
   line-height: 1.6;
   color: var(--color-bg-light, #FFFFFF);
@@ -663,7 +663,7 @@
 }
 
 .ceremonia-facial-section2-text3-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.75rem, 2vw, 2.5rem);
   line-height: 1.6;
   color: var(--color-bg-light, #1C1B1A);
@@ -680,7 +680,7 @@
 }
 
 .ceremonia-facial-section2-text4-text {
-  font-family: var(--font-malisha, 'Inter', sans-serif);
+  font-family: var(--font-malisha, 'Malisha', cursive);
   font-size: clamp(0.875rem, 2.2vw, 2.75rem);
   font-weight: 500;
   line-height: 1.6;
@@ -720,7 +720,7 @@
 }
 
 .ceremonia-facial-section2-text5-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.75rem, 1.2vw, 2.0rem);
   line-height: 1.6;
   color: var(--color-bg-light, #FFFFFF);
@@ -875,7 +875,7 @@
 /* Secondary Title */
 .ceremonia-facial-secondary-title {
   position: absolute;
-  font-family: var(--font-malisha, 'Playfair Display', serif);
+  font-family: var(--font-malisha, 'Malisha', cursive);
   font-size: clamp(1.25rem, 3vw, 4rem);
   font-weight: normal;
   color: var(--color-bg-light, #F0EACE);
@@ -923,7 +923,7 @@
 }
 
 .ceremonia-facial-text-card-text {
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.875rem, 1.5vw, 1.125rem);
   line-height: 1.6;
   color: var(--color-text-primary, #1C1B1A);
@@ -961,7 +961,7 @@
   position: absolute;
   z-index: 10;
   padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-  font-family: var(--font-text, 'Inter', sans-serif);
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.875rem, 1.5vw, 1rem);
   font-weight: 600;
   color: var(--color-brand-primary, #AE0000);

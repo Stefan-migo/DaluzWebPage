@@ -54,6 +54,12 @@ fix-admin-access.sql
 verify-and-fix-admin.sql
 remote-data-dump.sql
 
+# Cursor
+.cursor/
+
+# Windows reserved names
+nul
+
 # IDE
 .vscode/
 .idea/

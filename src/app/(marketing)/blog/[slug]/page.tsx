@@ -267,7 +267,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   {post.categories.map((category, index) => (
                     <Badge
                       key={index}
-                      className="bg-white/20 backdrop-blur-sm text-white border-white/30 font-caption"
+                      className="bg-white/20 backdrop-blur-sm text-white border-white/30 font-subtitle italic text-xs"
                       style={
                         category.color
                           ? {
@@ -282,7 +282,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
                   ))}
                 </div>
               )}
-              <h1 className="font-title text-3xl md:text-4xl lg:text-5xl text-white leading-tight">
+              <h1 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-white leading-tight drop-shadow-md">
                 {post.title}
               </h1>
               <div className="flex flex-wrap items-center gap-4 mt-4 text-white/90 text-sm font-caption">

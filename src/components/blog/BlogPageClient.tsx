@@ -93,16 +93,14 @@ export function BlogPageClient({ posts, categories }: BlogPageClientProps) {
           <div className="flex items-center justify-center gap-3 mb-6">
             <BookOpen className="h-8 w-8 text-[var(--color-highlight)]" />
             <Badge className="bg-[var(--color-highlight)] text-[var(--color-text-primary)] font-semibold px-4 py-2 font-caption uppercase tracking-wider">
-              Blog DA LUZ CONSCIENTE
+              BLOG
             </Badge>
           </div>
           <h1 className="font-title text-4xl md:text-5xl lg:text-6xl mb-6 text-white">
-            Conocimiento para una vida consciente
+            EL PUENTE: Sabiduría Somática y Alkimya Viva
           </h1>
           <p className="font-text text-lg md:text-xl mb-8 leading-relaxed opacity-95 max-w-2xl mx-auto">
-            Descubre artículos sobre biocosmética natural, transformación
-            personal y bienestar holístico. Comparte el camino hacia una vida
-            más plena.
+            Saberes para inspirar a la exploración y herramientas para acuerpar el conocimiento, regular tu pulso vital y habitar la soberanía de tu Ser. Construimos un puente entre la Neurocosmética y la Soberanía Somática.
           </p>
 
           {/* Search Bar - functional */}
@@ -214,8 +212,8 @@ export function BlogPageClient({ posts, categories }: BlogPageClientProps) {
           ) : (
             <>
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-                <h2 className="font-title text-2xl text-[var(--color-text-primary)]">
-                  Artículos
+                <h2 className="font-heading font-bold text-2xl text-[var(--color-text-primary)]">
+                  BLOG
                 </h2>
                 <div className="flex items-center gap-4">
                   <Link

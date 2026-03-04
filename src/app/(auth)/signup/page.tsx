@@ -309,7 +309,7 @@ export default function SignupPage() {
             backgroundColor: 'var(--admin-bg-secondary)',
             border: '1px solid var(--admin-bg-secondary)',
             color: 'var(--color-text-inverse)',
-            fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
+            fontFamily: 'var(--font-caption), "Inter", -apple-system, BlinkMacSystemFont, sans-serif',
             fontWeight: 600
           }}
         >
