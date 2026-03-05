@@ -260,63 +260,181 @@
 }
 
 
-/* Mobile/Tablet: Height determined by content */
+/* ============================================
+   MOBILE ADAPTATION (max-width: 1279px)
+   - Flow layout, no absolute positioning
+   - No decorative SVGs (CardText.svg hidden)
+   - Page background only (TuCeremoniaPagebg2.svg)
+   - Touch-friendly, stacked content
+   - Desktop design unchanged (min-width: 1280px)
+   ============================================ */
+
 @media (max-width: 1279px) {
   .tu-ceremonia-page {
-    min-height: auto;
-    height: auto;
-    overflow-y: hidden;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
   
   .tu-ceremonia-bg-container {
-    min-height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    z-index: 0;
+    pointer-events: none;
   }
   
   .tu-ceremonia-content {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     min-height: auto;
-    height: auto;
-  }
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .tu-ceremonia-text-card {
-    width: 90%;
-    max-width: 500px;
+    padding: max(1.5rem, env(safe-area-inset-top)) 1rem 2.5rem;
+    gap: 1.5rem;
   }
   
-  .tu-ceremonia-text-card-1 {
-    left: 50%;
-    transform: translateX(-50%);
+  /* Titles - flow layout */
+  .tu-ceremonia-main-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(1.25rem, 5.5vw, 1.75rem);
+    line-height: 1.2;
+    margin: 0;
+    padding: 0 0.5rem;
+    order: 1;
+  }
+  
+  .tu-ceremonia-secondary-title {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(1rem, 4vw, 1.25rem);
+    color: var(--color-text-primary, #1C1B1A);
+    margin: 0;
+    padding: 0 0.5rem;
+    order: 2;
+  }
+  
+  /* Text cards - no decorative SVG, simple card style */
+  .tu-ceremonia-text-card {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    aspect-ratio: auto;
+    order: 3;
   }
   
   .tu-ceremonia-text-card-2 {
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+    order: 4;
   }
   
+  /* Hide decorative CardText.svg on mobile */
+  .tu-ceremonia-text-card-bg {
+    display: none;
+  }
+  
+  .tu-ceremonia-text-card-content {
+    position: relative;
+    inset: auto;
+    padding: 1.25rem 1rem;
+    background-color: rgba(240, 234, 206, 0.92);
+    border-radius: 8px;
+    border: 1px solid rgba(174, 0, 0, 0.12);
+  }
+  
+  .tu-ceremonia-text-card-text {
+    font-size: clamp(0.9375rem, 2.5vw, 1rem);
+    line-height: 1.6;
+    max-width: 100%;
+    text-align: left;
+  }
+  
+  /* Buttons - stacked, touch-friendly (min 44px) */
   .tu-ceremonia-buttons {
     position: relative;
-    width: 90%;
-    max-width: 400px;
-    margin: 2rem auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    max-width: 100%;
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    order: 5;
   }
   
   .tu-ceremonia-button {
     position: relative;
-    width: 100%;
-    margin-bottom: 1rem;
     top: auto;
     left: auto;
     right: auto;
     bottom: auto;
     transform: none;
+    width: 100%;
+    max-width: 100%;
+    min-width: unset;
+    min-height: 48px;
+    padding: 0.875rem 1.25rem;
+    font-size: 0.875rem;
+    white-space: normal;
+    text-align: center;
+    margin: 0;
   }
   
   .tu-ceremonia-button:last-child {
     margin-bottom: 0;
+  }
+}
+
+/* Phone-first refinements (max-width: 480px) */
+@media (max-width: 480px) {
+  .tu-ceremonia-content {
+    padding: max(1.25rem, env(safe-area-inset-top)) max(0.875rem, env(safe-area-inset-right)) calc(2rem + env(safe-area-inset-bottom, 0px)) max(0.875rem, env(safe-area-inset-left));
+    gap: 1.25rem;
+  }
+  
+  .tu-ceremonia-main-title {
+    font-size: 1.25rem;
+    padding: 0 0.25rem;
+  }
+  
+  .tu-ceremonia-secondary-title {
+    font-size: 1rem;
+    padding: 0 0.25rem;
+  }
+  
+  .tu-ceremonia-text-card-content {
+    padding: 1rem 0.875rem;
+  }
+  
+  .tu-ceremonia-text-card-text {
+    font-size: 0.9375rem;
+  }
+  
+  .tu-ceremonia-button {
+    min-height: 48px;
+    padding: 0.875rem 1rem;
+    font-size: 0.8125rem;
   }
 }
 

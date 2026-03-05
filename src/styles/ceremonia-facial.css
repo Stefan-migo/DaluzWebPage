@@ -1,1214 +1,413 @@
-/* Ceremonia Facial Page Styles */
-/* Following DA LUZ CONSCIENTE color structure from globals.css */
-
-/* ===========================
-   SECTION 1 - CEREMONIA FACIAL
-   =========================== */
-
-/* Section 1 - Base Styles */
-.section-ceremonia-facial-1 {
-  position: relative;
-  min-height: auto;
-  height: auto;
-  overflow-x: hidden !important;
-  padding: 2rem 1rem; /* Default padding for mobile */
-  background-color: var(--color-bg-cream, #F6FBD6);
-}
-
-.section-ceremonia-facial-1-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  z-index: 10;
-}
-
-/* SVG Background Container - Section 1 */
-.section-ceremonia-facial-1-bg-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.section-ceremonia-facial-1-bg-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-}
-
-/* Mobile/Tablet - SVG background, height adapts to content */
-@media (max-width: 1279px) {
-  .section-ceremonia-facial-1 {
-    min-height: auto;
-    height: auto;
-    padding: 2rem 1rem;
-    position: relative;
-  }
-
-  .section-ceremonia-facial-1-content {
-    padding: 2rem 1rem 1rem 1rem;
-    min-height: 100%;
-  }
-
-  .section-ceremonia-facial-1-bg-container {
-    min-height: 100%;
-    height: 100%;
-  }
-
-  /* Text elements - relative positioning for mobile/tablet */
-  .ceremonia-facial-section1-text-element {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    width: 90% !important;
-    max-width: 100% !important;
-    margin: 0 auto;
-  }
-}
-
-/* Desktop - SVG background with aspect ratio */
-@media (min-width: 1280px) {
-  .section-ceremonia-facial-1 {
-    /* SVG aspect ratio: 1920 / 1080 = 1.778 */
-    aspect-ratio: 1920 / 1080;
-    min-height: calc(100vw * (1080 / 1920));
-    height: auto;
-    overflow-y: hidden;
-    position: relative;
-    padding: 0;
-  }
-
-  .section-ceremonia-facial-1-bg-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .section-ceremonia-facial-1-bg-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-  }
-
-  .section-ceremonia-facial-1-content {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
-  }
-}
-
-/* ===========================
-   SECTION 1 ELEMENTS
-   =========================== */
-
-/* Main Title */
-.ceremonia-facial-section1-main-title {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  aspect-ratio: 1919.66 / 361.27;
-  z-index: 20;
-  margin: 0;
-  padding: 0;
-}
-
-.ceremonia-facial-section1-main-title-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/MainTitleBg.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section1-main-title-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-title, 'VELISTA', serif);
-  font-size: clamp(1.5rem, 5vw, 7rem);
-  font-weight: normal;
-  color: var(--color-brand-primary, #AE0000);
-  text-align: center;
-  z-index: 1;
-  padding: 1rem 2rem;
-  top: -8rem
-}
-
-/* Secondary Title */
-.ceremonia-facial-section1-secondary-title {
-  position: absolute;
-  top: 22%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 1000px;
-  z-index: 20;
-  margin: 0;
-  padding: 0;
-  font-family: var(--font-subtitle, 'Playfair Display', serif);
-  font-size: clamp(1rem, 3vw, 4rem);
-  font-weight: normal;
-  color: var(--color-bg-light, #F0EACE);
-  text-align: center;
-}
-
-/* Section Title */
-.ceremonia-facial-section1-section-title {
-  position: absolute;
-  top: 28%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  max-width: 600px;
-  aspect-ratio: 888.51 / 130.39;
-  z-index: 20;
-  margin: 0;
-  padding: 0;
-}
-
-.ceremonia-facial-section1-section-title-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section1-section-title-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-malisha, 'Malisha', cursive);
-  font-size: clamp(0.875rem, 3.5vw, 3.25rem);
-  font-weight: 500;
-  color: var(--color-bg-light, #F0EACE);
-  text-align: center;
-  z-index: 1;
-  padding: 0.5rem 1rem;
-}
-
-/* Left Column Container */
-.ceremonia-facial-section1-left-column {
-  position: absolute;
-  top: 45%;
-  left: 5%;
-  width: 45%;
-  z-index: 20;
-}
-
-/* Right Column Container */
-.ceremonia-facial-section1-right-column {
-  position: absolute;
-  top: 45%;
-  right: -8%;
-  width: 45%;
-  z-index: 20;
-}
-
-/* Text 1 */
-.ceremonia-facial-section1-text1 {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 708.58 / 88.13;
-  margin-bottom: 1.5rem;
-  z-index: 20;
-}
-
-.ceremonia-facial-section1-text1-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/text1Bg.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section1-text1-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 2rem;
-  z-index: 1;
-}
-
-.ceremonia-facial-section1-text1-text {
-  font-family: var(--font-malisha, 'Malisha', cursive);
-  font-size: clamp(0.875rem, 3.2vw, 3.125rem);
-  font-weight: 500;
-  color: var(--color-bg-main, #AE0000);
-  margin: 0;
-}
-
-/* Text 2 */
-.ceremonia-facial-section1-text2 {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1075.83 / 255.38;
-  margin-bottom: 1.5rem;
-  z-index: 20;
-}
-
-.ceremonia-facial-section1-text2-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/text2Bg.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section1-text2-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1.5rem 2rem;
-  z-index: 1;
-}
-
-.ceremonia-facial-section1-text2-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.75rem, 1vw, 2rem);
-  line-height: 1.6;
-  color: var(--color-text-inverse, #FFFFFF);
-  margin: 0;
-}
-
-/* Text 3 */
-.ceremonia-facial-section1-text3 {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 968.46 / 144.62;
-  z-index: 20;
-}
-
-.ceremonia-facial-section1-text3-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/text3Bg.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section1-text3-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1rem 2rem;
-  z-index: 1;
-}
-
-.ceremonia-facial-section1-text3-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.75rem, 1vw, 2rem);
-  line-height: 1.6;
-  color: var(--color-text-inverse, #FFFFFF);
-  margin: 0;
-}
-
-/* Image */
-.ceremonia-facial-section1-image {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 668.8 / 429.97;
-  z-index: 20;
-}
-
-.ceremonia-facial-section1-image-img {
-  width: 70%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-}
-
-/* Mobile/Tablet adjustments for Section 1 elements */
-@media (max-width: 1279px) {
-  .ceremonia-facial-section1-main-title,
-  .ceremonia-facial-section1-secondary-title,
-  .ceremonia-facial-section1-section-title,
-  .ceremonia-facial-section1-left-column,
-  .ceremonia-facial-section1-right-column {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    transform: none !important;
-    width: 90% !important;
-    max-width: 100% !important;
-    margin: 1.5rem auto !important;
-  }
-
-  .ceremonia-facial-section1-left-column,
-  .ceremonia-facial-section1-right-column {
-    width: 100% !important;
-  }
-
-  .ceremonia-facial-section1-image {
-    margin-top: 2rem;
-  }
-}
-
-/* ===========================
-   SECTION 2 - CEREMONIA FACIAL
-   =========================== */
-
-/* Section 2 - Base Styles */
-.section-ceremonia-facial-2 {
-  position: relative;
-  min-height: auto;
-  height: auto;
-  overflow-x: hidden !important;
-  padding: 2rem 1rem; /* Default padding for mobile */
-  background-color: var(--color-bg-cream, #F6FBD6);
-}
-
-.section-ceremonia-facial-2-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-  margin: 0 auto;
-  position: relative;
-  z-index: 10;
-}
-
-/* SVG Background Container - Section 2 */
-.section-ceremonia-facial-2-bg-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  overflow: hidden;
-}
-
-.section-ceremonia-facial-2-bg-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-}
-
-/* Mobile/Tablet - SVG background, height adapts to content */
-@media (max-width: 1279px) {
-  .section-ceremonia-facial-2 {
-    min-height: auto;
-    height: auto;
-    padding: 2rem 1rem;
-    position: relative;
-  }
-
-  .section-ceremonia-facial-2-content {
-    padding: 2rem 1rem 1rem 1rem;
-    min-height: 100%;
-  }
-
-  .section-ceremonia-facial-2-bg-container {
-    min-height: 100%;
-    height: 100%;
-  }
-
-  /* Text elements - relative positioning for mobile/tablet */
-  .ceremonia-facial-section2-text-element {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    bottom: auto !important;
-    transform: none !important;
-    width: 90% !important;
-    max-width: 100% !important;
-    margin: 0 auto;
-  }
-}
-
-/* Desktop - SVG background with aspect ratio */
-@media (min-width: 1280px) {
-  .section-ceremonia-facial-2 {
-    /* SVG aspect ratio: 1920.21 / 1080 ≈ 1.778 */
-    aspect-ratio: 1920.21 / 1080;
-    min-height: calc(100vw * (1080 / 1920.21));
-    height: auto;
-    overflow-y: hidden;
-    position: relative;
-    padding: 0;
-  }
-
-  .section-ceremonia-facial-2-bg-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .section-ceremonia-facial-2-bg-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
-    display: block;
-  }
-
-  .section-ceremonia-facial-2-content {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    height: 100%;
-    min-height: 100%;
-  }
-}
-
-/* ===========================
-   SECTION 2 ELEMENTS
-   =========================== */
-
-/* Section Title */
-.ceremonia-facial-section2-section-title {
-  position: absolute;
-  top: 6%;
-  left: 28%;
-  transform: translateX(-50%);
-  width: 40%;
-  max-width: 600px;
-  aspect-ratio: 708.58 / 107.3;
-  z-index: 20;
-  margin: 0;
-  padding: 0;
-}
-
-.ceremonia-facial-section2-section-title-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/SectionTitle2.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section2-section-title-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-malisha, 'Malisha', cursive);
-  font-size: clamp(0.875rem, 3.5vw, 3.25rem);
-  font-weight: 500;
-  color: var(--color-bg-main, #AE0000);
-  text-align: center;
-  z-index: 1;
-  padding: 0.5rem 1rem;
-}
-
-/* Left Column Container */
-.ceremonia-facial-section2-left-column {
-  position: absolute;
-  top: 23%;
-  left: 5%;
-  width: 45%;
-  z-index: 20;
-}
-
-/* Right Column Container */
-.ceremonia-facial-section2-right-column {
-  position: absolute;
-  top: 62%;
-  right: 5%;
-  width: 45%;
-  z-index: 20;
-}
-
-/* Text 1 */
-.ceremonia-facial-section2-text1 {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1154.37 / 93.96;
-  margin-bottom: 1.5rem;
-  z-index: 20;
-}
-
-.ceremonia-facial-section2-text1-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/Section2Text1.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section2-text1-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 2rem;
-  z-index: 1;
-}
-
-.ceremonia-facial-section2-text1-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.75rem, 1.5vw, 2.5rem);
-  line-height: 1.6;
-  color: var(--color-bg-light, #FFFFFF);
-  margin: 0;
-}
-
-/* Text 2 */
-.ceremonia-facial-section2-text2 {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1173.09 / 122.77;
-  margin-bottom: 1.5rem;
-  z-index: 20;
-}
-
-.ceremonia-facial-section2-text2-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/Section2Text2.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section2-text2-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1rem 2rem;
-  z-index: 1;
-}
-
-.ceremonia-facial-section2-text2-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.75rem, 1.5vw, 2.5rem);
-  line-height: 1.6;
-  color: var(--color-bg-light, #FFFFFF);
-  margin: 0;
-}
-
-/* Text 3 - No SVG background */
-.ceremonia-facial-section2-text3 {
-  position: relative;
-  width: 100%;
-  margin-bottom: 1.5rem;
-  z-index: 20;
-}
-
-.ceremonia-facial-section2-text3-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.75rem, 2vw, 2.5rem);
-  line-height: 1.6;
-  color: var(--color-bg-light, #1C1B1A);
-  margin: 0;
-  padding: 1rem 0;
-}
-
-/* Text 4 - No SVG background */
-.ceremonia-facial-section2-text4 {
-  position: relative;
-  width: 100%;
-  margin-bottom: 1.5rem;
-  z-index: 20;
-}
-
-.ceremonia-facial-section2-text4-text {
-  font-family: var(--font-malisha, 'Malisha', cursive);
-  font-size: clamp(0.875rem, 2.2vw, 2.75rem);
-  font-weight: 500;
-  line-height: 1.6;
-  color: var(--color-bg-light, #FFFFFF);
-  margin: 0;
-  padding: 1rem 0;
-}
-
-/* Text 5 */
-.ceremonia-facial-section2-text5 {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 1078.86 / 281.34;
-  z-index: 20;
-}
-
-.ceremonia-facial-section2-text5-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/Section2Text5.svg');
-  background-size: contain;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-section2-text5-content {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1.5rem 2rem;
-  z-index: 1;
-}
-
-.ceremonia-facial-section2-text5-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.75rem, 1.2vw, 2.0rem);
-  line-height: 1.6;
-  color: var(--color-bg-light, #FFFFFF);
-  margin: 0;
-}
-
-/* Mobile/Tablet adjustments for Section 2 elements */
-@media (max-width: 1279px) {
-  .ceremonia-facial-section2-section-title,
-  .ceremonia-facial-section2-left-column,
-  .ceremonia-facial-section2-right-column {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    transform: none !important;
-    width: 90% !important;
-    max-width: 100% !important;
-    margin: 1.5rem auto !important;
-  }
-
-  .ceremonia-facial-section2-left-column,
-  .ceremonia-facial-section2-right-column {
-    width: 100% !important;
-  }
-}
-
-/* Extra Large Desktop */
-@media (min-width: 1450px) {
-  .section-ceremonia-facial-2 {
-    /* SVG aspect ratio: 1920.21 / 1080 ≈ 1.778 */
-    aspect-ratio: 1920.21 / 1080;
-    min-height: calc(100vw * (1080 / 1920.21));
-    height: auto;
-    overflow-y: hidden;
-    padding: 0;
-  }
-
-  .section-ceremonia-facial-2-bg-container {
-    height: 100%;
-  }
-}
-
-@media (min-width: 1550px) {
-  .section-ceremonia-facial-2 {
-    /* SVG aspect ratio: 1920.21 / 1080 ≈ 1.778 */
-    aspect-ratio: 1920.21 / 1080;
-    min-height: calc(100vw * (1080 / 1920.21));
-    height: auto;
-    overflow-y: hidden;
-    padding: 0;
-  }
-
-  .section-ceremonia-facial-2-bg-container {
-    height: 100%;
-  }
-}
-
-/* Extra Large Desktop */
-@media (min-width: 1450px) {
-  .section-ceremonia-facial-1 {
-    /* SVG aspect ratio: 1920 / 1080 = 1.778 */
-    aspect-ratio: 1920 / 1080;
-    min-height: calc(100vw * (1080 / 1920));
-    height: auto;
-    overflow-y: hidden;
-    padding: 0;
-  }
-
-  .section-ceremonia-facial-1-bg-container {
-    height: 100%;
-  }
-}
-
-@media (min-width: 1550px) {
-  .section-ceremonia-facial-1 {
-    /* SVG aspect ratio: 1920 / 1080 = 1.778 */
-    aspect-ratio: 1920 / 1080;
-    min-height: calc(100vw * (1080 / 1920));
-    height: auto;
-    overflow-y: hidden;
-    padding: 0;
-  }
-
-  .section-ceremonia-facial-1-bg-container {
-    height: 100%;
-  }
-}
-
-/* ===========================
-   PAGE CONTAINER (Legacy - for backward compatibility)
-   =========================== */
+/* Ceremonia Facial Page - DA LUZ CONSCIENTE */
+/* Desktop: Zigzag layout with SVG graphics | Mobile: Stacked layout with adapted graphics */
 
 .ceremonia-facial-page {
   position: relative;
-  width: 100%;
-  min-height: auto;
-  height: auto;
+  min-height: 100vh;
   overflow-x: hidden;
-  overflow-y: hidden;
   background-color: var(--color-bg-cream, #F6FBD6);
 }
 
-/* SVG Background Container - Height determined by content */
-.ceremonia-facial-bg-container {
+.ceremonia-facial-bg {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  right: 0;
+  bottom: 0;
+  min-height: 100%;
   z-index: 0;
-  overflow: hidden;
+  background-image: url('/svg/ceremonias/CeremenoniSectionBg.svg');
+  background-repeat: repeat-y;
+  background-size: 100% auto;
+  background-position: center top;
+  pointer-events: none;
 }
 
-.ceremonia-facial-bg-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center top;
-  display: block;
-}
-
-/* Page Content Container - Height determines section height */
 .ceremonia-facial-content {
   position: relative;
   z-index: 10;
+}
+
+.ceremonia-facial-content > section:first-of-type {
+  padding-top: 0;
+}
+
+/* ===========================
+   HERO - Shared base, desktop has MainTitleBg
+   =========================== */
+
+.ceremonia-facial-hero-title {
+  position: relative;
   width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ceremonia-facial-hero-title-text {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-title, 'VELISTA', serif);
+  font-weight: normal;
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.ceremonia-facial-hero-subtitle {
+  font-family: var(--font-subtitle, 'Playfair Display', serif);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ===========================
+   STEP CONTAINER - Base
+   =========================== */
+
+.ceremonia-facial-step-container {
+  position: relative;
+}
+
+/* ===========================
+   MOBILE FIRST - Stacked layout with adapted graphics
+   =========================== */
+
+/* Hero - mobile (no background, cream text for contrast) */
+.ceremonia-facial-hero-title-bg {
+  display: none;
+}
+
+.ceremonia-facial-hero-title {
   min-height: auto;
-  height: auto;
-  min-height: calc(68rem + 4rem + 2rem);
-  padding-bottom: 2rem;
+  padding: 1rem 0;
 }
 
-/* Main Title */
-.ceremonia-facial-main-title {
-  position: absolute;
-  font-family: var(--font-velista, 'VELISTA', serif);
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: normal;
-  color: var(--color-brand-primary, #AE0000);
-  text-align: center;
-  z-index: 20;
-  top: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 1200px;
-  margin: 0;
-  padding: 0;
-}
-
-/* Secondary Title */
-.ceremonia-facial-secondary-title {
-  position: absolute;
-  font-family: var(--font-malisha, 'Malisha', cursive);
-  font-size: clamp(1.25rem, 3vw, 4rem);
-  font-weight: normal;
+.ceremonia-facial-hero-title-text {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
   color: var(--color-bg-light, #F0EACE);
-  text-align: center;
-  z-index: 20;
-  top: 20%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 1000px;
-  margin: 0;
-  padding: 0;
 }
 
-/* Text Card Container */
-.ceremonia-facial-text-card {
-  position: absolute;
-  z-index: 20;
-  width: 85%;
-  height: 100%;
-  aspect-ratio: auto;
-  margin: 0;
+.ceremonia-facial-hero-subtitle {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: var(--color-bg-light, #F0EACE);
 }
 
-.ceremonia-facial-text-card-bg {
+/* Step cards - mobile: stacked, with SVG backgrounds */
+.ceremonia-facial-step-title,
+.ceremonia-facial-block-title,
+.ceremonia-facial-block-text,
+.ceremonia-facial-extra-block {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+
+.ceremonia-facial-step-title {
+  min-height: 100px;
+  padding: 1rem 1.25rem;
+}
+
+.ceremonia-facial-block-title {
+  min-height: 60px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ceremonia-facial-block-text {
+  min-height: 80px;
+  padding: 1rem 1.25rem;
+}
+
+.ceremonia-facial-extra-block {
+  min-height: 80px;
+  padding: 1rem 1.25rem;
+}
+
+/* SVG backgrounds - mobile (visible, adapted) */
+.ceremonia-facial-step-title-bg,
+.ceremonia-facial-block-title-bg,
+.ceremonia-facial-block-text-bg,
+.ceremonia-facial-extra-block-bg {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  background-image: url('/svg/ceremonias/CardText.svg');
-  background-size: contain;
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
 }
 
-.ceremonia-facial-text-card-content {
+.ceremonia-facial-step-title-bg {
+  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
+}
+
+.ceremonia-facial-block-title-bg {
+  background-image: url('/svg/ceremonias/SectionTitle2.svg');
+}
+
+.ceremonia-facial-block-text-bg,
+.ceremonia-facial-extra-block-bg {
+  background-image: url('/svg/ceremonias/text2Bg.svg');
+}
+
+/* Text content - mobile */
+.ceremonia-facial-step-title-text,
+.ceremonia-facial-block-title-text,
+.ceremonia-facial-block-text-content,
+.ceremonia-facial-extra-block-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ceremonia-facial-step-title-text {
+  padding: 1rem 1.25rem;
+  font-family: var(--font-subtitle);
+  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-bg-light, #F0EACE);
+  line-height: 1.3;
+}
+
+.ceremonia-facial-block-title-text {
+  padding: 0.75rem 1rem;
+  font-family: var(--font-subtitle, 'Playfair Display', serif);
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-brand-primary, #AE0000);
+  line-height: 1.3;
+}
+
+.ceremonia-facial-block-text-content {
+  padding: 1rem 1.25rem;
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-inverse, #FFFFFF);
+}
+
+.ceremonia-facial-extra-block-content {
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-inverse, #FFFFFF);
+}
+
+/* Mobile card wrapper - no background, transparent */
+.ceremonia-facial-mobile-card {
+  background: transparent;
+  padding: 1.25rem 0;
+}
+
+/* Alquimia title - mobile */
+.ceremonia-facial-alquimia-title {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 90px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem;
+}
+
+.ceremonia-facial-alquimia-title-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.ceremonia-facial-alquimia-title-text {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(1.5rem, 3vw, 2.5rem);
+  font-family: var(--font-title);
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  color: var(--color-bg-light, #F0EACE);
+  text-align: center;
   z-index: 1;
 }
 
-.ceremonia-facial-text-card-text {
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.875rem, 1.5vw, 1.125rem);
-  line-height: 1.6;
-  color: var(--color-text-primary, #1C1B1A);
-  text-align: left;
-  margin: 0;
-  max-width: 90%;
-}
+/* ===========================
+   DESKTOP ONLY (min-width: 1024px) - Zigzag, absolute positioning
+   =========================== */
 
-/* Text Card 1 */
-.ceremonia-facial-text-card-1 {
-  top: 0%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Text Card 2 */
-.ceremonia-facial-text-card-2 {
-  top: 40%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* Buttons Container */
-.ceremonia-facial-buttons {
-  position: relative;
-  z-index: 20;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-/* Button Base Styles */
-.ceremonia-facial-button {
-  position: absolute;
-  z-index: 10;
-  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1.5rem, 3vw, 2rem);
-  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
-  font-size: clamp(0.875rem, 1.5vw, 1rem);
-  font-weight: 600;
-  color: var(--color-brand-primary, #AE0000);
-  background-color: var(--color-bg-light, #F0EACE);
-  border: 2px solid var(--color-brand-primary, #AE0000);
-  border-radius: 0px 15px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  white-space: nowrap;
-  top: var(--pos-top, auto);
-  left: var(--pos-left, auto);
-  right: var(--pos-right, auto);
-  bottom: var(--pos-bottom, auto);
-  transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0));
-  width: var(--pos-width, auto);
-  max-width: var(--pos-max-width, 300px);
-  min-width: 150px;
-}
-
-/* Button hover animation - matching landing page btn-enhanced style */
-.ceremonia-facial-button::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent);
-  transition: left 0.5s ease;
-  z-index: -1;
-}
-
-.ceremonia-facial-button:hover::before {
-  left: 100%;
-}
-
-.ceremonia-facial-button:hover {
-  background-color: var(--color-brand-primary, #AE0000);
-  color: var(--color-text-inverse, #FFFFFF);
-  transform: translate(var(--pos-translate-x, 0), calc(var(--pos-translate-y, 0) - 2px));
-  box-shadow:
-    0 10px 25px rgba(174, 0, 0, 0.4),
-    0 5px 10px rgba(0, 0, 0, 0.2);
-}
-
-.ceremonia-facial-button:active {
-  transform: translate(var(--pos-translate-x, 0), var(--pos-translate-y, 0));
-}
-
-/* Mobile/Tablet: Height determined by content */
-@media (max-width: 1279px) {
-  .ceremonia-facial-page {
-    min-height: auto;
-    height: auto;
-    overflow-y: hidden;
+@media (min-width: 1024px) {
+  /* Hero - desktop with MainTitleBg full bleed */
+  .ceremonia-facial-hero-title {
+    min-height: 180px;
   }
-  
-  .ceremonia-facial-bg-container {
-    min-height: 100%;
+
+  .ceremonia-facial-hero-title-bg {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    min-width: 100vw;
     height: 100%;
+    min-height: 180px;
+    background-image: url('/svg/ceremonias/MainTitleBg.svg');
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    z-index: 0;
   }
-  
-  .ceremonia-facial-content {
-    min-height: auto;
-    height: auto;
-  }
-}
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .ceremonia-facial-text-card {
-    width: 90%;
-    max-width: 500px;
+  .ceremonia-facial-hero-title-text {
+    font-size: clamp(2rem, 4vw, 4.5rem);
+    color: var(--color-brand-primary, #AE0000);
   }
-  
-  .ceremonia-facial-text-card-1 {
-    left: 50%;
-    transform: translateX(-50%);
+
+  .ceremonia-facial-hero-subtitle {
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    color: var(--color-bg-light, #F0EACE);
   }
-  
-  .ceremonia-facial-text-card-2 {
-    right: auto;
-    left: 50%;
-    transform: translateX(-50%);
+
+  /* Step container */
+  .ceremonia-facial-step-container {
+    min-height: 850px;
   }
-  
-  .ceremonia-facial-buttons {
-    position: relative;
-    width: 90%;
-    max-width: 400px;
-    margin: 2rem auto;
+
+  .ceremonia-facial-mobile-card {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
   }
-  
-  .ceremonia-facial-button {
-    position: relative;
-    width: 100%;
-    margin-bottom: 1rem;
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
-    transform: none;
-  }
-  
-  .ceremonia-facial-button:last-child {
+
+  /* Zigzag - absolute positioning */
+  .ceremonia-facial-step-title,
+  .ceremonia-facial-block-title,
+  .ceremonia-facial-block-text,
+  .ceremonia-facial-extra-block {
+    position: absolute;
     margin-bottom: 0;
   }
-}
 
-/* Desktop: Height determined by content */
-@media (min-width: 1280px) {
-  .ceremonia-facial-page {
-    min-height: auto;
-    height: auto;
-    overflow-y: hidden;
-  }
-  
-  .ceremonia-facial-bg-container {
-    min-height: 100%;
-    height: 100%;
-  }
-  
-  .ceremonia-facial-content {
-    min-height: auto;
-    height: auto;
-    min-height: calc(68rem + 4rem + 4rem);
-    padding-bottom: 4rem;
+  [data-zigzag="left"] {
+    left: 6%;
+    right: auto;
+    transform: none;
   }
 
-  .ceremonia-facial-main-title {
-    top: 6%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 1200px;
-    margin: 0;
-    padding: 0;
+  [data-zigzag="right"] {
+    left: auto;
+    right: 6%;
+    transform: none;
   }
 
-  .ceremonia-facial-secondary-title {
-    top: 25%;
+  .ceremonia-facial-step-title[data-zigzag="left"] { left: 5%; }
+  .ceremonia-facial-step-title[data-zigzag="right"] { right: 5%; }
+  .ceremonia-facial-block-title[data-zigzag="left"] { left: 10%; }
+  .ceremonia-facial-block-title[data-zigzag="right"] { right: 9%; }
+  .ceremonia-facial-block-text[data-zigzag="left"] { left: 8%; }
+  .ceremonia-facial-block-text[data-zigzag="right"] { right: -7%; }
+  .ceremonia-facial-extra-block[data-zigzag="left"] { left: 7%; }
+  .ceremonia-facial-extra-block[data-zigzag="right"] { right: 8%; }
+
+  /* Desktop dimensions */
+  .ceremonia-facial-step-title {
+    top: -101px;
+    width: 781px;
+    max-width: 100%;
+    min-height: 244px;
+    padding: 1rem 1.5rem;
   }
 
-  .ceremonia-facial-text-card-1 {
-    top: 0%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .ceremonia-facial-text-card-2 {
-    top: 18%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-
-@media (min-width: 1450px) {
-  .ceremonia-facial-page {
-    min-height: auto;
-    height: auto;
-    overflow-y: hidden;
-  }
-  
-  .ceremonia-facial-bg-container {
-    min-height: 100%;
-    height: 100%;
-  }
-  
-  .ceremonia-facial-content {
-    min-height: calc(68rem + 4rem + 4rem);
-    padding-bottom: 4rem;
+  .ceremonia-facial-step-title-text {
+    position: absolute;
+    inset: 0;
+    padding: 1rem 1.5rem;
+    font-size: clamp(1.5rem, 2.2vw, 3.25rem);
+    color: var(--color-bg-light, #F0EACE);
   }
 
-  .ceremonia-facial-main-title {
-    top: 6%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 1200px;
-    margin: 0;
-    padding: 0;
+  .ceremonia-facial-block-title {
+    width: 480px;
+    max-width: 100%;
+    min-height: 70px;
+    padding: 0.75rem 1.25rem;
   }
 
-  .ceremonia-facial-secondary-title {
-    top: 25%;
+  .ceremonia-facial-block-title-text {
+    position: absolute;
+    inset: 0;
+    padding: 0.75rem 1.25rem;
+    font-size: clamp(1rem, 1.35vw, 1.25rem);
+    color: var(--color-brand-primary, #AE0000);
   }
 
-  .ceremonia-facial-text-card-1 {
-    top: 0%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  
-  .ceremonia-facial-text-card-2 {
-    top: 18%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
-}
-
-@media (min-width: 1550px) {
-  .ceremonia-facial-page {
-    min-height: auto;
-    height: auto;
-    overflow-y: hidden;
-  }
-  
-  .ceremonia-facial-bg-container {
-    min-height: 100%;
-    height: 100%;
-  }
-  
-  .ceremonia-facial-content {
-    min-height: calc(68rem + 4rem + 4rem);
-    padding-bottom: 4rem;
+  .ceremonia-facial-block-text {
+    width: 590px;
+    max-width: 100%;
+    min-height: 100px;
+    padding: 1.25rem 1.5rem;
   }
 
-  .ceremonia-facial-main-title {
-    top: 6%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 1200px;
-    margin: 0;
-    padding: 0;
+  .ceremonia-facial-block-text-content {
+    position: relative;
+    min-height: 80px;
+    padding: 1.25rem 1.5rem;
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    color: var(--color-text-inverse, #FFFFFF);
   }
 
-  .ceremonia-facial-secondary-title {
-    top: 25%;
+  .ceremonia-facial-extra-block {
+    width: 890px;
+    max-width: 100%;
+    min-height: 175px;
+    padding: 1.25rem 1.5rem;
   }
 
-  .ceremonia-facial-text-card-1 {
-    top: 0%;
-    left: 50%;
-    transform: translateX(-50%);
+  .ceremonia-facial-extra-block-content {
+    position: relative;
+    min-height: 70px;
+    padding: 1.25rem 1.5rem;
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    color: var(--color-text-inverse, #FFFFFF);
   }
-  
-  .ceremonia-facial-text-card-2 {
-    top: 18%;
-    left: 50%;
-    transform: translateX(-50%);
+
+  /* Desktop top positions */
+  .ceremonia-facial-step-container > .ceremonia-facial-step-title { top: -101px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-block-title:nth-child(2) { top: 95px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-block-text:nth-child(3) { top: 157px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-block-title:nth-child(4) { top: 315px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-block-text:nth-child(5) { top: 379px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-block-title:nth-child(6) { top: 535px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-block-text:nth-child(7) { top: 597px; }
+  .ceremonia-facial-step-container > .ceremonia-facial-extra-block { top: 730px; }
+
+  /* Section container */
+  .ceremonia-facial-content .max-w-4xl {
+    max-width: 65rem;
+  }
+
+  /* Alquimia title - desktop */
+  .ceremonia-facial-alquimia-title {
+    max-width: 600px;
+    min-height: 120px;
+    margin: 0 auto 2rem;
+  }
+
+  .ceremonia-facial-alquimia-title-text {
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+    letter-spacing: 0.05em;
+    color: var(--color-bg-light, #F0EACE);
   }
 }
-
