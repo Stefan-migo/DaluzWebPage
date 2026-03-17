@@ -1,0 +1,241 @@
+/* =============================================
+   LOGIN PAGE STYLES — DA LUZ CONSCIENTE
+   Follows the project's design system using
+   CSS variables from globals.css
+   ============================================= */
+
+/* ── Card Container ── */
+.login-card {
+  border-radius: 0px 15px;
+  background-color: var(--admin-accent-primary);
+  border: none;
+  overflow: hidden;
+  max-height: 99vh;
+}
+
+/* ── Header ── */
+.login-header {
+  background-color: var(--admin-accent-primary);
+  padding-bottom: 0.75rem;
+}
+
+.login-title {
+  font-size: 1.875rem;
+  text-align: center;
+}
+
+.login-description {
+  text-align: center;
+}
+
+/* ── Content Area ── */
+.login-content {
+  background-color: var(--color-bg-light);
+  padding: 1rem 1.5rem;
+}
+
+/* ── Error Alert ── */
+.login-alert {
+  background-color: #fef2f2;
+  border-color: #fecaca;
+}
+
+.login-alert-text {
+  color: #991b1b;
+}
+
+/* ── Form Field Groups ── */
+.login-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.login-field-label {
+  font-weight: 500;
+}
+
+/* ── Input Wrappers & Icons ── */
+.login-input-wrapper {
+  position: relative;
+}
+
+.login-input-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 1rem;
+  width: 1rem;
+  opacity: 0.4;
+}
+
+/* ── Inputs ── */
+.login-input {
+  padding-left: 2.5rem;
+  background-color: var(--admin-bg-tertiary);
+  border-color: var(--admin-text-primary);
+}
+
+.login-input--with-toggle {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+  background-color: var(--admin-bg-tertiary);
+  border-color: var(--admin-text-primary);
+}
+
+.login-input--error {
+  border-color: #ef4444;
+}
+
+/* ── Toggle Password Button ── */
+.login-toggle-password {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  padding: 0.5rem 0.75rem;
+  opacity: 0.6;
+}
+
+.login-toggle-password:hover {
+  background-color: transparent !important;
+  opacity: 1;
+}
+
+/* ── Validation Error Text ── */
+.login-error-text {
+  font-size: 0.875rem;
+  color: #dc2626;
+}
+
+/* ── Forgot Password Link ── */
+.login-forgot-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 0.25rem;
+}
+
+.login-forgot-link {
+  font-size: 0.875rem;
+  text-decoration: underline;
+  transition: color 0.2s;
+  text-align: center;
+}
+
+/* ── Submit Button ── */
+.login-submit-btn {
+  width: 100%;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 0px 15px;
+}
+
+.login-submit-btn:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Divider ── */
+.login-divider {
+  position: relative;
+}
+
+.login-divider-line {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+}
+
+.login-divider-line span {
+  width: 100%;
+  border-top: 1px solid;
+  opacity: 0.2;
+}
+
+.login-divider-text-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+}
+
+.login-divider-text {
+  background-color: var(--color-bg-light);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  opacity: 0.6;
+}
+
+/* ── Google Button ── */
+.login-google-btn {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100%;
+  height: auto !important;
+  padding: 0.75rem 1.5rem !important;
+  font-size: 1rem;
+  gap: 0.5rem !important;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  border-radius: 0px 15px;
+  background-color: var(--admin-bg-secondary) !important;
+  border: 1px solid var(--admin-bg-secondary) !important;
+  color: var(--color-text-inverse) !important;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 600;
+}
+
+.login-google-btn:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Override shadcn Button's forced [&_svg]:size-4 */
+.login-google-btn svg {
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  flex-shrink: 0;
+}
+
+/* Responsive: pantallas pequeñas */
+@media (max-width: 480px) {
+  .login-google-btn {
+    font-size: 0.875rem;
+    padding: 0.625rem 1rem !important;
+    gap: 0.375rem !important;
+  }
+
+  .login-google-btn svg {
+    width: 1rem !important;
+    height: 1rem !important;
+  }
+
+  .login-google-btn span {
+    font-size: 0.875rem;
+    text-align: center !important;
+    justify-content: center !important;
+  }
+
+
+}
+
+/* ── Signup Link ── */
+.login-signup-text {
+  text-align: center;
+  font-size: 0.875rem;
+  opacity: 0.7;
+}
+
+.login-signup-link {
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.2s;
+}

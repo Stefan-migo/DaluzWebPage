@@ -11,7 +11,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
       <div className="flex min-h-screen items-center justify-center p-4 md:p-8">
         <div className="w-full max-w-md">
           {/* DA LUZ Brand Header */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-4">
             <Link href="/" className="inline-block">
               <h1 className="text-4xl font-display font-bold text-brand-primary mb-2 transition-colors hover:text-brand-secondary">
                 DA LUZ CONSCIENTE

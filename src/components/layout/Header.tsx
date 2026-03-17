@@ -30,13 +30,13 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Badge } from "@/components/ui/badge";
 import CartSidebar from "@/components/commerce/CartSidebar";
 import { getAllPosts } from "@/lib/sanity/client";
-import { 
-  Menu, 
-  User, 
-  LogOut, 
-  Settings, 
-  ShoppingBag, 
-  Heart, 
+import {
+  Menu,
+  User,
+  LogOut,
+  Settings,
+  ShoppingBag,
+  Heart,
   Package,
   BookOpen
 } from "lucide-react";
@@ -113,7 +113,7 @@ export default function Header() {
 
   const headerBg = isRaicesPage(pathname ?? '') ? RAICES_BG
     : isProcesosPage(pathname ?? '') ? PROCESOS_BG
-    : '#AE0000';
+      : '#AE0000';
 
   // Fetch latest blog posts
   useEffect(() => {
@@ -135,10 +135,10 @@ export default function Header() {
     };
 
     fetchLatestPosts();
-    
+
     // Set up interval to refresh posts every 60 seconds
     const interval = setInterval(fetchLatestPosts, 60000);
-    
+
     return () => clearInterval(interval);
   }, []);
 
@@ -156,22 +156,22 @@ export default function Header() {
             <Link href="/" className="flex items-center space-x-3">
               {/* SVG Logo - Hidden on mobile/tablet */}
               <div className="flex-shrink-0 hidden xl:block">
-                <Image 
-                  src="/svg/logo.svg" 
-                  alt="DA LUZ Logo" 
-                  width={40} 
+                <Image
+                  src="/svg/logo.svg"
+                  alt="DA LUZ Logo"
+                  width={40}
                   height={40}
                   className="transition-transform duration-300 hover:scale-105"
-                  style={{  }}
+                  style={{}}
                 />
               </div>
-              
+
               {/* Text Logo - Vertical Layout - Centered */}
               <div className="flex flex-col justify-center items-center">
-                <div className="text-xl font-display font-normal transition-colors duration-300 leading-tight text-center" style={{ color: '#FFF4B3' }}>
+                <div className="text-2xl font-display font-normal transition-colors duration-300 leading-tight text-center" style={{ color: '#FFF4B3' }}>
                   DA LUZ
                 </div>
-                <div className="text-xs font-caption leading-tight mt-0.5 text-center" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+                <div className="text-sm font-caption leading-tight mt-0.5 text-center" style={{ color: '#FFF4B3', opacity: 0.8 }}>
                   Alkimya Consciente
                 </div>
               </div>
@@ -181,7 +181,7 @@ export default function Header() {
             <NavigationMenu className="hidden xl:flex">
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
                     Tienda
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -223,7 +223,7 @@ export default function Header() {
                       </ListItem>
                     </ul>
                     <ul className="grid grid-cols-2 gap-3 p-4 pt-0 md:w-[500px] lg:w-[600px]">
-                       <ListItem href="/categorias/linea-jade-ritual" title="LINEA JADE RITUAL">
+                      <ListItem href="/categorias/linea-jade-ritual" title="LINEA JADE RITUAL">
                         Tinturas Madre para desequilibrios organicos, Flores de Bach
                       </ListItem>
                       <ListItem href="/categorias/linea-utopica" title="LINEA UTOPICA">
@@ -235,7 +235,7 @@ export default function Header() {
 
                 {/* ALKIMYA DROPDOWN MENU */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
                     Alkimya
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -285,7 +285,7 @@ export default function Header() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
                     Raices Da Luz
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -347,115 +347,115 @@ export default function Header() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
                     Procesos
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
-                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                       <li className="row-span-3 min-h-[220px] flex">
-                          <NavigationMenuLink asChild>
-                            <Link
-                              className="flex h-full min-h-full w-full select-none flex-col items-center justify-center no-underline outline-none shadow-md hover:shadow-lg transition-all relative overflow-hidden"
-                              style={{ borderRadius: '0px 15px', backgroundColor: '#fff4e0', backgroundImage: 'url(/svg/header/bg%20procesos%20holisticos.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: 220 }}
-                              href="/servicios/procesos"
-                            >
-                              <div className="relative z-10 flex flex-col items-center justify-center text-center p-6 w-full h-full">
-                                <Image
-                                  src="/svg/header/Procesos%20holisticos.svg"
-                                  alt="Procesos Holísticos"
-                                  width={64}
-                                  height={64}
-                                  className="mb-3"
-                                  unoptimized
-                                />
-                                <div className="mb-2 text-xl font-title font-semibold uppercase" style={{ color: '#1C1B1A' }}>
-                                  PROCESOS
-                                </div>
-                                <p className="text-base font-text font-medium leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                                  Terapias para el bienestar integral.
-                                </p>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                      <li className="row-span-3 min-h-[220px] flex">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            className="flex h-full min-h-full w-full select-none flex-col items-center justify-center no-underline outline-none shadow-md hover:shadow-lg transition-all relative overflow-hidden"
+                            style={{ borderRadius: '0px 15px', backgroundColor: '#fff4e0', backgroundImage: 'url(/svg/header/bg%20procesos%20holisticos.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: 220 }}
+                            href="/servicios/procesos"
+                          >
+                            <div className="relative z-10 flex flex-col items-center justify-center text-center p-6 w-full h-full">
+                              <Image
+                                src="/svg/header/Procesos%20holisticos.svg"
+                                alt="Procesos Holísticos"
+                                width={64}
+                                height={64}
+                                className="mb-3"
+                                unoptimized
+                              />
+                              <div className="mb-2 text-xl font-title font-semibold uppercase" style={{ color: '#1C1B1A' }}>
+                                PROCESOS
                               </div>
-                            </Link>
-                          </NavigationMenuLink>
-                       </li>
-                       <ListItem href="/servicios/procesos/ciclos-alquimicos" title="Ciclos Alquímicos">
-                           Procesos transformadores cíclicos
-                       </ListItem>
-                       <ListItem href="/servicios/procesos/sesiones-integrales" title="Sesiones Integrales">
-                           Sesiones holísticas personalizadas
-                       </ListItem>
-                      </ul>
+                              <p className="text-base font-text font-medium leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                Terapias para el bienestar integral.
+                              </p>
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+                      <ListItem href="/servicios/procesos/ciclos-alquimicos" title="Ciclos Alquímicos">
+                        Procesos transformadores cíclicos
+                      </ListItem>
+                      <ListItem href="/servicios/procesos/sesiones-integrales" title="Sesiones Integrales">
+                        Sesiones holísticas personalizadas
+                      </ListItem>
+                    </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
                     Blog
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
-                     <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                        <li className="row-span-3 min-h-[220px] flex">
-                          <NavigationMenuLink asChild>
-                            <Link
-                              href="/blog"
-                              className="flex h-full min-h-full w-full select-none flex-col items-center justify-center no-underline outline-none shadow-md hover:shadow-lg transition-all relative overflow-hidden"
-                              style={{ borderRadius: '0px 15px', backgroundColor: '#fff4e0', backgroundImage: 'url(/svg/header/bgBlog.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: 220 }}
-                            >
-                              <div className="relative z-10 flex flex-col items-center justify-center text-center p-6 w-full h-full">
-                                <Image
-                                  src="/svg/header/Blog.svg"
-                                  alt="Blog"
-                                  width={64}
-                                  height={64}
-                                  className="mb-3"
-                                  unoptimized
-                                />
-                                <div className="mb-2 text-xl font-title font-semibold uppercase" style={{ color: '#1C1B1A' }}>
-                                  BLOG
-                                </div>
-                                <p className="text-base font-text font-medium leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
-                                  Lee nuestras últimas publicaciones.
-                                </p>
+                    <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                      <li className="row-span-3 min-h-[220px] flex">
+                        <NavigationMenuLink asChild>
+                          <Link
+                            href="/blog"
+                            className="flex h-full min-h-full w-full select-none flex-col items-center justify-center no-underline outline-none shadow-md hover:shadow-lg transition-all relative overflow-hidden"
+                            style={{ borderRadius: '0px 15px', backgroundColor: '#fff4e0', backgroundImage: 'url(/svg/header/bgBlog.webp)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', minHeight: 220 }}
+                          >
+                            <div className="relative z-10 flex flex-col items-center justify-center text-center p-6 w-full h-full">
+                              <Image
+                                src="/svg/header/Blog.svg"
+                                alt="Blog"
+                                width={64}
+                                height={64}
+                                className="mb-3"
+                                unoptimized
+                              />
+                              <div className="mb-2 text-xl font-title font-semibold uppercase" style={{ color: '#1C1B1A' }}>
+                                BLOG
                               </div>
-                            </Link>
-                          </NavigationMenuLink>
-                        </li>
-                        
-                        {/* Latest Blog Posts */}
-                        {latestPosts.map((post, index) => (
-                          <BlogListItem 
-                            key={post._id}
-                            href={`/blog/${post.slug.current}`} 
-                            title={post.title}
-                            subtitle={post.excerpt || `Artículo publicado el ${new Date(post.publishedAt).toLocaleDateString('es-ES', { 
-                              year: 'numeric', 
-                              month: 'long', 
-                              day: 'numeric' 
-                            })}`}
+                              <p className="text-base font-text font-medium leading-tight" style={{ color: '#1C1B1A', opacity: 0.7 }}>
+                                Lee nuestras últimas publicaciones.
+                              </p>
+                            </div>
+                          </Link>
+                        </NavigationMenuLink>
+                      </li>
+
+                      {/* Latest Blog Posts */}
+                      {latestPosts.map((post, index) => (
+                        <BlogListItem
+                          key={post._id}
+                          href={`/blog/${post.slug.current}`}
+                          title={post.title}
+                          subtitle={post.excerpt || `Artículo publicado el ${new Date(post.publishedAt).toLocaleDateString('es-ES', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}`}
+                        />
+                      ))}
+
+                      {/* If no posts available, show placeholder */}
+                      {latestPosts.length === 0 && (
+                        <>
+                          <BlogListItem
+                            href="/blog"
+                            title="Últimas Publicaciones"
+                            subtitle="Explora nuestros artículos más recientes sobre alkimyas y bienestar consciente."
                           />
-                        ))}
-                        
-                        {/* If no posts available, show placeholder */}
-                        {latestPosts.length === 0 && (
-                          <>
-                            <BlogListItem 
-                              href="/blog" 
-                              title="Últimas Publicaciones"
-                              subtitle="Explora nuestros artículos más recientes sobre alkimyas y bienestar consciente."
-                            />
-                            <BlogListItem 
-                              href="/blog" 
-                              title="Contenido Actualizado"
-                              subtitle="Mantente al día con las novedades y conocimientos de DA LUZ CONSCIENTE."
-                            />
-                          </>
-                        )}
-                      </ul>
+                          <BlogListItem
+                            href="/blog"
+                            title="Contenido Actualizado"
+                            subtitle="Mantente al día con las novedades y conocimientos de DA LUZ CONSCIENTE."
+                          />
+                        </>
+                      )}
+                    </ul>
                   </NavigationMenuContent>
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
                     Membresía
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -511,17 +511,17 @@ export default function Header() {
             {/* User Menu / Auth Buttons - DESKTOP ONLY */}
             <div className="hidden xl:flex items-center space-x-4">
               {/* Shopping Cart - Available for all users */}
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="relative hover:bg-white/10"
                 style={{ color: '#FFF4B3' }}
                 onClick={toggleCart}
               >
                 <ShoppingBag className="h-5 w-5" />
                 {itemCount > 0 && (
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white text-brand-primary text-xs font-bold"
                   >
                     {itemCount}
@@ -589,10 +589,10 @@ export default function Header() {
                 </>
               ) : (
                 <div className="flex items-center space-x-2">
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="relative hover:bg-white/10 font-text"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative hover:bg-white/10 font-text text-base"
                     style={{ color: '#FFF4B3' }}
                     type="button"
                     onClick={() => {
@@ -603,10 +603,10 @@ export default function Header() {
                   >
                     Iniciar Sesión
                   </Button>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="relative hover:bg-white/10 font-text"
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative hover:bg-white/10 font-text text-base"
                     style={{ color: '#FFF4B3' }}
                     type="button"
                     onClick={() => {
@@ -624,17 +624,17 @@ export default function Header() {
             {/* MOBILE/TABLET MENU - Enhanced with Cart and User Auth at bottom */}
             <div className="flex xl:hidden items-center space-x-3">
               {/* Mobile Shopping Cart */}
-              <Button 
-                variant="ghost" 
-                size="sm" 
+              <Button
+                variant="ghost"
+                size="sm"
                 className="relative hover:bg-white/10"
                 style={{ color: '#FFF4B3' }}
                 onClick={toggleCart}
               >
                 <ShoppingBag className="h-5 w-5" />
                 {itemCount > 0 && (
-                  <Badge 
-                    variant="secondary" 
+                  <Badge
+                    variant="secondary"
                     className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center bg-white text-brand-primary text-xs font-bold"
                   >
                     {itemCount}
@@ -653,17 +653,17 @@ export default function Header() {
                   <SheetHeader className="border-b border-brand-primary/20 pb-4">
                     <SheetTitle className="font-title text-left" style={{ color: '#1C1B1A' }}>Menú de Navegación</SheetTitle>
                   </SheetHeader>
-                  
+
                   {/* Main Navigation - Scrollable */}
                   <div className="flex-1 overflow-y-auto">
                     <nav className="flex flex-col space-y-1 mt-6">
-                      
+
                       {/* Tienda Section */}
                       <div className="mb-4">
                         <div className="text-lg font-title font-medium mb-3" style={{ color: '#AE0000' }}>Tienda</div>
                         <div className="ml-4 space-y-2">
-                    <Link
-                      href="/productos"
+                          <Link
+                            href="/productos"
                             className="block py-2 text-base font-text hover:text-brand-primary transition-colors"
                             style={{ color: '#1C1B1A' }}
                             onClick={() => setMobileMenuOpen(false)}
@@ -698,11 +698,11 @@ export default function Header() {
                             href="/categorias/linea-jade-ritual"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
                             Línea Jade Ritual
-                    </Link>
-                    <Link
+                          </Link>
+                          <Link
                             href="/categorias/linea-utopica"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: '#1C1B1A' }}
@@ -896,28 +896,28 @@ export default function Header() {
                             <User className="h-4 w-4" style={{ color: '#AE0000' }} />
                             <span className="font-text" style={{ color: '#1C1B1A' }}>Mi Perfil</span>
                           </Link>
-                        <Link
-                          href="/mis-pedidos"
+                          <Link
+                            href="/mis-pedidos"
                             className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
                             <Package className="h-4 w-4" style={{ color: '#AE0000' }} />
                             <span className="font-text" style={{ color: '#1C1B1A' }}>Mis Pedidos</span>
-                        </Link>
-                        <Link
+                          </Link>
+                          <Link
                             href="/configuracion"
                             className="flex items-center space-x-3 py-2 px-3 rounded-lg hover:bg-white/30 transition-colors"
-                          onClick={() => setMobileMenuOpen(false)}
-                        >
+                            onClick={() => setMobileMenuOpen(false)}
+                          >
                             <Settings className="h-4 w-4" style={{ color: '#AE0000' }} />
                             <span className="font-text" style={{ color: '#1C1B1A' }}>Configuración</span>
-                        </Link>
-                        <Button
-                          variant="ghost"
-                          onClick={() => {
-                            handleSignOut();
-                            setMobileMenuOpen(false);
-                          }}
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              handleSignOut();
+                              setMobileMenuOpen(false);
+                            }}
                             className="w-full justify-start px-3 py-2 hover:bg-white/30 transition-colors"
                           >
                             <LogOut className="h-4 w-4 mr-3" style={{ color: '#AE0000' }} />
@@ -950,7 +950,7 @@ export default function Header() {
                             className="w-full border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white font-text"
                           >
                             Crear Cuenta
-                        </Button>
+                          </Button>
                         </div>
                       </div>
                     )}

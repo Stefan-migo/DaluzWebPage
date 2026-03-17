@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Eye, EyeOff, Mail, Lock } from "lucide-react";
+import './login.css';
 
 const loginSchema = z.object({
   email: z.string().email("Ingresa un email válido"),
@@ -66,62 +67,65 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="w-full shadow-alkimya border-0 overflow-hidden" style={{ borderRadius: '0px 15px', backgroundColor: 'var(--admin-accent-primary)' }}>
-      <CardHeader className="space-y-2 pb-6" style={{ backgroundColor: 'var(--admin-accent-primary)' }}>
-        <CardTitle className="text-3xl font-title text-center text-brand-primary">
+    <Card className="login-card w-full shadow-alkimya">
+      <CardHeader className="login-header space-y-2">
+        <CardTitle className="login-title font-title text-brand-primary">
           Iniciar Sesión
         </CardTitle>
-        <CardDescription className="text-center text-text-primary/70 font-text">
+        <CardDescription className="login-description text-text-primary/70 font-text">
           Accede a tu cuenta de DA LUZ CONSCIENTE
         </CardDescription>
       </CardHeader>
-      <CardContent className="bg-bg-light p-6 space-y-5">
+
+      <CardContent className="login-content space-y-5">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           {error && (
-            <Alert variant="destructive" className="bg-red-50 border-red-200">
-              <AlertDescription className="text-red-800">{error.message}</AlertDescription>
+            <Alert variant="destructive" className="login-alert">
+              <AlertDescription className="login-alert-text">
+                {error.message}
+              </AlertDescription>
             </Alert>
           )}
 
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-text-primary font-text font-medium">
+          {/* Email Field */}
+          <div className="login-field-group">
+            <Label htmlFor="email" className="login-field-label text-text-primary font-text">
               Email
             </Label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-primary/40" />
+            <div className="login-input-wrapper">
+              <Mail className="login-input-icon text-text-primary" />
               <Input
                 id="email"
                 type="email"
                 placeholder="tu@email.com"
                 {...register("email")}
-                className={`pl-10 border-text-primary/20 focus:border-brand-primary focus:ring-brand-primary ${errors.email ? "border-red-500" : ""}`}
-                style={{ backgroundColor: 'var(--admin-bg-tertiary)', borderColor: 'var(--admin-text-primary)' }}
+                className={`login-input ${errors.email ? "login-input--error" : ""}`}
               />
             </div>
             {errors.email && (
-              <p className="text-sm text-red-600 font-text">{errors.email.message}</p>
+              <p className="login-error-text font-text">{errors.email.message}</p>
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password" className="text-text-primary font-text font-medium">
+          {/* Password Field */}
+          <div className="login-field-group">
+            <Label htmlFor="password" className="login-field-label text-text-primary font-text">
               Contraseña
             </Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-text-primary/40" />
+            <div className="login-input-wrapper">
+              <Lock className="login-input-icon text-text-primary" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
                 placeholder="Tu contraseña"
                 {...register("password")}
-                className={`pl-10 pr-10 border-text-primary/20 focus:border-brand-primary focus:ring-brand-primary ${errors.password ? "border-red-500" : ""}`}
-                style={{ backgroundColor: 'var(--admin-bg-tertiary)', borderColor: 'var(--admin-text-primary)' }}
+                className={`login-input--with-toggle ${errors.password ? "login-input--error" : ""}`}
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="sm"
-                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-text-primary/60 hover:text-text-primary"
+                className="login-toggle-password text-text-primary"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? (
@@ -132,24 +136,25 @@ export default function LoginPage() {
               </Button>
             </div>
             {errors.password && (
-              <p className="text-sm text-red-600 font-text">{errors.password.message}</p>
+              <p className="login-error-text font-text">{errors.password.message}</p>
             )}
           </div>
 
-          <div className="flex items-center justify-end">
+          {/* Forgot Password */}
+          <div className="login-forgot-row">
             <Link
               href="/reset-password"
-              className="text-sm text-brand-primary hover:text-brand-secondary font-text underline transition-colors"
+              className="login-forgot-link text-brand-primary hover:text-brand-secondary font-text"
             >
               ¿Olvidaste tu contraseña?
             </Link>
           </div>
 
-          <Button 
-            type="submit" 
-            className="w-full bg-brand-primary hover:bg-brand-secondary text-white font-text font-semibold py-6 text-base transition-all duration-300 shadow-md hover:shadow-lg"
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            className="login-submit-btn bg-brand-primary hover:bg-brand-secondary text-white font-text"
             disabled={loading}
-            style={{ borderRadius: '0px 15px' }}
           >
             {loading ? (
               <>
@@ -162,37 +167,31 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-text-primary/20" />
+        {/* Divider */}
+        <div className="login-divider">
+          <div className="login-divider-line">
+            <span className="border-text-primary" />
           </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-bg-light px-2 text-text-primary/60 font-text">O</span>
+          <div className="login-divider-text-wrapper">
+            <span className="login-divider-text font-text">O</span>
           </div>
         </div>
 
+        {/* Google Button */}
         <Button
           type="button"
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
-          className="w-full py-6 text-base transition-all duration-300 shadow-md hover:shadow-lg"
-          style={{ 
-            borderRadius: '0px 15px',
-            backgroundColor: 'var(--admin-bg-secondary)',
-            border: '1px solid var(--admin-bg-secondary)',
-            color: 'var(--color-text-inverse)',
-            fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, sans-serif',
-            fontWeight: 600
-          }}
+          className="login-google-btn"
         >
           {googleLoading ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Conectando con Google...
+              <span>Conectando con Google...</span>
             </>
           ) : (
             <>
-              <svg className="mr-2 h-5 w-5" viewBox="0 0 24 24">
+              <svg viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -210,17 +209,18 @@ export default function LoginPage() {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Continuar con Google
+              <span>Continuar con Google</span>
             </>
           )}
         </Button>
 
-        <div className="text-center">
-          <p className="text-sm text-text-primary/70 font-text">
+        {/* Signup Link */}
+        <div className="login-signup-text">
+          <p className="text-text-primary font-text">
             ¿No tienes cuenta?{" "}
             <Link
               href="/signup"
-              className="text-brand-primary hover:text-brand-secondary font-semibold underline transition-colors"
+              className="login-signup-link text-brand-primary hover:text-brand-secondary"
             >
               Regístrate aquí
             </Link>
@@ -229,4 +229,4 @@ export default function LoginPage() {
       </CardContent>
     </Card>
   );
-} 
+}
