@@ -1,0 +1,604 @@
+/* Ceremonia Facial Page - DA LUZ CONSCIENTE */
+/* Desktop: Zigzag layout with SVG graphics | Mobile: Stacked layout with adapted graphics */
+
+.ceremonia-corporal-page {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-color: #7A160E;
+  /* Color base oscuro */
+}
+
+/* Modern Animated Mesh Gradient Background */
+.ceremonia-corporal-bg {
+  position: fixed;
+  top: -5%;
+  left: -10%;
+  width: 120vw;
+  height: 120vh;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 30%, #791010 0%, transparent 60%),
+    radial-gradient(circle at 70% 20%, rgba(255, 78, 33, 0.6) 0%, transparent 50%),
+    /* #FF4E21 */
+    radial-gradient(circle at 30% 80%, #7A160E 0%, transparent 60%);
+  filter: blur(30px);
+  animation: mesh-flow 20s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-flow {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(5deg) scale(1.1);
+  }
+}
+
+.ceremonia-corporal-content {
+  position: relative;
+  z-index: 10;
+}
+
+.ceremonia-corporal-content>section:first-of-type {
+  padding-top: 0;
+}
+
+/* ===========================
+   HERO - Shared base, desktop has MainTitleBg
+   =========================== */
+
+.ceremonia-corporal-hero-title {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-velista);
+}
+
+.ceremonia-corporal-hero-title-text {
+  position: relative;
+  z-index: 1;
+  font-family: var(--font-title, 'VELISTA', serif);
+  font-weight: normal;
+  text-align: flex-start;
+  padding: 0 1rem;
+}
+
+.ceremonia-corporal-hero-subtitle {
+  font-family: var(--font-subtitle, 'Playfair Display', serif);
+  font-style: italic;
+  text-align: center;
+}
+
+/* ===========================
+   STEP CONTAINER - Base
+   =========================== */
+
+.ceremonia-corporal-step-container {
+  position: relative;
+}
+
+/* ===========================
+   MOBILE FIRST - Stacked layout with adapted graphics
+   =========================== */
+
+/* Hero - mobile (no background, cream text for contrast) */
+.ceremonia-corporal-hero-title-bg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100%;
+  background-image: url('/svg/ceremonias/ceremoniaHeroBg.svg');
+  background-size: 100% 100%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.ceremonia-corporal-hero-title {
+  min-height: 140px;
+  padding: 1.5rem 0;
+}
+
+.ceremonia-corporal-hero-title-text {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  color: var(--color-brand-primary, #AE0000);
+}
+
+.ceremonia-corporal-hero-subtitle {
+  font-size: clamp(1rem, 4vw, 1.5rem);
+  color: var(--color-bg-light, #F0EACE);
+}
+
+/* Step cards - mobile: stacked, with SVG backgrounds */
+.ceremonia-corporal-step-title,
+.ceremonia-corporal-block-title,
+.ceremonia-corporal-block-text,
+.ceremonia-corporal-extra-block {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+.ceremonia-corporal-step-title {
+  min-height: 100px;
+  padding: 1rem 1.25rem;
+}
+
+.ceremonia-corporal-block-title {
+  min-height: 60px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.ceremonia-corporal-block-text {
+  min-height: 80px;
+  padding: 1rem 1.25rem;
+}
+
+.ceremonia-corporal-extra-block {
+  min-height: 80px;
+  padding: 1rem 1.25rem;
+}
+
+/* SVG backgrounds - mobile (visible, adapted) */
+.ceremonia-corporal-step-title-bg,
+.ceremonia-corporal-block-title-bg,
+.ceremonia-corporal-block-text-bg,
+.ceremonia-corporal-extra-block-bg {
+  position: absolute;
+  inset: 0;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.ceremonia-corporal-step-title-bg {
+  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
+}
+
+.ceremonia-corporal-block-title-bg {
+  background-image: url('/svg/ceremonias/SectionTitle2.svg');
+}
+
+.ceremonia-corporal-block-text-bg,
+.ceremonia-corporal-extra-block-bg {
+  background-image: url('/svg/ceremonias/text2Bg.svg');
+}
+
+/* Text content - mobile */
+.ceremonia-corporal-step-title-text,
+.ceremonia-corporal-block-title-text,
+.ceremonia-corporal-block-text-content,
+.ceremonia-corporal-extra-block-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.ceremonia-corporal-step-title-text {
+  padding: 1rem 1.25rem;
+  font-family: var(--font-subtitle);
+  font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-bg-light, #F0EACE);
+  line-height: 1.3;
+}
+
+.ceremonia-corporal-block-title-text {
+  padding: 0.75rem 1rem;
+  font-family: var(--font-subtitle, 'Playfair Display', serif);
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-brand-primary, #AE0000);
+  line-height: 1.3;
+}
+
+.ceremonia-corporal-block-text-content {
+  padding: 1rem 1.25rem;
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-inverse, #FFFFFF);
+}
+
+.ceremonia-corporal-extra-block-content {
+  flex-direction: column;
+  padding: 1rem 1.25rem;
+  font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
+  font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--color-text-inverse, #FFFFFF);
+}
+
+/* Mobile card wrapper - no background, transparent */
+.ceremonia-corporal-mobile-card {
+  background: transparent;
+  padding: 1.25rem 0;
+}
+
+/* Photo Blocks - Mobile */
+.ceremonia-corporal-photo-block {
+  position: relative;
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.ceremonia-corporal-foto-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px dashed var(--color-brand-primary, #AE0000);
+  padding: 8px;
+}
+
+.ceremonia-corporal-foto-circle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ceremonia-corporal-foto-leaf {
+  width: 240px;
+  height: 240px;
+  border-radius: 50px 10px 50px 10px;
+  background-color: var(--color-bg-light, #F0EACE);
+  padding: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ceremonia-corporal-foto-leaf img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px 10px 50px 10px;
+  object-fit: cover;
+}
+
+.ceremonia-wavy-decoration {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: -1;
+  color: var(--color-bg-light, #F0EACE);
+  pointer-events: none;
+}
+
+.ceremonia-wavy-decoration svg {
+  animation: ceremonio-wavy-float 4s ease-in-out infinite alternate;
+  overflow: visible;
+}
+
+@keyframes ceremonio-wavy-float {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Alquimia title - mobile */
+.ceremonia-corporal-alquimia-title {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-height: 90px;
+  margin: 0 auto 1.5rem;
+  padding: 1rem;
+}
+
+.ceremonia-corporal-alquimia-title-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.ceremonia-corporal-alquimia-title-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-title);
+  font-size: clamp(1.25rem, 5vw, 1.75rem);
+  font-weight: normal;
+  letter-spacing: 0.03em;
+  color: var(--color-bg-light, #F0EACE);
+  text-align: center;
+  z-index: 1;
+}
+
+/* ===========================
+   DESKTOP ONLY (min-width: 1024px) - Zigzag, absolute positioning
+   =========================== */
+
+@media (min-width: 1024px) {
+
+  /* Hero - desktop with ceremonyHeroBg full bleed */
+  .ceremonia-corporal-hero-title {
+    min-height: 200px;
+  }
+
+  .ceremonia-corporal-hero-title-bg {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    min-width: 100vw;
+    height: 100%;
+    min-height: 200px;
+    background-image: url('/svg/ceremonias/ceremoniaHeroBg.svg');
+    background-size: 100% 100%;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    z-index: 0;
+  }
+
+  .ceremonia-corporal-hero-title-text {
+    font-size: clamp(2rem, 4vw, 4.5rem);
+    color: var(--color-brand-primary, #AE0000);
+  }
+
+  .ceremonia-corporal-hero-subtitle {
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    color: var(--color-bg-light, #F0EACE);
+  }
+
+  /* Step container */
+  .ceremonia-corporal-step-container {
+    min-height: 680px;
+  }
+
+  .ceremonia-corporal-mobile-card {
+    background: transparent;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  /* Zigzag - absolute positioning */
+  .ceremonia-corporal-step-title,
+  .ceremonia-corporal-block-title,
+  .ceremonia-corporal-block-text,
+  .ceremonia-corporal-extra-block {
+    position: absolute;
+    margin-bottom: 0;
+  }
+
+  [data-zigzag="left"] {
+    left: 6%;
+    right: auto;
+    transform: none;
+  }
+
+  [data-zigzag="right"] {
+    left: auto;
+    right: 6%;
+    transform: none;
+  }
+
+  .ceremonia-corporal-step-title[data-zigzag="left"] {
+    left: 5%;
+  }
+
+  .ceremonia-corporal-step-title[data-zigzag="right"] {
+    right: 5%;
+  }
+
+  .ceremonia-corporal-block-title[data-zigzag="left"] {
+    left: 7%;
+  }
+
+  .ceremonia-corporal-block-text[data-zigzag="left"],
+  .ceremonia-corporal-extra-block[data-zigzag="left"] {
+    left: 8%;
+    right: auto;
+  }
+
+  .ceremonia-corporal-block-title[data-zigzag="right"],
+  .ceremonia-corporal-block-text[data-zigzag="right"],
+  .ceremonia-corporal-extra-block[data-zigzag="right"] {
+    /* Usamos 'left' en lugar de 'right' para que sus comienzos (izquierdos) estÃ©n perfectamente alineados. 
+       Se usa un calc() para asegurar que entren en pantallas pequeÃ±as sin sobrepasar el ancho. */
+    left: calc(100% - 620px);
+    right: auto;
+  }
+
+  /* Desktop dimensions */
+  .ceremonia-corporal-step-title {
+    top: -101px;
+    width: 781px;
+    max-width: 100%;
+    min-height: 244px;
+    padding: 1rem 1.5rem;
+  }
+
+  .ceremonia-corporal-step-title-text {
+    position: absolute;
+    inset: 0;
+    padding: 1rem 1.5rem;
+    font-size: clamp(1.5rem, 2.2vw, 3.25rem);
+    color: var(--color-bg-light, #F0EACE);
+  }
+
+  .ceremonia-corporal-block-title {
+    width: 480px;
+    max-width: 100%;
+    min-height: 70px;
+    padding: 0.75rem 1.25rem;
+  }
+
+  .ceremonia-corporal-block-title-text {
+    position: absolute;
+    inset: 0;
+    padding: 0.75rem 1.25rem;
+    font-size: clamp(1rem, 1.35vw, 1.25rem);
+    color: var(--color-brand-primary, #AE0000);
+  }
+
+  .ceremonia-corporal-block-text {
+    width: 480px;
+    max-width: 100%;
+    min-height: 100px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .ceremonia-corporal-block-text-content {
+    position: relative;
+    min-height: 80px;
+    padding: 1.25rem 1.5rem;
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    color: var(--color-text-inverse, #FFFFFF);
+  }
+
+  .ceremonia-corporal-extra-block {
+    width: 480px;
+    max-width: 100%;
+    min-height: 175px;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .ceremonia-corporal-extra-block-content {
+    position: relative;
+    min-height: 70px;
+    padding: 1.25rem 1.5rem;
+    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    color: var(--color-text-inverse, #FFFFFF);
+  }
+
+  /* Desktop top positions */
+  .ceremonia-corporal-step-container>.ceremonia-corporal-step-title {
+    top: -101px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-title:nth-child(2) {
+    top: 95px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-text:nth-child(3) {
+    top: 157px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-title:nth-child(4) {
+    top: 315px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-text:nth-child(5) {
+    top: 379px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-title:nth-child(6) {
+    top: 535px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-text:nth-child(7) {
+    top: 597px;
+  }
+
+  .ceremonia-corporal-step-container>.ceremonia-corporal-extra-block {
+    top: 730px;
+  }
+
+  /* Desktop photo blocks */
+  .ceremonia-corporal-photo-block {
+    position: absolute;
+    margin: 0;
+    top: 170px;
+    z-index: 1;
+    /* Put photos behind text */
+  }
+
+  .ceremonia-corporal-step-title,
+  .ceremonia-corporal-block-title,
+  .ceremonia-corporal-block-text,
+  .ceremonia-corporal-extra-block {
+    z-index: 10;
+    /* Ensure text sits on top of overlapping photos */
+  }
+
+  /* Right-side photo blocks (when title is left, photo is right) */
+  .ceremonia-corporal-photo-block[data-zigzag="right"] {
+    left: auto;
+    right: -18%;
+  }
+
+  /* Left-side photo blocks (when title is right, photo is left) */
+  .ceremonia-corporal-photo-block[data-zigzag="left"] {
+    left: -18%;
+    right: auto;
+  }
+
+  .ceremonia-corporal-photo-block[data-zigzag="right"] .ceremonia-wavy-decoration {
+    left: -50px;
+    right: auto;
+  }
+
+  .ceremonia-corporal-photo-block[data-zigzag="left"] .ceremonia-wavy-decoration {
+    right: -50px;
+    left: auto;
+  }
+
+  .ceremonia-corporal-foto-circle {
+    width: 320px;
+    height: 320px;
+    border: 2px dashed var(--color-brand-primary, #AE0000);
+  }
+
+  .ceremonia-corporal-foto-leaf {
+    width: 340px;
+    height: 340px;
+    border-radius: 70px 15px 70px 15px;
+  }
+
+  .ceremonia-corporal-foto-leaf img {
+    border-radius: 70px 15px 70px 15px;
+  }
+
+  /* Section container */
+  .ceremonia-corporal-content .max-w-4xl {
+    max-width: 65rem;
+  }
+
+  /* Alquimia title - desktop */
+  .ceremonia-corporal-alquimia-title {
+    max-width: 600px;
+    min-height: 120px;
+    margin: 0 auto 2rem;
+    margin-top: 0.5rem;
+    font-family: var(--font-title);
+  }
+
+  .ceremonia-corporal-alquimia-title-text {
+    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
+    letter-spacing: 0.05em;
+    color: var(--color-bg-light, #F0EACE);
+  }
+}

@@ -1,11 +1,11 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import '@/styles/ceremonia-facial.css'
+import '@/styles/ceremonia-capilar.css'
 
 export const metadata: Metadata = {
   title: 'Ceremonia Capilar | ALKIMYA | DA LUZ CONSCIENTE',
   description:
-    'Descubrí tu ceremonia capilar. Fortalecé la raíz y transformá tu rutina de cuidado del cabello en un ritual consciente con DA LUZ Alkimya.',
+    'Descubri tu ceremonia capilar. Fortalecé la raíz y transformá tu rutina de cuidado del cabello en un ritual consciente con DA LUZ Alkimya.',
 }
 
 const PASOS = [
@@ -24,9 +24,9 @@ const PASOS = [
     proposito:
       'Remueve impurezas, sebo y residuos. Abre las cutículas para recibir el tratamiento.',
     intencion:
-      'Limpiá tu mente de pensamientos repetitivos. Nutrí el templo de tu cabeza para recibir nuevas ideas.',
+      'Limpia tu mente de pensamientos repetitivos. Nutrí el templo de tu cabeza para recibir nuevas ideas.',
     consejos:
-      'Usá el Shampoo para tu biotipo. Aplicá con masajes circulares suaves, acompañando con respiración consciente para liberar las tensiones craneales.',
+      'Usá el Shampoo para tu biotipo. Aplicá con masajes circulares suaves, acompañando con respiraciones.',
   },
   {
     num: 3,
@@ -45,7 +45,7 @@ const PASOS = [
     intencion:
       'Mantené el equilibrio y la intención de vitalidad hasta el próximo lavado.',
     consejos:
-      'Aplicá tu Sérum Capilar Ilumina, poné 2 o 3 gotas en las yemas de los dedos, frotalos calentando suavemente el aceite y aplica en las puntas para sellar; o usá el Tónico Capilar Raíz en el cuero cabelludo masajeando suavemente.',
+      'Aplicá tu Sérum Capilar Ilumina, poné 2 o 3 gotas en las yemas de los dedos y aplicá en las puntas para sellar.',
   },
 ] as const
 
@@ -53,7 +53,7 @@ const ALQUIMIAS = [
   {
     id: 'normal',
     kitTitulo: 'Kit para Cabello Normal y Equilibrado',
-    alquimiaTitulo: 'Tu Alquimia Vata: Nutrición y Brillo',
+    alquimiaTitulo: 'Tu Alquimia Vata: NutriciÃ³n y Brillo',
     descripcion: 'Vitalidad y fuerza diaria.',
     productos: ['SHAMPOO PUREZA', 'ACONDICIONADOR PUREZA'],
   },
@@ -90,18 +90,18 @@ const ALQUIMIAS = [
 
 export default function CeremoniaCapilarPage() {
   return (
-    <div className="ceremonia-facial-page">
-      <div className="ceremonia-facial-bg" aria-hidden="true" />
-      <main className="ceremonia-facial-content">
+    <div className="ceremonia-capilar-page">
+      <div className="ceremonia-capilar-bg" aria-hidden="true" />
+      <main className="ceremonia-capilar-content">
         {/* Hero - pt-0 so MainTitleBg touches header */}
         <section className="px-4 pt-0 pb-8 sm:px-6 sm:pb-12 md:px-8 md:pb-16 lg:px-12 lg:pb-20">
-          <h1 className="ceremonia-facial-hero-title">
-            <div className="ceremonia-facial-hero-title-bg" aria-hidden="true" />
-            <span className="ceremonia-facial-hero-title-text">
+          <h1 className="ceremonia-capilar-hero-title">
+            <div className="ceremonia-capilar-hero-title-bg" aria-hidden="true" />
+            <span className="ceremonia-capilar-hero-title-text">
               CEREMONIA CAPILAR
             </span>
           </h1>
-          <h3 className="font-subtitle mt-4 text-center text-xl italic sm:text-2xl md:text-3xl ceremonia-facial-hero-subtitle">
+          <h3 className="font-subtitle mt-4 text-center text-xl italic sm:text-2xl md:text-3xl ceremonia-capilar-hero-subtitle">
             El Cabello: Fortaleciendo la Raíz
           </h3>
         </section>
@@ -111,86 +111,105 @@ export default function CeremoniaCapilarPage() {
           <div className="mx-auto max-w-4xl space-y-12 md:space-y-16 lg:space-y-20">
             {PASOS.map((paso, stepIndex) => {
               const isEvenStep = stepIndex % 2 === 0
+              const photoShapeClass = stepIndex % 2 === 0 ? 'ceremonia-capilar-foto-circle' : 'ceremonia-capilar-foto-leaf'
               const zigzag = {
                 title: isEvenStep ? 'left' : 'right',
                 proposito: isEvenStep ? 'right' : 'left',
                 intencion: isEvenStep ? 'left' : 'right',
                 consejos: isEvenStep ? 'right' : 'left',
+                photo: isEvenStep ? 'right' : 'left',
               }
               return (
                 <article
                   key={paso.num}
-                  className="ceremonia-facial-step-container ceremonia-facial-mobile-card lg:bg-transparent lg:shadow-none lg:p-0"
+                  className="ceremonia-capilar-step-container ceremonia-capilar-mobile-card lg:bg-transparent lg:shadow-none lg:p-0"
                 >
                   {/* Titulo Principal */}
                   <div
-                    className="ceremonia-facial-step-title"
+                    className="ceremonia-capilar-step-title"
                     data-zigzag={zigzag.title}
                   >
-                    <div className="ceremonia-facial-step-title-bg" aria-hidden="true" />
-                    <h4 className="ceremonia-facial-step-title-text">
+                    <div className="ceremonia-capilar-step-title-bg" aria-hidden="true" />
+                    <h4 className="ceremonia-capilar-step-title-text">
                       {paso.num}. {paso.titulo}
                     </h4>
                   </div>
 
-                  {/* Propósito y Beneficio */}
+                  {/* PropÃ³sito y Beneficio */}
                   <div
-                    className="ceremonia-facial-block-title"
+                    className="ceremonia-capilar-block-title"
                     data-zigzag={zigzag.proposito}
                   >
-                    <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-facial-block-title-text">
+                    <div className="ceremonia-capilar-block-title-bg" aria-hidden="true" />
+                    <span className="ceremonia-capilar-block-title-text">
                       Propósito y Beneficio
                     </span>
                   </div>
                   <div
-                    className="ceremonia-facial-block-text"
+                    className="ceremonia-capilar-block-text"
                     data-zigzag={zigzag.proposito}
                   >
-                    <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content">
+                    <div className="ceremonia-capilar-block-text-bg" aria-hidden="true" />
+                    <p className="ceremonia-capilar-block-text-content">
                       {paso.proposito}
                     </p>
                   </div>
 
-                  {/* Intención de la Ceremonia */}
+                  {/* IntenciÃ³n de la Ceremonia */}
                   <div
-                    className="ceremonia-facial-block-title"
+                    className="ceremonia-capilar-block-title"
                     data-zigzag={zigzag.intencion}
                   >
-                    <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-facial-block-title-text">
+                    <div className="ceremonia-capilar-block-title-bg" aria-hidden="true" />
+                    <span className="ceremonia-capilar-block-title-text">
                       Intención de la Ceremonia
                     </span>
                   </div>
                   <div
-                    className="ceremonia-facial-block-text"
+                    className="ceremonia-capilar-block-text"
                     data-zigzag={zigzag.intencion}
                   >
-                    <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content">
+                    <div className="ceremonia-capilar-block-text-bg" aria-hidden="true" />
+                    <p className="ceremonia-capilar-block-text-content">
                       {paso.intencion}
                     </p>
                   </div>
 
-                  {/* Consejos de Aplicación */}
+                  {/* Consejos de AplicaciÃ³n */}
                   <div
-                    className="ceremonia-facial-block-title"
+                    className="ceremonia-capilar-block-title"
                     data-zigzag={zigzag.consejos}
                   >
-                    <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-facial-block-title-text">
+                    <div className="ceremonia-capilar-block-title-bg" aria-hidden="true" />
+                    <span className="ceremonia-capilar-block-title-text">
                       Consejos de Aplicación
                     </span>
                   </div>
                   <div
-                    className="ceremonia-facial-block-text"
+                    className="ceremonia-capilar-block-text"
                     data-zigzag={zigzag.consejos}
                   >
-                    <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content">
+                    <div className="ceremonia-capilar-block-text-bg" aria-hidden="true" />
+                    <p className="ceremonia-capilar-block-text-content">
                       {paso.consejos}
                     </p>
+                  </div>
+
+                  {/* Foto del Paso Capilar */}
+                  <div 
+                    className={`ceremonia-capilar-photo-block ${photoShapeClass}`}
+                    data-zigzag={zigzag.photo}
+                  >
+                    <img 
+                      src={`/images/ceremonias/cap_step_${paso.num}.png`} 
+                      alt={`Foto Capilar paso ${paso.num}`} 
+                    />
+                    {/* Wavy Line Decoration */}
+                    <div className="ceremonia-wavy-decoration" aria-hidden="true">
+                      <svg width="25" height="120" viewBox="0 0 25 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 12 0 C 30 20 0 40 12 60 C 30 80 0 100 12 120" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
                   </div>
                 </article>
               )
@@ -200,11 +219,11 @@ export default function CeremoniaCapilarPage() {
 
         {/* Elegí tu Alquimia */}
         <section className="px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-12 lg:pb-32">
-          <div className="ceremonia-facial-alquimia-title">
-            <div className="ceremonia-facial-alquimia-title-bg" aria-hidden="true" />
-            <h3 className="ceremonia-facial-alquimia-title-text">
+          <div className="ceremonia-capilar-alquimia-title">
+            <div className="ceremonia-capilar-alquimia-title-bg" aria-hidden="true" />
+            <h1 className="ceremonia-capilar-alquimia-title-text">
               ¡Elegí tu Alquimia!
-            </h3>
+            </h1>
           </div>
 
           <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2">
