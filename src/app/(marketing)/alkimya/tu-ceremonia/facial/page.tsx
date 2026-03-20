@@ -8,20 +8,25 @@ export const metadata: Metadata = {
     'Descubrí tu ceremonia facial diaria. Transformá tu rutina de cuidado facial en un ritual consciente con DA LUZ Alkimya.',
 }
 
-const PASOS = [
+type Paso = {
+  num: number;
+  titulo: string;
+  proposito: string;
+  intencion: string;
+  consejos: string;
+  extra?: readonly { titulo: string; texto: string }[];
+};
+
+const PASOS: readonly Paso[] = [
   {
     num: 1,
     titulo: 'Limpieza Facial',
     proposito:
       'Elimina suciedad, sebo, maquillaje y toxinas. Prepara la piel para absorber tratamientos.',
     intencion:
-      'Con el agua, liberá la piel de lo que ya no necesita y conectate con la pureza para recibir el nuevo día o la noche.',
+      'Con el agua, liberá la piel de lo que ya no necesita y conectate con la pureza para recibir el nuevo día .',
     consejos:
-      'Usá tu Agua Micelar para desmaquillar y tu Limpiador Facial en Gel como segundo paso. Limpiá mañana y noche.',
-    extra: [
-      { titulo: 'Agua Fría:', texto: 'Ayuda a cerrar los poros, estimula la circulación y reduce la hinchazón.' },
-      { titulo: 'Evitar Agua Caliente:', texto: 'Deshidrata, elimina aceites naturales y causa irritaciones.' },
-    ],
+      'Usá tu Agua Micelar para desmaquillar y tu limpiador facial en Gel como segundo paso.',
   },
   {
     num: 2,
@@ -62,7 +67,7 @@ const PASOS = [
     consejos:
       'Usá la Emulsión o Crema específica para tu biotipo. Aplicá después del sérum.',
   },
-] as const
+];
 
 const ALQUIMIAS = [
   {
@@ -156,8 +161,8 @@ export default function CeremoniaFacialPage() {
         </section>
 
         {/* Paso a Paso */}
-        <section className="px-4 pb-12 sm:px-6 sm:pb-16 md:px-8 md:pb-20 lg:px-12 lg:pb-24">
-          <div className="mx-auto max-w-4xl space-y-12 md:space-y-16 lg:space-y-20">
+        <section className="px-4 pb-2 sm:px-6 sm:pb-4 md:px-8 md:pb-6 lg:px-12 lg:pb-10">
+          <div className="mx-auto max-w-4xl space-y-6 md:space-y-8 lg:space-y-10">
             {PASOS.map((paso, stepIndex) => {
               /* Zigzag: Step 1 starts L,R,L,R,L. Step 2 continues R,L,R,L. Step 3 L,R,L,R. etc. */
               const isEvenStep = stepIndex % 2 === 0
@@ -167,7 +172,9 @@ export default function CeremoniaFacialPage() {
                 intencion: isEvenStep ? 'left' : 'right',
                 consejos: isEvenStep ? 'right' : 'left',
                 extra: 'left' as const,
+                photo: isEvenStep ? 'right' : 'left',
               }
+              const photoShapeClass = stepIndex % 2 === 0 ? 'ceremonia-facial-foto-circle' : 'ceremonia-facial-foto-leaf'
               return (
                 <article
                   key={paso.num}
@@ -179,7 +186,7 @@ export default function CeremoniaFacialPage() {
                     data-zigzag={zigzag.title}
                   >
                     <div className="ceremonia-facial-step-title-bg" aria-hidden="true" />
-                    <h4 className="ceremonia-facial-step-title-text">
+                    <h4 className="ceremonia-facial-step-title-text pb-4 lg:pb-6">
                       {paso.num}. {paso.titulo}
                     </h4>
                   </div>
@@ -239,7 +246,7 @@ export default function CeremoniaFacialPage() {
                     data-zigzag={zigzag.consejos}
                   >
                     <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content">
+                    <p className="ceremonia-facial-block-text-content whitespace-pre-line">
                       {paso.consejos}
                     </p>
                   </div>
@@ -263,6 +270,23 @@ export default function CeremoniaFacialPage() {
                       </div>
                     </div>
                   )}
+
+                  {/* Foto del Paso */}
+                  <div
+                    className={`ceremonia-facial-photo-block ${photoShapeClass}`}
+                    data-zigzag={zigzag.photo}
+                  >
+                    <img
+                      src={`/images/ceremonias/step_${paso.num}.png`}
+                      alt={`Foto paso ${paso.num}`}
+                    />
+                    {/* Wavy Line Decoration */}
+                    <div className="ceremonia-wavy-decoration" aria-hidden="true">
+                      <svg width="25" height="120" viewBox="0 0 25 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 12 0 C 30 20 0 40 12 60 C 30 80 0 100 12 120" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                  </div>
                 </article>
               )
             })}
@@ -270,10 +294,10 @@ export default function CeremoniaFacialPage() {
         </section>
 
         {/* Elegí tu Alquimia */}
-        <section className="px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-12 lg:pb-32">
+        <section className="px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-12 lg:pb-32 -mt-4 sm:-mt-8 lg:-mt-16">
           <div className="ceremonia-facial-alquimia-title">
             <div className="ceremonia-facial-alquimia-title-bg" aria-hidden="true" />
-            <h3 className="ceremonia-facial-alquimia-title-text">
+            <h3 className="ceremonia-facial-alquimia-title-text pb-2 lg:pb-4">
               ¡Elegí tu Alquimia!
             </h3>
           </div>
@@ -282,7 +306,7 @@ export default function CeremoniaFacialPage() {
             {ALQUIMIAS.map((alq) => (
               <article
                 key={alq.id}
-                className="flex flex-col rounded-lg bg-white/90 p-6 shadow-md backdrop-blur-sm transition-shadow hover:shadow-lg sm:p-8"
+                className="flex flex-col rounded-lg bg-white/90 px-6 pb-6 pt-3 shadow-md backdrop-blur-sm transition-shadow hover:shadow-lg sm:px-8 sm:pb-8 sm:pt-4"
               >
                 <h4 className="font-title mb-1 text-xl font-normal text-[var(--color-brand-primary)] sm:text-2xl">
                   {alq.titulo}

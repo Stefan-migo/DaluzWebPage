@@ -5,22 +5,36 @@
   position: relative;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: var(--color-bg-cream, #F6FBD6);
+  background-color: #7A160E;
+  /* Color base oscuro */
 }
 
+/* Modern Animated Mesh Gradient Background */
 .ceremonia-facial-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  min-height: 100%;
+  position: fixed;
+  top: -5%;
+  left: -10%;
+  width: 120vw;
+  height: 120vh;
   z-index: 0;
-  background-image: url('/svg/ceremonias/CeremenoniSectionBg.svg');
-  background-repeat: repeat-y;
-  background-size: 100% auto;
-  background-position: center top;
   pointer-events: none;
+  background-image:
+    radial-gradient(circle at 20% 30%, #791010 0%, transparent 60%),
+    radial-gradient(circle at 70% 20%, rgba(255, 78, 33, 0.6) 0%, transparent 50%),
+    /* #FF4E21 */
+    radial-gradient(circle at 30% 80%, #7A160E 0%, transparent 60%);
+  filter: blur(30px);
+  animation: mesh-flow 20s ease-in-out infinite alternate;
+}
+
+@keyframes mesh-flow {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+
+  100% {
+    transform: rotate(5deg) scale(1.1);
+  }
 }
 
 .ceremonia-facial-content {
@@ -28,7 +42,7 @@
   z-index: 10;
 }
 
-.ceremonia-facial-content > section:first-of-type {
+.ceremonia-facial-content>section:first-of-type {
   padding-top: 0;
 }
 
@@ -43,6 +57,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-velista);
 }
 
 .ceremonia-facial-hero-title-text {
@@ -50,7 +65,7 @@
   z-index: 1;
   font-family: var(--font-title, 'VELISTA', serif);
   font-weight: normal;
-  text-align: center;
+  text-align: flex-start;
   padding: 0 1rem;
 }
 
@@ -74,17 +89,28 @@
 
 /* Hero - mobile (no background, cream text for contrast) */
 .ceremonia-facial-hero-title-bg {
-  display: none;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  height: 100%;
+  background-image: url('/svg/ceremonias/ceremoniaHeroBg.svg');
+  background-size: 100% 100%;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 0;
 }
 
 .ceremonia-facial-hero-title {
-  min-height: auto;
-  padding: 1rem 0;
+  min-height: 140px;
+  padding: 1.5rem 0;
 }
 
 .ceremonia-facial-hero-title-text {
   font-size: clamp(1.75rem, 6vw, 2.5rem);
-  color: var(--color-bg-light, #F0EACE);
+  color: var(--color-brand-primary, #AE0000);
 }
 
 .ceremonia-facial-hero-subtitle {
@@ -102,7 +128,7 @@
   max-width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 1rem;
+
 }
 
 .ceremonia-facial-step-title {
@@ -208,6 +234,67 @@
   padding: 1.25rem 0;
 }
 
+/* Photo Blocks - Mobile */
+.ceremonia-facial-photo-block {
+  position: relative;
+  margin: 2rem auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 5;
+}
+
+.ceremonia-facial-foto-circle {
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  border: 1px dashed var(--color-brand-primary, #AE0000);
+  padding: 8px;
+}
+
+.ceremonia-facial-foto-circle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.ceremonia-facial-foto-leaf {
+  width: 240px;
+  height: 240px;
+  border-radius: 50px 10px 50px 10px;
+  background-color: var(--color-bg-light, #F0EACE);
+  padding: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.ceremonia-facial-foto-leaf img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50px 10px 50px 10px;
+  object-fit: cover;
+}
+
+.ceremonia-wavy-decoration {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: -1;
+  color: var(--color-bg-light, #F0EACE);
+  pointer-events: none;
+}
+
+.ceremonia-wavy-decoration svg {
+  animation: ceremonio-wavy-float 4s ease-in-out infinite alternate;
+  overflow: visible;
+}
+
+@keyframes ceremonio-wavy-float {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-15px); }
+}
+
 /* Alquimia title - mobile */
 .ceremonia-facial-alquimia-title {
   position: relative;
@@ -248,9 +335,10 @@
    =========================== */
 
 @media (min-width: 1024px) {
-  /* Hero - desktop with MainTitleBg full bleed */
+
+  /* Hero - desktop with ceremonyHeroBg full bleed */
   .ceremonia-facial-hero-title {
-    min-height: 180px;
+    min-height: 200px;
   }
 
   .ceremonia-facial-hero-title-bg {
@@ -262,10 +350,10 @@
     width: 100vw;
     min-width: 100vw;
     height: 100%;
-    min-height: 180px;
-    background-image: url('/svg/ceremonias/MainTitleBg.svg');
-    background-size: cover;
-    background-position: center top;
+    min-height: 200px;
+    background-image: url('/svg/ceremonias/ceremoniaHeroBg.svg');
+    background-size: 100% 100%;
+    background-position: center bottom;
     background-repeat: no-repeat;
     z-index: 0;
   }
@@ -312,14 +400,32 @@
     transform: none;
   }
 
-  .ceremonia-facial-step-title[data-zigzag="left"] { left: 5%; }
-  .ceremonia-facial-step-title[data-zigzag="right"] { right: 5%; }
-  .ceremonia-facial-block-title[data-zigzag="left"] { left: 10%; }
-  .ceremonia-facial-block-title[data-zigzag="right"] { right: 9%; }
-  .ceremonia-facial-block-text[data-zigzag="left"] { left: 8%; }
-  .ceremonia-facial-block-text[data-zigzag="right"] { right: -7%; }
-  .ceremonia-facial-extra-block[data-zigzag="left"] { left: 7%; }
-  .ceremonia-facial-extra-block[data-zigzag="right"] { right: 8%; }
+  .ceremonia-facial-step-title[data-zigzag="left"] {
+    left: 5%;
+  }
+
+  .ceremonia-facial-step-title[data-zigzag="right"] {
+    right: 5%;
+  }
+
+  .ceremonia-facial-block-title[data-zigzag="left"] {
+    left: 7%;
+  }
+
+  .ceremonia-facial-block-text[data-zigzag="left"],
+  .ceremonia-facial-extra-block[data-zigzag="left"] {
+    left: 8%;
+    right: auto;
+  }
+
+  .ceremonia-facial-block-title[data-zigzag="right"],
+  .ceremonia-facial-block-text[data-zigzag="right"],
+  .ceremonia-facial-extra-block[data-zigzag="right"] {
+    /* Usamos 'left' en lugar de 'right' para que sus comienzos (izquierdos) estén perfectamente alineados. 
+       Se usa un calc() para asegurar que entren en pantallas pequeñas sin sobrepasar el ancho. */
+    left: calc(100% - 620px);
+    right: auto;
+  }
 
   /* Desktop dimensions */
   .ceremonia-facial-step-title {
@@ -354,7 +460,7 @@
   }
 
   .ceremonia-facial-block-text {
-    width: 590px;
+    width: 480px;
     max-width: 100%;
     min-height: 100px;
     padding: 1.25rem 1.5rem;
@@ -369,7 +475,7 @@
   }
 
   .ceremonia-facial-extra-block {
-    width: 890px;
+    width: 480px;
     max-width: 100%;
     min-height: 175px;
     padding: 1.25rem 1.5rem;
@@ -384,14 +490,92 @@
   }
 
   /* Desktop top positions */
-  .ceremonia-facial-step-container > .ceremonia-facial-step-title { top: -101px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-block-title:nth-child(2) { top: 95px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-block-text:nth-child(3) { top: 157px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-block-title:nth-child(4) { top: 315px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-block-text:nth-child(5) { top: 379px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-block-title:nth-child(6) { top: 535px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-block-text:nth-child(7) { top: 597px; }
-  .ceremonia-facial-step-container > .ceremonia-facial-extra-block { top: 730px; }
+  .ceremonia-facial-step-container>.ceremonia-facial-step-title {
+    top: -101px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-block-title:nth-child(2) {
+    top: 95px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-block-text:nth-child(3) {
+    top: 157px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-block-title:nth-child(4) {
+    top: 315px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-block-text:nth-child(5) {
+    top: 379px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-block-title:nth-child(6) {
+    top: 535px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-block-text:nth-child(7) {
+    top: 597px;
+  }
+
+  .ceremonia-facial-step-container>.ceremonia-facial-extra-block {
+    top: 730px;
+  }
+
+  /* Desktop photo blocks */
+  .ceremonia-facial-photo-block {
+    position: absolute;
+    margin: 0;
+    top: 170px;
+    z-index: 1;
+    /* Put photos behind text */
+  }
+
+  .ceremonia-facial-step-title,
+  .ceremonia-facial-block-title,
+  .ceremonia-facial-block-text,
+  .ceremonia-facial-extra-block {
+    z-index: 10;
+    /* Ensure text sits on top of overlapping photos */
+  }
+
+  /* Right-side photo blocks (when title is left, photo is right) */
+  .ceremonia-facial-photo-block[data-zigzag="right"] {
+    left: auto;
+    right: -18%;
+  }
+
+  /* Left-side photo blocks (when title is right, photo is left) */
+  .ceremonia-facial-photo-block[data-zigzag="left"] {
+    left: -18%;
+    right: auto;
+  }
+
+  .ceremonia-facial-photo-block[data-zigzag="right"] .ceremonia-wavy-decoration {
+    left: -50px;
+    right: auto;
+  }
+
+  .ceremonia-facial-photo-block[data-zigzag="left"] .ceremonia-wavy-decoration {
+    right: -50px;
+    left: auto;
+  }
+
+  .ceremonia-facial-foto-circle {
+    width: 320px;
+    height: 320px;
+    border: 2px dashed var(--color-brand-primary, #AE0000);
+  }
+
+  .ceremonia-facial-foto-leaf {
+    width: 340px;
+    height: 340px;
+    border-radius: 70px 15px 70px 15px;
+  }
+
+  .ceremonia-facial-foto-leaf img {
+    border-radius: 70px 15px 70px 15px;
+  }
 
   /* Section container */
   .ceremonia-facial-content .max-w-4xl {
