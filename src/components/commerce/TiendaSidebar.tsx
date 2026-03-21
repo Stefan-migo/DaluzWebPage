@@ -6,18 +6,18 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { 
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { 
-  Search, 
-  Filter, 
-  X, 
-  ChevronDown, 
+import {
+  Search,
+  Filter,
+  X,
+  ChevronDown,
   ChevronRight,
   Grid3X3,
   Grid2X2,
@@ -116,7 +116,7 @@ export default function TiendaSidebar({
       {/* Search */}
       <Card variant="artisanal" className="lg:block">
         <CardHeader className="pb-2 lg:pb-3">
-          <CardTitle 
+          <CardTitle
             className="text-base lg:text-lg flex items-center gap-2"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
@@ -143,14 +143,14 @@ export default function TiendaSidebar({
 
       {/* Categories */}
       <Card variant="artisanal">
-        <CardHeader 
+        <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
             console.log('Categories header clicked');
             toggleSection('categories');
           }}
         >
-          <CardTitle 
+          <CardTitle
             className="text-base lg:text-lg flex items-center justify-between"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
@@ -172,17 +172,8 @@ export default function TiendaSidebar({
         {expandedSections.categories && (
           <CardContent className="pt-0">
             <div className="space-y-2 lg:space-y-3">
-              {/* All Categories */}
-              <Button
-                variant={selectedCategory === '' ? 'line-primary' : 'line-ghost'}
-                className="w-full justify-start text-sm h-8 lg:h-9"
-                onClick={() => setSelectedCategory('')}
-              >
-                Todas las categorías
-              </Button>
-              
-              <Separator />
-              
+
+
               {/* Product Lines */}
               {productLines.map((line) => (
                 <Button
@@ -200,20 +191,6 @@ export default function TiendaSidebar({
                   {line.name}
                 </Button>
               ))}
-              
-              <Separator />
-              
-              {/* Database Categories */}
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id ? 'line-primary' : 'line-ghost'}
-                  className="w-full justify-start text-sm h-8 lg:h-9"
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  {category.name}
-                </Button>
-              ))}
             </div>
           </CardContent>
         )}
@@ -221,14 +198,14 @@ export default function TiendaSidebar({
 
       {/* Filters */}
       <Card variant="artisanal">
-        <CardHeader 
+        <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
             console.log('Filters header clicked');
             toggleSection('filters');
           }}
         >
-          <CardTitle 
+          <CardTitle
             className="text-base lg:text-lg flex items-center justify-between"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
@@ -308,14 +285,14 @@ export default function TiendaSidebar({
 
       {/* Sort & Grid - Hidden on mobile */}
       <Card variant="artisanal" className="hidden lg:block">
-        <CardHeader 
+        <CardHeader
           className="pb-3 cursor-pointer"
           onClick={() => {
             console.log('Sort header clicked');
             toggleSection('sort');
           }}
         >
-          <CardTitle 
+          <CardTitle
             className="text-lg flex items-center justify-between"
             style={{
               fontFamily: 'VELISTA, var(--font-velista), serif',
@@ -392,7 +369,7 @@ export default function TiendaSidebar({
         <Card variant="artisanal">
           <CardContent className="pt-4">
             <div className="space-y-2">
-              <h4 
+              <h4
                 className="font-normal text-sm"
                 style={{
                   fontFamily: 'VELISTA, var(--font-velista), serif',
