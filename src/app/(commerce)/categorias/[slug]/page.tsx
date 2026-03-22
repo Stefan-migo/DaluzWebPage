@@ -11,11 +11,12 @@ import { toast } from "sonner";
 import Link from "next/link";
 
 // Map category slugs to product line themes
-const getLineThemeFromSlug = (slug: string): 'alma-terra' | 'ecos' | 'jade-ritual' | 'umbral' | 'utopica' | 'default' => {
+const getLineThemeFromSlug = (slug: string): 'alma-terra' | 'ecos' | 'jade-ritual' | 'umbral' | 'utopica' | 'kits-experiencia' | 'default' => {
   const slugLower = slug.toLowerCase();
   if (slugLower.includes('alma-terra')) return 'alma-terra';
   if (slugLower.includes('ecos')) return 'ecos';
   if (slugLower.includes('jade-ritual')) return 'jade-ritual';
+  if (slugLower.includes('kits')) return 'kits-experiencia';
   if (slugLower.includes('umbral')) return 'umbral';
   if (slugLower.includes('utopica')) return 'utopica';
   return 'default';
@@ -158,6 +159,8 @@ export default function CategoryPage() {
         return { primary: '#12406F', secondary: '#005180', light: '#81CCD7', lightest: '#B7DFE5', dark: '#092038' };
       case 'jade-ritual':
         return { primary: '#04412D', secondary: '#286939', light: '#7BC38E', lightest: '#D3E1BE', dark: '#022116' };
+      case 'kits-experiencia':
+        return { primary: '#AE0000', secondary: '#C70000', light: '#F0EACE', lightest: '#F6FBD6', dark: '#570000' };
       case 'umbral':
         return { primary: '#EA4F12', secondary: '#F17E06', light: '#FFD18A', lightest: '#FFF2DB', dark: '#752809' };
       case 'utopica':

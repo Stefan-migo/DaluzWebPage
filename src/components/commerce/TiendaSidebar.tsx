@@ -48,6 +48,7 @@ const productLines = [
   { id: 'alma-terra', name: 'Alma Terra', color: 'text-alma-primary' },
   { id: 'ecos', name: 'Ecos', color: 'text-ecos-primary' },
   { id: 'jade-ritual', name: 'Jade Ritual', color: 'text-jade-primary' },
+  { id: 'kits-experiencia', name: 'Kits y Experiencia', color: 'text-brand-primary' },
   { id: 'umbral', name: 'Umbral', color: 'text-umbral-primary' },
   { id: 'utopica', name: 'Utópica', color: 'text-utopica-primary' }
 ];

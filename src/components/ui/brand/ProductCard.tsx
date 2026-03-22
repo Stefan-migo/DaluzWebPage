@@ -37,7 +37,7 @@ interface ProductCardProps {
   size?: string;
   className?: string;
   variant?: 'default' | 'elegant' | 'artisanal' | 'glass';
-  lineTheme?: 'alma-terra' | 'ecos' | 'jade-ritual' | 'umbral' | 'utopica' | 'default';
+  lineTheme?: 'alma-terra' | 'ecos' | 'jade-ritual' | 'umbral' | 'utopica' | 'kits-experiencia' | 'default';
   onAddToCart?: (productId: string, quantity: number) => void;
 }
 
@@ -88,6 +88,14 @@ const lineThemeClasses = {
     star: 'fill-utopica-secondary text-utopica-secondary',
     background: '#F9F5C5', // utopica-lightest
     border: '#392E13' // utopica-primary
+  },
+  'kits-experiencia': {
+    accent: 'text-brand-primary',
+    badge: 'bg-brand-primary/10 text-brand-primary border-brand-primary/20',
+    button: 'bg-brand-primary hover:bg-brand-primary/90 text-white',
+    star: 'fill-gold-500 text-gold-500',
+    background: '#F6FBD6',
+    border: '#AE0000'
   },
   'default': {
     accent: 'text-brand-primary',
