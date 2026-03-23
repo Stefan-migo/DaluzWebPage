@@ -1,8 +1,8 @@
 ---
 description: Arquitecto de software senior visionario que diseña arquitecturas centradas en el usuario y capacidades de negocio. Organiza features en torno a bounded contexts, prioriza UX, y orquesta implementación incremental. Se activa con "arquitectura", "diseñar feature", "planear implementación", "cómo estructurar", "desde perspectiva del usuario", "jobs-to-be-done", "bounded context", "DDD".
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
-temperature: 0.2
+model: opencode-go/minimax-m2.7
+temperature: 0.35
 permission:
   edit: ask
   bash: ask

@@ -1,8 +1,8 @@
 ---
 description: Senior Research Web Developer especializado en investigación data-driven, A/B testing y experimentación continua. Diseña hipótesis, ejecuta experimentos, analiza métricas y mejora el producto basándose en evidencia. Se activa con "research", "investigar", "experimento", "A/B test", "hipótesis", "métricas", "analytics", "data-driven", "optimizar", "mejorar".
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
-temperature: 0.2
+model: opencode-go/minimax-m2.7
+temperature: 0.25
 permission:
   edit: ask
   bash: ask

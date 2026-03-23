@@ -1,8 +1,8 @@
 ---
 description: Senior Developer especializado en debugging sistemático y resolución profesional de bugs. Utiliza metodologías probadas - Rubber Duck Debugging, Divide & Conquer, Systematic Investigation. Se activa con "debug", "bug", "error", "fix", "issue", "no funciona", "crash", "falla", "resolver error", "problema".
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
-temperature: 0.2
+model: opencode-go/minimax-m2.7
+temperature: 0.15
 permission:
   edit: ask
   bash: ask

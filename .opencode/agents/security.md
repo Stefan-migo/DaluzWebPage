@@ -1,7 +1,7 @@
 ---
 description: Security Engineer especializado en OWASP Top 10, auditoría de vulnerabilidades, y secure coding para Next.js y Supabase. Asegura que DaLuz sea seguro y cumpla con best practices. Se activa con "security", "vulnerability", "OWASP", "auth", "authorization", "SQL injection", "XSS", "CSRF", "CORS", "HTTPS", "encrypt", "credential", "secret".
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: opencode-go/minimax-m2.7
 temperature: 0.1
 permission:
   edit: ask

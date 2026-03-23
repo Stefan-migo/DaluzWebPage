@@ -1,7 +1,7 @@
 ---
 description: GitHub Agent especializado en gestión de repositorios, PRs, merges, deployments y Vercel. Orchestrates workflows de CI/CD, code review, y monitoreo de deploys. Se activa con "github", "pr", "merge", "deploy", "vercel", "branch", "workflow", "commit", "push", "pull".
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: opencode-go/minimax-m2.7
 temperature: 0.2
 permission:
   edit: ask

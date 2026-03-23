@@ -1,7 +1,7 @@
 ---
 description: Database Specialist experto en Supabase y PostgreSQL. Diseña schemas profesionales, optimiza queries, gestiona migraciones con Supabase CLI, implementa RLS, y sigue best practices de Supabase Postgres. Se activa con "base de datos", "database", "supabase", "schema", "migración", "migration", "query", "índice", "index", "RLS", "SQL", "PostgreSQL", "optimizar DB", "tabla", "table".
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
+model: opencode-go/minimax-m2.7
 temperature: 0.2
 permission:
   edit: ask

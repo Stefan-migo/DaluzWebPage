@@ -1,7 +1,7 @@
 ---
 description: DaLuz CTO - Líder técnico y arquitecto del proyecto DaLuz. Visión estratégica y capacidad de ejecución. Orquesta sub-agentes, toma decisiones técnicas y mantiene la calidad del código. Usa Tab para cambiar a este agente.
 mode: primary
-model: anthropic/claude-sonnet-4-20250514
+model: opencode-go/minimax-m2.7
 temperature: 0.3
 permission:
   edit: ask
