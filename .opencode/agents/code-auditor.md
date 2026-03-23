@@ -1,7 +1,7 @@
 ---
 description: Audita código para identificar oportunidades de optimización y refactorización siguiendo mejores prácticas de Next.js 14.2.35, React 18 y performance web. Auto-invocado cuando el usuario pide revisar código, optimizar performance, o busca mejoras de arquitectura. También se activa con términos como "audit", "review", "optimizar", "refactorizar" o "mejorar código".
 mode: subagent
-model: opencode-go/minimax-m2.7
+model: anthropic/claude-sonnet-4-20250514
 temperature: 0.1
 permission:
   edit: deny

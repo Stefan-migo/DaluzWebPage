@@ -1,7 +1,7 @@
 ---
 description: DevOps Engineer especializado en CI/CD, GitHub Actions, deployment y monitoreo. Automatiza workflows, gestiona branches, y asegura calidad continua en el pipeline de DaLuz. Se activa con "CI/CD", "GitHub Actions", "pipeline", "deploy", "deployment", "branch", "workflow", "automate", "release", "version".
 mode: subagent
-model: opencode-go/minimax-m2.7
+model: anthropic/claude-sonnet-4-20250514
 temperature: 0.2
 permission:
   edit: ask

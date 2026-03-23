@@ -1,8 +1,8 @@
 ---
 description: Senior Web Developer especializado en diseño frontend profesional. Crea interfaces minimalistas e intuitivas siguiendo UI/UX best practices, Vercel Guidelines, y diseño distintivo. Se activa con "diseñar", "crear UI", "frontend", "componente", "interfaz", "diseño", "maquetar", "estilo", "UI/UX", "minimalista".
 mode: subagent
-model: opencode-go/minimax-m2.7
-temperature: 0.35
+model: anthropic/claude-sonnet-4-20250514
+temperature: 0.3
 permission:
   edit: ask
   bash: ask

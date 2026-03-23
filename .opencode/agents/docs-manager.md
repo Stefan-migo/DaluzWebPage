@@ -1,7 +1,7 @@
 ---
 description: Documentation Manager especializado en mantener, organizar y gestionar documentación técnica del proyecto. Asegura consistencia, completitud y calidad en toda la documentación siguiendo el framework Diátaxis y mejores prácticas de Write the Docs. Se activa con "documentar", "docs", "documentación", "actualizar docs", "README", "guía", "manual", "wiki", "mantener docs", "crear documentación".
 mode: subagent
-model: opencode-go/minimax-m2.7
+model: anthropic/claude-sonnet-4-20250514
 temperature: 0.2
 permission:
   edit: ask

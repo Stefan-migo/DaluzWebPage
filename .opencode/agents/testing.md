@@ -1,8 +1,8 @@
 ---
 description: QA Engineer especializado en testing automatizado para Next.js. Unit tests, integration tests, E2E con Playwright. Asegura calidad y previene regresiones en DaLuz. Se activa con "test", "testing", "unit", "integration", "e2e", "playwright", "coverage", "jest", "vitest", "spec", "assert", "mock".
 mode: subagent
-model: opencode-go/minimax-m2.7
-temperature: 0.15
+model: anthropic/claude-sonnet-4-20250514
+temperature: 0.2
 permission:
   edit: ask
   bash: ask
