@@ -7,8 +7,36 @@
   position: relative;
   min-height: auto;
   height: auto;
-  overflow-x: hidden !important;
-  padding: 2rem 1rem; /* Default padding for mobile */
+  overflow: hidden !important;
+  padding: 2rem 1rem;
+  /* Default padding for mobile */
+}
+
+.biotipos-mesh-bg-global {
+  position: fixed;
+  top: -50px;
+  left: -50px;
+  right: -50px;
+  bottom: -50px;
+  background-color: #1a0505;
+  background-image:
+    radial-gradient(circle at 10% 20%, #c21717 0%, transparent 60%),
+    radial-gradient(circle at 20% 30%, #791010 0%, transparent 60%),
+    radial-gradient(circle at 70% 20%, rgba(255, 78, 33, 0.6) 0%, transparent 50%),
+    radial-gradient(circle at 30% 80%, #7A160E 0%, transparent 60%);
+  filter: blur(30px);
+  animation: mesh-flow 20s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+@keyframes mesh-flow {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.1);
+  }
 }
 
 .section-biotipos-1-content {
@@ -68,7 +96,7 @@
     color: var(--color-bg-light) !important;
     margin: 0 auto 2rem auto;
     text-align: center;
-    font-size: 1.125rem;
+    font-size: 1.35rem;
     line-height: 1.5;
     font-family: var(--font-malisha);
   }
@@ -76,11 +104,12 @@
   /* Main Text - Mobile */
   .biotipos-section1-main-text {
     position: relative !important;
-    width: 100% !important;
+    width: 80% !important;
     max-width: 100% !important;
-    aspect-ratio: 1024.87 / 1258.42; /* Mobile SVG aspect ratio */
-    margin: 2rem 0;
-    min-height: 300px;
+    aspect-ratio: 1024.87 / 1258.42;
+    /* Mobile SVG aspect ratio */
+    margin: 2rem auto;
+    min-height: 250px;
   }
 
   .biotipos-section1-main-text-bg {
@@ -163,15 +192,17 @@
 
   /* Subtitle - Tablet */
   .biotipos-section1-subtitle {
-    font-size: 1.375rem;
+    font-size: 1.6rem;
     margin-bottom: 2.5rem;
   }
 
   /* Main Text - Tablet */
   .biotipos-section1-main-text {
-    margin: 2.5rem 0;
-    aspect-ratio: 1024.87 / 1258.42; /* Mobile SVG aspect ratio for tablet too */
-    min-height: 350px;
+    width: 70% !important;
+    margin: 2.5rem auto;
+    aspect-ratio: 1024.87 / 1258.42;
+    /* Mobile SVG aspect ratio for tablet too */
+    min-height: 300px;
   }
 
   .biotipos-section1-main-text-bg {
@@ -240,7 +271,8 @@
     min-height: auto;
     overflow-x: hidden !important;
     position: relative !important;
-    padding: 0; /* No padding, content positioned absolutely */
+    padding: 0;
+    /* No padding, content positioned absolutely */
   }
 
   /* Ensure desktop SVG container matches section SVG height calculation */
@@ -252,10 +284,13 @@
 
   /* Content area */
   .section-biotipos-1-content {
-    position: absolute; /* Absolute positioning for desktop */
+    position: absolute;
+    /* Absolute positioning for desktop */
     inset: 0;
-    display: block; /* Revert to block for absolute positioning */
-    text-align: left; /* Default text alignment for desktop */
+    display: block;
+    /* Revert to block for absolute positioning */
+    text-align: left;
+    /* Default text alignment for desktop */
     width: 100%;
     height: 100%;
     max-width: none;
@@ -274,7 +309,8 @@
     transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
     width: var(--pos-width, auto);
     max-width: var(--pos-max-width, 800px);
-    margin: 0; /* Remove default margins */
+    margin: 0;
+    /* Remove default margins */
   }
 
   /* Main Title - Section 1 */
@@ -285,7 +321,7 @@
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.2;
-    --pos-top: 4%;
+    --pos-top: 5%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -296,11 +332,11 @@
   /* Subtitle - Section 1 */
   .biotipos-section1-subtitle {
     font-family: var(--font-malisha);
-    font-size: 1.5rem;
+    font-size: 2rem;
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.5;
-    --pos-top: 12%;
+    --pos-top: 14%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -311,10 +347,10 @@
   /* Main Text with SVG Background - Section 1 */
   .biotipos-section1-main-text {
     position: absolute;
-    width: var(--pos-width, 80%);
-    max-width: var(--pos-max-width, 1800px);
+    width: var(--pos-width, 65%);
+    max-width: var(--pos-max-width, 1400px);
     aspect-ratio: 1591.28 / 366.76;
-    --pos-top: 30%;
+    --pos-top: 35%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -385,7 +421,7 @@
   }
 
   .biotipos-section1-button-1 {
-    --pos-top: 70%;
+    --pos-top: 82%;
     --pos-left: 35%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -394,7 +430,7 @@
   }
 
   .biotipos-section1-button-2 {
-    --pos-top: 70%;
+    --pos-top: 82%;
     --pos-left: 65%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -411,7 +447,8 @@
     min-height: auto;
     overflow-x: hidden !important;
     position: relative !important;
-    padding: 0; /* No padding, content positioned absolutely */
+    padding: 0;
+    /* No padding, content positioned absolutely */
   }
 
   /* Ensure desktop SVG container matches section SVG height calculation */
@@ -423,10 +460,13 @@
 
   /* Content area */
   .section-biotipos-1-content {
-    position: absolute; /* Absolute positioning for desktop */
+    position: absolute;
+    /* Absolute positioning for desktop */
     inset: 0;
-    display: block; /* Revert to block for absolute positioning */
-    text-align: left; /* Default text alignment for desktop */
+    display: block;
+    /* Revert to block for absolute positioning */
+    text-align: left;
+    /* Default text alignment for desktop */
     width: 100%;
     height: 100%;
     max-width: none;
@@ -445,7 +485,8 @@
     transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
     width: var(--pos-width, auto);
     max-width: var(--pos-max-width, 800px);
-    margin: 0; /* Remove default margins */
+    margin: 0;
+    /* Remove default margins */
   }
 
   /* Main Title - Section 1 */
@@ -456,7 +497,7 @@
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.2;
-    --pos-top: 4%;
+    --pos-top: 5%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -467,11 +508,11 @@
   /* Subtitle - Section 1 */
   .biotipos-section1-subtitle {
     font-family: var(--font-malisha);
-    font-size: 1.5rem;
+    font-size: 2.25rem;
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.5;
-    --pos-top: 12%;
+    --pos-top: 14%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -482,10 +523,10 @@
   /* Main Text with SVG Background - Section 1 */
   .biotipos-section1-main-text {
     position: absolute;
-    width: var(--pos-width, 80%);
-    max-width: var(--pos-max-width, 1800px);
+    width: var(--pos-width, 60%);
+    max-width: var(--pos-max-width, 1400px);
     aspect-ratio: 1591.28 / 366.76;
-    --pos-top: 30%;
+    --pos-top: 35%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -552,7 +593,7 @@
   }
 
   .biotipos-section1-button-1 {
-    --pos-top: 70%;
+    --pos-top: 82%;
     --pos-left: 35%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -561,7 +602,7 @@
   }
 
   .biotipos-section1-button-2 {
-    --pos-top: 70%;
+    --pos-top: 82%;
     --pos-left: 65%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -578,7 +619,8 @@
     min-height: auto;
     overflow-x: hidden !important;
     position: relative !important;
-    padding: 0; /* No padding, content positioned absolutely */
+    padding: 0;
+    /* No padding, content positioned absolutely */
   }
 
   /* Ensure desktop SVG container matches section SVG height calculation */
@@ -590,10 +632,13 @@
 
   /* Content area */
   .section-biotipos-1-content {
-    position: absolute; /* Absolute positioning for desktop */
+    position: absolute;
+    /* Absolute positioning for desktop */
     inset: 0;
-    display: block; /* Revert to block for absolute positioning */
-    text-align: left; /* Default text alignment for desktop */
+    display: block;
+    /* Revert to block for absolute positioning */
+    text-align: left;
+    /* Default text alignment for desktop */
     width: 100%;
     height: 100%;
     max-width: none;
@@ -612,7 +657,8 @@
     transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
     width: var(--pos-width, auto);
     max-width: var(--pos-max-width, 800px);
-    margin: 0; /* Remove default margins */
+    margin: 0;
+    /* Remove default margins */
   }
 
   /* Main Title - Section 1 */
@@ -623,7 +669,7 @@
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.2;
-    --pos-top: 4%;
+    --pos-top: 5%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -634,11 +680,11 @@
   /* Subtitle - Section 1 */
   .biotipos-section1-subtitle {
     font-family: var(--font-malisha);
-    font-size: 1.5rem;
+    font-size: 2.25rem;
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.5;
-    --pos-top: 12%;
+    --pos-top: 14%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -649,10 +695,10 @@
   /* Main Text with SVG Background - Section 1 */
   .biotipos-section1-main-text {
     position: absolute;
-    width: var(--pos-width, 80%);
-    max-width: var(--pos-max-width, 1800px);
-    aspect-ratio: 1591.28 / 366.76;
-    --pos-top: 30%;
+    width: var(--pos-width, 55%);
+    max-width: var(--pos-max-width, 1400px);
+    aspect-ratio: 1591.28 / 360.76;
+    --pos-top: 59%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -725,7 +771,7 @@
   }
 
   .biotipos-section1-button-1 {
-    --pos-top: 70%;
+    --pos-top: 82%;
     --pos-left: 35%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -734,7 +780,7 @@
   }
 
   .biotipos-section1-button-2 {
-    --pos-top: 70%;
+    --pos-top: 82%;
     --pos-left: 65%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -766,7 +812,8 @@
   display: inline-block;
   width: 100%;
   max-width: 90%;
-  aspect-ratio: 1083.83 / 115.13; /* SectionTitle.svg aspect ratio */
+  aspect-ratio: 1083.83 / 115.13;
+  /* SectionTitle.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 80px;
 }
@@ -847,9 +894,11 @@
   /* Text Left - Mobile/Tablet (merged text) */
   .biotipos-section2-text-left {
     position: relative;
-    width: 100%;
-    aspect-ratio: 905.09 / 760.44; /* Double height for merged text (380.22 * 2) */
-    min-height: 500px;
+    width: 80%;
+    margin: 0 auto;
+    aspect-ratio: 905.09 / 760.44;
+    /* Double height for merged text */
+    min-height: 300px;
   }
 
   .biotipos-section2-text-left-bg {
@@ -858,7 +907,7 @@
     width: 100%;
     height: 100%;
     background-image: url('/svg/Biotipos/LeftText.svg');
-    background-size: contain;
+    background-size: 80% auto;
     background-position: center;
     background-repeat: no-repeat;
     z-index: 0;
@@ -916,7 +965,9 @@
   }
 
   .biotipos-section2-text-left {
-    min-height: 600px;
+    width: 90%;
+    margin: 0 auto;
+    min-height: 350px;
   }
 
   .biotipos-section2-text-left-content {
@@ -1016,7 +1067,8 @@
     right: auto !important;
     bottom: auto !important;
     transform: none !important;
-    width: 100%;
+    width: 75%;
+    margin: 0 auto;
     aspect-ratio: 905.09 / 380.22;
     min-height: 300px;
   }
@@ -1027,7 +1079,7 @@
     width: 100%;
     height: 100%;
     background-image: url('/svg/Biotipos/LeftText.svg');
-    background-size: contain;
+    background-size: 80% auto;
     background-position: center;
     background-repeat: no-repeat;
     z-index: 0;
@@ -1044,8 +1096,11 @@
   }
 
   .biotipos-section2-text-left {
-    aspect-ratio: 905.09 / 760.44; /* Double height for merged text */
-    min-height: 500px;
+    width: 75%;
+    margin: 0 auto;
+    aspect-ratio: 905.09 / 760.44;
+    /* Double height for merged text */
+    min-height: 350px;
   }
 
 
@@ -1069,7 +1124,7 @@
     font-size: 1.25rem;
     line-height: 1.7;
     max-width: 90%;
-}
+  }
 
 }
 
@@ -1083,8 +1138,9 @@
     font-size: 1.45rem;
     line-height: 1.7;
     max-width: 90%;
+  }
 }
-}
+
 /* ===========================
    SECTION 2 - QUIZ STYLES
    =========================== */
@@ -1117,7 +1173,7 @@
   background: rgba(146, 0, 0, 0.1);
   border-radius: 4px;
   overflow: hidden;
-  margin-bottom: 0.5rem;
+
 }
 
 .biotipos-section2-quiz-progress-fill {
@@ -1389,7 +1445,8 @@
   width: 100vw;
   margin-left: -50vw;
   margin-right: -50vw;
-  aspect-ratio: 1919.66 / 305.22; /* fullWidthDivider.svg aspect ratio */
+  aspect-ratio: 1919.66 / 305.22;
+  /* fullWidthDivider.svg aspect ratio */
   min-height: 200px;
   margin-bottom: 3rem;
 }
@@ -1435,7 +1492,8 @@
   display: inline-block;
   width: var(--secondary-title-width, 100%);
   max-width: var(--secondary-title-max-width, 90%);
-  aspect-ratio: 1083.83 / 115.13; /* SectionTitle.svg aspect ratio */
+  aspect-ratio: 1083.83 / 115.13;
+  /* SectionTitle.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 80px;
 }
@@ -1472,7 +1530,8 @@
   position: relative;
   width: var(--table-width, 100%);
   max-width: var(--table-max-width, 100%);
-  aspect-ratio: 1898.22 / 634.56; /* SectionMainText.svg aspect ratio */
+  aspect-ratio: 1898.22 / 634.56;
+  /* SectionMainText.svg aspect ratio */
   min-height: 400px;
   margin: 0 auto;
 }
@@ -1991,7 +2050,8 @@
   display: inline-block;
   width: var(--secondary-title-width, 100%);
   max-width: var(--secondary-title-max-width, 90%);
-  aspect-ratio: 1083.83 / 115.13; /* SectionTitle.svg aspect ratio */
+  aspect-ratio: 1083.83 / 115.13;
+  /* SectionTitle.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 80px;
 }
@@ -2040,7 +2100,8 @@
   position: relative;
   width: var(--table-width, 100%);
   max-width: var(--table-max-width, 100%);
-  aspect-ratio: 1898.22 / 634.56; /* SectionMainText.svg aspect ratio */
+  aspect-ratio: 1898.22 / 634.56;
+  /* SectionMainText.svg aspect ratio */
   min-height: 400px;
   margin: 0 auto;
 }
@@ -2161,6 +2222,7 @@
 
 /* Mobile/Tablet - Sections 4-8 */
 @media (max-width: 1279px) {
+
   .section-biotipos-4-content,
   .section-biotipos-5-content,
   .section-biotipos-6-content,
@@ -2266,6 +2328,7 @@
 
 /* Tablet - Sections 4-8 */
 @media (min-width: 768px) and (max-width: 1279px) {
+
   .section-biotipos-4-content,
   .section-biotipos-5-content,
   .section-biotipos-6-content,
@@ -2338,6 +2401,7 @@
 
 /* Desktop - Sections 4-8 */
 @media (min-width: 1280px) {
+
   .biotipos-section4-table-bg,
   .biotipos-section5-table-bg,
   .biotipos-section6-table-bg,
@@ -2364,7 +2428,7 @@
     top: -25%;
 
   }
-  
+
   .biotipos-section4-table th,
   .biotipos-section5-table th,
   .biotipos-section6-table th,
@@ -2374,7 +2438,7 @@
     font-size: 1.4rem;
     color: var(--color-brand-primary);
   }
-  
+
   .biotipos-section4-table td,
   .biotipos-section5-table td,
   .biotipos-section6-table td,
@@ -2409,6 +2473,7 @@
 
 /* Desktop - Sections 4-8 */
 @media (min-width: 1450px) {
+
   .biotipos-section4-table-bg,
   .biotipos-section5-table-bg,
   .biotipos-section6-table-bg,
@@ -2435,7 +2500,7 @@
     top: -25%;
 
   }
-  
+
   .biotipos-section4-table th,
   .biotipos-section5-table th,
   .biotipos-section6-table th,
@@ -2445,7 +2510,7 @@
     font-size: 1.4rem;
     color: var(--color-brand-primary);
   }
-  
+
   .biotipos-section4-table td,
   .biotipos-section5-table td,
   .biotipos-section6-table td,
@@ -2507,7 +2572,7 @@
     top: -25%;
 
   }
-  
+
   .biotipos-section4-table th,
   .biotipos-section5-table th,
   .biotipos-section6-table th,
@@ -2517,7 +2582,7 @@
     font-size: 1.4rem;
     color: var(--color-brand-primary);
   }
-  
+
   .biotipos-section4-table td,
   .biotipos-section5-table td,
   .biotipos-section6-table td,
@@ -2550,12 +2615,12 @@
   }
 
   .biotipos-section4-secondary-title-text,
-.biotipos-section5-secondary-title-text,
-.biotipos-section6-secondary-title-text,
-.biotipos-section7-secondary-title-text,
-.biotipos-section8-secondary-title-text {
-  font-size: 3rem;
-}
+  .biotipos-section5-secondary-title-text,
+  .biotipos-section6-secondary-title-text,
+  .biotipos-section7-secondary-title-text,
+  .biotipos-section8-secondary-title-text {
+    font-size: 3rem;
+  }
 }
 
 /* ===========================
@@ -2586,7 +2651,8 @@
   display: inline-block;
   width: var(--main-title-width, 100%);
   max-width: var(--main-title-max-width, 90%);
-  aspect-ratio: 1703.45 / 141.54; /* Section9Title.svg aspect ratio */
+  aspect-ratio: 1703.45 / 141.54;
+  /* Section9Title.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 100px;
 }
@@ -2623,7 +2689,8 @@
   position: relative;
   width: var(--main-text-width, 100%);
   max-width: var(--main-text-max-width, 90%);
-  aspect-ratio: 1557.79 / 260.43; /* section9MainText.svg aspect ratio */
+  aspect-ratio: 1557.79 / 260.43;
+  /* section9MainText.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 200px;
 }
@@ -2674,7 +2741,8 @@
 .biotipos-section9-left-text {
   position: relative;
   width: 100%;
-  aspect-ratio: 904.56 / 260.43; /* Section9bgTextbysides.svg aspect ratio */
+  aspect-ratio: 904.56 / 260.43;
+  /* Section9bgTextbysides.svg aspect ratio */
   min-height: 250px;
 }
 
@@ -2704,7 +2772,8 @@
 .biotipos-section9-right-text {
   position: relative;
   width: 100%;
-  aspect-ratio: 904.56 / 260.43; /* Section9bgTextbysides.svg aspect ratio */
+  aspect-ratio: 904.56 / 260.43;
+  /* Section9bgTextbysides.svg aspect ratio */
   min-height: 250px;
 }
 
@@ -2717,7 +2786,8 @@
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  transform: scaleX(-1); /* Mirror horizontally */
+  transform: scaleX(-1);
+  /* Mirror horizontally */
   z-index: 0;
 }
 
@@ -2834,7 +2904,7 @@
   /* Main Title - Desktop */
   .biotipos-section9-main-title {
     aspect-ratio: 1703.45 / 141.54;
-    --pos-top: 10%;
+    --pos-top: 12%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -2851,7 +2921,7 @@
     width: var(--main-text-width, 80%);
     max-width: var(--main-text-max-width, 1400px);
     aspect-ratio: 1557.79 / 260.43;
-    --pos-top: 30%;
+    --pos-top: 35%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -2875,7 +2945,7 @@
     gap: 2rem;
     width: var(--text-grid-width, 85%);
     max-width: var(--text-grid-max-width, 1600px);
-    --pos-top: 55%;
+    --pos-top: 65%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -2952,11 +3022,11 @@
   }
 
   .biotipos-section9-text-grid {
-    --pos-top: 55%;
+    --pos-top: 65%;
   }
 
   .biotipos-section9-main-text {
-    --pos-top: 30%;
+    --pos-top: 35%;
 
   }
 }
@@ -2993,7 +3063,8 @@
   display: inline-block;
   width: var(--secondary-title-width, 100%);
   max-width: var(--secondary-title-max-width, 90%);
-  aspect-ratio: 1083.83 / 115.13; /* SectionTitle.svg aspect ratio */
+  aspect-ratio: 1083.83 / 115.13;
+  /* SectionTitle.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 80px;
 }
@@ -3163,6 +3234,7 @@
 
 /* Mobile/Tablet - Sections 10-14 */
 @media (max-width: 1279px) {
+
   .section-biotipos-10-content,
   .section-biotipos-11-content,
   .section-biotipos-12-content,
@@ -3268,6 +3340,7 @@
 
 /* Tablet - Sections 10-14 */
 @media (min-width: 768px) and (max-width: 1279px) {
+
   .section-biotipos-10-content,
   .section-biotipos-11-content,
   .section-biotipos-12-content,
@@ -3339,6 +3412,7 @@
 
 /* Desktop - Sections 10-14 */
 @media (min-width: 1280px) {
+
   .section-biotipos-10-content,
   .section-biotipos-11-content,
   .section-biotipos-12-content,
@@ -3461,6 +3535,7 @@
 
 /* Desktop - Sections 10-14 */
 @media (min-width: 1450px) {
+
   /* Secondary Title - Desktop (absolute positioning) */
   .biotipos-section10-secondary-title,
   .biotipos-section11-secondary-title,
@@ -3500,7 +3575,7 @@
     top: -25%;
 
   }
-  
+
   .biotipos-section10-table th,
   .biotipos-section11-table th,
   .biotipos-section12-table th,
@@ -3510,7 +3585,7 @@
     font-size: 1.4rem;
     color: var(--color-brand-primary);
   }
-  
+
   .biotipos-section10-table td,
   .biotipos-section11-table td,
   .biotipos-section12-table td,
@@ -3532,6 +3607,7 @@
     padding: 2rem;
     top: -15%;
   }
+
   /* Secondary Title - Desktop (absolute positioning) */
   .biotipos-section10-secondary-title,
   .biotipos-section11-secondary-title,
@@ -3573,7 +3649,8 @@
   position: relative;
   width: var(--main-container-width, 100%);
   max-width: var(--main-container-max-width, 90%);
-  aspect-ratio: 1782.16 / 639.91; /* Section15MainText.svg aspect ratio */
+  aspect-ratio: 1782.16 / 639.91;
+  /* Section15MainText.svg aspect ratio */
   margin: 0 auto;
   min-height: 500px;
 }
@@ -3885,14 +3962,14 @@
   .biotipos-section15-main-title {
     position: absolute;
     top: var(--main-title-top, 13%);
-}
+  }
 
-.biotipos-section15-main-text {
-  position: absolute;
-  /* Use CSS custom properties for flexible positioning */
-  top: var(--main-text-top, 35%);
-  z-index: 2;
-}
+  .biotipos-section15-main-text {
+    position: absolute;
+    /* Use CSS custom properties for flexible positioning */
+    top: var(--main-text-top, 35%);
+    z-index: 2;
+  }
 
 }
 
@@ -3903,7 +3980,7 @@
 
   .biotipos-section15-main-title-link {
     font-size: 2.5rem;
-  }  
+  }
 
   .biotipos-section15-main-text-paragraph {
     font-size: 1.5rem;
@@ -3918,14 +3995,14 @@
   .biotipos-section15-main-title {
     position: absolute;
     top: var(--main-title-top, 13%);
-}
+  }
 
-.biotipos-section15-main-text {
-  position: absolute;
-  /* Use CSS custom properties for flexible positioning */
-  top: var(--main-text-top, 35%);
-  z-index: 2;
-}
+  .biotipos-section15-main-text {
+    position: absolute;
+    /* Use CSS custom properties for flexible positioning */
+    top: var(--main-text-top, 35%);
+    z-index: 2;
+  }
 
 }
 
@@ -3953,18 +4030,18 @@
     position: absolute;
     top: var(--main-title-top, 13%);
     font-size: 2.35rem;
-}
+  }
 
-.biotipos-section15-main-title-link {
-  font-size: 2.5rem;
-}
+  .biotipos-section15-main-title-link {
+    font-size: 2.5rem;
+  }
 
-.biotipos-section15-main-text {
-  position: absolute;
-  /* Use CSS custom properties for flexible positioning */
-  top: var(--main-text-top, 35%);
-  z-index: 2;
-}
+  .biotipos-section15-main-text {
+    position: absolute;
+    /* Use CSS custom properties for flexible positioning */
+    top: var(--main-text-top, 35%);
+    z-index: 2;
+  }
 
 
 }
@@ -3986,7 +4063,8 @@
   z-index: 10;
   padding: 2rem 1rem;
   min-height: auto;
-  height: auto; /* Allow section to expand with content */
+  height: auto;
+  /* Allow section to expand with content */
 }
 
 /* Main Title - Section 16 */
@@ -3995,7 +4073,8 @@
   display: inline-block;
   width: var(--main-title-width, 100%);
   max-width: var(--main-title-max-width, 90%);
-  aspect-ratio: 1896.55 / 216.89; /* Section16MainTilte.svg aspect ratio */
+  aspect-ratio: 1896.55 / 216.89;
+  /* Section16MainTilte.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 150px;
 }
@@ -4032,18 +4111,23 @@
   position: relative;
   width: var(--accordion-button-text-width, 100%);
   max-width: var(--accordion-button-text-max-width, 90%);
-  aspect-ratio: 1870.55 / 404.32; /* Section16DropDownButton.svg aspect ratio */
+  aspect-ratio: 1870.55 / 404.32;
+  /* Section16DropDownButton.svg aspect ratio */
   margin: 0 auto 2rem auto;
   min-height: 300px;
-  height: auto; /* Allow height to expand when accordion opens */
+  height: auto;
+  /* Allow height to expand when accordion opens */
   z-index: 10;
 }
 
 /* When accordion is open, allow the container to expand beyond aspect ratio */
 .biotipos-section16-accordion-button-text.accordion-open {
-  aspect-ratio: auto; /* Override aspect ratio when open */
-  min-height: 300px; /* Keep minimum height */
-  height: auto; /* Allow full expansion */
+  aspect-ratio: auto;
+  /* Override aspect ratio when open */
+  min-height: 300px;
+  /* Keep minimum height */
+  height: auto;
+  /* Allow full expansion */
 }
 
 .biotipos-section16-accordion-button-text-bg {
@@ -4097,7 +4181,7 @@
   font-size: 1.5rem;
   color: var(--color-brand-primary);
   transition: transform 0.3s ease;
-  margin-top: 0.5rem;
+
   display: block;
 }
 
@@ -4107,7 +4191,8 @@
 
 /* Accordion Content - Section 16 (now inside the button text) */
 .biotipos-section16-accordion-content {
-  position: relative; /* Changed from absolute to relative so it contributes to parent height */
+  position: relative;
+  /* Changed from absolute to relative so it contributes to parent height */
   width: 100%;
   margin-top: 1rem;
   min-height: 300px;
@@ -4122,7 +4207,8 @@
 }
 
 .biotipos-section16-accordion-content-bg {
-  display: none; /* Remove SVG background */
+  display: none;
+  /* Remove SVG background */
 }
 
 .biotipos-section16-accordion-content-inner {
@@ -4389,9 +4475,11 @@
   .biotipos-section16-accordion-button-text {
     width: var(--accordion-button-text-width, 75%);
     max-width: var(--accordion-button-text-max-width, 1400px);
-    aspect-ratio: 1870.55 / 404.32; /* Section16DropDownButton.svg aspect ratio */
+    aspect-ratio: 1870.55 / 404.32;
+    /* Section16DropDownButton.svg aspect ratio */
     margin: 0 auto 2.5rem auto;
-    height: auto; /* Allow height to expand when accordion opens */
+    height: auto;
+    /* Allow height to expand when accordion opens */
     z-index: 10;
   }
 
@@ -4415,13 +4503,15 @@
 
   /* Accordion Content - Desktop */
   .biotipos-section16-accordion-content {
-    position: relative; /* Changed to relative so it contributes to section height */
+    position: relative;
+    /* Changed to relative so it contributes to section height */
     width: 100%;
     margin-top: 1rem;
   }
 
   .biotipos-section16-accordion-button-text {
-    height: auto; /* Allow button text container to expand when accordion opens */
+    height: auto;
+    /* Allow button text container to expand when accordion opens */
   }
 
   .biotipos-section16-table {
@@ -4491,7 +4581,8 @@
   position: relative;
   width: var(--main-text-width, 100%);
   max-width: var(--main-text-max-width, 90%);
-  aspect-ratio: 1798.47 / 915.06; /* Section17MainText.svg aspect ratio */
+  aspect-ratio: 1798.47 / 915.06;
+  /* Section17MainText.svg aspect ratio */
   margin: 0 auto 2.5rem auto;
   min-height: 600px;
 }
@@ -4581,7 +4672,8 @@
   position: relative;
   width: var(--bottom-text-width, 100%);
   max-width: var(--bottom-text-max-width, 90%);
-  aspect-ratio: 1870.55 / 193.54; /* section17BottomText.svg aspect ratio */
+  aspect-ratio: 1870.55 / 193.54;
+  /* section17BottomText.svg aspect ratio */
   margin: 0 auto;
   min-height: 150px;
 }
@@ -4749,7 +4841,7 @@
     max-width: var(--main-text-max-width, 1400px);
     aspect-ratio: 1798.47 / 915.06;
     min-height: 600px;
-    --pos-top: 35%;
+    --pos-top: 41%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -4787,7 +4879,7 @@
     max-width: var(--bottom-text-max-width, 1300px);
     aspect-ratio: 1870.55 / 193.54;
     min-height: 150px;
-    --pos-top: 80%;
+    --pos-top: 94%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -4812,9 +4904,10 @@
 
 /* Desktop - Section 17 (Medium screens - fix overlap) */
 @media (min-width: 1280px) and (max-width: 1549px) {
+
   /* Adjust main text positioning and size */
   .biotipos-section17-main-text {
-    --pos-top: 15%;
+    --pos-top: 18%;
     width: var(--main-text-width, 70%);
     max-width: var(--main-text-max-width, 1200px);
     min-height: 500px;
@@ -4858,7 +4951,7 @@
   .biotipos-section17-main-text-content {
     padding: 4rem 7rem;
   }
-  
+
   .biotipos-section17-main-text-title {
     font-size: 2rem;
   }
@@ -4884,7 +4977,7 @@
     max-width: var(--main-text-max-width, 1400px);
     aspect-ratio: 1798.47 / 915.06;
     min-height: 600px;
-    --pos-top: 13%;
+    --pos-top: 15%;
     --pos-left: 50%;
     --pos-translate-x: -50%;
     --pos-translate-y: 0;
@@ -4898,7 +4991,8 @@
   min-height: auto;
   height: auto;
   overflow-x: hidden !important;
-  padding: 2rem 1rem; /* Default padding for mobile */
+  padding: 2rem 1rem;
+  /* Default padding for mobile */
 }
 
 .section-biotipos-2-content {
@@ -4915,6 +5009,7 @@
 
 /* Mobile/Tablet - SVG background, height adapts to content */
 @media (max-width: 1279px) {
+
   .section-biotipos-2,
   .section-biotipos-3,
   .section-biotipos-4,
@@ -4981,6 +5076,7 @@
 
 /* Tablet - Improved layout */
 @media (min-width: 768px) and (max-width: 1279px) {
+
   .section-biotipos-2,
   .section-biotipos-3,
   .section-biotipos-10 {
@@ -5015,6 +5111,7 @@
 
 /* Desktop - SVG background, height matches SVG exactly */
 @media (min-width: 1280px) {
+
   .section-biotipos-2,
   .section-biotipos-3,
   .section-biotipos-4,
@@ -5038,7 +5135,8 @@
     overflow-x: hidden !important;
     overflow-y: hidden !important;
     position: relative !important;
-    padding: 0; /* No padding, content positioned absolutely */
+    padding: 0;
+    /* No padding, content positioned absolutely */
   }
 
   /* Ensure desktop SVG container matches section SVG height calculation */
@@ -5079,10 +5177,13 @@
   .section-biotipos-15-content,
   .section-biotipos-16-content,
   .section-biotipos-17-content {
-    position: absolute; /* Absolute positioning for desktop */
+    position: absolute;
+    /* Absolute positioning for desktop */
     inset: 0;
-    display: block; /* Revert to block for absolute positioning */
-    text-align: left; /* Default text alignment for desktop */
+    display: block;
+    /* Revert to block for absolute positioning */
+    text-align: left;
+    /* Default text alignment for desktop */
     width: 100%;
     height: 100%;
     max-width: none;
@@ -5139,3 +5240,24 @@
   }
 }
 
+
+
+/* =======================================
+   REDUCE SECONDARY TITLE BG (SLIGHTLY)
+   ======================================= */
+[class*="biotipos-section"][class*="-secondary-title-bg"] {
+  /* Mantiene la imagen centrada pero reduce su tamaño al 80% en lugar del 100% (contain) */
+  background-size: 80% auto !important;
+  background-position: center !important;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+/* =======================================
+   REDUCE SECONDARY TITLE MARGIN TOP
+   ======================================= */
+/* Aplicar margen negativo para acercar los títulos al elemento superior.
+   (La sección 1 usa '-subtitle' en vez de '-secondary-title' así que esto solo afecta de la 2 en adelante) */
+[class*="biotipos-section"][class*="-secondary-title"]:not(.biotipos-section0-subtitle) {
+  margin-top: 0.5rem !important;
+}

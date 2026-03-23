@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { BiotiposSection1Background, BiotiposGeneralBackground } from '@/components/svg/SVGComponents'
+
 
 // Quiz questions data
 const quizQuestions = [
@@ -156,13 +156,9 @@ export default function BiotiposDoshasPage() {
   };
   return (
     <>
+      <div className="biotipos-mesh-bg-global"></div>
       {/* Section 1 */}
       <section className="relative px-6 overflow-hidden flex flex-col section-biotipos-1">
-        {/* Background - Full section */}
-        <BiotiposSection1Background
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
 
         {/* Content Area - Flexible area for adding text and other elements */}
         <div className="relative z-10 flex-1 section-biotipos-1-content">
@@ -181,7 +177,7 @@ export default function BiotiposDoshasPage() {
             <div className="biotipos-section1-main-text-bg"></div>
             <div className="biotipos-section1-main-text-content">
               <p className="biotipos-section1-main-text-paragraph">
-                El concepto de bio-individualidad es un pilar central para Da Luz, integrando lo ancestral (Ayurveda) y la autogestión. "Bio" se refiere a lo biológico (cuerpo, química, genética) e "Individualidad" a tu unicidad.
+                El concepto de bio-individualidad es un pilar central para Da Luz, integrando lo ancestral (Ayurveda) y la autogestión.
                 <br /><br />
                 Comprender tu biotipo es el primer paso para elegir las Alquimias de Da Luz que mejor te acompañarán. No buscamos clasificar, buscamos honrar tu esencia única.
               </p>
@@ -189,8 +185,8 @@ export default function BiotiposDoshasPage() {
           </div>
 
           {/* Buttons */}
-          <a 
-            href="#section-pieles" 
+          <a
+            href="#section-pieles"
             className="biotipos-text-element biotipos-section1-button biotipos-section1-button-1"
             onClick={(e) => {
               e.preventDefault();
@@ -200,8 +196,8 @@ export default function BiotiposDoshasPage() {
             Pieles
           </a>
 
-          <a 
-            href="#section-cabellos" 
+          <a
+            href="#section-cabellos"
             className="biotipos-text-element biotipos-section1-button biotipos-section1-button-2"
             onClick={(e) => {
               e.preventDefault();
@@ -215,10 +211,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 2 */}
       <section className="relative px-6 overflow-hidden flex flex-col section-biotipos-2">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-2-content">
           {/* Section Title - Full Width at Top */}
           <h2 className="biotipos-text-element biotipos-section2-title">
@@ -235,8 +228,6 @@ export default function BiotiposDoshasPage() {
                 <div className="biotipos-section2-text-left-bg"></div>
                 <div className="biotipos-section2-text-left-content">
                   <p className="biotipos-section2-text-paragraph">
-                    Para comprender el biotipo, es esencial reconocer a la Piel como el órgano más extenso y una frontera muy activa entre el cuerpo y el entorno.
-                    <br /><br />
                     Sus funciones vitales actúan como nuestra primera línea de defensa: Controlar la pérdida de agua, proteger contra el entorno y actuar como barrera frente a químicos y agentes externos.
                   </p>
                 </div>
@@ -246,76 +237,75 @@ export default function BiotiposDoshasPage() {
             {/* Right Column - Quiz */}
             <div className="biotipos-section2-right-column">
               <div className="biotipos-section2-quiz">
-            {!showResult ? (
-              <>
-                <h3 className="biotipos-section2-quiz-title">
-                  Descubre tu Dosha ALKIMYA
-                </h3>
-                <div className="biotipos-section2-quiz-progress">
-                  <div className="biotipos-section2-quiz-progress-bar">
-                    <div 
-                      className="biotipos-section2-quiz-progress-fill"
-                      style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
-                    ></div>
-                  </div>
-                  <span className="biotipos-section2-quiz-progress-text">
-                    Pregunta {currentQuestion + 1} de {quizQuestions.length}
-                  </span>
-                </div>
-                <div className="biotipos-section2-quiz-content">
-                  <h4 className="biotipos-section2-quiz-question">
-                    {quizQuestions[currentQuestion].question}
-                  </h4>
-                  <div className="biotipos-section2-quiz-options">
-                    {(['A', 'B', 'C'] as const).map((option) => (
+                {!showResult ? (
+                  <>
+                    <h3 className="biotipos-section2-quiz-title">
+                      Descubre tu Dosha ALKIMYA
+                    </h3>
+                    <div className="biotipos-section2-quiz-progress">
+                      <div className="biotipos-section2-quiz-progress-bar">
+                        <div
+                          className="biotipos-section2-quiz-progress-fill"
+                          style={{ width: `${((currentQuestion + 1) / quizQuestions.length) * 100}%` }}
+                        ></div>
+                      </div>
+                      <span className="biotipos-section2-quiz-progress-text">
+                        Pregunta {currentQuestion + 1} de {quizQuestions.length}
+                      </span>
+                    </div>
+                    <div className="biotipos-section2-quiz-content">
+                      <h4 className="biotipos-section2-quiz-question">
+                        {quizQuestions[currentQuestion].question}
+                      </h4>
+                      <div className="biotipos-section2-quiz-options">
+                        {(['A', 'B', 'C'] as const).map((option) => (
+                          <button
+                            key={option}
+                            className={`biotipos-section2-quiz-option ${answers[currentQuestion + 1] === option ? 'selected' : ''
+                              }`}
+                            onClick={() => handleAnswer(option)}
+                          >
+                            <span className="biotipos-section2-quiz-option-label">{option}</span>
+                            <span className="biotipos-section2-quiz-option-text">
+                              {quizQuestions[currentQuestion].options[option].text}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {currentQuestion > 0 && (
                       <button
-                        key={option}
-                        className={`biotipos-section2-quiz-option ${
-                          answers[currentQuestion + 1] === option ? 'selected' : ''
-                        }`}
-                        onClick={() => handleAnswer(option)}
+                        className="biotipos-section2-quiz-back"
+                        onClick={() => setCurrentQuestion(currentQuestion - 1)}
                       >
-                        <span className="biotipos-section2-quiz-option-label">{option}</span>
-                        <span className="biotipos-section2-quiz-option-text">
-                          {quizQuestions[currentQuestion].options[option].text}
-                        </span>
+                        ← Anterior
                       </button>
-                    ))}
+                    )}
+                  </>
+                ) : (
+                  <div className="biotipos-section2-quiz-result">
+                    <h3 className="biotipos-section2-quiz-result-title">
+                      Tu Dosha es: {result?.name}
+                    </h3>
+                    <div className="biotipos-section2-quiz-result-content">
+                      <p className="biotipos-section2-quiz-result-biotipo">
+                        <strong>Biotipo:</strong> {result?.biotipo}
+                      </p>
+                      <p className="biotipos-section2-quiz-result-alkimya">
+                        <strong>ALKIMYA Recomendada:</strong> {result?.alkimya}
+                      </p>
+                      <p className="biotipos-section2-quiz-result-description">
+                        {result?.description}
+                      </p>
+                    </div>
+                    <button
+                      className="biotipos-section2-quiz-restart"
+                      onClick={resetQuiz}
+                    >
+                      Volver a hacer el quiz
+                    </button>
                   </div>
-                </div>
-                {currentQuestion > 0 && (
-                  <button
-                    className="biotipos-section2-quiz-back"
-                    onClick={() => setCurrentQuestion(currentQuestion - 1)}
-                  >
-                    ← Anterior
-                  </button>
                 )}
-              </>
-            ) : (
-              <div className="biotipos-section2-quiz-result">
-                <h3 className="biotipos-section2-quiz-result-title">
-                  Tu Dosha es: {result?.name}
-                </h3>
-                <div className="biotipos-section2-quiz-result-content">
-                  <p className="biotipos-section2-quiz-result-biotipo">
-                    <strong>Biotipo:</strong> {result?.biotipo}
-                  </p>
-                  <p className="biotipos-section2-quiz-result-alkimya">
-                    <strong>ALKIMYA Recomendada:</strong> {result?.alkimya}
-                  </p>
-                  <p className="biotipos-section2-quiz-result-description">
-                    {result?.description}
-                  </p>
-                </div>
-                <button
-                  className="biotipos-section2-quiz-restart"
-                  onClick={resetQuiz}
-                >
-                  Volver a hacer el quiz
-                </button>
-              </div>
-            )}
               </div>
             </div>
           </div>
@@ -324,10 +314,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 3 */}
       <section id="section-pieles" className="relative overflow-hidden flex flex-col section-biotipos-3">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-3-content">
           {/* Main Title - Full Width */}
           <div className="biotipos-section3-main-title-wrapper">
@@ -374,10 +361,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 4 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-4">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-4-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section4-secondary-title">
@@ -416,10 +400,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 5 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-5">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-5-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section5-secondary-title">
@@ -458,10 +439,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 6 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-6">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-6-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section6-secondary-title">
@@ -500,10 +478,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 7 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-7">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-7-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section7-secondary-title">
@@ -542,10 +517,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 8 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-8">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-8-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section8-secondary-title">
@@ -584,10 +556,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 9 */}
       <section id="section-cabellos" className="relative overflow-hidden flex flex-col section-biotipos-9">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-9-content">
           {/* Main Title */}
           <h2 className="biotipos-text-element biotipos-section9-main-title">
@@ -632,10 +601,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 10 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-10">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-10-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section10-secondary-title">
@@ -672,10 +638,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 11 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-11">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-11-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section11-secondary-title">
@@ -712,10 +675,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 12 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-12">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-12-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section12-secondary-title">
@@ -752,10 +712,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 13 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-13">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-13-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section13-secondary-title">
@@ -792,10 +749,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 14 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-14">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-14-content">
           {/* Secondary Title */}
           <h3 className="biotipos-text-element biotipos-section14-secondary-title">
@@ -832,10 +786,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 15 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-15">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-15-content">
           {/* Main Text Container with SVG Background */}
           <div className="biotipos-section15-main-container">
@@ -854,22 +805,22 @@ export default function BiotiposDoshasPage() {
                   ¿Aún tienes dudas? ¡Te ayudamos a elegir!
                   <br /><br />
                   Si después de identificar tu biotipo todavía tienes dudas sobre cuál es el mejor producto para ti, contáctanos. ¡Estamos para guiarte en tu camino de bienestar!
-          </p>
-        </div>
+                </p>
+              </div>
 
               {/* Buttons Container */}
               <div className="biotipos-section15-buttons-container">
-                <a 
-                  href="https://www.instagram.com" 
-                  target="_blank" 
+                <a
+                  href="https://www.instagram.com"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="biotipos-section15-button biotipos-section15-button-instagram"
                 >
                   Contactá por Instagram
                 </a>
-                <a 
-                  href="https://wa.me" 
-                  target="_blank" 
+                <a
+                  href="https://wa.me"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="biotipos-section15-button biotipos-section15-button-whatsapp"
                 >
@@ -877,16 +828,13 @@ export default function BiotiposDoshasPage() {
                 </a>
               </div>
             </div>
-      </div>
-    </div>
+          </div>
+        </div>
       </section>
 
       {/* Section 16 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-16">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-16-content">
           {/* Main Title */}
           <h2 className="biotipos-text-element biotipos-section16-main-title">
@@ -997,10 +945,7 @@ export default function BiotiposDoshasPage() {
 
       {/* Section 17 */}
       <section className="relative overflow-hidden flex flex-col section-biotipos-17">
-        <BiotiposGeneralBackground
-          bgColor="#F6FBD6"
-          className="opacity-100"
-        />
+
         <div className="relative z-10 flex-1 section-biotipos-17-content">
           {/* Main Text */}
           <div className="biotipos-text-element biotipos-section17-main-text">
@@ -1035,8 +980,8 @@ export default function BiotiposDoshasPage() {
                 Este enfoque holístico subraya que la salud de la piel es un síntoma de la armonía o el desequilibrio interno de la persona en su totalidad.
               </p>
             </div>
-      </div>
-    </div>
+          </div>
+        </div>
       </section>
     </>
   )
