@@ -158,14 +158,17 @@ export default function BiotiposDoshasPage() {
     <>
       <div className="biotipos-mesh-bg-global"></div>
       {/* Section 1 */}
-      <section className="relative px-6 overflow-hidden flex flex-col section-biotipos-1">
+      <section className="relative overflow-hidden flex flex-col section-biotipos-1">
 
         {/* Content Area - Flexible area for adding text and other elements */}
         <div className="relative z-10 flex-1 section-biotipos-1-content">
           {/* Main Title */}
-          <h1 className="biotipos-text-element biotipos-section1-title">
-            TU BIOTIPO Y CEREMONIA
-          </h1>
+          <div className="biotipos-section1-main-title-wrapper">
+            <div className="biotipos-section1-main-title-bg"></div>
+            <h1 className="biotipos-text-element biotipos-section1-main-title">
+              TU BIOTIPO Y CEREMONIA
+            </h1>
+          </div>
 
           {/* Subtitle */}
           <p className="biotipos-text-element biotipos-section1-subtitle">

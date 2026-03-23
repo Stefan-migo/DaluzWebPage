@@ -828,6 +828,7 @@
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
+  transform: translateY(-13%) !important;
 }
 
 .biotipos-section2-title-text {
@@ -843,6 +844,7 @@
   text-align: center;
   padding: 0 2rem;
   z-index: 1;
+  transform: translateY(-13%) !important;
 }
 
 /* Main Container - Left and Right Columns */
@@ -5445,4 +5447,128 @@ div.biotipos-section14-table-bg[class*="-table-bg"] {
 .section-biotipos-16:has(.accordion-open) {
   margin-bottom: 15rem !important;
   transition: margin-bottom 0.4s ease;
+}
+
+/* =======================================
+   ESTILOS COPIADOS DE SECTION 3 -> SECTION 1
+   ======================================= */
+.section-biotipos-1-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  z-index: 10 !important;
+  padding: 2rem 1rem !important;
+}
+
+.biotipos-section1-main-title-wrapper {
+  position: relative !important;
+  width: 100vw !important;
+  left: 50% !important;
+  margin-left: -50vw !important;
+  aspect-ratio: 1919.66 / 305.22 !important;
+  min-height: 200px !important;
+  margin-bottom: 3rem !important;
+}
+
+.biotipos-section1-main-title-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-image: url('/svg/Biotipos/fullWidthDivider.svg') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  transform: translate(-13%, -13%) !important;
+  background-repeat: no-repeat !important;
+  z-index: 0 !important;
+}
+
+.biotipos-section1-main-title {
+  position: center !important;
+  top: 5% !important;
+  /* Subido para que no choque con la curva roja inferior */
+  left: 35% !important;
+
+  width: auto !important;
+  max-width: 100% !important;
+  display: center !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: var(--font-title) !important;
+  font-size: 3rem !important;
+  font-weight: 400 !important;
+  color: var(--color-brand-primary) !important;
+  text-align: center !important;
+  padding: 0 2rem !important;
+  z-index: 1 !important;
+  margin: 0 !important;
+}
+
+.biotipos-text-element.biotipos-section1-subtitle {
+  top: 10% !important;
+  /* Subido para que no choque con la curva roja inferior */
+  left: 47% !important;
+  color: var(--color-brand-primary) !important;
+}
+
+/* =======================================
+   REUBICAR TEXTO MÁS ARRIBA SECTION 1
+   ======================================= */
+.biotipos-section1-main-text {
+
+  top: 48% !important;
+  /* Estaba originalmente en 59%, reducir para subir */
+  transform: translate(-50%, -80%) !important;
+  /* Mantener centrado */
+}
+
+.biotipos-section1-button-1,
+.biotipos-section1-button-2 {
+  top: 72% !important;
+  /* Estaban originalmente en 82%, reducir para subir */
+  transform: translate(-50%, -60%) !important;
+  /* Mantener centrados en su % de left */
+}
+
+/* =======================================
+   TITULOS SECUNDARIOS MODERNOS (CON MÁSCARA SVG)
+   ======================================= */
+div.biotipos-section3-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section4-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section5-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section6-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section7-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section8-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section9-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section10-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section11-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section12-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section13-secondary-title-bg[class*="-secondary-title-bg"],
+div.biotipos-section14-secondary-title-bg[class*="-secondary-title-bg"] {
+
+  /* Eliminamos la imagen plana original del fondo */
+  background-image: none !important;
+
+  /* Rellenamos el contenedor con el elegante degradado luminoso de Alkimya */
+  background: linear-gradient(135deg, #ae00008b 0%, #dc36008b 100%) !important;
+
+  /* Transformamos tu SVG original en un 'molde' o recortador (máscara) */
+  -webkit-mask-image: url('/svg/Biotipos/SectionTitle.svg') !important;
+  mask-image: url('/svg/Biotipos/SectionTitle.svg') !important;
+
+  /* Sincronizamos las dimensiones de la máscara al 80% como lo programaste originalmente */
+  -webkit-mask-size: 80% auto !important;
+  mask-size: 80% auto !important;
+  -webkit-mask-position: center !important;
+  mask-position: center !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+
+  /* Agregamos una moderna y cálida sombra que proyecta la forma exacta de tu SVG */
+  filter: drop-shadow(0px 8px 12px rgba(174, 0, 0, 0.462)) drop-shadow(0px 2px 4px rgba(220, 54, 0, 0.2)) !important;
 }
