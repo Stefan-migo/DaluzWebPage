@@ -5261,3 +5261,188 @@
 [class*="biotipos-section"][class*="-secondary-title"]:not(.biotipos-section0-subtitle) {
   margin-top: 0.5rem !important;
 }
+
+/* =======================================
+   UNIFY SECONDARY TITLE SIZES
+   ======================================= */
+/* Unificar tamaños de la fuente (font-size) de todos los textos secundarios (spans) de la seccion 2 a la 16 */
+[class*="biotipos-section"][class*="-secondary-title-text"] {
+  font-size: 1.25rem !important;
+}
+
+@media (min-width: 768px) {
+  [class*="biotipos-section"][class*="-secondary-title-text"] {
+    font-size: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  [class*="biotipos-section"][class*="-secondary-title-text"] {
+    font-size: 1.75rem !important;
+  }
+}
+
+
+/* =======================================
+   CERRAR BRECHA ENTRE SECCIONES (TABLE Y SIGUIENTE TITULO)
+   ======================================= */
+
+/* MÓVIL Y TABLET: Quitamos paddings excesivos para apretar los contenidos */
+@media (max-width: 1279px) {
+  [class^="section-biotipos-"]:not(.section-biotipos-1):not(.section-biotipos-2) {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+  }
+}
+
+/* ESCRITORIO: Las secciones tienen un aspect-ratio que crea un espacio vacío al fondo (el 20% inferior está vacío).
+   Usamos margin-bottom negativo para acercar la siguiente sección sin romper los anchos.
+   Se omite la sección 1, 2 y la 17 porque no tienen este problema masivo de aspect-ratio. */
+@media (min-width: 1200px) {
+  [class*="section-biotipos-"][class*="-secondary-title-text"] {
+    margin-bottom: 2rem !important;
+    margin-top: 0.5rem !important;
+    /* -18vw empuja radicalmente a la siguiente sección hacia arriba, comiéndose el "hueco" transparente */
+  }
+}
+
+/* Secciones 15 y 16 también tienen layout de aspect-ratio similares */
+
+/* =======================================
+   REDUCE TABLE BG
+   ======================================= */
+[class*="biotipos-section"][class*="-table-bg"] {
+  background-size: 85% auto !important;
+  background-position: center !important;
+  margin-top: -1rem !important;
+  margin-bottom: -1rem !important;
+}
+
+/* =======================================
+   TABLE BG RE-SIZE (SECTIONS 10-14)
+   ======================================= */
+div.biotipos-section10-table-bg[class*="-table-bg"],
+div.biotipos-section11-table-bg[class*="-table-bg"],
+div.biotipos-section12-table-bg[class*="-table-bg"],
+div.biotipos-section13-table-bg[class*="-table-bg"],
+div.biotipos-section14-table-bg[class*="-table-bg"] {
+  background-size: 95% auto !important;
+
+}
+
+/* =======================================
+   LOWER SECONDARY TITLES (SECTIONS 10-14)
+   ======================================= */
+
+
+/* =======================================
+   ACERCAR SECCIONES (REDUCIR HUECO VACÍO EN ESCRITORIO)
+   ======================================= */
+@media (min-width: 1024px) {
+
+  .section-biotipos-3,
+  .section-biotipos-4,
+  .section-biotipos-5,
+  .section-biotipos-6,
+  .section-biotipos-7 {
+    /* El valor en "vw" tira hacia arriba de la sección siguiente sobreponiéndola 
+       al final transparente y vacío de esta. */
+    margin-bottom: -15vw !important;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  .section-biotipos-9,
+  .section-biotipos-10,
+  .section-biotipos-11,
+  .section-biotipos-12,
+  .section-biotipos-13,
+  .section-biotipos-14,
+  .section-biotipos-15 {
+    /* El valor en "vw" tira hacia arriba de la sección siguiente sobreponiéndola 
+       al final transparente y vacío de esta. */
+    margin-bottom: -10vw !important;
+
+  }
+
+  .section-biotipos-16 {
+    margin-bottom: -25vw !important;
+  }
+
+
+  /* Mueve tanto el título secundario como la tabla hacia abajo en sintonía */
+  div.biotipos-section10-secondary-title[class*="-secondary-title"],
+  div.biotipos-section11-secondary-title[class*="-secondary-title"],
+  div.biotipos-section12-secondary-title[class*="-secondary-title"],
+  div.biotipos-section13-secondary-title[class*="-secondary-title"],
+  div.biotipos-section14-secondary-title[class*="-secondary-title"],
+  div.biotipos-section10-table-container[class*="-table"],
+  div.biotipos-section11-table-container[class*="-table"],
+  div.biotipos-section12-table-container[class*="-table"],
+  div.biotipos-section13-table-container[class*="-table"],
+  div.biotipos-section14-table-container[class*="-table"] {
+    margin-bottom: 0.5rem !important;
+    margin-top: -4rem !important;
+  }
+}
+
+/* =======================================
+   SECTION 9 ACHICAR FONDOS
+   ======================================= */
+.biotipos-section9-main-text-bg {
+  background-size: 85% auto !important;
+  background-position: center !important;
+  width: 100% !important;
+  left: 0 !important;
+  transform: none !important;
+
+}
+
+.biotipos-section9-left-text-bg {
+  background-size: 85% auto !important;
+  background-position: left !important;
+  width: 100% !important;
+  left: -10% !important;
+  transform: none !important;
+
+}
+
+.biotipos-section9-left-text-content {
+  transform: translateX(-17%) !important;
+  /* Ajusta aquí (-10%, -15%, etc.) para alinear el texto sobre tu fondo */
+}
+
+
+
+.biotipos-section9-right-text-bg {
+  background-size: 85% auto !important;
+  background-position: absolute !important;
+  width: 100% !important;
+  left: -25% !important;
+  transform: none !important;
+}
+
+.biotipos-section9-right-text-content {
+  transform: translateX(-25%) !important;
+  /* Ajusta aquí (-10%, -15%, etc.) para alinear el texto sobre tu fondo */
+}
+
+/* =======================================
+   REDUCIR MARGEN SUPERIOR SECTION 9 LADOS
+   ======================================= */
+.biotipos-section9-left-text,
+.biotipos-section9-right-text {
+  /* Margen negativo para empujar los bloques hacia arriba, acercándolos al main-text */
+  margin-top: -4.5rem !important;
+}
+
+/* =======================================
+   SECTION 16 ACCORDION DYNAMIC GAP
+   ======================================= */
+/* Si la tabla está ABIERTA, anula el margen negativo masivo que solapaba la seccion 17.
+   Esto fuerza a la Sec 17 a desplazarse hacia abajo. */
+.section-biotipos-16:has(.accordion-open) {
+  margin-bottom: 15rem !important;
+  transition: margin-bottom 0.4s ease;
+}

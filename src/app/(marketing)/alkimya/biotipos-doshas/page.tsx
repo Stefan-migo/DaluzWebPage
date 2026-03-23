@@ -387,7 +387,7 @@ export default function BiotiposDoshasPage() {
                   <tr>
                     <td>Seca (Alípica)</td>
                     <td>Vata (Éter y Aire)</td>
-                    <td>Piel fina, áspera, tirante, con tendencia a la descamación y arrugas prematuras. Déficit en secreción sebácea.</td>
+                    <td>Piel fina, tirante, con tendencia a la descamación y arrugas. Déficit en secreción sebácea.</td>
                     <td>Nutrición intensa (aceites pesados), lípidos, ceramidas y alta humectación.</td>
                     <td>NUTRE</td>
                   </tr>
@@ -953,7 +953,7 @@ export default function BiotiposDoshasPage() {
             <div className="biotipos-section17-main-text-content">
               <h3 className="biotipos-section17-main-text-title">La Importancia de la Visión Holística</h3>
               <p className="biotipos-section17-main-text-paragraph">
-                Al igual que en el cuidado de la piel, donde las texturas y activos se eligen según el biotipo (ej. cremas ligeras para piel grasa), en Ayurveda el tratamiento de la salud se personaliza.
+                Al igual que en el cuidado de la piel, donde las texturas y activos se eligen según el biotipo, en Ayurveda el tratamiento de la salud se personaliza.
               </p>
               <ul className="biotipos-section17-main-text-list">
                 <li>
@@ -966,19 +966,9 @@ export default function BiotiposDoshasPage() {
                 </li>
                 <li>
                   <h4 className="biotipos-section17-main-text-list-title">Piel Grasa/Kapha:</h4>
-                  <p className="biotipos-section17-main-text-list-text">Requiere terapias para <strong>reducir el exceso de agua y tierra</strong> (Kapha), con una dieta que evite lo dulce, el exceso de líquidos, y aceites ligeros o secos.</p>
+                  <p className="biotipos-section17-main-text-list-text">Requiere terapias para <strong>reducir el exceso de agua y tierra</strong> (Kapha).</p>
                 </li>
               </ul>
-            </div>
-          </div>
-
-          {/* Bottom Text */}
-          <div className="biotipos-text-element biotipos-section17-bottom-text">
-            <div className="biotipos-section17-bottom-text-bg"></div>
-            <div className="biotipos-section17-bottom-text-content">
-              <p className="biotipos-section17-bottom-text-paragraph">
-                Este enfoque holístico subraya que la salud de la piel es un síntoma de la armonía o el desequilibrio interno de la persona en su totalidad.
-              </p>
             </div>
           </div>
         </div>
