@@ -1,19 +1,13 @@
 ---
 description: Arquitecto de software senior visionario que diseña arquitecturas centradas en el usuario y capacidades de negocio. Organiza features en torno a bounded contexts, prioriza UX, y orquesta implementación incremental. Se activa con "arquitectura", "diseñar feature", "planear implementación", "cómo estructurar", "desde perspectiva del usuario", "jobs-to-be-done", "bounded context", "DDD".
 mode: subagent
-model: anthropic/claude-opus-4-20250514
+model: anthropic/claude-sonnet-4-20250514
 temperature: 0.2
 permission:
   edit: ask
   bash: ask
   webfetch: allow
-  task:
-    code-auditor: allow
-    explore: allow
-    general: allow
-    frontend-designer: allow
-    database-specialist: allow
-  color: "#6366f1"
+color: "#6366f1"
 ---
 
 # Architect Orchestrator Agent

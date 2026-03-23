@@ -1,0 +1,4 @@
+# Exclude style utility scripts from ESLint
+# These are Node.js scripts for CSS manipulation, not part of the Next.js app
+src/styles/*.js
+src/styles/*.js
