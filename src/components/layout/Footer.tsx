@@ -100,20 +100,20 @@ export default function Footer() {
         <div className="container mx-auto px-6 py-8 min-w-0 z-30">
           {/* Brand Section - Mobile */}
           <div className="text-center space-y-4 mb-8">
-            <h3 className="text-xl font-display font-normal" style={{ color: '#FFF4B3' }}>
+            <h3 className="text-xl font-display font-normal" style={{ color: '#FFF4E0' }}>
               DA LUZ CONSCIENTE
             </h3>
-            <div className="text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+            <div className="text-xs font-caption" style={{ color: '#FFF4E0', opacity: 0.8 }}>
               Alkimyas para alma y cuerpo
             </div>
           </div>
 
           {/* Contact Info - Mobile Optimized */}
           <div className="space-y-4 mb-8">
-            <h4 className="font-title font-medium text-center text-lg" style={{ color: '#FFF4B3' }}>
+            <h4 className="font-title font-medium text-center text-lg" style={{ color: '#FFF4E0' }}>
               Contacto
             </h4>
-            <div className="space-y-4 font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+            <div className="space-y-4 font-text" style={{ color: '#FFF4E0', opacity: 0.9 }}>
               {/* Email */}
               <div className="flex items-center justify-center space-x-3 px-4">
                 <Mail className="h-4 w-4 flex-shrink-0 lucide" style={{ color: '#F8D794' }} />
@@ -150,7 +150,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-              style={{ color: '#FFF4B3' }}
+              style={{ color: '#FFF4E0' }}
               aria-label="Instagram"
             >
               <Instagram className="h-5 w-5 lucide" />
@@ -160,7 +160,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-              style={{ color: '#FFF4B3' }}
+              style={{ color: '#FFF4E0' }}
               aria-label="Facebook"
             >
               <Facebook className="h-5 w-5 lucide" />
@@ -170,7 +170,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-              style={{ color: '#FFF4B3' }}
+              style={{ color: '#FFF4E0' }}
               aria-label="WhatsApp"
             >
               <MessageCircle className="h-5 w-5 lucide" />
@@ -180,23 +180,23 @@ export default function Footer() {
           {/* Quick Links - Mobile Simplified */}
           <div className="grid grid-cols-2 gap-6 mb-8 text-center">
             <div>
-              <h4 className="font-title font-medium mb-3 text-sm" style={{ color: '#FFF4B3' }}>Productos</h4>
+              <h4 className="font-title font-medium mb-3 text-sm" style={{ color: '#FFF4E0' }}>Productos</h4>
               <div className="space-y-2">
-                <Link href="/productos" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                <Link href="/productos" className="block text-xs font-text" style={{ color: '#FFF4E0', opacity: 0.9 }}>
                   Ver Todo
                 </Link>
-                <Link href="/productos/kits" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                <Link href="/productos/kits" className="block text-xs font-text" style={{ color: '#FFF4E0', opacity: 0.9 }}>
                   Kits Especiales
                 </Link>
               </div>
             </div>
             <div>
-              <h4 className="font-title font-medium mb-3 text-sm" style={{ color: '#FFF4B3' }}>Membresía</h4>
+              <h4 className="font-title font-medium mb-3 text-sm" style={{ color: '#FFF4E0' }}>Membresía</h4>
               <div className="space-y-2">
-                <Link href="/membresia" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                <Link href="/membresia" className="block text-xs font-text" style={{ color: '#FFF4E0', opacity: 0.9 }}>
                   Programa
                 </Link>
-                <Link href="/membresia/comunidad" className="block text-xs font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                <Link href="/membresia/comunidad" className="block text-xs font-text" style={{ color: '#FFF4E0', opacity: 0.9 }}>
                   Comunidad
                 </Link>
               </div>
@@ -204,7 +204,7 @@ export default function Footer() {
           </div>
 
           {/* Values - Mobile */}
-          <div className="flex justify-center space-x-4 mb-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+          <div className="flex justify-center space-x-4 mb-6 font-caption" style={{ color: '#FFF4E0', opacity: 0.9 }}>
             <div className="flex items-center space-x-1">
               <Leaf className="h-3 w-3 lucide" style={{ color: '#F8D794' }} />
               <span className="text-xs">Natural</span>
@@ -220,7 +220,7 @@ export default function Footer() {
           </div>
 
           {/* Copyright - Mobile */}
-          <div className="text-center text-xs font-text pt-4 border-t border-white/20" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+          <div className="text-center text-xs font-text pt-4 border-t border-white/20" style={{ color: '#FFF4E0', opacity: 0.8 }}>
             <div>© {currentYear} DA LUZ CONSCIENTE</div>
             <div className="mt-1">Todos los derechos reservados</div>
           </div>
@@ -234,22 +234,22 @@ export default function Footer() {
             {/* Brand Section */}
             <div className="lg:col-span-2 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-2xl font-display font-normal" style={{ color: '#FFF4B3' }}>
+                <h3 className="text-2xl font-display font-normal" style={{ color: '#FFF4E0' }}>
                   DA LUZ CONSCIENTE
                 </h3>
-                <div className="text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+                <div className="text-xs font-caption" style={{ color: '#FFF4E0', opacity: 0.8 }}>
                   Alkimyas para alma y cuerpo
                 </div>
               </div>
 
-              <p className="text-sm font-text leading-relaxed" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+              <p className="text-sm font-text leading-relaxed" style={{ color: '#FFF4E0', opacity: 0.9 }}>
                 Transformamos vidas a través de la biocosmética artesanal y terapias holísticas.
                 Acompañamos tu camino hacia el bienestar integral con productos naturales y
                 un programa de transformación personal de 7 meses.
               </p>
 
               {/* Contact Info */}
-              <div className="space-y-2 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+              <div className="space-y-2 text-sm font-text" style={{ color: '#FFF4E0', opacity: 0.9 }}>
                 <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
                   <a href="mailto:contacto@daluzconsciente.com" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
@@ -275,7 +275,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                  style={{ color: '#FFF4B3' }}
+                  style={{ color: '#FFF4E0' }}
                   aria-label="Instagram"
                 >
                   <Instagram className="h-5 w-5 lucide" />
@@ -285,7 +285,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                  style={{ color: '#FFF4B3' }}
+                  style={{ color: '#FFF4E0' }}
                   aria-label="Facebook"
                 >
                   <Facebook className="h-5 w-5 lucide" />
@@ -295,7 +295,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                  style={{ color: '#FFF4B3' }}
+                  style={{ color: '#FFF4E0' }}
                   aria-label="WhatsApp"
                 >
                   <MessageCircle className="h-5 w-5 lucide" />
@@ -306,14 +306,14 @@ export default function Footer() {
             {/* Footer Links */}
             {footerSections.map((section) => (
               <div key={section.title} className="space-y-4">
-                <h4 className="font-title font-medium" style={{ color: '#FFF4B3' }}>{section.title}</h4>
+                <h4 className="font-title font-medium" style={{ color: '#FFF4E0' }}>{section.title}</h4>
                 <ul className="space-y-2">
                   {section.links.map((link) => (
                     <li key={link.name}>
                       <Link
                         href={link.href as any}
                         className="text-sm font-text transition-colors duration-300 block px-2 py-1 rounded hover:bg-white/10 hover:text-white"
-                        style={{ color: '#FFF4B3', opacity: 0.9 }}
+                        style={{ color: '#FFF4E0', opacity: 0.9 }}
                       >
                         {link.name}
                       </Link>
@@ -330,14 +330,14 @@ export default function Footer() {
         {/* Bottom Footer */}
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-4 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+            <div className="flex items-center space-x-4 text-sm font-text" style={{ color: '#FFF4E0', opacity: 0.8 }}>
               <span>© {currentYear} DA LUZ CONSCIENTE</span>
               <span>•</span>
               <span>Todos los derechos reservados</span>
             </div>
 
             {/* Values Icons */}
-            <div className="flex items-center space-x-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+            <div className="flex items-center space-x-6 font-caption" style={{ color: '#FFF4E0', opacity: 0.9 }}>
               <div className="flex items-center space-x-1 text-xs">
                 <Leaf className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
                 <span>100% Natural</span>
@@ -353,7 +353,7 @@ export default function Footer() {
             </div>
 
             {/* Payment Methods */}
-            <div className="flex items-center space-x-2 text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+            <div className="flex items-center space-x-2 text-xs font-caption" style={{ color: '#FFF4E0', opacity: 0.9 }}>
               <span>Aceptamos:</span>
               <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
                 Mercado Pago

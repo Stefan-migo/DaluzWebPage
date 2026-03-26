@@ -168,11 +168,8 @@ export default function Header() {
 
               {/* Text Logo - Vertical Layout - Centered */}
               <div className="flex flex-col justify-center items-center">
-                <div className="text-2xl font-display font-normal transition-colors duration-300 leading-tight text-center" style={{ color: '#FFF4B3' }}>
+                <div className="text-2xl font-display font-normal transition-colors duration-300 leading-tight text-center" style={{ color: '#FFF4E0' }}>
                   DA LUZ
-                </div>
-                <div className="text-sm font-caption leading-tight mt-0.5 text-center" style={{ color: '#FFF4B3', opacity: 0.8 }}>
-                  Alkimya Consciente
                 </div>
               </div>
             </Link>
@@ -181,7 +178,7 @@ export default function Header() {
             <NavigationMenu className="hidden xl:flex">
               <NavigationMenuList>
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4E0' }}>
                     Tienda
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -235,7 +232,7 @@ export default function Header() {
 
                 {/* ALKIMYA DROPDOWN MENU */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4E0' }}>
                     Alkimya
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -285,7 +282,7 @@ export default function Header() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4E0' }}>
                     Raices Da Luz
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -347,7 +344,7 @@ export default function Header() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4E0' }}>
                     Procesos
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -389,7 +386,7 @@ export default function Header() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4E0' }}>
                     Blog
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -455,7 +452,7 @@ export default function Header() {
                 </NavigationMenuItem>
 
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4B3' }}>
+                  <NavigationMenuTrigger className="bg-transparent focus:bg-white/10 data-[active]:bg-white/10 data-[state=open]:bg-white/10 hover:bg-white/10 font-text font-medium text-base" style={{ color: '#FFF4E0' }}>
                     Membresía
                   </NavigationMenuTrigger>
                   <NavigationMenuContent className="border border-gray-200 shadow-lg" style={{ backgroundColor: '#fff4e0' }}>
@@ -515,7 +512,7 @@ export default function Header() {
                 variant="ghost"
                 size="sm"
                 className="relative hover:bg-white/10"
-                style={{ color: '#FFF4B3' }}
+                style={{ color: '#FFF4E0' }}
                 onClick={toggleCart}
               >
                 <ShoppingBag className="h-5 w-5" />
@@ -537,7 +534,7 @@ export default function Header() {
                       <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-white/10">
                         <Avatar className="h-8 w-8">
                           <AvatarImage src={profile?.avatar_url || ""} alt="Avatar" />
-                          <AvatarFallback className="text-brand-primary" style={{ backgroundColor: '#FFF4B3' }}>
+                          <AvatarFallback className="text-brand-primary" style={{ backgroundColor: '#FFF4E0' }}>
                             {profile?.first_name?.charAt(0) || user.email?.charAt(0) || "U"}
                           </AvatarFallback>
                         </Avatar>
@@ -593,7 +590,7 @@ export default function Header() {
                     variant="ghost"
                     size="sm"
                     className="relative hover:bg-white/10 font-text text-base"
-                    style={{ color: '#FFF4B3' }}
+                    style={{ color: '#FFF4E0' }}
                     type="button"
                     onClick={() => {
                       if (typeof window !== 'undefined') {
@@ -607,7 +604,7 @@ export default function Header() {
                     variant="ghost"
                     size="sm"
                     className="relative hover:bg-white/10 font-text text-base"
-                    style={{ color: '#FFF4B3' }}
+                    style={{ color: '#FFF4E0' }}
                     type="button"
                     onClick={() => {
                       if (typeof window !== 'undefined') {
@@ -628,7 +625,7 @@ export default function Header() {
                 variant="ghost"
                 size="sm"
                 className="relative hover:bg-white/10"
-                style={{ color: '#FFF4B3' }}
+                style={{ color: '#FFF4E0' }}
                 onClick={toggleCart}
               >
                 <ShoppingBag className="h-5 w-5" />
@@ -645,7 +642,7 @@ export default function Header() {
               {/* Mobile Menu Trigger */}
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" className="hover:bg-white/10" style={{ color: '#FFF4B3' }} size="sm">
+                  <Button variant="ghost" className="hover:bg-white/10" style={{ color: '#FFF4E0' }} size="sm">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
