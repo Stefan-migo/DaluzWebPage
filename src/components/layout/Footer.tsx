@@ -18,16 +18,16 @@ const RAICES_BG = '#0f3460';
 const RAICES_BORDER = '#1a4a7a';
 const isRaicesPage = (pathname: string) =>
   pathname === '/raices' || pathname === '/filosofia-proposito';
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Instagram, 
-  Facebook, 
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Instagram,
+  Facebook,
   MessageCircle,
   Heart,
   Leaf,
-  Sparkles 
+  Sparkles
 } from "lucide-react";
 
 export default function Footer() {
@@ -37,10 +37,10 @@ export default function Footer() {
 
   const footerBg = isRaicesPage(pathname ?? '') ? RAICES_BG
     : isProcesosPage(pathname ?? '') ? PROCESOS_BG
-    : '#AE0000';
+      : '#AE0000';
   const footerBorder = isRaicesPage(pathname ?? '') ? RAICES_BORDER
     : isProcesosPage(pathname ?? '') ? PROCESOS_BORDER
-    : '#C70000';
+      : '#C70000';
 
   const footerSections = [
     {
@@ -86,7 +86,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer 
+    <footer
       className="border-t transition-all duration-300 z-30"
       style={{
         backgroundColor: footerBg,
@@ -117,8 +117,8 @@ export default function Footer() {
               {/* Email */}
               <div className="flex items-center justify-center space-x-3 px-4">
                 <Mail className="h-4 w-4 flex-shrink-0 lucide" style={{ color: '#F8D794' }} />
-                <a 
-                  href="mailto:contacto@daluzconsciente.com" 
+                <a
+                  href="mailto:contacto@daluzconsciente.com"
                   className="text-sm hover:text-white transition-colors duration-300 flex-1 text-center"
                   style={{ wordBreak: 'normal', overflowWrap: 'break-word' }}
                 >
@@ -128,8 +128,8 @@ export default function Footer() {
               {/* Phone */}
               <div className="flex items-center justify-center space-x-3 px-4">
                 <Phone className="h-4 w-4 flex-shrink-0 lucide" style={{ color: '#F8D794' }} />
-                <a 
-                  href="tel:+5491112345678" 
+                <a
+                  href="tel:+5491112345678"
                   className="text-sm hover:text-white transition-colors duration-300 flex-1 text-center"
                 >
                   +54 9 11 1234-5678
@@ -145,36 +145,36 @@ export default function Footer() {
 
           {/* Social Media - Mobile */}
           <div className="flex justify-center space-x-6 mb-8">
-                          <a 
-                href="https://instagram.com/daluzconsciente" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                style={{ color: '#FFF4B3' }}
-                aria-label="Instagram"
-              >
-                <Instagram className="h-5 w-5 lucide" />
-              </a>
-              <a 
-                href="https://facebook.com/daluzconsciente" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                style={{ color: '#FFF4B3' }}
-                aria-label="Facebook"
-              >
-                <Facebook className="h-5 w-5 lucide" />
-              </a>
-              <a 
-                href="https://wa.me/5493511234567" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                style={{ color: '#FFF4B3' }}
-                aria-label="WhatsApp"
-              >
-                <MessageCircle className="h-5 w-5 lucide" />
-              </a>
+            <a
+              href="https://instagram.com/daluzconsciente"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              style={{ color: '#FFF4B3' }}
+              aria-label="Instagram"
+            >
+              <Instagram className="h-5 w-5 lucide" />
+            </a>
+            <a
+              href="https://facebook.com/daluzconsciente"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              style={{ color: '#FFF4B3' }}
+              aria-label="Facebook"
+            >
+              <Facebook className="h-5 w-5 lucide" />
+            </a>
+            <a
+              href="https://wa.me/5493511234567"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+              style={{ color: '#FFF4B3' }}
+              aria-label="WhatsApp"
+            >
+              <MessageCircle className="h-5 w-5 lucide" />
+            </a>
           </div>
 
           {/* Quick Links - Mobile Simplified */}
@@ -229,138 +229,138 @@ export default function Footer() {
 
       {/* 💻 DESKTOP FOOTER - Full Design */}
       <div className="hidden lg:block">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
-          {/* Brand Section */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="space-y-2">
-              <h3 className="text-2xl font-display font-normal" style={{ color: '#FFF4B3' }}>
-                DA LUZ CONSCIENTE
-              </h3>
-              <div className="text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.8 }}>
-                Alkimyas para alma y cuerpo
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+            {/* Brand Section */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="space-y-2">
+                <h3 className="text-2xl font-display font-normal" style={{ color: '#FFF4B3' }}>
+                  DA LUZ CONSCIENTE
+                </h3>
+                <div className="text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+                  Alkimyas para alma y cuerpo
+                </div>
               </div>
-            </div>
-            
-            <p className="text-sm font-text leading-relaxed" style={{ color: '#FFF4B3', opacity: 0.9 }}>
-              Transformamos vidas a través de la biocosmética artesanal y terapias holísticas. 
-              Acompañamos tu camino hacia el bienestar integral con productos naturales y 
-              un programa de transformación personal de 7 meses.
-            </p>
 
-            {/* Contact Info */}
-            <div className="space-y-2 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
-              <div className="flex items-center space-x-2">
+              <p className="text-sm font-text leading-relaxed" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                Transformamos vidas a través de la biocosmética artesanal y terapias holísticas.
+                Acompañamos tu camino hacia el bienestar integral con productos naturales y
+                un programa de transformación personal de 7 meses.
+              </p>
+
+              {/* Contact Info */}
+              <div className="space-y-2 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+                <div className="flex items-center space-x-2">
                   <Mail className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
-                <a href="mailto:contacto@daluzconsciente.com" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
-                  contacto@daluzconsciente.com
-                </a>
-              </div>
-              <div className="flex items-center space-x-2">
+                  <a href="mailto:contacto@daluzconsciente.com" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
+                    contacto@daluzconsciente.com
+                  </a>
+                </div>
+                <div className="flex items-center space-x-2">
                   <Phone className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
-                <a href="tel:+5491112345678" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
-                  +54 9 11 1234-5678
+                  <a href="tel:+5491112345678" className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded">
+                    +54 9 3512 34-4580
+                  </a>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <MapPin className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
+                  <span>Córdoba, Argentina</span>
+                </div>
+              </div>
+
+              {/* Social Media */}
+              <div className="flex space-x-4">
+                <a
+                  href="https://instagram.com/daluzconsciente"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                  style={{ color: '#FFF4B3' }}
+                  aria-label="Instagram"
+                >
+                  <Instagram className="h-5 w-5 lucide" />
+                </a>
+                <a
+                  href="https://facebook.com/daluzconsciente"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                  style={{ color: '#FFF4B3' }}
+                  aria-label="Facebook"
+                >
+                  <Facebook className="h-5 w-5 lucide" />
+                </a>
+                <a
+                  href="https://wa.me/5493512344580"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
+                  style={{ color: '#FFF4B3' }}
+                  aria-label="WhatsApp"
+                >
+                  <MessageCircle className="h-5 w-5 lucide" />
                 </a>
               </div>
-              <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
-                <span>Córdoba, Argentina</span>
+            </div>
+
+            {/* Footer Links */}
+            {footerSections.map((section) => (
+              <div key={section.title} className="space-y-4">
+                <h4 className="font-title font-medium" style={{ color: '#FFF4B3' }}>{section.title}</h4>
+                <ul className="space-y-2">
+                  {section.links.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        href={link.href as any}
+                        className="text-sm font-text transition-colors duration-300 block px-2 py-1 rounded hover:bg-white/10 hover:text-white"
+                        style={{ color: '#FFF4B3', opacity: 0.9 }}
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="h-px mx-4 my-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-60" />
+
+        {/* Bottom Footer */}
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+            <div className="flex items-center space-x-4 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.8 }}>
+              <span>© {currentYear} DA LUZ CONSCIENTE</span>
+              <span>•</span>
+              <span>Todos los derechos reservados</span>
+            </div>
+
+            {/* Values Icons */}
+            <div className="flex items-center space-x-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+              <div className="flex items-center space-x-1 text-xs">
+                <Leaf className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
+                <span>100% Natural</span>
+              </div>
+              <div className="flex items-center space-x-1 text-xs">
+                <Heart className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
+                <span>Cruelty Free</span>
+              </div>
+              <div className="flex items-center space-x-1 text-xs">
+                <Sparkles className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
+                <span>Artesanal</span>
               </div>
             </div>
 
-            {/* Social Media */}
-            <div className="flex space-x-4">
-              <a 
-                href="https://instagram.com/daluzconsciente" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                style={{ color: '#FFF4B3' }}
-                aria-label="Instagram"
-              >
-                  <Instagram className="h-5 w-5 lucide" />
-              </a>
-              <a 
-                href="https://facebook.com/daluzconsciente" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                style={{ color: '#FFF4B3' }}
-                aria-label="Facebook"
-              >
-                  <Facebook className="h-5 w-5 lucide" />
-              </a>
-              <a 
-                href="https://wa.me/5493511234567" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                style={{ color: '#FFF4B3' }}
-                aria-label="WhatsApp"
-              >
-                  <MessageCircle className="h-5 w-5 lucide" />
-              </a>
-            </div>
-          </div>
-
-          {/* Footer Links */}
-          {footerSections.map((section) => (
-            <div key={section.title} className="space-y-4">
-              <h4 className="font-title font-medium" style={{ color: '#FFF4B3' }}>{section.title}</h4>
-              <ul className="space-y-2">
-                {section.links.map((link) => (
-                  <li key={link.name}>
-                    <Link 
-                      href={link.href as any}
-                      className="text-sm font-text transition-colors duration-300 block px-2 py-1 rounded hover:bg-white/10 hover:text-white"
-                      style={{ color: '#FFF4B3', opacity: 0.9 }}
-                    >
-                      {link.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="h-px mx-4 my-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-60" />
-
-      {/* Bottom Footer */}
-      <div className="container mx-auto px-4 py-6">
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-4 text-sm font-text" style={{ color: '#FFF4B3', opacity: 0.8 }}>
-            <span>© {currentYear} DA LUZ CONSCIENTE</span>
-            <span>•</span>
-            <span>Todos los derechos reservados</span>
-          </div>
-
-          {/* Values Icons */}
-          <div className="flex items-center space-x-6 font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
-            <div className="flex items-center space-x-1 text-xs">
-                <Leaf className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
-              <span>100% Natural</span>
-            </div>
-            <div className="flex items-center space-x-1 text-xs">
-                <Heart className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
-              <span>Cruelty Free</span>
-            </div>
-            <div className="flex items-center space-x-1 text-xs">
-                <Sparkles className="h-4 w-4 lucide" style={{ color: '#F8D794' }} />
-              <span>Artesanal</span>
-            </div>
-          </div>
-
-          {/* Payment Methods */}
-          <div className="flex items-center space-x-2 text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
-            <span>Aceptamos:</span>
-            <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
-              Mercado Pago
-            </Badge>
-            <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
-              Transferencia
-            </Badge>
+            {/* Payment Methods */}
+            <div className="flex items-center space-x-2 text-xs font-caption" style={{ color: '#FFF4B3', opacity: 0.9 }}>
+              <span>Aceptamos:</span>
+              <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
+                Mercado Pago
+              </Badge>
+              <Badge variant="outline" className="text-xs border-white/30 text-white/90 hover:bg-white/10 transition-all duration-300">
+                Transferencia
+              </Badge>
             </div>
           </div>
         </div>

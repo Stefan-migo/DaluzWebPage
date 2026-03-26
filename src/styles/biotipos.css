@@ -170,6 +170,45 @@
     background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
     filter: brightness(1.1);
   }
+
+  /* NUEVA ESTRUCTURA DEL TITULO PRINCIPAL (MOBILE) */
+  .biotipos-section1-main-title-wrapper {
+    position: relative !important;
+    width: 100vw !important; /* Ocupar el ancho total aunque haya padding */
+    left: 50% !important;
+    margin-left: -50vw !important;
+    aspect-ratio: auto !important;
+    min-height: 120px !important;
+    margin-bottom: 2rem !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .biotipos-section1-main-title-bg {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-image: url('/svg/Biotipos/fullWidthDivider.svg') !important;
+    background-size: cover !important;
+    background-position: center !important;
+    transform: none !important; /* Quitar el desfasaje agresivo de escritorio */
+    z-index: 0 !important;
+  }
+
+  .biotipos-section1-main-title {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    display: block !important;
+    color: var(--color-brand-primary) !important;
+    text-align: center;
+    font-size: 2rem !important;
+    font-family: var(--font-title);
+    z-index: 1 !important;
+    padding: 2rem 1rem !important;
+  }
 }
 
 /* Tablet - Improved layout */
@@ -4586,7 +4625,7 @@ div.biotipos-section14-secondary-title-bg[class*="-secondary-title-bg"] {
   /* Transformamos tu SVG original en un 'molde' o recortador (máscara) */
   -webkit-mask-image: url('/svg/Biotipos/SectionTitle.svg') !important;
   mask-image: url('/svg/Biotipos/SectionTitle.svg') !important;
-
+  
   /* Sincronizamos las dimensiones de la máscara al 80% como lo programaste originalmente */
   -webkit-mask-size: 80% auto !important;
   mask-size: 80% auto !important;
@@ -4597,4 +4636,32 @@ div.biotipos-section14-secondary-title-bg[class*="-secondary-title-bg"] {
 
   /* Agregamos una moderna y cálida sombra que proyecta la forma exacta de tu SVG */
   filter: drop-shadow(0px 8px 12px rgba(174, 0, 0, 0.462)) drop-shadow(0px 2px 4px rgba(220, 54, 0, 0.2)) !important;
+}
+
+/* =======================================
+   RESCATE GLOBAL DE ASPECT-RATIO EN MÓVILES
+   ======================================= */
+@media (max-width: 1279px) {
+  /* Anulamos los aspect-ratio de todos los contenedores de texto, 
+     permitiendo que su altura crezca libremente para cobijar textos largos en vertical */
+  [class*="section"][class*="-main-text"]:not(.biotipos-section1-main-text),
+  [class*="section"][class*="-left-text"],
+  [class*="section"][class*="-right-text"],
+  [class*="section"][class*="-side-text"],
+  [class*="section"][class*="-accordion-button-text"] {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+    padding-bottom: 2rem !important;
+    padding-top: 2rem !important;
+  }
+
+  /* Forzamos que la textura del fondo SVG se estire para abarcar la nueva altura de la caja */
+  [class*="section"][class*="-main-text-bg"]:not(.biotipos-section1-main-text-bg),
+  [class*="section"][class*="-left-text-bg"],
+  [class*="section"][class*="-right-text-bg"],
+  [class*="section"][class*="-side-text-bg"],
+  [class*="section"][class*="-accordion-button-text-bg"] {
+    background-size: 100% 100% !important;
+  }
 }

@@ -814,7 +814,7 @@ export default function BiotiposDoshasPage() {
               {/* Buttons Container */}
               <div className="biotipos-section15-buttons-container">
                 <a
-                  href="https://www.instagram.com"
+                  href="https://www.instagram.com/daluzconsciente/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="biotipos-section15-button biotipos-section15-button-instagram"
@@ -822,7 +822,7 @@ export default function BiotiposDoshasPage() {
                   Contactá por Instagram
                 </a>
                 <a
-                  href="https://wa.me"
+                  href="https://wa.me/5493512344580"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="biotipos-section15-button biotipos-section15-button-whatsapp"
