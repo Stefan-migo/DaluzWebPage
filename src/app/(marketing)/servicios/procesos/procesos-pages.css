@@ -1,7 +1,7 @@
 /**
  * Procesos Pages - Shared Styles
  * Used by: /servicios/procesos, /servicios/procesos/ciclos-alquimicos, /servicios/procesos/sesiones-integrales
- * Design: Organic Z/S composition, dark forest green theme
+ * Design: Shared layout components and theme variables
  */
 
 /* ===========================
@@ -180,132 +180,6 @@
   font-weight: 600;
 }
 
-
-/* ===========================
-   SESIONES INTEGRALES PAGE
-   =========================== */
-.sesiones-header-band {
-  position: relative;
-  z-index: 10;
-  background-color: rgba(253, 252, 240, 0.12);
-  padding: 2rem 1.5rem;
-  margin: 0;
-}
-
-.sesiones-header-band-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.sesiones-page-title {
-  font-family: var(--font-title), var(--font-velista), serif;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 400;
-  color: var(--procesos-accent);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.sesiones-intro {
-  position: relative;
-  z-index: 10;
-  padding: 4rem 1.5rem 3rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.sesiones-intro-block {
-  margin-bottom: 2rem;
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: clamp(0.95rem, 2vw, 1.0625rem);
-  line-height: 1.65;
-  color: var(--procesos-accent);
-}
-
-.sesiones-intro-block:last-of-type {
-  margin-bottom: 0;
-}
-
-.sesiones-intro-block.sesiones-intro-left {
-  margin-right: auto;
-  max-width: 560px;
-}
-
-.sesiones-intro-block.sesiones-intro-right {
-  margin-left: auto;
-  max-width: 560px;
-  text-align: right;
-}
-
-.sesiones-grid {
-  position: relative;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto 4rem;
-  padding: 0 1.5rem;
-}
-
-.sesiones-card {
-  background-color: var(--procesos-cream);
-  color: var(--procesos-text-on-cream);
-  padding: 2rem 1.5rem;
-  border-radius: 0 15px;
-  border: 1px solid rgba(1, 31, 24, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sesiones-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.sesiones-card-title {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-weight: 600;
-  font-size: 1.125rem;
-  color: var(--procesos-text-on-cream);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1.25rem;
-}
-
-.sesiones-card-body {
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  flex: 1;
-}
-
-.sesiones-card-body p {
-  margin-bottom: 0.875rem;
-}
-
-.sesiones-card-body p:last-child {
-  margin-bottom: 0;
-}
-
-.sesiones-card-body strong {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-weight: 600;
-}
-
-.sesiones-card-cta {
-  margin-top: 1.5rem;
-}
-
-.sesiones-card-cta .procesos-btn-cream {
-  width: 100%;
-  font-size: 0.8125rem;
-  padding: 0.625rem 1rem;
-  text-align: center;
-}
 
 /* ===========================
    FOOTER CTA SECTION
@@ -500,7 +374,7 @@ a.procesos-btn-cream:hover {
 
 .procesos-herramienta-desc {
   font-family: var(--font-text), var(--font-body), serif;
-  font-size: 0.9375rem;
+  font-size: 1.1rem;
   line-height: 1.65;
 }
 
@@ -701,28 +575,6 @@ a.procesos-btn-cream:hover {
   .procesos-ciclo-featured .procesos-ciclo-body {
     margin-left: 0;
   }
-
-  .procesos-sesiones-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-
-  /* Sesiones responsive */
-  .sesiones-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 0 1rem;
-    margin-bottom: 3rem;
-  }
-
-  .sesiones-intro {
-    padding: 3rem 1rem 2rem;
-  }
-
-  .sesiones-intro-block.sesiones-intro-right {
-    text-align: left;
-  }
 }
 
 /* ===========================
@@ -773,32 +625,12 @@ a.procesos-btn-cream:hover {
   .procesos-page-cta-text {
     font-size: 0.9375rem;
   }
-
-  a.procesos-btn-cream {
-    max-width: 100%;
-    padding: 0.875rem 1.5rem;
-  }
-
-
-  .sesiones-grid {
-    padding: 0 0.75rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .sesiones-card {
-    padding: 1.5rem 1.25rem;
-  }
-
-  .sesiones-intro {
-    padding: 2.5rem 0.75rem 1.5rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
 
   .procesos-organic-box,
-  .procesos-btn-cream,
-  .sesiones-card {
+  .procesos-btn-cream {
     transition: none;
   }
 
