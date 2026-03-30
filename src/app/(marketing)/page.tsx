@@ -923,7 +923,7 @@ export default async function HomePage() {
                 </div>
 
                 {/* Title */}
-                <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
+                <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300 text-transform-none">
                   PROCESOS INTEGRATIVOS
                 </h3>
 
