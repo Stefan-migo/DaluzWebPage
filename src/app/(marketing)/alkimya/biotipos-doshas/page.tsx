@@ -171,7 +171,7 @@ export default function BiotiposDoshasPage() {
           </div>
 
           {/* Subtitle */}
-          <p className="biotipos-text-element biotipos-section1-subtitle">
+          <p className="biotipos-text-element biotipos-section1-subtitle" style={{ fontSize: 'clamp(0.8rem, 1.4vw, 1.3rem)' }}>
             El Reconocimiento de que Cada Ser es Único: Bio-individualidad y Sabiduría Ancestra
           </p>
 
@@ -179,7 +179,7 @@ export default function BiotiposDoshasPage() {
           <div className="biotipos-text-element biotipos-section1-main-text">
             <div className="biotipos-section1-main-text-bg"></div>
             <div className="biotipos-section1-main-text-content">
-              <p className="biotipos-section1-main-text-paragraph">
+              <p className="biotipos-section1-main-text-paragraph" style={{ fontSize: 'clamp(0.8rem, 1.4vw, 1.2rem)' }}>
                 El concepto de bio-individualidad es un pilar central para Da Luz, integrando lo ancestral (Ayurveda) y la autogestión.
                 <br /><br />
                 Comprender tu biotipo es el primer paso para elegir las Alquimias de Da Luz que mejor te acompañarán. No buscamos clasificar, buscamos honrar tu esencia única.
