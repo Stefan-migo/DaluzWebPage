@@ -206,6 +206,7 @@ a.procesos-btn-cream.ciclos-detail-link {
 .ciclos-cycle-header {
   text-align: center;
   margin-bottom: 1.5rem;
+  margin-top: 1rem !important;
 }
 
 .ciclos-cycle-subtitle {

@@ -59,10 +59,6 @@ export default function CiclosAlquimicosPage() {
             </p>
 
           </section>
-          <p className="ciclos-intro-cta">
-            Conocé los programas y elegí el ritmo de tu propio proceso transformador.
-          </p>
-
           {/* Bloque 2: OASIS */}
           <article
             className="ciclos-cycle-block"
