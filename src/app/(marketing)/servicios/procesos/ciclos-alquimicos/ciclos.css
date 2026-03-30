@@ -42,15 +42,20 @@
 /* Ciclos page - alignment utilities (ovals) */
 .ciclos-oval-left {
   margin-right: auto;
+  background-color: #0D3221 !important;
+
 }
 
 .ciclos-oval-right {
   margin-left: auto;
+  background-color: #0D3221 !important;
 }
 
 .ciclos-oval-center {
   margin-left: auto;
   margin-right: auto;
+  background-color: #0D3221 !important;
+
 }
 
 .ciclos-text-center .procesos-oval-box-inner {
@@ -59,15 +64,15 @@
 
 /* Ciclos section title box */
 .ciclos-cycle-title {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-family: var(--font-velista), var(--font-heading), serif;
   font-weight: 600;
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-size: clamp(1.75rem, 5vw, 2.75rem);
   color: var(--procesos-text-on-cream);
   background-color: var(--procesos-cream);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0 15px;
+  padding: 1.25rem 3.5rem;
+  border-radius: 0 20px;
   display: inline-block;
-  margin-bottom: -2.5rem !important;
+  margin-bottom: -3.5rem !important;
   margin-top: 1rem !important;
 }
 
@@ -87,9 +92,9 @@
 
 /* Ciclos link button - min 44px touch target */
 a.procesos-btn-cream.ciclos-detail-link {
-  font-size: 0.875rem;
-  padding: 0.75rem 1.5rem;
-  min-height: 44px;
+  font-size: 1.1rem;
+  padding: 1rem 3rem;
+  min-height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -178,7 +183,7 @@ a.procesos-btn-cream.ciclos-detail-link {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: top center;
-  padding: 1.5rem 1rem 3rem;
+  padding: 1.5rem 1rem 1.5rem;
   margin-top: 0;
   margin-bottom: 3rem;
 }
@@ -205,17 +210,42 @@ a.procesos-btn-cream.ciclos-detail-link {
 
 .ciclos-cycle-header {
   text-align: center;
-  margin-bottom: 1.5rem;
-  margin-top: 1rem !important;
+  margin-bottom: 2.5rem;
+  margin-top: 1.5rem !important;
 }
 
 .ciclos-cycle-subtitle {
   text-align: center;
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: clamp(0.9375rem, 2vw, 1rem);
+  font-family: var(--font-playfair), serif;
+  font-size: 1.2rem;
   color: var(--procesos-accent);
-  margin-top: 0.5rem;
+  margin-top: 1rem;
+  transform: translateY(20px);
   line-height: 1.6;
+  position: relative;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 2rem 15rem;
+  z-index: 1;
+}
+
+.ciclos-cycle-subtitle::after {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 40px);
+  max-width: 800px;
+  height: 80px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 235 1920 165'%3E%3Cpath fill='none' stroke='%23fff2db' stroke-miterlimit='10' stroke-width='1.52' d='M1628.31,318.59c24.33,37.98-293.71,77.61-692.06,82.72-382.18,4.9-692.06-37.04-692.06-82.72s309.85-82.72,692.06-82.72,667.42,44.25,692.06,82.72Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .ciclos-cycle-ovals {
@@ -224,11 +254,13 @@ a.procesos-btn-cream.ciclos-detail-link {
   gap: 2.5rem;
   align-items: start;
   margin: 2.5rem 0;
+
 }
 
 .ciclos-cycle-ovals-single {
   grid-template-columns: 1fr;
   justify-items: center;
+  background-color: #0D3221;
 }
 
 .ciclos-cycle-cta {

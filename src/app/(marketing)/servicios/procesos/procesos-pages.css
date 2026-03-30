@@ -344,10 +344,11 @@ a.procesos-btn-cream {
   border-radius: 0 15px;
   font-family: var(--font-title), var(--font-velista), serif;
   font-weight: 500;
+  font-size: 1.1rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 0.75rem 2rem;
-  min-height: 2.5rem;
+  padding: 1rem 3rem;
+  min-height: 3.5rem;
   text-decoration: none;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;

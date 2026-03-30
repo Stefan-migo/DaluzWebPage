@@ -69,11 +69,9 @@ export default function CiclosAlquimicosPage() {
                 OASIS
               </h2>
             </div>
-            <div className="ciclos-cycle-ovals ciclos-cycle-ovals-single">
-              <ProcesosOvalBox className="ciclos-oval-center ciclos-text-center">
-                Ideal para: Quien busca una ruta de sanación 100% a medida para comenzar.
-              </ProcesosOvalBox>
-            </div>
+            <p className="ciclos-cycle-subtitle">
+              <strong>Ideal para:</strong> Quien busca una sanación 100% a medida para comenzar.
+            </p>
             <div className="ciclos-cycle-ovals">
               <ProcesosOvalBox className="ciclos-oval-left">
                 <strong>Modalidad:</strong>
