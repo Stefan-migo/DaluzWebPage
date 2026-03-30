@@ -1,0 +1,356 @@
+/**
+ * Ciclos Alquímicos - Exclusive Styles
+ * Design: Dedicated structure for transformation paths
+ */
+
+/* Ciclos: tarjetas con borde default (igual que responsivo) */
+.ciclos-main .procesos-oval-box {
+  background-color: transparent;
+  border: 2px solid rgba(253, 252, 240, 0.6);
+  border-radius: 0 15px;
+  box-shadow: none;
+  width: 100%;
+  max-width: 100%;
+  padding: 1.5rem 1.25rem;
+  transform: none;
+}
+
+.ciclos-main .procesos-oval-box-inner {
+  transform: none;
+  color: var(--procesos-accent);
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(0.9375rem, 1.4vw, 1rem);
+  line-height: 1.65;
+}
+
+.ciclos-main .procesos-oval-box-inner strong {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-weight: 600;
+  color: var(--procesos-accent);
+}
+
+/* Ciclos page - main container */
+.ciclos-main {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: env(safe-area-inset-bottom, 2rem);
+}
+
+/* Ciclos page - alignment utilities (ovals) */
+.ciclos-oval-left {
+  margin-right: auto;
+}
+
+.ciclos-oval-right {
+  margin-left: auto;
+}
+
+.ciclos-oval-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ciclos-text-center .procesos-oval-box-inner {
+  text-align: center;
+}
+
+/* Ciclos section title box */
+.ciclos-cycle-title {
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-weight: 600;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  color: var(--procesos-text-on-cream);
+  background-color: var(--procesos-cream);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0 15px;
+  display: inline-block;
+  margin-bottom: -2.5rem !important;
+  margin-top: 1rem !important;
+}
+
+/* Ciclos section header (CICLOS ALQUIMICOS) */
+.ciclos-section-header {
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 400;
+  color: #fffef5;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  padding: 1rem 2rem;
+  margin-bottom: 1rem;
+  transform: translateY(-25px);
+}
+
+/* Ciclos link button - min 44px touch target */
+a.procesos-btn-cream.ciclos-detail-link {
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ciclos page - intro block */
+.ciclos-intro {
+  position: relative;
+  z-index: 10;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-bottom: 0rem;
+  margin-top: 0.5rem;
+  padding: 6rem 8vw 6rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 180 1920 600' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill:%230d3221;filter:url(%23ds-2)%7D%3C/style%3E%3Cfilter id='ds-2' x='-50' y='160' width='2020' height='700' filterUnits='userSpaceOnUse'%3E%3CfeOffset dx='-7' dy='7'/%3E%3CfeGaussianBlur result='blur' stdDeviation='5'/%3E%3CfeFlood flood-color='%23000' flood-opacity='.5'/%3E%3CfeComposite in2='blur' operator='in'/%3E%3CfeComposite in='SourceGraphic'/%3E%3C/filter%3E%3C/defs%3E%3Cpath class='cls-1' d='M497.2,727.1c-108.77-9.8-192.45-17.34-297.48-4.36-25.01,3.09-85.65,5.79-144.83-22.67-61.7-29.67-64.31-86.8-3.91-115.08,19.19-8.99,43.83-14.64,182.01-21.79,221.92-11.49,235.98-.92,315.1-13.95,111.53-18.37,126.72-20.84,243.48-48.82,116.43-27.9,106.98-30.14,138.89-50.56,37.59-24.06,7.73-59.49-39.83-84.56-51.24-27.02-91.17-28.83-144.87-33.13-130.27-10.43-171.23,8.9-350.33,13.95-137.78,3.88-250.52,7.06-303.35-23.54-43.52-25.2-38.03-68.47,4.26-96.56,40.16-26.67,116.82-41.85,445.88-42.93,362.87-1.19,564.13-.61,604.75,40.1,43.25,43.34-162.28,93.14-121.34,132.51,40.82,39.26,288.44,39.96,446.23,27.9,100.01-7.65,234.7-17.86,351.2-2.66,35.14,4.58,64.44,10.93,84.11,32.3,23.25,25.28-33.3,59.22-83.02,78.46-106.71,41.28-214.41,77.9-386.84,66.07-118.1-8.1-223.36-66.25-345.98-59.75-209.33,11.08-283.15,33.99-282.92,34.65,5.5,16.38,218.27-3.2,275.96,36.62,9.94,6.86,16.36,15.08,19.58,24.21,16.17,45.82-89.3,126.18-191.81,156.25-14.73,4.32-26.07,6.63-36.26,7.88-12.34,1.52-22.18,2.12-29.65,2.41,0,0-16.33.63-32.16-.12-38.1-1.81-249.45-26.77-316.84-32.84Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: center top;
+}
+
+.ciclos-intro-item {
+  margin-bottom: 1.5rem;
+  font-family: var(--font-velista), var(--font-heading), serif;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  color: var(--procesos-accent);
+  max-width: 520px;
+}
+
+.ciclos-intro-left-1 {
+  margin-left: 5%;
+  margin-top: -1.5rem;
+  transform: translateY(-45px);
+}
+
+.ciclos-intro-right {
+  margin-left: 15%;
+  margin-top: -0.5rem;
+  transform: translateY(-10px);
+}
+
+.ciclos-intro-left-2 {
+  margin-left: 5%;
+  margin-top: -0.5rem;
+  transform: translateY(35px);
+
+}
+
+.ciclos-intro-item:last-of-type {
+  margin-bottom: 0;
+}
+
+.ciclos-intro-left {
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.ciclos-intro-right {
+  margin-left: auto;
+  margin-right: 0;
+  text-align: right;
+}
+
+.ciclos-intro-cta {
+  text-align: center;
+  margin-top: 2rem;
+  font-family: var(--font-subtitle), var(--font-heading), serif;
+  font-size: clamp(1rem, 2.5vw, 1.125rem);
+  color: var(--procesos-accent);
+  line-height: 1.6;
+}
+
+/* Ciclos header band - full width como Sesiones */
+.ciclos-header-band {
+  position: relative;
+  z-index: 10;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 290' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill:%230d3221;filter:url(%23ds-1)%7D%3C/style%3E%3Cfilter id='ds-1' x='-50' y='-20' width='2020' height='350' filterUnits='userSpaceOnUse'%3E%3CfeOffset dx='-7' dy='7'/%3E%3CfeGaussianBlur result='blur' stdDeviation='5'/%3E%3CfeFlood flood-color='%23000' flood-opacity='.5'/%3E%3CfeComposite in2='blur' operator='in'/%3E%3CfeComposite in='SourceGraphic'/%3E%3C/filter%3E%3C/defs%3E%3Cpath class='cls-1' d='M1920,0v65c-155,90-355,173-595,188-278,18-321-74-652-73C362,180,152,263,0,285V0h1920Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: top center;
+  padding: 1.5rem 1rem 3rem;
+  margin-top: 0;
+  margin-bottom: 3rem;
+}
+
+.ciclos-header-band-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+/* Ciclos cycle block */
+.ciclos-cycle-block {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 1.5rem;
+}
+
+.ciclos-cycle-block-last {
+  margin-bottom: 3rem;
+}
+
+.ciclos-cycle-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.ciclos-cycle-subtitle {
+  text-align: center;
+  font-family: var(--font-text), var(--font-body), serif;
+  font-size: clamp(0.9375rem, 2vw, 1rem);
+  color: var(--procesos-accent);
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+.ciclos-cycle-ovals {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
+  margin: 2.5rem 0;
+}
+
+.ciclos-cycle-ovals-single {
+  grid-template-columns: 1fr;
+  justify-items: center;
+}
+
+.ciclos-cycle-cta {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.ciclos-cycle-cta .procesos-btn-cream {
+  display: inline-flex;
+  margin: 0 auto;
+}
+
+/* ===========================
+   RESPONSIVE - TABLET (max 768px)
+   =========================== */
+@media (max-width: 768px) {
+
+  /* Ciclos responsive - tablet */
+  .ciclos-main {
+    padding: 0 1rem 2rem;
+  }
+
+  .ciclos-intro {
+    padding: 2.5rem 1rem 2rem;
+    background-image: none;
+    width: 100%;
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .ciclos-intro-right {
+    text-align: left;
+  }
+
+  .ciclos-header-band {
+    background-image: none;
+    background-color: #0d3221;
+    width: 100%;
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .ciclos-cycle-block {
+    margin-bottom: 3rem;
+    padding: 0 1rem;
+  }
+
+  .ciclos-cycle-ovals {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .ciclos-cycle-cta .procesos-btn-cream {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* ===========================
+   RESPONSIVE - SMALL MOBILE (max 480px)
+   =========================== */
+@media (max-width: 480px) {
+
+  /* Ciclos responsive - small mobile */
+  .ciclos-main {
+    padding: 0 0.75rem 1.5rem;
+  }
+
+  .ciclos-intro {
+    padding: 2rem 0.75rem 1.5rem;
+  }
+
+  .ciclos-intro-item {
+    font-size: 1rem;
+    max-width: 100%;
+  }
+
+  .ciclos-header-band {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .ciclos-section-header {
+    font-size: clamp(1.25rem, 6vw, 1.5rem);
+  }
+
+  .ciclos-cycle-block {
+    margin-bottom: 2.5rem;
+    padding: 0 0.75rem;
+  }
+
+  .ciclos-cycle-block-last {
+    margin-bottom: 2rem;
+  }
+
+  .ciclos-cycle-title {
+    font-size: 1.125rem;
+    padding: 0.625rem 1.25rem;
+  }
+
+  .ciclos-cycle-subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .ciclos-cycle-ovals {
+    gap: 1.25rem;
+    margin: 1.25rem 0;
+  }
+
+  .ciclos-main .procesos-oval-box {
+    padding: 1.25rem 1rem;
+  }
+
+  .ciclos-cycle-cta .procesos-btn-cream {
+    max-width: 100%;
+    min-height: 48px;
+    font-size: 0.8125rem;
+    padding: 0.875rem 1rem;
+  }
+}
