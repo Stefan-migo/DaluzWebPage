@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { ProcesosBackground } from '@/components/svg/ProcesosPageComponents';
 import '../procesos-pages.css';
+import './sesiones.css';
 
 const PROCESOS_WRAPPER = 'procesos-pages';
 

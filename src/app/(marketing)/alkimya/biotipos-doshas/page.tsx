@@ -158,17 +158,20 @@ export default function BiotiposDoshasPage() {
     <>
       <div className="biotipos-mesh-bg-global"></div>
       {/* Section 1 */}
-      <section className="relative px-6 overflow-hidden flex flex-col section-biotipos-1">
+      <section className="relative overflow-hidden flex flex-col section-biotipos-1">
 
         {/* Content Area - Flexible area for adding text and other elements */}
         <div className="relative z-10 flex-1 section-biotipos-1-content">
           {/* Main Title */}
-          <h1 className="biotipos-text-element biotipos-section1-title">
-            TU BIOTIPO Y CEREMONIA
-          </h1>
+          <div className="biotipos-section1-main-title-wrapper">
+            <div className="biotipos-section1-main-title-bg"></div>
+            <h1 className="biotipos-text-element biotipos-section1-main-title">
+              TU BIOTIPO Y CEREMONIA
+            </h1>
+          </div>
 
           {/* Subtitle */}
-          <p className="biotipos-text-element biotipos-section1-subtitle">
+          <p className="biotipos-text-element biotipos-section1-subtitle" style={{ fontSize: 'clamp(0.8rem, 1.4vw, 1.3rem)' }}>
             El Reconocimiento de que Cada Ser es Único: Bio-individualidad y Sabiduría Ancestra
           </p>
 
@@ -176,7 +179,7 @@ export default function BiotiposDoshasPage() {
           <div className="biotipos-text-element biotipos-section1-main-text">
             <div className="biotipos-section1-main-text-bg"></div>
             <div className="biotipos-section1-main-text-content">
-              <p className="biotipos-section1-main-text-paragraph">
+              <p className="biotipos-section1-main-text-paragraph" style={{ fontSize: 'clamp(0.8rem, 1.4vw, 1.2rem)' }}>
                 El concepto de bio-individualidad es un pilar central para Da Luz, integrando lo ancestral (Ayurveda) y la autogestión.
                 <br /><br />
                 Comprender tu biotipo es el primer paso para elegir las Alquimias de Da Luz que mejor te acompañarán. No buscamos clasificar, buscamos honrar tu esencia única.
@@ -811,7 +814,7 @@ export default function BiotiposDoshasPage() {
               {/* Buttons Container */}
               <div className="biotipos-section15-buttons-container">
                 <a
-                  href="https://www.instagram.com"
+                  href="https://www.instagram.com/daluzconsciente/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="biotipos-section15-button biotipos-section15-button-instagram"
@@ -819,7 +822,7 @@ export default function BiotiposDoshasPage() {
                   Contactá por Instagram
                 </a>
                 <a
-                  href="https://wa.me"
+                  href="https://wa.me/5493512344580"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="biotipos-section15-button biotipos-section15-button-whatsapp"
@@ -832,147 +835,9 @@ export default function BiotiposDoshasPage() {
         </div>
       </section>
 
-      {/* Section 16 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-16">
 
-        <div className="relative z-10 flex-1 section-biotipos-16-content">
-          {/* Main Title */}
-          <h2 className="biotipos-text-element biotipos-section16-main-title">
-            <div className="biotipos-section16-main-title-bg"></div>
-            <span className="biotipos-section16-main-title-text">Visión Holística: Doshas y Equilibrio Interno</span>
-          </h2>
 
-          {/* Accordion Button Text - Now acts as the dropdown button */}
-          <div className={`biotipos-text-element biotipos-section16-accordion-button-text ${isAccordionOpen ? 'accordion-open' : ''}`}>
-            <div className="biotipos-section16-accordion-button-text-bg"></div>
-            <button
-              className="biotipos-section16-accordion-button-text-content"
-              onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-            >
-              <h3 className="biotipos-section16-accordion-button-title">Los Tres Doshas (Vata, Pitta, Kapha)</h3>
-              <p className="biotipos-section16-accordion-button-paragraph">
-                El Ayurveda establece tres fuerzas cósmicas o Doshas que determinan la constitución cuerpo-mente de cada individuo, influyendo directamente en la calidad de la piel, el cabello, y la salud mental y emocional.
-              </p>
-              <span className={`biotipos-section16-accordion-icon ${isAccordionOpen ? 'open' : ''}`}>▼</span>
-            </button>
 
-            {/* Accordion Content - Both tables */}
-            {isAccordionOpen && (
-              <div className="biotipos-section16-accordion-content">
-                <button
-                  className="biotipos-section16-accordion-close"
-                  onClick={() => setIsAccordionOpen(false)}
-                  aria-label="Cerrar"
-                >
-                  ✕
-                </button>
-                <div className="biotipos-section16-accordion-content-inner">
-                  {/* Table 1: Doshas Table */}
-                  <div className="biotipos-section16-table-wrapper">
-                    <h4 className="biotipos-section16-table-title">Tabla de Doshas</h4>
-                    <table className="biotipos-section16-table">
-                      <thead>
-                        <tr>
-                          <th>Dosha</th>
-                          <th>Atributos Principales</th>
-                          <th>Biotipo Cutáneo</th>
-                          <th>Cabello</th>
-                          <th>Contextura Física</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>Vata</strong> (Éter y Aire)</td>
-                          <td>Frío, seco, ligero, áspero, sutil, móvil.</td>
-                          <td>Piel Alípica o Seca: Fina, fría, seca, áspera, con tendencia a las arrugas finas y venas visibles.</td>
-                          <td>Escaso, áspero, seco, ligeramente ondulado.</td>
-                          <td>Delgada o esbelta. Huesos prominentes, ligereza.</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Pitta</strong> (Fuego y Agua)</td>
-                          <td>Caliente, ligero, agudo, penetrante, ligeramente oleoso, líquido.</td>
-                          <td>Piel Sensible: Caliente, rubicunda (roja), suave, con tendencia a pecas, lunares y erupciones cutáneas.</td>
-                          <td>Cantidad normal, fino, suave, con canas prematuras o calvicie.</td>
-                          <td>Tamaño mediano, físico moderadamente desarrollado, con musculatura media.</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Kapha</strong> (Tierra y Agua)</td>
-                          <td>Pesado, frío, lento, pegajoso, suave, firme.</td>
-                          <td>Piel Grasa: Gruesa, blanca, húmeda, fría, suave, con poros poco visibles (aunque dilatados).</td>
-                          <td>Abundante, graso, grueso, muy ondulado, brillante.</td>
-                          <td>Grande o robusta, cuerpo firme, con tendencia a la obesidad.</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-
-                  {/* Table 2: Psychological Tendencies Table */}
-                  <div className="biotipos-section16-table-wrapper">
-                    <h4 className="biotipos-section16-table-title">Tendencias Psicológicas</h4>
-                    <table className="biotipos-section16-table">
-                      <thead>
-                        <tr>
-                          <th>Dosha</th>
-                          <th>Tendencias Psicológicas (En Armonía)</th>
-                          <th>Tendencias Psicológicas (En Desequilibrio)</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td><strong>Vata</strong></td>
-                          <td>Creativo, entusiasta, rápido, flexible, propenso al cambio.</td>
-                          <td>Nerviosismo, ansiedad, miedo, insomnio, preocupación y confusión.</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Pitta</strong></td>
-                          <td>Inteligente, perspicaz, con liderazgo, buena voluntad y claridad.</td>
-                          <td>Enojo, irritabilidad, arrogancia, impaciencia, y tendencia a juzgar.</td>
-                        </tr>
-                        <tr>
-                          <td><strong>Kapha</strong></td>
-                          <td>Calmado, apegado, sentimental, tranquilo, con excelente memoria y gran resistencia.</td>
-                          <td>Letargo, apego excesivo, tristeza, depresión, falta de motivación y desórdenes del aparato respiratorio (mucosidad).</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Section 17 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-17">
-
-        <div className="relative z-10 flex-1 section-biotipos-17-content">
-          {/* Main Text */}
-          <div className="biotipos-text-element biotipos-section17-main-text">
-            <div className="biotipos-section17-main-text-bg"></div>
-            <div className="biotipos-section17-main-text-content">
-              <h3 className="biotipos-section17-main-text-title">La Importancia de la Visión Holística</h3>
-              <p className="biotipos-section17-main-text-paragraph">
-                Al igual que en el cuidado de la piel, donde las texturas y activos se eligen según el biotipo, en Ayurveda el tratamiento de la salud se personaliza.
-              </p>
-              <ul className="biotipos-section17-main-text-list">
-                <li>
-                  <h4 className="biotipos-section17-main-text-list-title">Piel Seca/Vata:</h4>
-                  <p className="biotipos-section17-main-text-list-text">Requiere terapias que <strong>reduzcan el exceso de aire</strong> (Vata), incluyendo dieta nutritiva, humectante y caliente, y masajes con aceites pesados (sésamo, oliva).</p>
-                </li>
-                <li>
-                  <h4 className="biotipos-section17-main-text-list-title">Piel Sensible/Pitta:</h4>
-                  <p className="biotipos-section17-main-text-list-text">Necesita terapias para <strong>reducir el exceso de fuego</strong> (Pitta), con una dieta que evite el picante, el ácido y el salado, y aceites fríos y suaves (coco, girasol).</p>
-                </li>
-                <li>
-                  <h4 className="biotipos-section17-main-text-list-title">Piel Grasa/Kapha:</h4>
-                  <p className="biotipos-section17-main-text-list-text">Requiere terapias para <strong>reducir el exceso de agua y tierra</strong> (Kapha).</p>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   )
 }

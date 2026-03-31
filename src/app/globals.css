@@ -451,7 +451,7 @@ h1 {
 }
 
 h2 {
-  font-size: var(--text-4xl) !important;
+  font-size: var(--text-4xl);
   /* 2.25rem = 25% smaller than h1's 3rem */
 }
 
@@ -469,7 +469,7 @@ p {
   font-family: "EB Garamond", var(--font-body), "Times New Roman", serif !important;
   font-weight: 500 !important;
   /* Medium */
-  font-size: max(18px, 1.125rem) !important;
+  font-size: max(18px, 1.125rem);
   /* Mínimo 18px para legibilidad */
   line-height: 1.5 !important;
 }

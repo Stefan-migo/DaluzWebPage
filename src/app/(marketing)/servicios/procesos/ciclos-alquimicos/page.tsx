@@ -5,6 +5,7 @@ import {
   ProcesosOvalBox,
 } from '@/components/svg/ProcesosPageComponents';
 import '../procesos-pages.css';
+import './ciclos.css';
 
 const PROCESOS_WRAPPER = 'procesos-pages';
 
@@ -47,20 +48,17 @@ export default function CiclosAlquimicosPage() {
             <h2 id="ciclos-intro-heading" className="sr-only">
               Introducción a los Ciclos Alquímicos
             </h2>
-            <p className="ciclos-intro-item ciclos-intro-left">
-              Nuestros Ciclos Alquímicos son rutas de transformación consciente diseñadas para reconectar tu biología con tu esencia.
+            <p className="ciclos-intro-item ciclos-intro-left-1">
+              Nuestros Ciclos Alquímicos son caminos de transformación consciente diseñados para reconectar tu biología con tu esencia.
             </p>
             <p className="ciclos-intro-item ciclos-intro-right">
-              A través de la depuración natural y el acompañamiento holístico, te ayudamos a recuperar tu bioequilibrio y potenciar tu bienestar desde el interior.
+              A través de la depuración natural y el acompañamiento holístico, recuperarás tu bioequilibrio y potenciarás tu bienestar.
             </p>
-            <p className="ciclos-intro-item ciclos-intro-left">
-              Iniciá el Viaje Alquímico: Donde la Biología y la Consciencia se Unen.
+            <p className="ciclos-intro-item ciclos-intro-left-2">
+              Iniciá el Viaje Alquímico: Donde la Biología y la Consciencia se unen.
             </p>
-            <p className="ciclos-intro-cta">
-              Conocé los programas y elegí el ritmo de tu propio proceso transformador.
-            </p>
-          </section>
 
+          </section>
           {/* Bloque 2: OASIS */}
           <article
             className="ciclos-cycle-block"
@@ -71,11 +69,9 @@ export default function CiclosAlquimicosPage() {
                 OASIS
               </h2>
             </div>
-            <div className="ciclos-cycle-ovals ciclos-cycle-ovals-single">
-              <ProcesosOvalBox className="ciclos-oval-center ciclos-text-center">
-                Ideal para: Quien busca una ruta de sanación 100% a medida para comenzar.
-              </ProcesosOvalBox>
-            </div>
+            <p className="ciclos-cycle-subtitle">
+              <strong>Ideal para:</strong> Quien busca una sanación 100% a medida para comenzar.
+            </p>
             <div className="ciclos-cycle-ovals">
               <ProcesosOvalBox className="ciclos-oval-left">
                 <strong>Modalidad:</strong>
