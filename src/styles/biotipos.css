@@ -96,7 +96,7 @@
     color: var(--color-bg-light) !important;
     margin: 0 auto 2rem auto;
     text-align: center;
-    font-size: 1.35rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     line-height: 1.5;
     font-family: var(--font-malisha);
   }
@@ -135,7 +135,7 @@
   }
 
   .biotipos-section1-main-text-paragraph {
-    font-size: 0.875rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     max-width: 95%;
     color: var(--color-text-primary);
   }
@@ -231,7 +231,7 @@
 
   /* Subtitle - Tablet */
   .biotipos-section1-subtitle {
-    font-size: 1.6rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     margin-bottom: 2.5rem;
   }
 
@@ -267,7 +267,7 @@
   }
 
   .biotipos-section1-main-text-paragraph {
-    font-size: 1rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     max-width: 90%;
     color: var(--color-text-primary);
   }
@@ -371,7 +371,7 @@
   /* Subtitle - Section 1 */
   .biotipos-section1-subtitle {
     font-family: var(--font-malisha);
-    font-size: 2rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.5;
@@ -382,8 +382,6 @@
     --pos-width: 85%;
     --pos-max-width: 900px;
   }
-
-  /* Main Text with SVG Background - Section 1 */
   .biotipos-section1-main-text {
     position: absolute;
     width: var(--pos-width, 65%);
@@ -420,7 +418,7 @@
 
   .biotipos-section1-main-text-paragraph {
     font-family: var(--font-malisha);
-    font-size: 1.35rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     color: var(--color-text-primary);
     text-align: center;
     line-height: 1.7;
@@ -547,7 +545,7 @@
   /* Subtitle - Section 1 */
   .biotipos-section1-subtitle {
     font-family: var(--font-malisha);
-    font-size: 2.25rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.5;
@@ -596,7 +594,7 @@
 
   .biotipos-section1-main-text-paragraph {
     font-family: var(--font-malisha);
-    font-size: 1.53rem;
+    /* font-size removido para permitir estilos inline dinámicos */
 
   }
 
@@ -719,7 +717,7 @@
   /* Subtitle - Section 1 */
   .biotipos-section1-subtitle {
     font-family: var(--font-malisha);
-    font-size: 2.25rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     color: var(--color-bg-light);
     text-align: center;
     line-height: 1.5;
@@ -768,7 +766,7 @@
 
   .biotipos-section1-main-text-paragraph {
     font-family: var(--font-malisha);
-    font-size: 1.75rem;
+    /* font-size removido para permitir estilos inline dinámicos */
     color: var(--color-text-primary);
     text-align: center;
     line-height: 1.7;
@@ -4046,7 +4044,7 @@
   }
 
   .biotipos-section15-main-title-link {
-    font-size: 2.25rem;
+    /* font-size removido para permitir estilos inline dinámicos */
   }
 
   .biotipos-section15-main-text-paragraph {
