@@ -1,12 +1,19 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
+import { useState, useEffect } from "react";
+import DOMPurify from "dompurify";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -14,7 +21,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -22,26 +29,26 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { 
-  Mail, 
-  Plus, 
-  Edit, 
-  Trash2, 
+} from "@/components/ui/select";
+import {
+  Mail,
+  Plus,
+  Edit,
+  Trash2,
   Send,
   Eye,
   CheckCircle,
-  XCircle
-} from 'lucide-react';
-import { toast } from 'sonner';
-import EmailTemplateEditor from './EmailTemplateEditor';
+  XCircle,
+} from "lucide-react";
+import { toast } from "sonner";
+import EmailTemplateEditor from "./EmailTemplateEditor";
 
 interface EmailTemplate {
   id: string;
@@ -60,14 +67,15 @@ interface EmailTemplate {
 export default function EmailTemplatesManager() {
   const [templates, setTemplates] = useState<EmailTemplate[]>([]);
   const [loading, setLoading] = useState(true);
-  const [typeFilter, setTypeFilter] = useState('all');
+  const [typeFilter, setTypeFilter] = useState("all");
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
   const [showTestDialog, setShowTestDialog] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<EmailTemplate | null>(null);
   const [testing, setTesting] = useState<string | null>(null);
-  const [testEmail, setTestEmail] = useState('');
+  const [testEmail, setTestEmail] = useState("");
 
   useEffect(() => {
     fetchTemplates();
@@ -77,20 +85,22 @@ export default function EmailTemplatesManager() {
     try {
       setLoading(true);
       const params = new URLSearchParams();
-      if (typeFilter !== 'all') {
-        params.set('type', typeFilter);
+      if (typeFilter !== "all") {
+        params.set("type", typeFilter);
       }
-      
-      const response = await fetch(`/api/admin/system/email-templates?${params}`);
+
+      const response = await fetch(
+        `/api/admin/system/email-templates?${params}`,
+      );
       if (!response.ok) {
-        throw new Error('Failed to fetch templates');
+        throw new Error("Failed to fetch templates");
       }
 
       const data = await response.json();
       setTemplates(data.templates || []);
     } catch (error) {
-      console.error('Error fetching templates:', error);
-      toast.error('Error al cargar plantillas');
+      console.error("Error fetching templates:", error);
+      toast.error("Error al cargar plantillas");
     } finally {
       setLoading(false);
     }
@@ -98,82 +108,95 @@ export default function EmailTemplatesManager() {
 
   const handleToggleActive = async (template: EmailTemplate) => {
     try {
-      const response = await fetch(`/api/admin/system/email-templates/${template.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_active: !template.is_active })
-      });
+      const response = await fetch(
+        `/api/admin/system/email-templates/${template.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ is_active: !template.is_active }),
+        },
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to update template');
+        throw new Error("Failed to update template");
       }
 
-      toast.success(`Plantilla ${!template.is_active ? 'activada' : 'desactivada'}`);
+      toast.success(
+        `Plantilla ${!template.is_active ? "activada" : "desactivada"}`,
+      );
       fetchTemplates();
     } catch (error) {
-      console.error('Error updating template:', error);
-      toast.error('Error al actualizar plantilla');
+      console.error("Error updating template:", error);
+      toast.error("Error al actualizar plantilla");
     }
   };
 
   const handleDelete = async (template: EmailTemplate) => {
     if (template.is_system) {
-      toast.error('No se pueden eliminar plantillas del sistema');
+      toast.error("No se pueden eliminar plantillas del sistema");
       return;
     }
 
-    if (!confirm(`¿Estás seguro de eliminar la plantilla "${template.name}"?`)) {
+    if (
+      !confirm(`¿Estás seguro de eliminar la plantilla "${template.name}"?`)
+    ) {
       return;
     }
 
     try {
-      const response = await fetch(`/api/admin/system/email-templates/${template.id}`, {
-        method: 'DELETE'
-      });
+      const response = await fetch(
+        `/api/admin/system/email-templates/${template.id}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to delete template');
+        throw new Error("Failed to delete template");
       }
 
-      toast.success('Plantilla eliminada');
+      toast.success("Plantilla eliminada");
       fetchTemplates();
     } catch (error) {
-      console.error('Error deleting template:', error);
-      toast.error('Error al eliminar plantilla');
+      console.error("Error deleting template:", error);
+      toast.error("Error al eliminar plantilla");
     }
   };
 
   const handleTestEmail = (template: EmailTemplate) => {
     setSelectedTemplate(template);
-    setTestEmail('');
+    setTestEmail("");
     setShowTestDialog(true);
   };
 
   const confirmTestEmail = async () => {
     if (!selectedTemplate || !testEmail) {
-      toast.error('Por favor ingresa un email válido');
+      toast.error("Por favor ingresa un email válido");
       return;
     }
 
     try {
       setTesting(selectedTemplate.id);
-      const response = await fetch(`/api/admin/system/email-templates/${selectedTemplate.id}/test`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ testEmail })
-      });
+      const response = await fetch(
+        `/api/admin/system/email-templates/${selectedTemplate.id}/test`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ testEmail }),
+        },
+      );
 
       const data = await response.json();
       if (data.success) {
-        toast.success(data.message || 'Email de prueba enviado');
+        toast.success(data.message || "Email de prueba enviado");
         setShowTestDialog(false);
-        setTestEmail('');
+        setTestEmail("");
       } else {
-        toast.error(data.error || 'Error al enviar email de prueba');
+        toast.error(data.error || "Error al enviar email de prueba");
       }
     } catch (error) {
-      console.error('Error testing email:', error);
-      toast.error('Error al enviar email de prueba');
+      console.error("Error testing email:", error);
+      toast.error("Error al enviar email de prueba");
     } finally {
       setTesting(null);
     }
@@ -181,22 +204,22 @@ export default function EmailTemplatesManager() {
 
   const getTypeLabel = (type: string): string => {
     const labels: Record<string, string> = {
-      order_confirmation: 'Confirmación de Pedido',
-      order_shipped: 'Pedido Enviado',
-      order_delivered: 'Pedido Entregado',
-      password_reset: 'Restablecer Contraseña',
-      account_welcome: 'Bienvenida',
-      membership_welcome: 'Bienvenida Membresía',
-      membership_reminder: 'Recordatorio Membresía',
-      low_stock_alert: 'Alerta de Stock Bajo',
-      marketing: 'Marketing',
-      custom: 'Personalizado'
+      order_confirmation: "Confirmación de Pedido",
+      order_shipped: "Pedido Enviado",
+      order_delivered: "Pedido Entregado",
+      password_reset: "Restablecer Contraseña",
+      account_welcome: "Bienvenida",
+      membership_welcome: "Bienvenida Membresía",
+      membership_reminder: "Recordatorio Membresía",
+      low_stock_alert: "Alerta de Stock Bajo",
+      marketing: "Marketing",
+      custom: "Personalizado",
     };
     return labels[type] || type;
   };
 
-  const filteredTemplates = templates.filter(t => 
-    typeFilter === 'all' || t.type === typeFilter
+  const filteredTemplates = templates.filter(
+    (t) => typeFilter === "all" || t.type === typeFilter,
   );
 
   return (
@@ -204,11 +227,18 @@ export default function EmailTemplatesManager() {
       {/* Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-azul-profundo">Plantillas de Email</h2>
-          <p className="text-tierra-media">Gestiona las plantillas de email del sistema</p>
+          <h2 className="text-2xl font-bold text-azul-profundo">
+            Plantillas de Email
+          </h2>
+          <p className="text-tierra-media">
+            Gestiona las plantillas de email del sistema
+          </p>
         </div>
-        <Button onClick={() => setShowCreateDialog(true)}>
-          <Plus className="h-4 w-4 mr-2" />
+        <Button
+          onClick={() => setShowCreateDialog(true)}
+          aria-label="Crear nueva plantilla"
+        >
+          <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
           Nueva Plantilla
         </Button>
       </div>
@@ -224,12 +254,20 @@ export default function EmailTemplatesManager() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Todos los tipos</SelectItem>
-                <SelectItem value="order_confirmation">Confirmación de Pedido</SelectItem>
+                <SelectItem value="order_confirmation">
+                  Confirmación de Pedido
+                </SelectItem>
                 <SelectItem value="order_shipped">Pedido Enviado</SelectItem>
-                <SelectItem value="order_delivered">Pedido Entregado</SelectItem>
-                <SelectItem value="password_reset">Restablecer Contraseña</SelectItem>
+                <SelectItem value="order_delivered">
+                  Pedido Entregado
+                </SelectItem>
+                <SelectItem value="password_reset">
+                  Restablecer Contraseña
+                </SelectItem>
                 <SelectItem value="account_welcome">Bienvenida</SelectItem>
-                <SelectItem value="membership_welcome">Bienvenida Membresía</SelectItem>
+                <SelectItem value="membership_welcome">
+                  Bienvenida Membresía
+                </SelectItem>
                 <SelectItem value="low_stock_alert">Alerta de Stock</SelectItem>
                 <SelectItem value="marketing">Marketing</SelectItem>
                 <SelectItem value="custom">Personalizado</SelectItem>
@@ -263,11 +301,17 @@ export default function EmailTemplatesManager() {
               <TableBody>
                 {filteredTemplates.map((template) => (
                   <TableRow key={template.id}>
-                    <TableCell className="font-medium">{template.name}</TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{getTypeLabel(template.type)}</Badge>
+                    <TableCell className="font-medium">
+                      {template.name}
                     </TableCell>
-                    <TableCell className="max-w-xs truncate">{template.subject}</TableCell>
+                    <TableCell>
+                      <Badge variant="outline">
+                        {getTypeLabel(template.type)}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="max-w-xs truncate">
+                      {template.subject}
+                    </TableCell>
                     <TableCell>
                       <Switch
                         checked={template.is_active}
@@ -284,9 +328,9 @@ export default function EmailTemplatesManager() {
                             setSelectedTemplate(template);
                             setShowPreviewDialog(true);
                           }}
-                          title="Ver plantilla"
+                          aria-label={`Ver plantilla ${template.name}`}
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="h-4 w-4" aria-hidden="true" />
                         </Button>
                         <Button
                           variant="ghost"
@@ -295,18 +339,20 @@ export default function EmailTemplatesManager() {
                             setSelectedTemplate(template);
                             setShowEditDialog(true);
                           }}
-                          title="Editar plantilla"
+                          aria-label={`Editar plantilla ${template.name}`}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Edit className="h-4 w-4" aria-hidden="true" />
                         </Button>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => handleTestEmail(template)}
                           disabled={testing === template.id}
-                          title="Enviar email de prueba"
+                          aria-label={`Enviar email de prueba de ${template.name}`}
                         >
-                          <Send className={`h-4 w-4 ${testing === template.id ? 'animate-spin' : ''}`} />
+                          <Send
+                            className={`h-4 w-4 ${testing === template.id ? "animate-spin" : ""} aria-hidden="true"`}
+                          />
                         </Button>
                         {!template.is_system && (
                           <Button
@@ -314,8 +360,9 @@ export default function EmailTemplatesManager() {
                             size="sm"
                             onClick={() => handleDelete(template)}
                             className="text-red-600"
+                            aria-label={`Eliminar plantilla ${template.name}`}
                           >
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="h-4 w-4" aria-hidden="true" />
                           </Button>
                         )}
                       </div>
@@ -356,9 +403,16 @@ export default function EmailTemplatesManager() {
       {/* Preview Dialog */}
       {showPreviewDialog && selectedTemplate && (
         <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
-          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+          <DialogContent
+            className="max-w-3xl max-h-[80vh] overflow-y-auto"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="preview-dialog-title"
+          >
             <DialogHeader>
-              <DialogTitle>{selectedTemplate.name}</DialogTitle>
+              <DialogTitle id="preview-dialog-title">
+                {selectedTemplate.name}
+              </DialogTitle>
               <DialogDescription>
                 Vista previa de la plantilla
               </DialogDescription>
@@ -370,14 +424,19 @@ export default function EmailTemplatesManager() {
               </div>
               <div>
                 <Label>Contenido:</Label>
-                <div 
+                <div
                   className="border rounded-lg p-4 bg-admin-bg-primary"
-                  dangerouslySetInnerHTML={{ __html: selectedTemplate.content }}
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(selectedTemplate.content),
+                  }}
                 />
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setShowPreviewDialog(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowPreviewDialog(false)}
+              >
                 Cerrar
               </Button>
             </DialogFooter>
@@ -388,14 +447,23 @@ export default function EmailTemplatesManager() {
       {/* Test Email Dialog */}
       {showTestDialog && selectedTemplate && (
         <Dialog open={showTestDialog} onOpenChange={setShowTestDialog}>
-          <DialogContent className="max-w-md">
+          <DialogContent
+            className="max-w-md"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="test-email-dialog-title"
+          >
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5" />
+              <DialogTitle
+                id="test-email-dialog-title"
+                className="flex items-center gap-2"
+              >
+                <Send className="h-5 w-5" aria-hidden="true" />
                 Enviar Email de Prueba
               </DialogTitle>
               <DialogDescription>
-                Envía un email de prueba de la plantilla "{selectedTemplate.name}" a una dirección de correo.
+                Envía un email de prueba de la plantilla "
+                {selectedTemplate.name}" a una dirección de correo.
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
@@ -415,17 +483,17 @@ export default function EmailTemplatesManager() {
               </div>
             </div>
             <DialogFooter>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={() => {
                   setShowTestDialog(false);
-                  setTestEmail('');
+                  setTestEmail("");
                 }}
                 disabled={testing === selectedTemplate.id}
               >
                 Cancelar
               </Button>
-              <Button 
+              <Button
                 onClick={confirmTestEmail}
                 disabled={!testEmail || testing === selectedTemplate.id}
               >
@@ -448,4 +516,3 @@ export default function EmailTemplatesManager() {
     </div>
   );
 }
-

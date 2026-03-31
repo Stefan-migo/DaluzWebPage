@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,29 +7,28 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
 
     // Pagination
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '9'); // Changed default from 12 to 9
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "9"); // Changed default from 12 to 9
     const offset = (page - 1) * limit;
 
     // Filters
-    const category = searchParams.get('category');
-    const search = searchParams.get('search');
-    const skinType = searchParams.get('skin_type');
-    const minPrice = searchParams.get('min_price');
-    const maxPrice = searchParams.get('max_price');
-    const featured = searchParams.get('featured');
-    const inStock = searchParams.get('in_stock');
-    const status = searchParams.get('status'); // For admin use
-    const includeArchived = searchParams.get('include_archived') === 'true'; // For admin use
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
+    const skinType = searchParams.get("skin_type");
+    const minPrice = searchParams.get("min_price");
+    const maxPrice = searchParams.get("max_price");
+    const featured = searchParams.get("featured");
+    const inStock = searchParams.get("in_stock");
+    const status = searchParams.get("status"); // For admin use
+    const includeArchived = searchParams.get("include_archived") === "true"; // For admin use
 
     // Sort
-    const sortBy = searchParams.get('sort_by') || 'created_at';
-    const sortOrder = searchParams.get('sort_order') || 'desc';
+    const sortBy = searchParams.get("sort_by") || "created_at";
+    const sortOrder = searchParams.get("sort_order") || "desc";
 
     // Build query with count option
-    let query = supabase
-      .from('products')
-      .select(`
+    let query = supabase.from("products").select(
+      `
         *,
         categories:category_id (
           id,
@@ -46,11 +45,13 @@ export async function GET(request: NextRequest) {
           option3,
           is_default
         )
-      `, { count: 'exact' });
+      `,
+      { count: "exact" },
+    );
 
     // Apply filters
     if (category) {
-      query = query.eq('category_id', category);
+      query = query.eq("category_id", category);
     }
 
     if (search) {
@@ -58,47 +59,50 @@ export async function GET(request: NextRequest) {
     }
 
     if (skinType) {
-      query = query.contains('skin_type', [skinType]);
+      query = query.contains("skin_type", [skinType]);
     }
 
     if (minPrice) {
-      query = query.gte('price', parseFloat(minPrice));
+      query = query.gte("price", parseFloat(minPrice));
     }
 
     if (maxPrice) {
-      query = query.lte('price', parseFloat(maxPrice));
+      query = query.lte("price", parseFloat(maxPrice));
     }
 
-    if (featured === 'true') {
-      query = query.eq('is_featured', true);
+    if (featured === "true") {
+      query = query.eq("is_featured", true);
     }
 
-    if (inStock === 'true') {
-      query = query.gt('inventory_quantity', 0);
+    if (inStock === "true") {
+      query = query.gt("inventory_quantity", 0);
     }
 
     // Status filtering - only show active products for public consumption
     if (status) {
-      query = query.eq('status', status);
+      query = query.eq("status", status);
     } else {
       // For public consumption, only show active products
-      query = query.eq('status', 'active');
+      query = query.eq("status", "active");
     }
 
     // Apply sorting
     const sortColumn = getSortColumn(sortBy);
     const order = getSortOrder(sortBy);
-    query = query.order(sortColumn, { ascending: order === 'asc' });
+    query = query.order(sortColumn, { ascending: order === "asc" });
 
     // Execute query with pagination and get count
-    const { data: products, count, error } = await query
-      .range(offset, offset + limit - 1);
+    const {
+      data: products,
+      count,
+      error,
+    } = await query.range(offset, offset + limit - 1);
 
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return NextResponse.json(
-        { error: 'Failed to fetch products' },
-        { status: 500 }
+        { error: "Failed to fetch products" },
+        { status: 500 },
       );
     }
 
@@ -108,15 +112,17 @@ export async function GET(request: NextRequest) {
         try {
           // Get review summary for this product
           const { data: reviews } = await supabase
-            .from('reviews')
-            .select('rating')
-            .eq('product_id', product.id)
-            .eq('is_approved', true);
+            .from("reviews")
+            .select("rating")
+            .eq("product_id", product.id)
+            .eq("is_approved", true);
 
           const reviewCount = reviews?.length || 0;
-          const averageRating = reviewCount > 0 && reviews
-            ? reviews.reduce((sum, review) => sum + review.rating, 0) / reviewCount
-            : 0;
+          const averageRating =
+            reviewCount > 0 && reviews
+              ? reviews.reduce((sum, review) => sum + review.rating, 0) /
+                reviewCount
+              : 0;
 
           return {
             ...product,
@@ -124,14 +130,17 @@ export async function GET(request: NextRequest) {
             averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal place
           };
         } catch (error) {
-          console.error(`Error fetching reviews for product ${product.id}:`, error);
+          console.error(
+            `Error fetching reviews for product ${product.id}:`,
+            error,
+          );
           return {
             ...product,
             reviewCount: 0,
             averageRating: 0,
           };
         }
-      })
+      }),
     );
 
     // Calculate pagination info
@@ -149,10 +158,10 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('API error:', error);
+    console.error("API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -166,8 +175,8 @@ export async function POST(request: NextRequest) {
     // Validate required fields
     if (!productData.name || !productData.price) {
       return NextResponse.json(
-        { error: 'Name and price are required' },
-        { status: 400 }
+        { error: "Name and price are required" },
+        { status: 400 },
       );
     }
 
@@ -175,11 +184,11 @@ export async function POST(request: NextRequest) {
     if (!productData.slug) {
       productData.slug = productData.name
         .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9\s-]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/-+/g, '-')
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
         .trim();
     }
 
@@ -187,101 +196,120 @@ export async function POST(request: NextRequest) {
     const product = {
       name: productData.name,
       slug: productData.slug,
-      description: productData.description || '',
-      short_description: productData.short_description || '',
+      description: productData.description || "",
+      short_description: productData.short_description || "",
       price: parseFloat(productData.price),
-      compare_at_price: productData.compare_at_price ? parseFloat(productData.compare_at_price) : null,
+      compare_at_price: productData.compare_at_price
+        ? parseFloat(productData.compare_at_price)
+        : null,
       category_id: productData.category_id || null,
-      featured_image: productData.featured_image || '',
+      featured_image: productData.featured_image || "",
       gallery: productData.gallery || [],
       skin_type: productData.skin_type || [],
       benefits: productData.benefits || [],
-      usage_instructions: productData.usage_instructions || '',
-      precautions: productData.precautions || '',
+      usage_instructions: productData.usage_instructions || "",
+      precautions: productData.precautions || "",
       certifications: productData.certifications || [],
       ingredients: productData.ingredients || [],
       weight: productData.weight ? parseFloat(productData.weight) : null,
-      dimensions: productData.dimensions || '',
-      package_characteristics: productData.package_characteristics || '',
+      dimensions: productData.dimensions || "",
+      package_characteristics: productData.package_characteristics || "",
       inventory_quantity: parseInt(productData.inventory_quantity) || 0,
-      status: productData.status || 'active',
+      status: productData.status || "active",
       is_featured: productData.is_featured || false,
       published_at: productData.published_at || new Date().toISOString(),
-      vendor: 'ALKIMYA DA LUZ',
-      currency: 'ARS',
+      vendor: "ALKIMYA DA LUZ",
+      currency: "ARS",
       requires_shipping: true,
       track_inventory: true,
-      inventory_policy: 'deny',
+      inventory_policy: "deny",
       low_stock_threshold: 5,
+      // Nuevos campos de la migración
+      promotional_tag: productData.promotional_tag || "none",
+      discount_transfer_percent: productData.discount_transfer_percent
+        ? parseFloat(productData.discount_transfer_percent)
+        : null,
+      discount_cash_percent: productData.discount_cash_percent
+        ? parseFloat(productData.discount_cash_percent)
+        : null,
+      access_id: productData.access_id || null,
     };
 
     // Insert product
     const { data, error } = await supabase
-      .from('products')
+      .from("products")
       .insert([product])
       .select()
       .single();
 
     if (error) {
-      console.error('Database error:', error);
-      
+      console.error("Database error:", error);
+
       // Handle unique constraint violations
-      if (error.code === '23505') {
-        if (error.message.includes('slug')) {
+      if (error.code === "23505") {
+        if (error.message.includes("slug")) {
           return NextResponse.json(
-            { error: 'A product with this URL already exists' },
-            { status: 400 }
+            { error: "A product with this URL already exists" },
+            { status: 400 },
           );
         }
         return NextResponse.json(
-          { error: 'Product already exists' },
-          { status: 400 }
+          { error: "Product already exists" },
+          { status: 400 },
         );
       }
-      
+
       return NextResponse.json(
-        { error: 'Failed to create product' },
-        { status: 500 }
+        { error: "Failed to create product" },
+        { status: 500 },
       );
     }
 
-    return NextResponse.json({
-      message: 'Product created successfully',
-      product: data,
-    }, { status: 201 });
-
-  } catch (error) {
-    console.error('API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      {
+        message: "Product created successfully",
+        product: data,
+      },
+      { status: 201 },
+    );
+  } catch (error) {
+    console.error("API error:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
 
 function getSortColumn(sortBy: string): string {
   switch (sortBy) {
-    case 'price_asc':
-    case 'price_desc':
-      return 'price';
-    case 'name':
-      return 'name';
-    case 'newest':
-      return 'created_at';
-    case 'featured':
-      return 'is_featured';
+    case "price_asc":
+    case "price_desc":
+      return "price";
+    case "name":
+      return "name";
+    case "newest":
+      return "created_at";
+    case "featured":
+      return "is_featured";
     default:
-      return 'created_at';
+      return "created_at";
   }
 }
 
 function getSortOrder(sort: string) {
   switch (sort) {
-    case 'price_asc': return 'asc';
-    case 'price_desc': return 'desc';
-    case 'name': return 'asc';
-    case 'newest': return 'desc';
-    case 'featured': return 'desc';
-    default: return 'desc';
+    case "price_asc":
+      return "asc";
+    case "price_desc":
+      return "desc";
+    case "name":
+      return "asc";
+    case "newest":
+      return "desc";
+    case "featured":
+      return "desc";
+    default:
+      return "desc";
   }
-} 
+}

@@ -21,7 +21,7 @@ import {
   ChevronRight,
   Grid3X3,
   Grid2X2,
-  SlidersHorizontal
+  SlidersHorizontal,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -45,28 +45,32 @@ interface TiendaSidebarProps {
 }
 
 const productLines = [
-  { id: 'alma-terra', name: 'Alma Terra', color: 'text-alma-primary' },
-  { id: 'ecos', name: 'Ecos', color: 'text-ecos-primary' },
-  { id: 'jade-ritual', name: 'Jade Ritual', color: 'text-jade-primary' },
-  { id: 'kits-experiencia', name: 'Kits y Experiencia', color: 'text-brand-primary' },
-  { id: 'umbral', name: 'Umbral', color: 'text-umbral-primary' },
-  { id: 'utopica', name: 'Utópica', color: 'text-utopica-primary' }
+  { id: "alma-terra", name: "Alma Terra", color: "text-alma-primary" },
+  { id: "ecos", name: "Ecos", color: "text-ecos-primary" },
+  { id: "jade-ritual", name: "Jade Ritual", color: "text-jade-primary" },
+  {
+    id: "kits-experiencia",
+    name: "Kits y Experiencia",
+    color: "text-brand-primary",
+  },
+  { id: "umbral", name: "Umbral", color: "text-umbral-primary" },
+  { id: "utopica", name: "Utópica", color: "text-utopica-primary" },
 ];
 
 const skinTypes = [
-  { value: 'dry', label: 'Seca' },
-  { value: 'oily', label: 'Grasa' },
-  { value: 'combination', label: 'Mixta' },
-  { value: 'sensitive', label: 'Sensible' },
-  { value: 'normal', label: 'Normal' }
+  { value: "dry", label: "Seca" },
+  { value: "oily", label: "Grasa" },
+  { value: "combination", label: "Mixta" },
+  { value: "sensitive", label: "Sensible" },
+  { value: "normal", label: "Normal" },
 ];
 
 const sortOptions = [
-  { value: 'featured', label: 'Destacados' },
-  { value: 'newest', label: 'Más recientes' },
-  { value: 'price_asc', label: 'Precio: menor a mayor' },
-  { value: 'price_desc', label: 'Precio: mayor a menor' },
-  { value: 'name', label: 'Nombre A-Z' }
+  { value: "featured", label: "Destacados" },
+  { value: "newest", label: "Más recientes" },
+  { value: "price_asc", label: "Precio: menor a mayor" },
+  { value: "price_desc", label: "Precio: mayor a menor" },
+  { value: "name", label: "Nombre A-Z" },
 ];
 
 export default function TiendaSidebar({
@@ -85,19 +89,24 @@ export default function TiendaSidebar({
   categories,
   onClearFilters,
   hasActiveFilters,
-  className
+  className,
 }: TiendaSidebarProps) {
   const [expandedSections, setExpandedSections] = useState({
     categories: true,
     filters: true,
-    sort: true
+    sort: true,
   });
 
   const toggleSection = (section: keyof typeof expandedSections) => {
-    console.log('Toggling section:', section, 'current state:', expandedSections[section]);
-    setExpandedSections(prev => ({
+    console.log(
+      "Toggling section:",
+      section,
+      "current state:",
+      expandedSections[section],
+    );
+    setExpandedSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
   };
 
@@ -108,10 +117,15 @@ export default function TiendaSidebar({
         <Button
           variant="outline"
           className="w-full flex items-center gap-2 text-sm h-9"
-          onClick={() => setExpandedSections(prev => ({ ...prev, categories: !prev.categories }))}
+          onClick={() =>
+            setExpandedSections((prev) => ({
+              ...prev,
+              categories: !prev.categories,
+            }))
+          }
         >
           <SlidersHorizontal className="h-4 w-4" />
-          {expandedSections.categories ? 'Ocultar Filtros' : 'Mostrar Filtros'}
+          {expandedSections.categories ? "Ocultar Filtros" : "Mostrar Filtros"}
         </Button>
       </div>
       {/* Search */}
@@ -120,9 +134,9 @@ export default function TiendaSidebar({
           <CardTitle
             className="text-base lg:text-lg flex items-center gap-2"
             style={{
-              fontFamily: 'VELISTA, var(--font-velista), serif',
-              fontWeight: 'normal',
-              fontStyle: 'normal'
+              fontFamily: "EB Garamond, var(--font-text), serif",
+              fontWeight: 600,
+              fontStyle: "normal",
             }}
           >
             <Search className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
@@ -147,16 +161,16 @@ export default function TiendaSidebar({
         <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
-            console.log('Categories header clicked');
-            toggleSection('categories');
+            console.log("Categories header clicked");
+            toggleSection("categories");
           }}
         >
           <CardTitle
             className="text-base lg:text-lg flex items-center justify-between"
             style={{
-              fontFamily: 'VELISTA, var(--font-velista), serif',
-              fontWeight: 'normal',
-              fontStyle: 'normal'
+              fontFamily: "EB Garamond, var(--font-text), serif",
+              fontWeight: 600,
+              fontStyle: "normal",
             }}
           >
             <span className="flex items-center gap-2">
@@ -173,16 +187,16 @@ export default function TiendaSidebar({
         {expandedSections.categories && (
           <CardContent className="pt-0">
             <div className="space-y-2 lg:space-y-3">
-
-
               {/* Product Lines */}
               {productLines.map((line) => (
                 <Button
                   key={line.id}
-                  variant={selectedCategory === line.id ? 'line-primary' : 'line-ghost'}
+                  variant={
+                    selectedCategory === line.id ? "line-primary" : "line-ghost"
+                  }
                   className={cn(
                     "w-full justify-start text-sm h-8 lg:h-9",
-                    line.color
+                    line.color,
                   )}
                   onClick={() => {
                     // Redirect to specific category page instead of filtering
@@ -202,16 +216,16 @@ export default function TiendaSidebar({
         <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
-            console.log('Filters header clicked');
-            toggleSection('filters');
+            console.log("Filters header clicked");
+            toggleSection("filters");
           }}
         >
           <CardTitle
             className="text-base lg:text-lg flex items-center justify-between"
             style={{
-              fontFamily: 'VELISTA, var(--font-velista), serif',
-              fontWeight: 'normal',
-              fontStyle: 'normal'
+              fontFamily: "EB Garamond, var(--font-text), serif",
+              fontWeight: 600,
+              fontStyle: "normal",
             }}
           >
             <span className="flex items-center gap-2">
@@ -229,8 +243,13 @@ export default function TiendaSidebar({
           <CardContent className="pt-0 space-y-3 lg:space-y-4">
             {/* Skin Type */}
             <div>
-              <label className="text-xs lg:text-sm font-medium mb-2 block">Tipo de Piel</label>
-              <Select value={selectedSkinType} onValueChange={setSelectedSkinType}>
+              <label className="text-xs lg:text-sm font-medium mb-2 block">
+                Tipo de Piel
+              </label>
+              <Select
+                value={selectedSkinType}
+                onValueChange={setSelectedSkinType}
+              >
                 <SelectTrigger className="h-8 lg:h-10 text-sm">
                   <SelectValue placeholder="Todos los tipos" />
                 </SelectTrigger>
@@ -247,20 +266,26 @@ export default function TiendaSidebar({
 
             {/* Price Range */}
             <div>
-              <label className="text-xs lg:text-sm font-medium mb-2 block">Rango de Precio</label>
+              <label className="text-xs lg:text-sm font-medium mb-2 block">
+                Rango de Precio
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <Input
                   type="number"
                   placeholder="Mín"
                   value={priceRange.min}
-                  onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })}
+                  onChange={(e) =>
+                    setPriceRange({ ...priceRange, min: e.target.value })
+                  }
                   className="h-8 lg:h-10 text-sm"
                 />
                 <Input
                   type="number"
                   placeholder="Máx"
                   value={priceRange.max}
-                  onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })}
+                  onChange={(e) =>
+                    setPriceRange({ ...priceRange, max: e.target.value })
+                  }
                   className="h-8 lg:h-10 text-sm"
                 />
               </div>
@@ -271,7 +296,7 @@ export default function TiendaSidebar({
               <Button
                 variant="outline"
                 onClick={() => {
-                  console.log('Clear filters clicked');
+                  console.log("Clear filters clicked");
                   onClearFilters();
                 }}
                 className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
@@ -289,16 +314,16 @@ export default function TiendaSidebar({
         <CardHeader
           className="pb-3 cursor-pointer"
           onClick={() => {
-            console.log('Sort header clicked');
-            toggleSection('sort');
+            console.log("Sort header clicked");
+            toggleSection("sort");
           }}
         >
           <CardTitle
             className="text-lg flex items-center justify-between"
             style={{
-              fontFamily: 'VELISTA, var(--font-velista), serif',
-              fontWeight: 'normal',
-              fontStyle: 'normal'
+              fontFamily: "EB Garamond, var(--font-text), serif",
+              fontWeight: 600,
+              fontStyle: "normal",
             }}
           >
             <span className="flex items-center gap-2">
@@ -316,7 +341,9 @@ export default function TiendaSidebar({
           <CardContent className="pt-0 space-y-4">
             {/* Sort Options */}
             <div>
-              <label className="text-sm font-medium mb-2 block">Ordenar por</label>
+              <label className="text-sm font-medium mb-2 block">
+                Ordenar por
+              </label>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar orden" />
@@ -339,7 +366,7 @@ export default function TiendaSidebar({
                   variant={gridCols === 2 ? "line-primary" : "line-ghost"}
                   size="sm"
                   onClick={() => {
-                    console.log('Grid 2x2 clicked');
+                    console.log("Grid 2x2 clicked");
                     setGridCols(2);
                   }}
                   className="flex-1 rounded-none"
@@ -351,7 +378,7 @@ export default function TiendaSidebar({
                   variant={gridCols === 3 ? "line-primary" : "line-ghost"}
                   size="sm"
                   onClick={() => {
-                    console.log('Grid 3x3 clicked');
+                    console.log("Grid 3x3 clicked");
                     setGridCols(3);
                   }}
                   className="flex-1 rounded-none"
@@ -371,11 +398,11 @@ export default function TiendaSidebar({
           <CardContent className="pt-4">
             <div className="space-y-2">
               <h4
-                className="font-normal text-sm"
+                className="font-semibold text-sm"
                 style={{
-                  fontFamily: 'VELISTA, var(--font-velista), serif',
-                  fontWeight: 'normal',
-                  fontStyle: 'normal'
+                  fontFamily: "EB Garamond, var(--font-text), serif",
+                  fontWeight: 600,
+                  fontStyle: "normal",
                 }}
               >
                 Filtros Activos:
@@ -388,17 +415,20 @@ export default function TiendaSidebar({
                 )}
                 {selectedCategory && (
                   <Badge variant="secondary" className="text-xs">
-                    Categoría: {categories.find(c => c.id === selectedCategory)?.name || productLines.find(p => p.id === selectedCategory)?.name}
+                    Categoría:{" "}
+                    {categories.find((c) => c.id === selectedCategory)?.name ||
+                      productLines.find((p) => p.id === selectedCategory)?.name}
                   </Badge>
                 )}
-                {selectedSkinType && selectedSkinType !== 'all' && (
+                {selectedSkinType && selectedSkinType !== "all" && (
                   <Badge variant="secondary" className="text-xs">
-                    Piel: {skinTypes.find(s => s.value === selectedSkinType)?.label}
+                    Piel:{" "}
+                    {skinTypes.find((s) => s.value === selectedSkinType)?.label}
                   </Badge>
                 )}
                 {(priceRange.min || priceRange.max) && (
                   <Badge variant="secondary" className="text-xs">
-                    Precio: {priceRange.min || '0'} - {priceRange.max || '∞'}
+                    Precio: {priceRange.min || "0"} - {priceRange.max || "∞"}
                   </Badge>
                 )}
               </div>

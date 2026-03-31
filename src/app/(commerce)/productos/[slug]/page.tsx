@@ -20,21 +20,21 @@ import {
 } from "@/components/ui/dialog";
 import { useCart } from "@/contexts/CartContext";
 import { useAuthContext } from "@/contexts/AuthContext";
-import { 
-  Star, 
-  Heart, 
-  Share2, 
-  Plus, 
-  Minus, 
-  ShoppingCart, 
-  Truck, 
-  Shield, 
+import {
+  Star,
+  Heart,
+  Share2,
+  Plus,
+  Minus,
+  ShoppingCart,
+  Truck,
+  Shield,
   Leaf,
   ArrowLeft,
   Check,
   AlertCircle,
   Sparkles,
-  MessageSquare
+  MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
 import RichTextDisplay from "@/components/ui/RichTextDisplay";
@@ -93,6 +93,16 @@ interface Product {
     description?: string;
   };
   product_variants?: ProductVariant[];
+  // New fields from migration 20260325000000
+  promotional_tag?:
+    | "none"
+    | "lanzamiento"
+    | "descuento"
+    | "ultimas_unidades"
+    | null;
+  discount_transfer_percent?: number | null;
+  discount_cash_percent?: number | null;
+  access_id?: string | null;
 }
 
 export default function ProductDetailPage() {
@@ -101,8 +111,10 @@ export default function ProductDetailPage() {
   const { user } = useAuthContext();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string>('');
+  const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(
+    null,
+  );
+  const [selectedImage, setSelectedImage] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
   const [isFavorite, setIsFavorite] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -126,12 +138,12 @@ export default function ProductDetailPage() {
   useEffect(() => {
     async function fetchProduct() {
       if (!params.slug) return;
-      
+
       setLoading(true);
       try {
         // First try to find by slug, if not found try by ID
         let response = await fetch(`/api/products/by-slug/${params.slug}`);
-        
+
         if (!response.ok && response.status === 404) {
           // Fallback to ID search if slug not found
           response = await fetch(`/api/products/${params.slug}`);
@@ -140,21 +152,25 @@ export default function ProductDetailPage() {
         if (response.ok) {
           const data = await response.json();
           setProduct(data.product);
-          
+
           // Set default variant and image
-          const defaultVariant = data.product.product_variants?.find((v: ProductVariant) => v.is_default) 
-            || data.product.product_variants?.[0];
+          const defaultVariant =
+            data.product.product_variants?.find(
+              (v: ProductVariant) => v.is_default,
+            ) || data.product.product_variants?.[0];
           setSelectedVariant(defaultVariant);
-          setSelectedImage(defaultVariant?.image_url || data.product.featured_image);
-          
+          setSelectedImage(
+            defaultVariant?.image_url || data.product.featured_image,
+          );
+
           // Fetch related products from the same line
           fetchRelatedProducts(data.product);
         } else {
-          toast.error('Producto no encontrado');
+          toast.error("Producto no encontrado");
         }
       } catch (error) {
-        console.error('Error fetching product:', error);
-        toast.error('Error al cargar el producto');
+        console.error("Error fetching product:", error);
+        toast.error("Error al cargar el producto");
       } finally {
         setLoading(false);
       }
@@ -169,42 +185,47 @@ export default function ProductDetailPage() {
     try {
       // Determine the product line based on category or product name
       const productLine = determineProductLine(currentProduct);
-      
+
       if (productLine) {
         const response = await fetch(`/api/products?limit=8&in_stock=true`);
         const data = await response.json();
-        
+
         if (response.ok) {
           // Filter products from the same line, excluding current product
-          const related = (data.products || []).filter((product: Product) => {
-            if (product.id === currentProduct.id) return false;
-            
-            const name = product.name?.toLowerCase() || '';
-            const description = product.description?.toLowerCase() || '';
-            const shortDescription = product.short_description?.toLowerCase() || '';
-            const categoryName = product.categories?.name?.toLowerCase() || '';
-            const categorySlug = product.categories?.slug?.toLowerCase() || '';
-            const lineName = productLine.name.toLowerCase();
-            const lineId = productLine.id.toLowerCase();
-            
-            return (
-              categoryName.includes(lineName) ||
-              categoryName.includes(lineId) ||
-              categorySlug.includes(lineId) ||
-              name.includes(lineName) ||
-              name.includes(lineId) ||
-              description.includes(lineName) ||
-              description.includes(lineId) ||
-              shortDescription.includes(lineName) ||
-              shortDescription.includes(lineId)
-            );
-          }).slice(0, 4);
-          
+          const related = (data.products || [])
+            .filter((product: Product) => {
+              if (product.id === currentProduct.id) return false;
+
+              const name = product.name?.toLowerCase() || "";
+              const description = product.description?.toLowerCase() || "";
+              const shortDescription =
+                product.short_description?.toLowerCase() || "";
+              const categoryName =
+                product.categories?.name?.toLowerCase() || "";
+              const categorySlug =
+                product.categories?.slug?.toLowerCase() || "";
+              const lineName = productLine.name.toLowerCase();
+              const lineId = productLine.id.toLowerCase();
+
+              return (
+                categoryName.includes(lineName) ||
+                categoryName.includes(lineId) ||
+                categorySlug.includes(lineId) ||
+                name.includes(lineName) ||
+                name.includes(lineId) ||
+                description.includes(lineName) ||
+                description.includes(lineId) ||
+                shortDescription.includes(lineName) ||
+                shortDescription.includes(lineId)
+              );
+            })
+            .slice(0, 4);
+
           setRelatedProducts(related);
         }
       }
     } catch (error) {
-      console.error('Error fetching related products:', error);
+      console.error("Error fetching related products:", error);
     } finally {
       setRelatedLoading(false);
     }
@@ -213,59 +234,60 @@ export default function ProductDetailPage() {
   // Determine product line based on product data
   const determineProductLine = (product: Product) => {
     const productLines = [
-      { 
-        id: 'alma-terra', 
-        name: 'Alma Terra',
-        primaryColor: '#9B201A',
-        secondaryColor: '#F0EACE',
-        buttonColor: 'bg-[#9B201A] hover:bg-[#9B201A]/90 text-white',
-        outlineColor: 'border-[#9B201A]/20 text-[#9B201A] hover:bg-[#9B201A]/5'
+      {
+        id: "alma-terra",
+        name: "Alma Terra",
+        primaryColor: "#9B201A",
+        secondaryColor: "#F0EACE",
+        buttonColor: "bg-[#9B201A] hover:bg-[#9B201A]/90 text-white",
+        outlineColor: "border-[#9B201A]/20 text-[#9B201A] hover:bg-[#9B201A]/5",
       },
-      { 
-        id: 'ecos', 
-        name: 'Ecos',
-        primaryColor: '#12406F',
-        secondaryColor: '#F0EACE',
-        buttonColor: 'bg-[#12406F] hover:bg-[#12406F]/90 text-white',
-        outlineColor: 'border-[#12406F]/20 text-[#12406F] hover:bg-[#12406F]/5'
+      {
+        id: "ecos",
+        name: "Ecos",
+        primaryColor: "#12406F",
+        secondaryColor: "#F0EACE",
+        buttonColor: "bg-[#12406F] hover:bg-[#12406F]/90 text-white",
+        outlineColor: "border-[#12406F]/20 text-[#12406F] hover:bg-[#12406F]/5",
       },
-      { 
-        id: 'jade-ritual', 
-        name: 'Jade Ritual',
-        primaryColor: '#04412D',
-        secondaryColor: '#F0EACE',
-        buttonColor: 'bg-[#04412D] hover:bg-[#04412D]/90 text-white',
-        outlineColor: 'border-[#04412D]/20 text-[#04412D] hover:bg-[#04412D]/5'
+      {
+        id: "jade-ritual",
+        name: "Jade Ritual",
+        primaryColor: "#04412D",
+        secondaryColor: "#F0EACE",
+        buttonColor: "bg-[#04412D] hover:bg-[#04412D]/90 text-white",
+        outlineColor: "border-[#04412D]/20 text-[#04412D] hover:bg-[#04412D]/5",
       },
-      { 
-        id: 'umbral', 
-        name: 'Umbral',
-        primaryColor: '#EA4F12',
-        secondaryColor: '#F0EACE',
-        buttonColor: 'bg-[#EA4F12] hover:bg-[#EA4F12]/90 text-white',
-        outlineColor: 'border-[#EA4F12]/20 text-[#EA4F12] hover:bg-[#EA4F12]/5'
+      {
+        id: "umbral",
+        name: "Umbral",
+        primaryColor: "#EA4F12",
+        secondaryColor: "#F0EACE",
+        buttonColor: "bg-[#EA4F12] hover:bg-[#EA4F12]/90 text-white",
+        outlineColor: "border-[#EA4F12]/20 text-[#EA4F12] hover:bg-[#EA4F12]/5",
       },
-      { 
-        id: 'utopica', 
-        name: 'Utópica',
-        primaryColor: '#392E13',
-        secondaryColor: '#F0EACE',
-        buttonColor: 'bg-[#392E13] hover:bg-[#392E13]/90 text-white',
-        outlineColor: 'border-[#392E13]/20 text-[#392E13] hover:bg-[#392E13]/5'
-      }
+      {
+        id: "utopica",
+        name: "Utópica",
+        primaryColor: "#392E13",
+        secondaryColor: "#F0EACE",
+        buttonColor: "bg-[#392E13] hover:bg-[#392E13]/90 text-white",
+        outlineColor: "border-[#392E13]/20 text-[#392E13] hover:bg-[#392E13]/5",
+      },
     ];
 
-    const name = product.name?.toLowerCase() || '';
-    const description = product.description?.toLowerCase() || '';
-    const categoryName = product.categories?.name?.toLowerCase() || '';
-    
-    return productLines.find(line => 
-      name.includes(line.name.toLowerCase()) ||
-      name.includes(line.id) ||
-      description.includes(line.name.toLowerCase()) ||
-      description.includes(line.id) ||
-      categoryName.includes(line.name.toLowerCase()) ||
-      categoryName.includes(line.id)
+    const name = product.name?.toLowerCase() || "";
+    const description = product.description?.toLowerCase() || "";
+    const categoryName = product.categories?.name?.toLowerCase() || "";
+
+    return productLines.find(
+      (line) =>
+        name.includes(line.name.toLowerCase()) ||
+        name.includes(line.id) ||
+        description.includes(line.name.toLowerCase()) ||
+        description.includes(line.id) ||
+        categoryName.includes(line.name.toLowerCase()) ||
+        categoryName.includes(line.id),
     );
   };
 
@@ -274,34 +296,36 @@ export default function ProductDetailPage() {
     if (!product) {
       // Default color palette from main landing page
       return {
-        id: 'default',
-        name: 'Default',
-        primaryColor: '#AE0000',
-        secondaryColor: '#F0EACE',
-        buttonColor: 'bg-dorado hover:bg-dorado/90 text-azul-profundo',
-        outlineColor: 'border-azul-profundo/20 text-azul-profundo hover:bg-azul-profundo/5'
+        id: "default",
+        name: "Default",
+        primaryColor: "#AE0000",
+        secondaryColor: "#F0EACE",
+        buttonColor: "bg-dorado hover:bg-dorado/90 text-azul-profundo",
+        outlineColor:
+          "border-azul-profundo/20 text-azul-profundo hover:bg-azul-profundo/5",
       };
     }
-    
+
     const productLine = determineProductLine(product);
     if (productLine) {
       return productLine;
     }
-    
+
     // Default color palette from main landing page
     return {
-      id: 'default',
-      name: 'Default',
-      primaryColor: '#AE0000',
-      secondaryColor: '#F0EACE',
-      buttonColor: 'bg-dorado hover:bg-dorado/90 text-azul-profundo',
-      outlineColor: 'border-azul-profundo/20 text-azul-profundo hover:bg-azul-profundo/5'
+      id: "default",
+      name: "Default",
+      primaryColor: "#AE0000",
+      secondaryColor: "#F0EACE",
+      buttonColor: "bg-dorado hover:bg-dorado/90 text-azul-profundo",
+      outlineColor:
+        "border-azul-profundo/20 text-azul-profundo hover:bg-azul-profundo/5",
     };
   };
 
   const handleVariantSelect = (variant: ProductVariant) => {
     setSelectedVariant(variant);
-    setSelectedImage(variant.image_url || product?.featured_image || '');
+    setSelectedImage(variant.image_url || product?.featured_image || "");
     setQuantity(1);
   };
 
@@ -315,7 +339,9 @@ export default function ProductDetailPage() {
   const prevImage = () => {
     const images = getImages();
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    setSelectedImage(images[(currentImageIndex - 1 + images.length) % images.length]);
+    setSelectedImage(
+      images[(currentImageIndex - 1 + images.length) % images.length],
+    );
   };
 
   const selectImage = (image: string, index: number) => {
@@ -328,10 +354,11 @@ export default function ProductDetailPage() {
 
     const variant = selectedVariant || product.product_variants?.[0];
     const currentPrice = variant?.price || product.price;
-    const currentStock = variant?.inventory_quantity || product.inventory_quantity;
+    const currentStock =
+      variant?.inventory_quantity || product.inventory_quantity;
 
     if (currentStock < quantity) {
-      toast.error('Stock insuficiente');
+      toast.error("Stock insuficiente");
       return;
     }
 
@@ -358,26 +385,26 @@ export default function ProductDetailPage() {
 
   const handleDeleteReview = async (reviewId: string) => {
     if (!currentUserId) return;
-    
+
     try {
       const response = await fetch(
         `/api/products/${product?.id}/reviews/${reviewId}?user_id=${currentUserId}`,
         {
-          method: 'DELETE',
-        }
+          method: "DELETE",
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Error al eliminar la reseña');
+        throw new Error(data.error || "Error al eliminar la reseña");
       }
 
-      toast.success('Reseña eliminada exitosamente');
+      toast.success("Reseña eliminada exitosamente");
       // The ReviewList component will automatically refresh
     } catch (error) {
-      console.error('Error deleting review:', error);
-      toast.error('Error al eliminar la reseña. Por favor intenta de nuevo.');
+      console.error("Error deleting review:", error);
+      toast.error("Error al eliminar la reseña. Por favor intenta de nuevo.");
     }
   };
 
@@ -392,47 +419,61 @@ export default function ProductDetailPage() {
 
     const shareData = {
       title: product.name,
-      text: product.short_description || product.description || 'Descubre este increíble producto de DA LUZ',
+      text:
+        product.short_description ||
+        product.description ||
+        "Descubre este increíble producto de DA LUZ",
       url: window.location.href,
     };
 
     try {
       // Check if Web Share API is supported and we're in a secure context
-      if (navigator.share && navigator.canShare && navigator.canShare(shareData) && window.isSecureContext) {
+      if (
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare(shareData) &&
+        window.isSecureContext
+      ) {
         await navigator.share(shareData);
-        toast.success('¡Producto compartido exitosamente!');
+        toast.success("¡Producto compartido exitosamente!");
       } else {
         // Fallback: Copy to clipboard
         await copyToClipboard(window.location.href);
-        toast.success('¡Enlace copiado al portapapeles!');
+        toast.success("¡Enlace copiado al portapapeles!");
       }
     } catch (error) {
-      console.error('Error sharing:', error);
+      console.error("Error sharing:", error);
       // Try clipboard fallback
       try {
         await copyToClipboard(window.location.href);
-        toast.success('¡Enlace copiado al portapapeles!');
+        toast.success("¡Enlace copiado al portapapeles!");
       } catch (clipboardError) {
-        console.error('Clipboard error:', clipboardError);
-        toast.error('No se pudo compartir el producto. Intenta copiar el enlace manualmente.');
+        console.error("Clipboard error:", clipboardError);
+        toast.error(
+          "No se pudo compartir el producto. Intenta copiar el enlace manualmente.",
+        );
       }
     }
   };
 
   const copyToClipboard = async (text: string) => {
-    if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+    if (
+      navigator.clipboard &&
+      navigator.clipboard.writeText &&
+      window.isSecureContext
+    ) {
       await navigator.clipboard.writeText(text);
     } else {
       // Fallback for older browsers or non-secure contexts
-      const textArea = document.createElement('textarea');
+      const textArea = document.createElement("textarea");
       textArea.value = text;
-      textArea.style.position = 'fixed';
-      textArea.style.left = '-999999px';
-      textArea.style.top = '-999999px';
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      textArea.style.top = "-999999px";
       document.body.appendChild(textArea);
       textArea.focus();
       textArea.select();
-      document.execCommand('copy');
+      document.execCommand("copy");
       document.body.removeChild(textArea);
     }
   };
@@ -442,7 +483,9 @@ export default function ProductDetailPage() {
   };
 
   const getCurrentStock = () => {
-    return selectedVariant?.inventory_quantity || product?.inventory_quantity || 0;
+    return (
+      selectedVariant?.inventory_quantity || product?.inventory_quantity || 0
+    );
   };
 
   const getImages = () => {
@@ -452,12 +495,12 @@ export default function ProductDetailPage() {
       images.push(...product.gallery);
     }
     // Add variant images
-    product.product_variants?.forEach(variant => {
+    product.product_variants?.forEach((variant) => {
       if (variant.image_url && !images.includes(variant.image_url)) {
         images.push(variant.image_url);
       }
     });
-    
+
     // Return all available images (no minimum requirement)
     return images.filter(Boolean);
   };
@@ -465,11 +508,11 @@ export default function ProductDetailPage() {
   // Calculate intelligent thumbnail sizing based on number of images
   const getThumbnailSize = (imageCount: number) => {
     if (imageCount <= 3) {
-      return { size: 'h-20', container: 'max-h-80' };
+      return { size: "h-20", container: "max-h-80" };
     } else if (imageCount === 4) {
-      return { size: 'h-16', container: 'max-h-80' };
+      return { size: "h-16", container: "max-h-80" };
     } else {
-      return { size: 'h-14', container: 'max-h-80' };
+      return { size: "h-14", container: "max-h-80" };
     }
   };
 
@@ -500,7 +543,9 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="container mx-auto px-4 py-8 text-center">
-        <h1 className="text-2xl font-bold text-azul-profundo mb-4">Producto no encontrado</h1>
+        <h1 className="text-2xl font-bold text-azul-profundo mb-4">
+          Producto no encontrado
+        </h1>
         <Link href="/productos">
           <Button variant="outline">
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -519,29 +564,42 @@ export default function ProductDetailPage() {
   return (
     <div className="min-h-screen overflow-hidden">
       {/* Background */}
-      <div 
+      <div
         className="fixed inset-0 w-full h-full opacity-100 pointer-events-none z-0"
         style={{
           backgroundImage: "url('/svg/backgrounds/tienda-background.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat"
+          backgroundRepeat: "no-repeat",
         }}
       />
-      
+
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Breadcrumb */}
         <nav className="mb-6">
           <ol className="flex items-center space-x-2 text-sm text-tierra-media">
-            <li><Link href="/" className="hover:text-azul-profundo">Inicio</Link></li>
+            <li>
+              <Link href="/" className="hover:text-azul-profundo">
+                Inicio
+              </Link>
+            </li>
             <li>/</li>
-            <li><Link href="/productos" className="hover:text-azul-profundo">Productos</Link></li>
+            <li>
+              <Link href="/productos" className="hover:text-azul-profundo">
+                Productos
+              </Link>
+            </li>
             {product.categories && (
               <>
                 <li>/</li>
-                <li><Link href={`/productos?category=${product.categories.id}`} className="hover:text-azul-profundo">
-                  {product.categories.name}
-                </Link></li>
+                <li>
+                  <Link
+                    href={`/productos?category=${product.categories.id}`}
+                    className="hover:text-azul-profundo"
+                  >
+                    {product.categories.name}
+                  </Link>
+                </li>
               </>
             )}
             <li>/</li>
@@ -554,7 +612,7 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Mobile: Main Image First */}
             <div className="lg:hidden">
-              <div 
+              <div
                 className="aspect-square relative overflow-hidden rounded-lg bg-white shadow-lg cursor-pointer group"
                 onClick={() => setShowImageModal(true)}
               >
@@ -565,7 +623,7 @@ export default function ProductDetailPage() {
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
                   priority
                 />
-                
+
                 {/* Navigation Arrows */}
                 {images.length > 1 && (
                   <>
@@ -589,18 +647,25 @@ export default function ProductDetailPage() {
                     </button>
                   </>
                 )}
-                
+
                 {/* Click to enlarge indicator */}
                 <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">
                   Click para ampliar
                 </div>
-                
+
                 {/* Badges */}
-                {product.compare_at_price && product.compare_at_price > currentPrice && (
-                  <Badge className="absolute top-4 left-4 bg-red-500 text-white">
-                    -{Math.round(((product.compare_at_price - currentPrice) / product.compare_at_price) * 100)}%
-                  </Badge>
-                )}
+                {product.compare_at_price &&
+                  product.compare_at_price > currentPrice && (
+                    <Badge className="absolute top-4 left-4 bg-red-500 text-white">
+                      -
+                      {Math.round(
+                        ((product.compare_at_price - currentPrice) /
+                          product.compare_at_price) *
+                          100,
+                      )}
+                      %
+                    </Badge>
+                  )}
                 {product.is_featured && (
                   <Badge className="absolute top-4 right-4 bg-dorado text-white">
                     Destacado
@@ -617,9 +682,9 @@ export default function ProductDetailPage() {
                     key={index}
                     onClick={() => selectImage(image, index)}
                     className={`w-20 h-20 flex-shrink-0 relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                      selectedImage === image 
-                        ? 'border-dorado shadow-lg scale-105' 
-                        : 'border-gray-200 hover:border-gray-300 hover:scale-105'
+                      selectedImage === image
+                        ? "border-dorado shadow-lg scale-105"
+                        : "border-gray-200 hover:border-gray-300 hover:scale-105"
                     }`}
                   >
                     <Image
@@ -637,117 +702,168 @@ export default function ProductDetailPage() {
             <div className="hidden lg:block">
               {/* Thumbnail Navigation - Left Side */}
               <div className="flex gap-4 items-center">
-              {/* Thumbnail Column */}
-              <div className="flex flex-col gap-2 w-auto justify-center">
-                {/* Up Arrow */}
-                {images.length > 3 && (
-                  <button
-                    onClick={() => {
-                      const newIndex = Math.max(0, currentImageIndex - 1);
-                      selectImage(images[newIndex], newIndex);
-                    }}
-                    className="w-full h-8 flex items-center justify-center transition-colors"
-                    disabled={currentImageIndex === 0}
-                  >
-                    <ArrowLeftSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
-                  </button>
-                )}
-                
-                {/* Thumbnails with intelligent sizing - vertically centered */}
-                <div className={`flex flex-col justify-center gap-2 ${getThumbnailSize(images.length).container} overflow-hidden`}>
-                  {images.map((image, index) => (
+                {/* Thumbnail Column */}
+                <div className="flex flex-col gap-2 w-auto justify-center">
+                  {/* Up Arrow */}
+                  {images.length > 3 && (
                     <button
-                      key={index}
-                      onClick={() => selectImage(image, index)}
-                      className={`w-16 ${getThumbnailSize(images.length).size} relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                        selectedImage === image 
-                          ? 'border-dorado shadow-lg scale-105' 
-                          : 'border-gray-200 hover:border-gray-300 hover:scale-105'
-                      }`}
+                      onClick={() => {
+                        const newIndex = Math.max(0, currentImageIndex - 1);
+                        selectImage(images[newIndex], newIndex);
+                      }}
+                      className="w-full h-8 flex items-center justify-center transition-colors"
+                      disabled={currentImageIndex === 0}
                     >
-                      <Image
-                        src={image}
-                        alt={`${product.name} ${index + 1}`}
-                        fill
-                        className="object-cover"
-                      />
+                      <ArrowLeftSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
                     </button>
-                  ))}
-                </div>
-                
-                {/* Down Arrow */}
-                {images.length > 3 && (
-                  <button
-                    onClick={() => {
-                      const newIndex = Math.min(images.length - 1, currentImageIndex + 1);
-                      selectImage(images[newIndex], newIndex);
-                    }}
-                    className="w-full h-8 flex items-center justify-center transition-colors"
-                    disabled={currentImageIndex >= images.length - 1}
-                  >
-                    <ArrowRightSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
-                  </button>
-                )}
-              </div>
+                  )}
 
-              {/* Main Image Display */}
-              <div className="flex-1">
-                <div 
-                  className="aspect-square relative overflow-hidden rounded-lg bg-white shadow-lg cursor-pointer group"
-                  onClick={() => setShowImageModal(true)}
-                >
-                  <Image
-                    src={selectedImage || product.featured_image}
-                    alt={product.name}
-                    fill
-                    className="object-cover"
-                    priority
-                  />
-                  
-                  {/* Navigation Arrows */}
-                  {images.length > 1 && (
-                    <>
+                  {/* Thumbnails with intelligent sizing - vertically centered */}
+                  <div
+                    className={`flex flex-col justify-center gap-2 ${getThumbnailSize(images.length).container} overflow-hidden`}
+                  >
+                    {images.map((image, index) => (
                       <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          prevImage();
-                        }}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
+                        key={index}
+                        onClick={() => selectImage(image, index)}
+                        className={`w-16 ${getThumbnailSize(images.length).size} relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
+                          selectedImage === image
+                            ? "border-dorado shadow-lg scale-105"
+                            : "border-gray-200 hover:border-gray-300 hover:scale-105"
+                        }`}
                       >
-                        <ArrowLeftSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                        <Image
+                          src={image}
+                          alt={`${product.name} ${index + 1}`}
+                          fill
+                          className="object-cover"
+                        />
                       </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          nextImage();
-                        }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
-                      >
-                        <ArrowRightSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
-                      </button>
-                    </>
-                  )}
-                  
-                  {/* Click to enlarge indicator */}
-                  <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                    Click para ampliar
+                    ))}
                   </div>
-                  
-                  {/* Badges */}
-                  {product.compare_at_price && product.compare_at_price > currentPrice && (
-                    <Badge className="absolute top-4 left-4 bg-red-500 text-white">
-                      -{Math.round(((product.compare_at_price - currentPrice) / product.compare_at_price) * 100)}%
-                    </Badge>
-                  )}
-                  {product.is_featured && (
-                    <Badge className="absolute top-4 right-4 bg-dorado text-azul-profundo">
-                      <Sparkles className="h-3 w-3 mr-1" />
-                      Destacado
-                    </Badge>
+
+                  {/* Down Arrow */}
+                  {images.length > 3 && (
+                    <button
+                      onClick={() => {
+                        const newIndex = Math.min(
+                          images.length - 1,
+                          currentImageIndex + 1,
+                        );
+                        selectImage(images[newIndex], newIndex);
+                      }}
+                      className="w-full h-8 flex items-center justify-center transition-colors"
+                      disabled={currentImageIndex >= images.length - 1}
+                    >
+                      <ArrowRightSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
+                    </button>
                   )}
                 </div>
+
+                {/* Main Image Display */}
+                <div className="flex-1">
+                  <div
+                    className="aspect-square relative overflow-hidden rounded-lg bg-white shadow-lg cursor-pointer group"
+                    onClick={() => setShowImageModal(true)}
+                  >
+                    <Image
+                      src={selectedImage || product.featured_image}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+
+                    {/* Navigation Arrows */}
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            prevImage();
+                          }}
+                          className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
+                        >
+                          <ArrowLeftSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            nextImage();
+                          }}
+                          className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
+                        >
+                          <ArrowRightSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                        </button>
+                      </>
+                    )}
+
+                    {/* Click to enlarge indicator */}
+                    <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                      Click para ampliar
+                    </div>
+
+                    {/* Badges */}
+                    {product.promotional_tag &&
+                      product.promotional_tag !== "none" && (
+                        <Badge
+                          className="absolute top-4 left-4 shadow-md"
+                          style={{
+                            backgroundColor: "#FFF2DB",
+                            color: "#791010",
+                            fontFamily: "EB Garamond, var(--font-text), serif",
+                            fontStyle: "italic",
+                            fontWeight: 500,
+                            border: "none",
+                          }}
+                        >
+                          {product.promotional_tag === "lanzamiento" && (
+                            <Sparkles className="h-3 w-3 mr-1" />
+                          )}
+                          {product.promotional_tag === "descuento" && (
+                            <Leaf className="h-3 w-3 mr-1" />
+                          )}
+                          {product.promotional_tag === "ultimas_unidades" && (
+                            <AlertCircle className="h-3 w-3 mr-1" />
+                          )}
+                          {product.promotional_tag === "lanzamiento"
+                            ? "Lanzamiento"
+                            : product.promotional_tag === "descuento"
+                              ? "Descuento"
+                              : product.promotional_tag === "ultimas_unidades"
+                                ? "Últimas Unidades"
+                                : ""}
+                        </Badge>
+                      )}
+                    {product.compare_at_price &&
+                      product.compare_at_price > currentPrice && (
+                        <Badge
+                          className="absolute top-4 bg-red-500 text-white"
+                          style={
+                            product.promotional_tag &&
+                            product.promotional_tag !== "none"
+                              ? { top: "4rem" }
+                              : {}
+                          }
+                        >
+                          -
+                          {Math.round(
+                            ((product.compare_at_price - currentPrice) /
+                              product.compare_at_price) *
+                              100,
+                          )}
+                          %
+                        </Badge>
+                      )}
+                    {product.is_featured && (
+                      <Badge className="absolute top-4 right-4 bg-dorado text-azul-profundo">
+                        <Sparkles className="h-3 w-3 mr-1" />
+                        Destacado
+                      </Badge>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
             </div>
           </div>
 
@@ -755,23 +871,30 @@ export default function ProductDetailPage() {
           <div className="space-y-6 px-4 lg:px-[4rem]">
             {/* Header */}
             <div>
-              
-              <h1 className="text-3xl font-bold text-azul-profundo mb-2">{product.name}</h1>
-              
+              <h1 className="text-3xl font-bold text-azul-profundo mb-2">
+                {product.name}
+              </h1>
+
               {product.short_description && (
                 <div className="text-tierra-media text-lg leading-relaxed">
                   <RichTextDisplay content={product.short_description} />
                 </div>
               )}
 
-<div className="flex items-center gap-2 mt-2 mb-4">
+              <div className="flex items-center gap-2 mt-2 mb-4">
                 {product.categories && (
-                  <Badge variant="outline" className="border-azul-profundo/20 text-azul-profundo">
+                  <Badge
+                    variant="outline"
+                    className="border-azul-profundo/20 text-azul-profundo"
+                  >
                     {product.categories.name}
                   </Badge>
                 )}
-                {product.certifications.includes('organic') && (
-                  <Badge variant="secondary" className="bg-verde-suave/20 text-verde-suave border-verde-suave/30">
+                {product.certifications.includes("organic") && (
+                  <Badge
+                    variant="secondary"
+                    className="bg-verde-suave/20 text-verde-suave border-verde-suave/30"
+                  >
                     <Leaf className="h-3 w-3 mr-1" />
                     Orgánico
                   </Badge>
@@ -784,20 +907,24 @@ export default function ProductDetailPage() {
                   {Array.from({ length: 5 }, (_, i) => {
                     const rating = product?.averageRating || 0;
                     const isFilled = i < Math.floor(rating);
-                    const isHalfFilled = i === Math.floor(rating) && rating % 1 >= 0.5;
+                    const isHalfFilled =
+                      i === Math.floor(rating) && rating % 1 >= 0.5;
                     return (
-                      <Star 
-                        key={i} 
+                      <Star
+                        key={i}
                         className={`h-4 w-4 ${
-                          isFilled || isHalfFilled 
-                            ? 'fill-dorado text-dorado' 
-                            : 'text-gray-300'
-                        }`} 
+                          isFilled || isHalfFilled
+                            ? "fill-dorado text-dorado"
+                            : "text-gray-300"
+                        }`}
                       />
                     );
                   })}
                 </div>
-                <span className="text-sm text-tierra-media">({product?.reviewCount || 0} {product?.reviewCount === 1 ? 'reseña' : 'reseñas'})</span>
+                <span className="text-sm text-tierra-media">
+                  ({product?.reviewCount || 0}{" "}
+                  {product?.reviewCount === 1 ? "reseña" : "reseñas"})
+                </span>
               </div>
             </div>
 
@@ -805,49 +932,126 @@ export default function ProductDetailPage() {
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
                 <span className="text-3xl font-bold text-azul-profundo">
-                  ${currentPrice.toLocaleString('es-AR')}
+                  ${currentPrice.toLocaleString("es-AR")}
                 </span>
-                {product.compare_at_price && product.compare_at_price > currentPrice && (
-                  <span className="text-lg text-tierra-media line-through">
-                    ${product.compare_at_price.toLocaleString('es-AR')}
-                  </span>
-                )}
+                {product.compare_at_price &&
+                  product.compare_at_price > currentPrice && (
+                    <span className="text-lg text-tierra-media line-through">
+                      ${product.compare_at_price.toLocaleString("es-AR")}
+                    </span>
+                  )}
               </div>
-              <p className="text-sm text-tierra-media">Precio en pesos argentinos</p>
+              <p className="text-sm text-tierra-media">
+                Precio en pesos argentinos
+              </p>
+              {/* Discount prices for transfer/cash payments */}
+              {(product.discount_transfer_percent ||
+                product.discount_cash_percent) && (
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {product.discount_transfer_percent &&
+                    product.discount_transfer_percent > 0 && (
+                      <div
+                        className="px-3 py-2 rounded-lg"
+                        style={{ backgroundColor: "#FFF2DB", color: "#791010" }}
+                      >
+                        <p
+                          className="text-sm font-medium"
+                          style={{
+                            fontFamily: "EB Garamond, var(--font-text), serif",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          Transferencia / Débit{" "}
+                          <span className="font-bold">
+                            $
+                            {Math.round(
+                              currentPrice *
+                                (1 - product.discount_transfer_percent / 100),
+                            ).toLocaleString("es-AR")}
+                          </span>
+                        </p>
+                        <p className="text-xs opacity-75">
+                          -{product.discount_transfer_percent}% off
+                        </p>
+                      </div>
+                    )}
+                  {product.discount_cash_percent &&
+                    product.discount_cash_percent > 0 && (
+                      <div
+                        className="px-3 py-2 rounded-lg"
+                        style={{ backgroundColor: "#FFF2DB", color: "#791010" }}
+                      >
+                        <p
+                          className="text-sm font-medium"
+                          style={{
+                            fontFamily: "EB Garamond, var(--font-text), serif",
+                            fontStyle: "italic",
+                          }}
+                        >
+                          Efectivo{" "}
+                          <span className="font-bold">
+                            $
+                            {Math.round(
+                              currentPrice *
+                                (1 - product.discount_cash_percent / 100),
+                            ).toLocaleString("es-AR")}
+                          </span>
+                        </p>
+                        <p className="text-xs opacity-75">
+                          -{product.discount_cash_percent}% off
+                        </p>
+                      </div>
+                    )}
+                </div>
+              )}
+              {/* Installments info */}
+              <p className="text-xs text-tierra-media mt-1">
+                Hasta 12 cuotas con tarjeta
+              </p>
             </div>
 
             {/* Variants */}
-            {product.product_variants && product.product_variants.length > 1 && (
-              <div className="space-y-3">
-                <h3 className="font-semibold" style={{ color: getColorPalette().primaryColor }}>Presentación:</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  {product.product_variants.map((variant) => (
-                    <Button
-                      key={variant.id}
-                      variant={selectedVariant?.id === variant.id ? "default" : "outline"}
-                      onClick={() => handleVariantSelect(variant)}
-                      className={`h-auto p-3 text-left transition-all duration-300 ${
-                        selectedVariant?.id === variant.id 
-                          ? `${getColorPalette().buttonColor} border-current` 
-                          : getColorPalette().outlineColor
-                      }`}
-                    >
-                      <div>
-                        <div className="font-medium">{variant.title}</div>
-                        <div className="text-sm opacity-75">
-                          ${variant.price.toLocaleString('es-AR')}
-                        </div>
-                        {variant.inventory_quantity <= 5 && (
-                          <div className="text-xs text-amber-600">
-                            Últimas {variant.inventory_quantity} unidades
+            {product.product_variants &&
+              product.product_variants.length > 1 && (
+                <div className="space-y-3">
+                  <h3
+                    className="font-semibold"
+                    style={{ color: getColorPalette().primaryColor }}
+                  >
+                    Presentación:
+                  </h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    {product.product_variants.map((variant) => (
+                      <Button
+                        key={variant.id}
+                        variant={
+                          selectedVariant?.id === variant.id
+                            ? "default"
+                            : "outline"
+                        }
+                        onClick={() => handleVariantSelect(variant)}
+                        className={`h-auto p-3 text-left transition-all duration-300 ${
+                          selectedVariant?.id === variant.id
+                            ? `${getColorPalette().buttonColor} border-current`
+                            : getColorPalette().outlineColor
+                        }`}
+                      >
+                        <div>
+                          <div className="font-medium">{variant.title}</div>
+                          <div className="text-sm opacity-75">
+                            ${variant.price.toLocaleString("es-AR")}
                           </div>
-                        )}
-                      </div>
-                    </Button>
-                  ))}
+                          {variant.inventory_quantity <= 5 && (
+                            <div className="text-xs text-amber-600">
+                              Últimas {variant.inventory_quantity} unidades
+                            </div>
+                          )}
+                        </div>
+                      </Button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Stock Status */}
             <div className="flex items-center gap-2">
@@ -873,35 +1077,47 @@ export default function ProductDetailPage() {
             {isInStock && (
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center border rounded-lg" style={{ borderColor: `${getColorPalette().primaryColor}20` }}>
+                  <div
+                    className="flex items-center border rounded-lg"
+                    style={{
+                      borderColor: `${getColorPalette().primaryColor}20`,
+                    }}
+                  >
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setQuantity(Math.max(1, quantity - 1))}
                       className="h-10 w-10 p-0 hover:opacity-50 transition-opacity duration-200"
-                      style={{ 
+                      style={{
                         color: getColorPalette().primaryColor,
-                        backgroundColor: 'transparent'
+                        backgroundColor: "transparent",
                       }}
                     >
                       <Minus className="h-4 w-4" />
                     </Button>
-                    <span className="px-4 py-2 text-center min-w-[3rem] font-medium" style={{ color: getColorPalette().primaryColor }}>{quantity}</span>
+                    <span
+                      className="px-4 py-2 text-center min-w-[3rem] font-medium"
+                      style={{ color: getColorPalette().primaryColor }}
+                    >
+                      {quantity}
+                    </span>
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setQuantity(Math.min(currentStock, quantity + 1))}
+                      onClick={() =>
+                        setQuantity(Math.min(currentStock, quantity + 1))
+                      }
                       className="h-10 w-10 p-0 hover:opacity-50 transition-opacity duration-200"
-                      style={{ 
+                      style={{
                         color: getColorPalette().primaryColor,
-                        backgroundColor: 'transparent'
+                        backgroundColor: "transparent",
                       }}
                       disabled={quantity >= currentStock}
                     >
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
-                  
+
                   <Button
                     onClick={handleAddToCart}
                     className={`flex-1 font-semibold h-10 transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}
@@ -917,14 +1133,16 @@ export default function ProductDetailPage() {
                     size="sm"
                     onClick={() => setIsFavorite(!isFavorite)}
                     className={`flex-1 ${getColorPalette().outlineColor} ${
-                      isFavorite ? 'bg-red-50 border-red-200 text-red-600' : ''
+                      isFavorite ? "bg-red-50 border-red-200 text-red-600" : ""
                     }`}
                   >
-                    <Heart className={`h-4 w-4 mr-2 ${isFavorite ? 'fill-current text-red-500' : ''}`} />
-                    {isFavorite ? 'En favoritos' : 'Agregar a favoritos'}
+                    <Heart
+                      className={`h-4 w-4 mr-2 ${isFavorite ? "fill-current text-red-500" : ""}`}
+                    />
+                    {isFavorite ? "En favoritos" : "Agregar a favoritos"}
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="sm"
                     className={getColorPalette().outlineColor}
                     onClick={handleShare}
@@ -940,15 +1158,21 @@ export default function ProductDetailPage() {
             <div className="space-y-3 p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-azul-profundo/10">
               <div className="flex items-center gap-2">
                 <Truck className="h-4 w-4 text-verde-suave" />
-                <span className="text-sm text-tierra-media">Envío gratis en compras superiores a $50.000</span>
+                <span className="text-sm text-tierra-media">
+                  Envío gratis en compras superiores a $50.000
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="h-4 w-4 text-azul-profundo" />
-                <span className="text-sm text-tierra-media">Garantía de calidad y satisfacción</span>
+                <span className="text-sm text-tierra-media">
+                  Garantía de calidad y satisfacción
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Leaf className="h-4 w-4 text-verde-suave" />
-                <span className="text-sm text-tierra-media">Productos naturales y artesanales</span>
+                <span className="text-sm text-tierra-media">
+                  Productos naturales y artesanales
+                </span>
               </div>
             </div>
           </div>
@@ -958,73 +1182,76 @@ export default function ProductDetailPage() {
         <div className="mt-12">
           <Tabs defaultValue="description" className="w-full">
             {/* Desktop Tabs */}
-            <TabsList className="hidden lg:grid w-full grid-cols-5 bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
-              <TabsTrigger 
+            <TabsList
+              className="hidden lg:grid w-full grid-cols-5 bg-white/50 backdrop-blur-sm border"
+              style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+            >
+              <TabsTrigger
                 value="description"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Descripción
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="ingredients"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Ingredientes
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="usage"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Modo de uso
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="physical"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Detalles Físicos
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="reviews"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Reseñas
@@ -1032,90 +1259,103 @@ export default function ProductDetailPage() {
             </TabsList>
 
             {/* Mobile Tabs */}
-            <TabsList className="lg:hidden flex w-full bg-white/50 backdrop-blur-sm border overflow-x-auto scrollbar-hide" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
-              <TabsTrigger 
+            <TabsList
+              className="lg:hidden flex w-full bg-white/50 backdrop-blur-sm border overflow-x-auto scrollbar-hide"
+              style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+            >
+              <TabsTrigger
                 value="description"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Descripción
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="ingredients"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Ingredientes
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="usage"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Modo de uso
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="physical"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Detalles Físicos
               </TabsTrigger>
-              <TabsTrigger 
+              <TabsTrigger
                 value="reviews"
                 className="data-[state=active]:text-white hover:opacity-80 transition-all duration-300 flex-shrink-0 whitespace-nowrap"
-                style={{ 
+                style={{
                   color: getColorPalette().primaryColor,
-                  backgroundColor: 'transparent'
+                  backgroundColor: "transparent",
                 }}
                 data-state-active-style={{
                   backgroundColor: getColorPalette().primaryColor,
-                  color: 'white'
+                  color: "white",
                 }}
               >
                 Reseñas
               </TabsTrigger>
             </TabsList>
-          
+
             <TabsContent value="description" className="mt-6">
-              <Card className="bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+              <Card
+                className="bg-white/50 backdrop-blur-sm border"
+                style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+              >
                 <CardHeader>
-                  <CardTitle style={{ color: getColorPalette().primaryColor }}>Descripción del producto</CardTitle>
+                  <CardTitle style={{ color: getColorPalette().primaryColor }}>
+                    Descripción del producto
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <RichTextDisplay content={product.description} />
-                  
+
                   {product.benefits && product.benefits.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="font-semibold mb-2" style={{ color: getColorPalette().primaryColor }}>Beneficios:</h4>
+                      <h4
+                        className="font-semibold mb-2"
+                        style={{ color: getColorPalette().primaryColor }}
+                      >
+                        Beneficios:
+                      </h4>
                       <ul className="list-disc list-inside space-y-1 text-tierra-media">
                         {product.benefits.map((benefit, index) => (
                           <li key={index}>{benefit}</li>
@@ -1126,25 +1366,38 @@ export default function ProductDetailPage() {
 
                   {product.skin_type && product.skin_type.length > 0 && (
                     <div className="mt-4">
-                      <h4 className="font-semibold mb-2" style={{ color: getColorPalette().primaryColor }}>Ideal para:</h4>
+                      <h4
+                        className="font-semibold mb-2"
+                        style={{ color: getColorPalette().primaryColor }}
+                      >
+                        Ideal para:
+                      </h4>
                       <div className="flex flex-wrap gap-2">
                         {product.skin_type.map((type, index) => {
                           // Translate skin type names to Spanish
-                          const skinTypeTranslations: { [key: string]: string } = {
-                            'oily': 'Grasa',
-                            'combination': 'Mixta',
-                            'normal': 'Normal',
-                            'sensitive': 'Sensible',
-                            'dry': 'Seca'
+                          const skinTypeTranslations: {
+                            [key: string]: string;
+                          } = {
+                            oily: "Grasa",
+                            combination: "Mixta",
+                            normal: "Normal",
+                            sensitive: "Sensible",
+                            dry: "Seca",
                           };
-                          
-                          const translatedType = skinTypeTranslations[type.toLowerCase()] || type.charAt(0).toUpperCase() + type.slice(1);
-                          
+
+                          const translatedType =
+                            skinTypeTranslations[type.toLowerCase()] ||
+                            type.charAt(0).toUpperCase() + type.slice(1);
+
                           return (
-                            <Badge key={index} variant="outline" style={{ 
-                              borderColor: `${getColorPalette().primaryColor}20`,
-                              color: getColorPalette().primaryColor
-                            }}>
+                            <Badge
+                              key={index}
+                              variant="outline"
+                              style={{
+                                borderColor: `${getColorPalette().primaryColor}20`,
+                                color: getColorPalette().primaryColor,
+                              }}
+                            >
                               {translatedType}
                             </Badge>
                           );
@@ -1155,23 +1408,36 @@ export default function ProductDetailPage() {
                 </CardContent>
               </Card>
             </TabsContent>
-          
+
             <TabsContent value="ingredients" className="mt-6">
-              <Card className="bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+              <Card
+                className="bg-white/50 backdrop-blur-sm border"
+                style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+              >
                 <CardHeader>
-                  <CardTitle style={{ color: getColorPalette().primaryColor }}>Ingredientes</CardTitle>
+                  <CardTitle style={{ color: getColorPalette().primaryColor }}>
+                    Ingredientes
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {product.ingredients && product.ingredients.length > 0 ? (
                     <div className="space-y-2">
                       {product.ingredients.map((ingredient: any, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-tierra-media">{ingredient.name}</span>
+                        <div
+                          key={index}
+                          className="flex justify-between items-center"
+                        >
+                          <span className="text-tierra-media">
+                            {ingredient.name}
+                          </span>
                           {ingredient.percentage && (
-                            <Badge variant="outline" style={{ 
-                              borderColor: `${getColorPalette().primaryColor}20`,
-                              color: getColorPalette().primaryColor
-                            }}>
+                            <Badge
+                              variant="outline"
+                              style={{
+                                borderColor: `${getColorPalette().primaryColor}20`,
+                                color: getColorPalette().primaryColor,
+                              }}
+                            >
                               {ingredient.percentage}%
                             </Badge>
                           )}
@@ -1179,60 +1445,91 @@ export default function ProductDetailPage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-tierra-media">Información de ingredientes no disponible.</p>
+                    <p className="text-tierra-media">
+                      Información de ingredientes no disponible.
+                    </p>
                   )}
-                  
-                  {product.certifications && product.certifications.length > 0 && (
-                    <div className="mt-4 pt-4 border-t" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
-                      <h4 className="font-semibold mb-2" style={{ color: getColorPalette().primaryColor }}>Certificaciones:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {product.certifications.map((cert, index) => {
-                          // Translate certification names to Spanish
-                          const certificationTranslations: { [key: string]: string } = {
-                            'organic': 'Orgánico',
-                            'natural': 'Natural',
-                            'vegan': 'Vegano',
-                            'cruelty-free': 'Libre de Crueldad',
-                            'eco-friendly': 'Ecológico',
-                            'biodegradable': 'Biodegradable',
-                            'paraben-free': 'Sin Parabenos',
-                            'sulfate-free': 'Sin Sulfatos',
-                            'hypoallergenic': 'Hipoalergénico',
-                            'dermatologically-tested': 'Testado Dermatológicamente',
-                            'fda-approved': 'Aprobado por FDA',
-                            'cosmetic-grade': 'Grado Cosmético'
-                          };
-                          
-                          const translatedCert = certificationTranslations[cert.toLowerCase()] || cert.charAt(0).toUpperCase() + cert.slice(1);
-                          
-                          return (
-                            <Badge key={index} variant="secondary" className="bg-verde-suave/20 text-verde-suave border-verde-suave/30">
-                              {translatedCert}
-                            </Badge>
-                          );
-                        })}
+
+                  {product.certifications &&
+                    product.certifications.length > 0 && (
+                      <div
+                        className="mt-4 pt-4 border-t"
+                        style={{
+                          borderColor: `${getColorPalette().primaryColor}10`,
+                        }}
+                      >
+                        <h4
+                          className="font-semibold mb-2"
+                          style={{ color: getColorPalette().primaryColor }}
+                        >
+                          Certificaciones:
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {product.certifications.map((cert, index) => {
+                            // Translate certification names to Spanish
+                            const certificationTranslations: {
+                              [key: string]: string;
+                            } = {
+                              organic: "Orgánico",
+                              natural: "Natural",
+                              vegan: "Vegano",
+                              "cruelty-free": "Libre de Crueldad",
+                              "eco-friendly": "Ecológico",
+                              biodegradable: "Biodegradable",
+                              "paraben-free": "Sin Parabenos",
+                              "sulfate-free": "Sin Sulfatos",
+                              hypoallergenic: "Hipoalergénico",
+                              "dermatologically-tested":
+                                "Testado Dermatológicamente",
+                              "fda-approved": "Aprobado por FDA",
+                              "cosmetic-grade": "Grado Cosmético",
+                            };
+
+                            const translatedCert =
+                              certificationTranslations[cert.toLowerCase()] ||
+                              cert.charAt(0).toUpperCase() + cert.slice(1);
+
+                            return (
+                              <Badge
+                                key={index}
+                                variant="secondary"
+                                className="bg-verde-suave/20 text-verde-suave border-verde-suave/30"
+                              >
+                                {translatedCert}
+                              </Badge>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                 </CardContent>
               </Card>
             </TabsContent>
-          
+
             <TabsContent value="usage" className="mt-6">
-              <Card className="bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+              <Card
+                className="bg-white/50 backdrop-blur-sm border"
+                style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+              >
                 <CardHeader>
-                  <CardTitle style={{ color: getColorPalette().primaryColor }}>Modo de uso</CardTitle>
+                  <CardTitle style={{ color: getColorPalette().primaryColor }}>
+                    Modo de uso
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   {product.usage_instructions ? (
                     <RichTextDisplay content={product.usage_instructions} />
                   ) : (
-                    <p className="text-tierra-media">Información de uso no disponible.</p>
+                    <p className="text-tierra-media">
+                      Información de uso no disponible.
+                    </p>
                   )}
-                  
+
                   {product.precautions && (
                     <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                      <h4 className="font-semibold text-amber-800 mb-2">Precauciones:</h4>
+                      <h4 className="font-semibold text-amber-800 mb-2">
+                        Precauciones:
+                      </h4>
                       <div className="text-amber-700 text-sm">
                         <RichTextDisplay content={product.precautions} />
                       </div>
@@ -1241,78 +1538,148 @@ export default function ProductDetailPage() {
 
                   {product.shelf_life_months && (
                     <div className="mt-4 text-sm text-tierra-media">
-                      <strong>Vida útil:</strong> {product.shelf_life_months} meses
+                      <strong>Vida útil:</strong> {product.shelf_life_months}{" "}
+                      meses
                     </div>
                   )}
                 </CardContent>
               </Card>
             </TabsContent>
-          
+
             <TabsContent value="physical" className="mt-6">
-              <Card className="bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+              <Card
+                className="bg-white/50 backdrop-blur-sm border"
+                style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+              >
                 <CardHeader>
-                  <CardTitle style={{ color: getColorPalette().primaryColor }}>Detalles Físicos</CardTitle>
+                  <CardTitle style={{ color: getColorPalette().primaryColor }}>
+                    Detalles Físicos
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {product.weight && (
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${getColorPalette().primaryColor}10` }}>
-                          <span className="font-semibold" style={{ color: getColorPalette().primaryColor }}>⚖️</span>
+                        <div
+                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          style={{
+                            backgroundColor: `${getColorPalette().primaryColor}10`,
+                          }}
+                        >
+                          <span
+                            className="font-semibold"
+                            style={{ color: getColorPalette().primaryColor }}
+                          >
+                            ⚖️
+                          </span>
                         </div>
                         <div>
-                          <p className="font-medium" style={{ color: getColorPalette().primaryColor }}>Peso</p>
+                          <p
+                            className="font-medium"
+                            style={{ color: getColorPalette().primaryColor }}
+                          >
+                            Peso
+                          </p>
                           <p className="text-tierra-media">{product.weight}g</p>
                         </div>
                       </div>
                     )}
-                    
+
                     {product.dimensions && (
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: `${getColorPalette().primaryColor}10` }}>
-                          <span className="font-semibold" style={{ color: getColorPalette().primaryColor }}>📏</span>
+                        <div
+                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          style={{
+                            backgroundColor: `${getColorPalette().primaryColor}10`,
+                          }}
+                        >
+                          <span
+                            className="font-semibold"
+                            style={{ color: getColorPalette().primaryColor }}
+                          >
+                            📏
+                          </span>
                         </div>
                         <div>
-                          <p className="font-medium" style={{ color: getColorPalette().primaryColor }}>Dimensiones</p>
-                          <p className="text-tierra-media">{product.dimensions}</p>
+                          <p
+                            className="font-medium"
+                            style={{ color: getColorPalette().primaryColor }}
+                          >
+                            Dimensiones
+                          </p>
+                          <p className="text-tierra-media">
+                            {product.dimensions}
+                          </p>
                         </div>
                       </div>
                     )}
                   </div>
-                  
+
                   {product.package_characteristics && (
                     <div className="mt-6">
-                      <h4 className="font-semibold mb-3" style={{ color: getColorPalette().primaryColor }}>Características del Empaque</h4>
-                      <div className="bg-white/30 p-4 rounded-lg border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
-                        <RichTextDisplay content={product.package_characteristics} />
+                      <h4
+                        className="font-semibold mb-3"
+                        style={{ color: getColorPalette().primaryColor }}
+                      >
+                        Características del Empaque
+                      </h4>
+                      <div
+                        className="bg-white/30 p-4 rounded-lg border"
+                        style={{
+                          borderColor: `${getColorPalette().primaryColor}10`,
+                        }}
+                      >
+                        <RichTextDisplay
+                          content={product.package_characteristics}
+                        />
                       </div>
                     </div>
                   )}
-                  
-                  {!product.weight && !product.dimensions && !product.package_characteristics && (
-                    <p className="text-tierra-media">Información de detalles físicos no disponible.</p>
-                  )}
+
+                  {!product.weight &&
+                    !product.dimensions &&
+                    !product.package_characteristics && (
+                      <p className="text-tierra-media">
+                        Información de detalles físicos no disponible.
+                      </p>
+                    )}
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             <TabsContent value="reviews" className="mt-6">
               <div className="space-y-6">
                 {/* Review Form */}
                 {currentUserId && (
                   <div>
                     {!showReviewForm ? (
-                      <Card className="bg-white/50 backdrop-blur-sm border" style={{ borderColor: `${getColorPalette().primaryColor}10` }}>
+                      <Card
+                        className="bg-white/50 backdrop-blur-sm border"
+                        style={{
+                          borderColor: `${getColorPalette().primaryColor}10`,
+                        }}
+                      >
                         <CardContent className="p-6 text-center">
                           <div className="space-y-4">
                             <div className="flex items-center justify-center gap-2">
-                              <MessageSquare className="w-5 h-5" style={{ color: getColorPalette().primaryColor }} />
-                              <h3 className="text-lg font-semibold" style={{ color: getColorPalette().primaryColor }}>
+                              <MessageSquare
+                                className="w-5 h-5"
+                                style={{
+                                  color: getColorPalette().primaryColor,
+                                }}
+                              />
+                              <h3
+                                className="text-lg font-semibold"
+                                style={{
+                                  color: getColorPalette().primaryColor,
+                                }}
+                              >
                                 ¿Compraste este producto?
                               </h3>
                             </div>
                             <p className="text-tierra-media">
-                              Comparte tu experiencia y ayuda a otros clientes a tomar una decisión informada.
+                              Comparte tu experiencia y ayuda a otros clientes a
+                              tomar una decisión informada.
                             </p>
                             <Button
                               onClick={() => setShowReviewForm(true)}
@@ -1325,13 +1692,15 @@ export default function ProductDetailPage() {
                         </CardContent>
                       </Card>
                     ) : (
-                      <div 
+                      <div
                         className="bg-white/50 backdrop-blur-sm border"
-                        style={{ borderColor: `${getColorPalette().primaryColor}10` }}
+                        style={{
+                          borderColor: `${getColorPalette().primaryColor}10`,
+                        }}
                       >
                         <ReviewForm
                           productId={product.id}
-                          userId={currentUserId || ''}
+                          userId={currentUserId || ""}
                           existingReview={editingReview}
                           onSuccess={handleReviewSuccess}
                           onCancel={() => {
@@ -1360,25 +1729,29 @@ export default function ProductDetailPage() {
         <div className="mt-16">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-azul-profundo mb-2">
-              Más productos de {determineProductLine(product)?.name || 'esta línea'}
+              Más productos de{" "}
+              {determineProductLine(product)?.name || "esta línea"}
             </h2>
             <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-azul-profundo to-transparent mx-auto" />
           </div>
-          
+
           {relatedProducts.length > 0 ? (
             <div className="relative">
               {/* Desktop Grid */}
-              <div className="hidden lg:grid grid-cols-4 gap-6">
+              <div className="hidden lg:grid grid-cols-2 xl:grid-cols-4 gap-4 lg:gap-6">
                 {relatedProducts.map((relatedProduct) => (
                   <ProductCard
                     className="p-[0]"
                     key={relatedProduct.id}
                     id={relatedProduct.id}
                     name={relatedProduct.name}
-                    description={relatedProduct.short_description || relatedProduct.description}
+                    description={
+                      relatedProduct.short_description ||
+                      relatedProduct.description
+                    }
                     price={relatedProduct.price}
                     originalPrice={relatedProduct.compare_at_price}
-                    category={relatedProduct.categories?.name || ''}
+                    category={relatedProduct.categories?.name || ""}
                     imageUrl={relatedProduct.featured_image}
                     rating={relatedProduct.averageRating || 0}
                     reviewCount={relatedProduct.reviewCount || 0}
@@ -1386,13 +1759,25 @@ export default function ProductDetailPage() {
                     isNew={false}
                     isOnSale={!!relatedProduct.compare_at_price}
                     stock={relatedProduct.inventory_quantity}
-                    size={relatedProduct.product_variants?.find(v => v.is_default)?.option1}
+                    size={
+                      relatedProduct.product_variants?.find((v) => v.is_default)
+                        ?.option1
+                    }
+                    promotionalTag={relatedProduct.promotional_tag}
+                    discountTransferPercent={
+                      relatedProduct.discount_transfer_percent
+                    }
+                    discountCashPercent={relatedProduct.discount_cash_percent}
                     onAddToCart={(productId: string, quantity: number) => {
-                      const product = relatedProducts.find(p => p.id === productId);
+                      const product = relatedProducts.find(
+                        (p) => p.id === productId,
+                      );
                       if (!product) return;
 
-                      const defaultVariant = product.product_variants?.find(v => v.is_default) || product.product_variants?.[0];
-                      
+                      const defaultVariant =
+                        product.product_variants?.find((v) => v.is_default) ||
+                        product.product_variants?.[0];
+
                       addItem({
                         productId: product.id,
                         variantId: defaultVariant?.id,
@@ -1400,7 +1785,9 @@ export default function ProductDetailPage() {
                         price: defaultVariant?.price || product.price,
                         originalPrice: product.compare_at_price,
                         image: product.featured_image,
-                        stock: defaultVariant?.inventory_quantity || product.inventory_quantity,
+                        stock:
+                          defaultVariant?.inventory_quantity ||
+                          product.inventory_quantity,
                         size: defaultVariant?.option1,
                         sku: product.slug,
                         quantity,
@@ -1415,17 +1802,23 @@ export default function ProductDetailPage() {
 
               {/* Mobile Carousel */}
               <div className="lg:hidden">
-                <div className="flex gap-1 overflow-x-auto pb-4 scrollbar-hide">
+                <div className="flex gap-3 overflow-x-auto pb-4 scrollbar-hide px-2">
                   {relatedProducts.map((relatedProduct) => (
-                    <div key={relatedProduct.id} className="flex-shrink-0 w-48">
+                    <div
+                      key={relatedProduct.id}
+                      className="flex-shrink-0 w-[160px] sm:w-56"
+                    >
                       <ProductCard
                         className="p-[0] h-full"
                         id={relatedProduct.id}
                         name={relatedProduct.name}
-                        description={relatedProduct.short_description || relatedProduct.description}
+                        description={
+                          relatedProduct.short_description ||
+                          relatedProduct.description
+                        }
                         price={relatedProduct.price}
                         originalPrice={relatedProduct.compare_at_price}
-                        category={relatedProduct.categories?.name || ''}
+                        category={relatedProduct.categories?.name || ""}
                         imageUrl={relatedProduct.featured_image}
                         rating={relatedProduct.averageRating || 0}
                         reviewCount={relatedProduct.reviewCount || 0}
@@ -1433,13 +1826,29 @@ export default function ProductDetailPage() {
                         isNew={false}
                         isOnSale={!!relatedProduct.compare_at_price}
                         stock={relatedProduct.inventory_quantity}
-                        size={relatedProduct.product_variants?.find(v => v.is_default)?.option1}
+                        size={
+                          relatedProduct.product_variants?.find(
+                            (v) => v.is_default,
+                          )?.option1
+                        }
+                        promotionalTag={relatedProduct.promotional_tag}
+                        discountTransferPercent={
+                          relatedProduct.discount_transfer_percent
+                        }
+                        discountCashPercent={
+                          relatedProduct.discount_cash_percent
+                        }
                         onAddToCart={(productId: string, quantity: number) => {
-                          const product = relatedProducts.find(p => p.id === productId);
+                          const product = relatedProducts.find(
+                            (p) => p.id === productId,
+                          );
                           if (!product) return;
 
-                          const defaultVariant = product.product_variants?.find(v => v.is_default) || product.product_variants?.[0];
-                          
+                          const defaultVariant =
+                            product.product_variants?.find(
+                              (v) => v.is_default,
+                            ) || product.product_variants?.[0];
+
                           addItem({
                             productId: product.id,
                             variantId: defaultVariant?.id,
@@ -1447,7 +1856,9 @@ export default function ProductDetailPage() {
                             price: defaultVariant?.price || product.price,
                             originalPrice: product.compare_at_price,
                             image: product.featured_image,
-                            stock: defaultVariant?.inventory_quantity || product.inventory_quantity,
+                            stock:
+                              defaultVariant?.inventory_quantity ||
+                              product.inventory_quantity,
                             size: defaultVariant?.option1,
                             sku: product.slug,
                             quantity,
@@ -1464,18 +1875,26 @@ export default function ProductDetailPage() {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-tierra-media mb-4">No hay productos relacionados disponibles en este momento.</p>
+              <p className="text-tierra-media mb-4">
+                No hay productos relacionados disponibles en este momento.
+              </p>
               <Link href="/productos">
-                <Button className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}>
+                <Button
+                  className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}
+                >
                   Ver todos los productos
                 </Button>
               </Link>
             </div>
           )}
-          
+
           <div className="text-center mt-8">
-            <Link href={`/categorias/linea-${determineProductLine(product)?.id}`}>
-              <Button className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}>
+            <Link
+              href={`/categorias/linea-${determineProductLine(product)?.id}`}
+            >
+              <Button
+                className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}
+              >
                 <Sparkles className="w-4 h-4 mr-2" />
                 Ver toda la línea {determineProductLine(product)?.name}
               </Button>
@@ -1497,13 +1916,13 @@ export default function ProductDetailPage() {
                 className="object-contain max-w-full max-h-full"
                 priority
                 style={{
-                  maxWidth: '100%',
-                  maxHeight: '90vh',
-                  width: 'auto',
-                  height: 'auto'
+                  maxWidth: "100%",
+                  maxHeight: "90vh",
+                  width: "auto",
+                  height: "auto",
                 }}
               />
-              
+
               {/* Navigation Arrows in Modal */}
               {images.length > 1 && (
                 <>
@@ -1522,7 +1941,7 @@ export default function ProductDetailPage() {
                 </>
               )}
             </div>
-            
+
             {/* Image Counter */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded-full text-sm">
               {currentImageIndex + 1} / {images.length}
@@ -1532,4 +1951,4 @@ export default function ProductDetailPage() {
       </Dialog>
     </div>
   );
-} 
+}

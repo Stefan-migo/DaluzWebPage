@@ -1,30 +1,30 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { 
-  MessageSquare, 
+} from "@/components/ui/dialog";
+import {
+  MessageSquare,
   ArrowLeft,
   Send,
   UserCircle,
@@ -45,10 +45,10 @@ import {
   Trash2,
   MessageCircle,
   Lock,
-  Globe
-} from 'lucide-react';
-import Link from 'next/link';
-import { toast } from 'sonner';
+  Globe,
+} from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 interface SupportTicket {
   id: string;
@@ -146,18 +146,18 @@ export default function TicketDetailPage() {
   const [updating, setUpdating] = useState(false);
 
   // Message composition
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [isInternalNote, setIsInternalNote] = useState(false);
   const [sendingMessage, setSendingMessage] = useState(false);
 
   // Edit ticket dialog
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editForm, setEditForm] = useState({
-    status: '',
-    priority: '',
-    assigned_to: '',
-    category_id: '',
-    resolution: ''
+    status: "",
+    priority: "",
+    assigned_to: "",
+    category_id: "",
+    resolution: "",
   });
 
   useEffect(() => {
@@ -173,21 +173,21 @@ export default function TicketDetailPage() {
       setLoading(true);
       const response = await fetch(`/api/admin/support/tickets/${ticketId}`);
       if (!response.ok) {
-        throw new Error('Failed to fetch ticket details');
+        throw new Error("Failed to fetch ticket details");
       }
       const data = await response.json();
       setTicket(data.ticket);
       setEditForm({
-        status: data.ticket.status || '',
-        priority: data.ticket.priority || '',
-        assigned_to: data.ticket.assigned_to || '',
-        category_id: data.ticket.category_id || '',
-        resolution: data.ticket.resolution || ''
+        status: data.ticket.status || "",
+        priority: data.ticket.priority || "",
+        assigned_to: data.ticket.assigned_to || "",
+        category_id: data.ticket.category_id || "",
+        resolution: data.ticket.resolution || "",
       });
       setError(null);
     } catch (err) {
-      console.error('Error fetching ticket details:', err);
-      setError(err instanceof Error ? err.message : 'Unknown error occurred');
+      console.error("Error fetching ticket details:", err);
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
     } finally {
       setLoading(false);
     }
@@ -195,69 +195,75 @@ export default function TicketDetailPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('/api/admin/support/categories');
+      const response = await fetch("/api/admin/support/categories");
       if (response.ok) {
         const data = await response.json();
         setCategories(data.categories || []);
       }
     } catch (err) {
-      console.error('Error fetching categories:', err);
+      console.error("Error fetching categories:", err);
     }
   };
 
   const fetchAdminUsers = async () => {
     try {
-      const response = await fetch('/api/admin/users');
+      const response = await fetch("/api/admin/users");
       if (response.ok) {
         const data = await response.json();
         setAdminUsers(data.users || []);
       }
     } catch (err) {
-      console.error('Error fetching admin users:', err);
+      console.error("Error fetching admin users:", err);
     }
   };
 
   const handleSendMessage = async () => {
     if (!newMessage.trim() || !ticket) return;
-    
+
     try {
       setSendingMessage(true);
-      const response = await fetch(`/api/admin/support/tickets/${ticketId}/messages`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `/api/admin/support/tickets/${ticketId}/messages`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: newMessage,
+            is_internal: isInternalNote,
+            is_from_customer: false,
+          }),
         },
-        body: JSON.stringify({
-          message: newMessage,
-          is_internal: isInternalNote,
-          is_from_customer: false
-        }),
-      });
+      );
 
       if (!response.ok) {
-        throw new Error('Failed to send message');
+        throw new Error("Failed to send message");
       }
 
       const data = await response.json();
-      
+
       // Add the new message to the ticket
-      setTicket(prev => ({
+      setTicket((prev) => ({
         ...prev!,
-        messages: [...(prev!.messages || []), data.message]
+        messages: [...(prev!.messages || []), data.message],
       }));
-      
-      setNewMessage('');
+
+      setNewMessage("");
       setIsInternalNote(false);
-      
-      toast.success(isInternalNote ? 'Nota interna agregada' : 'Mensaje enviado');
-      
+
+      toast.success(
+        isInternalNote ? "Nota interna agregada" : "Mensaje enviado",
+      );
+
       // Refresh ticket to get updated analytics
       fetchTicketDetails();
     } catch (err) {
-      console.error('Error sending message:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Error al enviar el mensaje';
-      toast.error('Error al enviar el mensaje', {
-        description: errorMessage
+      console.error("Error sending message:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Error al enviar el mensaje";
+      toast.error("Error al enviar el mensaje", {
+        description: errorMessage,
       });
     } finally {
       setSendingMessage(false);
@@ -266,40 +272,41 @@ export default function TicketDetailPage() {
 
   const handleUpdateTicket = async () => {
     if (!ticket) return;
-    
+
     try {
       setUpdating(true);
       const response = await fetch(`/api/admin/support/tickets/${ticketId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...editForm,
           assigned_to: editForm.assigned_to || null, // Convert empty string to null
           category_id: editForm.category_id || null, // Convert empty string to null
           previous_status: ticket.status,
-          previous_assigned_to: ticket.assigned_to
+          previous_assigned_to: ticket.assigned_to,
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to update ticket');
+        throw new Error("Failed to update ticket");
       }
 
       const data = await response.json();
       setTicket(data.ticket);
       setEditDialogOpen(false);
-      
-      toast.success('Ticket actualizado exitosamente');
-      
+
+      toast.success("Ticket actualizado exitosamente");
+
       // Refresh to get updated data
       fetchTicketDetails();
     } catch (err) {
-      console.error('Error updating ticket:', err);
-      const errorMessage = err instanceof Error ? err.message : 'Error al actualizar el ticket';
-      toast.error('Error al actualizar el ticket', {
-        description: errorMessage
+      console.error("Error updating ticket:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Error al actualizar el ticket";
+      toast.error("Error al actualizar el ticket", {
+        description: errorMessage,
       });
     } finally {
       setUpdating(false);
@@ -308,14 +315,18 @@ export default function TicketDetailPage() {
 
   const getStatusBadge = (status: string) => {
     const config: Record<string, { variant: any; label: string; icon: any }> = {
-      open: { variant: 'destructive', label: 'Abierto', icon: AlertTriangle },
-      in_progress: { variant: 'default', label: 'En Progreso', icon: Activity },
-      pending_customer: { variant: 'secondary', label: 'Esperando Cliente', icon: Clock },
-      resolved: { variant: 'outline', label: 'Resuelto', icon: CheckCircle },
-      closed: { variant: 'outline', label: 'Cerrado', icon: CheckCircle }
+      open: { variant: "destructive", label: "Abierto", icon: AlertTriangle },
+      in_progress: { variant: "default", label: "En Progreso", icon: Activity },
+      pending_customer: {
+        variant: "secondary",
+        label: "Esperando Cliente",
+        icon: Clock,
+      },
+      resolved: { variant: "outline", label: "Resuelto", icon: CheckCircle },
+      closed: { variant: "outline", label: "Cerrado", icon: CheckCircle },
     };
 
-    const statusConfig = config[status] || config['open'];
+    const statusConfig = config[status] || config["open"];
     const Icon = statusConfig.icon;
 
     return (
@@ -328,33 +339,37 @@ export default function TicketDetailPage() {
 
   const getPriorityBadge = (priority: string) => {
     const config: Record<string, { variant: any; label: string }> = {
-      low: { variant: 'outline', label: 'Baja' },
-      medium: { variant: 'secondary', label: 'Media' },
-      high: { variant: 'default', label: 'Alta' },
-      urgent: { variant: 'destructive', label: 'Urgente' }
+      low: { variant: "outline", label: "Baja" },
+      medium: { variant: "secondary", label: "Media" },
+      high: { variant: "default", label: "Alta" },
+      urgent: { variant: "destructive", label: "Urgente" },
     };
 
-    const priorityConfig = config[priority] || config['medium'];
-    return <Badge variant={priorityConfig.variant}>{priorityConfig.label}</Badge>;
+    const priorityConfig = config[priority] || config["medium"];
+    return (
+      <Badge variant={priorityConfig.variant}>{priorityConfig.label}</Badge>
+    );
   };
 
   const formatDateTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleString('es-AR');
+    return date.toLocaleString("es-AR");
   };
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    const diffHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffHours < 1) return 'Hace menos de 1 hora';
+    const diffHours = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60 * 60),
+    );
+
+    if (diffHours < 1) return "Hace menos de 1 hora";
     if (diffHours < 24) return `Hace ${diffHours} horas`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     if (diffDays < 7) return `Hace ${diffDays} días`;
-    
-    return date.toLocaleDateString('es-AR');
+
+    return date.toLocaleDateString("es-AR");
   };
 
   if (loading) {
@@ -368,25 +383,27 @@ export default function TicketDetailPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-azul-profundo">Cargando ticket...</h1>
+            <h1 className="font-title text-3xl text-azul-profundo">
+              Cargando ticket...
+            </h1>
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <Card className="animate-pulse">
               <CardContent className="p-6">
-                <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                <div className="h-8 bg-[#E5DFD3] rounded w-3/4 mb-4"></div>
+                <div className="h-4 bg-[#E5DFD3] rounded w-full mb-2"></div>
+                <div className="h-4 bg-[#E5DFD3] rounded w-2/3"></div>
               </CardContent>
             </Card>
           </div>
           <div>
             <Card className="animate-pulse">
               <CardContent className="p-6">
-                <div className="h-6 bg-gray-200 rounded w-1/2 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="h-6 bg-[#E5DFD3] rounded w-1/2 mb-4"></div>
+                <div className="h-4 bg-[#E5DFD3] rounded w-full mb-2"></div>
+                <div className="h-4 bg-[#E5DFD3] rounded w-3/4"></div>
               </CardContent>
             </Card>
           </div>
@@ -409,8 +426,12 @@ export default function TicketDetailPage() {
         <Card>
           <CardContent className="text-center py-16">
             <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-red-700 mb-2">Error al cargar el ticket</h3>
-            <p className="text-tierra-media mb-4">{error || 'Ticket no encontrado'}</p>
+            <h3 className="text-lg font-semibold text-red-700 mb-2">
+              Error al cargar el ticket
+            </h3>
+            <p className="text-tierra-media mb-4">
+              {error || "Ticket no encontrado"}
+            </p>
             <Button onClick={fetchTicketDetails}>Reintentar</Button>
           </CardContent>
         </Card>
@@ -431,14 +452,15 @@ export default function TicketDetailPage() {
           </Link>
           <div>
             <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold text-azul-profundo">
+              <h1 className="font-title text-3xl text-azul-profundo">
                 Ticket #{ticket.ticket_number}
               </h1>
               {getStatusBadge(ticket.status)}
               {getPriorityBadge(ticket.priority)}
             </div>
             <p className="text-tierra-media">
-              Creado {formatTimeAgo(ticket.created_at)} • Última actividad {formatTimeAgo(ticket.updated_at)}
+              Creado {formatTimeAgo(ticket.created_at)} • Última actividad{" "}
+              {formatTimeAgo(ticket.updated_at)}
             </p>
           </div>
         </div>
@@ -455,7 +477,7 @@ export default function TicketDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Ticket Details */}
-          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+          <Card className="bg-admin-bg-secondary admin-card">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <MessageSquare className="h-5 w-5 mr-2" />
@@ -465,17 +487,25 @@ export default function TicketDetailPage() {
             <CardContent>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold text-azul-profundo mb-2">Descripción:</h4>
+                  <h4 className="font-semibold text-azul-profundo mb-2">
+                    Descripción:
+                  </h4>
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <p className="text-tierra-media whitespace-pre-wrap">{ticket.description}</p>
+                    <p className="text-tierra-media whitespace-pre-wrap">
+                      {ticket.description}
+                    </p>
                   </div>
                 </div>
 
                 {ticket.resolution && (
                   <div>
-                    <h4 className="font-semibold text-verde-suave mb-2">Resolución:</h4>
+                    <h4 className="font-semibold text-verde-suave mb-2">
+                      Resolución:
+                    </h4>
                     <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                      <p className="text-green-800 whitespace-pre-wrap">{ticket.resolution}</p>
+                      <p className="text-green-800 whitespace-pre-wrap">
+                        {ticket.resolution}
+                      </p>
                     </div>
                   </div>
                 )}
@@ -484,7 +514,7 @@ export default function TicketDetailPage() {
           </Card>
 
           {/* Messages Thread */}
-          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+          <Card className="bg-admin-bg-secondary admin-card">
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -501,15 +531,17 @@ export default function TicketDetailPage() {
                 {ticket.messages?.map((message) => (
                   <div
                     key={message.id}
-                    className={`flex ${message.is_from_customer ? 'justify-start' : 'justify-end'}`}
+                    className={`flex ${message.is_from_customer ? "justify-start" : "justify-end"}`}
                   >
-                    <div className={`max-w-[80%] rounded-lg p-4 ${
-                      message.is_internal 
-                        ? 'bg-yellow-50 border border-yellow-200'
-                        : message.is_from_customer 
-                          ? 'bg-blue-50 border border-blue-200'
-                          : 'bg-green-50 border border-green-200'
-                    }`}>
+                    <div
+                      className={`max-w-[80%] rounded-lg p-4 ${
+                        message.is_internal
+                          ? "bg-yellow-50 border border-yellow-200"
+                          : message.is_from_customer
+                            ? "bg-blue-50 border border-blue-200"
+                            : "bg-green-50 border border-green-200"
+                      }`}
+                    >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           {message.is_from_customer ? (
@@ -518,10 +550,10 @@ export default function TicketDetailPage() {
                             <UserCircle className="h-4 w-4 text-green-600" />
                           )}
                           <span className="text-sm font-medium">
-                            {message.is_from_customer 
-                              ? `${ticket.customer?.first_name} ${ticket.customer?.last_name}`.trim() || 'Cliente'
-                              : message.sender_email || 'Admin'
-                            }
+                            {message.is_from_customer
+                              ? `${ticket.customer?.first_name} ${ticket.customer?.last_name}`.trim() ||
+                                "Cliente"
+                              : message.sender_email || "Admin"}
                           </span>
                           {message.is_internal && (
                             <Badge variant="outline" className="text-xs">
@@ -534,7 +566,9 @@ export default function TicketDetailPage() {
                           {formatDateTime(message.created_at)}
                         </span>
                       </div>
-                      <p className="text-sm whitespace-pre-wrap">{message.message}</p>
+                      <p className="text-sm whitespace-pre-wrap">
+                        {message.message}
+                      </p>
                     </div>
                   </div>
                 ))}
@@ -542,7 +576,9 @@ export default function TicketDetailPage() {
                 {(!ticket.messages || ticket.messages.length === 0) && (
                   <div className="text-center py-8">
                     <MessageCircle className="h-12 w-12 text-tierra-media mx-auto mb-4" />
-                    <p className="text-tierra-media">No hay mensajes en esta conversación</p>
+                    <p className="text-tierra-media">
+                      No hay mensajes en esta conversación
+                    </p>
                   </div>
                 )}
               </div>
@@ -559,18 +595,24 @@ export default function TicketDetailPage() {
                         className="rounded border-gray-300"
                       />
                       <Lock className="h-4 w-4" />
-                      <span className="text-sm">Nota interna (solo visible para administradores)</span>
+                      <span className="text-sm">
+                        Nota interna (solo visible para administradores)
+                      </span>
                     </label>
                   </div>
-                  
+
                   <Textarea
-                    placeholder={isInternalNote ? "Escribir nota interna..." : "Escribir respuesta al cliente..."}
+                    placeholder={
+                      isInternalNote
+                        ? "Escribir nota interna..."
+                        : "Escribir respuesta al cliente..."
+                    }
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     rows={4}
                     className="min-h-[100px]"
                   />
-                  
+
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-tierra-media">
                       {isInternalNote ? (
@@ -585,13 +627,17 @@ export default function TicketDetailPage() {
                         </div>
                       )}
                     </span>
-                    
-                    <Button 
+
+                    <Button
                       onClick={handleSendMessage}
                       disabled={!newMessage.trim() || sendingMessage}
                     >
                       <Send className="h-4 w-4 mr-2" />
-                      {sendingMessage ? 'Enviando...' : (isInternalNote ? 'Agregar Nota' : 'Enviar Respuesta')}
+                      {sendingMessage
+                        ? "Enviando..."
+                        : isInternalNote
+                          ? "Agregar Nota"
+                          : "Enviar Respuesta"}
                     </Button>
                   </div>
                 </div>
@@ -603,7 +649,7 @@ export default function TicketDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Customer Info */}
-          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+          <Card className="bg-admin-bg-secondary admin-card">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <User className="h-5 w-5 mr-2" />
@@ -612,44 +658,53 @@ export default function TicketDetailPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-tierra-media">Nombre:</label>
+                <label className="text-sm font-medium text-tierra-media">
+                  Nombre:
+                </label>
                 <p className="font-medium">
-                  {ticket.customer?.first_name && ticket.customer?.last_name 
+                  {ticket.customer?.first_name && ticket.customer?.last_name
                     ? `${ticket.customer.first_name} ${ticket.customer.last_name}`
-                    : 'Sin nombre'
-                  }
+                    : "Sin nombre"}
                 </p>
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium text-tierra-media">Email:</label>
+                <label className="text-sm font-medium text-tierra-media">
+                  Email:
+                </label>
                 <p className="font-medium">{ticket.customer?.email}</p>
               </div>
 
               {ticket.customer?.phone && (
                 <div>
-                  <label className="text-sm font-medium text-tierra-media">Teléfono:</label>
+                  <label className="text-sm font-medium text-tierra-media">
+                    Teléfono:
+                  </label>
                   <p className="font-medium">{ticket.customer.phone}</p>
                 </div>
               )}
 
               {ticket.customer?.is_member && (
                 <div>
-                  <label className="text-sm font-medium text-tierra-media">Membresía:</label>
+                  <label className="text-sm font-medium text-tierra-media">
+                    Membresía:
+                  </label>
                   <Badge variant="outline" className="mt-1">
-                    {ticket.customer.membership_tier || 'Miembro'}
+                    {ticket.customer.membership_tier || "Miembro"}
                   </Badge>
                 </div>
               )}
 
               {ticket.order && (
                 <div className="pt-3 border-t">
-                  <label className="text-sm font-medium text-tierra-media">Pedido Relacionado:</label>
+                  <label className="text-sm font-medium text-tierra-media">
+                    Pedido Relacionado:
+                  </label>
                   <div className="mt-1">
                     <Link href={`/admin/orders/${ticket.order.id}`}>
                       <Button variant="outline" size="sm" className="w-full">
-                        <Package className="h-4 w-4 mr-2" />
-                        #{ticket.order.order_number}
+                        <Package className="h-4 w-4 mr-2" />#
+                        {ticket.order.order_number}
                       </Button>
                     </Link>
                   </div>
@@ -660,7 +715,7 @@ export default function TicketDetailPage() {
 
           {/* Ticket Analytics */}
           {ticket.analytics && (
-            <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+            <Card className="bg-admin-bg-secondary admin-card">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <Activity className="h-5 w-5 mr-2" />
@@ -669,40 +724,67 @@ export default function TicketDetailPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-sm text-tierra-media">Edad del ticket:</span>
-                  <span className="font-medium">{ticket.analytics.ageHours}h</span>
+                  <span className="text-sm text-tierra-media">
+                    Edad del ticket:
+                  </span>
+                  <span className="font-medium">
+                    {ticket.analytics.ageHours}h
+                  </span>
                 </div>
-                
+
                 {ticket.analytics.responseTimeHours && (
                   <div className="flex justify-between">
-                    <span className="text-sm text-tierra-media">Tiempo de respuesta:</span>
-                    <span className="font-medium">{ticket.analytics.responseTimeHours}h</span>
+                    <span className="text-sm text-tierra-media">
+                      Tiempo de respuesta:
+                    </span>
+                    <span className="font-medium">
+                      {ticket.analytics.responseTimeHours}h
+                    </span>
                   </div>
                 )}
-                
+
                 <div className="flex justify-between">
-                  <span className="text-sm text-tierra-media">Total mensajes:</span>
-                  <span className="font-medium">{ticket.analytics.messageCount}</span>
+                  <span className="text-sm text-tierra-media">
+                    Total mensajes:
+                  </span>
+                  <span className="font-medium">
+                    {ticket.analytics.messageCount}
+                  </span>
                 </div>
-                
+
                 <div className="flex justify-between">
-                  <span className="text-sm text-tierra-media">Mensajes del cliente:</span>
-                  <span className="font-medium">{ticket.analytics.customerMessageCount}</span>
+                  <span className="text-sm text-tierra-media">
+                    Mensajes del cliente:
+                  </span>
+                  <span className="font-medium">
+                    {ticket.analytics.customerMessageCount}
+                  </span>
                 </div>
-                
+
                 <div className="flex justify-between">
-                  <span className="text-sm text-tierra-media">Respuestas admin:</span>
-                  <span className="font-medium">{ticket.analytics.adminMessageCount}</span>
+                  <span className="text-sm text-tierra-media">
+                    Respuestas admin:
+                  </span>
+                  <span className="font-medium">
+                    {ticket.analytics.adminMessageCount}
+                  </span>
                 </div>
-                
+
                 <div className="flex justify-between">
-                  <span className="text-sm text-tierra-media">Notas internas:</span>
-                  <span className="font-medium">{ticket.analytics.internalNoteCount}</span>
+                  <span className="text-sm text-tierra-media">
+                    Notas internas:
+                  </span>
+                  <span className="font-medium">
+                    {ticket.analytics.internalNoteCount}
+                  </span>
                 </div>
 
                 {ticket.analytics.needsResponse && (
                   <div className="pt-3 border-t">
-                    <Badge variant="destructive" className="w-full justify-center">
+                    <Badge
+                      variant="destructive"
+                      className="w-full justify-center"
+                    >
                       <AlertTriangle className="h-3 w-3 mr-1" />
                       Requiere respuesta
                     </Badge>
@@ -713,7 +795,7 @@ export default function TicketDetailPage() {
           )}
 
           {/* Ticket Metadata */}
-          <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+          <Card className="bg-admin-bg-secondary admin-card">
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Settings className="h-5 w-5 mr-2" />
@@ -722,58 +804,80 @@ export default function TicketDetailPage() {
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <label className="text-sm font-medium text-tierra-media">Categoría:</label>
+                <label className="text-sm font-medium text-tierra-media">
+                  Categoría:
+                </label>
                 <p className="font-medium">
-                  {ticket.category?.name || 'Sin categoría'}
+                  {ticket.category?.name || "Sin categoría"}
                 </p>
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium text-tierra-media">Asignado a:</label>
+                <label className="text-sm font-medium text-tierra-media">
+                  Asignado a:
+                </label>
                 <p className="font-medium">
-                  {ticket.assigned_admin?.email || 'Sin asignar'}
+                  {ticket.assigned_admin?.email || "Sin asignar"}
                 </p>
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium text-tierra-media">Creado:</label>
+                <label className="text-sm font-medium text-tierra-media">
+                  Creado:
+                </label>
                 <p className="text-sm">{formatDateTime(ticket.created_at)}</p>
               </div>
-              
+
               <div>
-                <label className="text-sm font-medium text-tierra-media">Última actualización:</label>
+                <label className="text-sm font-medium text-tierra-media">
+                  Última actualización:
+                </label>
                 <p className="text-sm">{formatDateTime(ticket.updated_at)}</p>
               </div>
 
               {ticket.first_response_at && (
                 <div>
-                  <label className="text-sm font-medium text-tierra-media">Primera respuesta:</label>
-                  <p className="text-sm">{formatDateTime(ticket.first_response_at)}</p>
+                  <label className="text-sm font-medium text-tierra-media">
+                    Primera respuesta:
+                  </label>
+                  <p className="text-sm">
+                    {formatDateTime(ticket.first_response_at)}
+                  </p>
                 </div>
               )}
 
               {ticket.resolved_at && (
                 <div>
-                  <label className="text-sm font-medium text-tierra-media">Resuelto:</label>
-                  <p className="text-sm">{formatDateTime(ticket.resolved_at)}</p>
+                  <label className="text-sm font-medium text-tierra-media">
+                    Resuelto:
+                  </label>
+                  <p className="text-sm">
+                    {formatDateTime(ticket.resolved_at)}
+                  </p>
                 </div>
               )}
 
               {ticket.customer_satisfaction_rating && (
                 <div>
-                  <label className="text-sm font-medium text-tierra-media">Calificación:</label>
+                  <label className="text-sm font-medium text-tierra-media">
+                    Calificación:
+                  </label>
                   <div className="flex items-center gap-1">
                     {[...Array(5)].map((_, i) => (
                       <span
                         key={i}
                         className={`text-lg ${
-                          i < ticket.customer_satisfaction_rating! ? 'text-yellow-400' : 'text-gray-300'
+                          i < ticket.customer_satisfaction_rating!
+                            ? "text-yellow-400"
+                            : "text-gray-300"
                         }`}
                       >
                         ★
                       </span>
                     ))}
-                    <span className="ml-2 text-sm">({ticket.customer_satisfaction_rating}/5)</span>
+                    <span className="ml-2 text-sm">
+                      ({ticket.customer_satisfaction_rating}/5)
+                    </span>
                   </div>
                 </div>
               )}
@@ -791,18 +895,27 @@ export default function TicketDetailPage() {
               Actualiza el estado, prioridad y asignación del ticket
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm font-medium text-tierra-media mb-2 block">Estado:</label>
-              <Select value={editForm.status} onValueChange={(value) => setEditForm(prev => ({ ...prev, status: value }))}>
+              <label className="text-sm font-medium text-tierra-media mb-2 block">
+                Estado:
+              </label>
+              <Select
+                value={editForm.status}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({ ...prev, status: value }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar estado" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="open">Abierto</SelectItem>
                   <SelectItem value="in_progress">En progreso</SelectItem>
-                  <SelectItem value="pending_customer">Esperando cliente</SelectItem>
+                  <SelectItem value="pending_customer">
+                    Esperando cliente
+                  </SelectItem>
                   <SelectItem value="resolved">Resuelto</SelectItem>
                   <SelectItem value="closed">Cerrado</SelectItem>
                 </SelectContent>
@@ -810,8 +923,15 @@ export default function TicketDetailPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-tierra-media mb-2 block">Prioridad:</label>
-              <Select value={editForm.priority} onValueChange={(value) => setEditForm(prev => ({ ...prev, priority: value }))}>
+              <label className="text-sm font-medium text-tierra-media mb-2 block">
+                Prioridad:
+              </label>
+              <Select
+                value={editForm.priority}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({ ...prev, priority: value }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar prioridad" />
                 </SelectTrigger>
@@ -825,8 +945,15 @@ export default function TicketDetailPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-tierra-media mb-2 block">Categoría:</label>
-              <Select value={editForm.category_id} onValueChange={(value) => setEditForm(prev => ({ ...prev, category_id: value }))}>
+              <label className="text-sm font-medium text-tierra-media mb-2 block">
+                Categoría:
+              </label>
+              <Select
+                value={editForm.category_id}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({ ...prev, category_id: value }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Seleccionar categoría" />
                 </SelectTrigger>
@@ -841,8 +968,18 @@ export default function TicketDetailPage() {
             </div>
 
             <div>
-              <label className="text-sm font-medium text-tierra-media mb-2 block">Asignar a:</label>
-              <Select value={editForm.assigned_to || 'unassigned'} onValueChange={(value) => setEditForm(prev => ({ ...prev, assigned_to: value === 'unassigned' ? '' : value }))}>
+              <label className="text-sm font-medium text-tierra-media mb-2 block">
+                Asignar a:
+              </label>
+              <Select
+                value={editForm.assigned_to || "unassigned"}
+                onValueChange={(value) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    assigned_to: value === "unassigned" ? "" : value,
+                  }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Sin asignar" />
                 </SelectTrigger>
@@ -850,7 +987,9 @@ export default function TicketDetailPage() {
                   <SelectItem value="unassigned">Sin asignar</SelectItem>
                   {adminUsers.map((admin) => (
                     <SelectItem key={admin.id} value={admin.id}>
-                      {admin.email || admin.name || `Admin ${admin.id.slice(0, 8)}`}
+                      {admin.email ||
+                        admin.name ||
+                        `Admin ${admin.id.slice(0, 8)}`}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -858,31 +997,35 @@ export default function TicketDetailPage() {
             </div>
           </div>
 
-          {(editForm.status === 'resolved' || editForm.status === 'closed') && (
+          {(editForm.status === "resolved" || editForm.status === "closed") && (
             <div>
-              <label className="text-sm font-medium text-tierra-media mb-2 block">Resolución:</label>
+              <label className="text-sm font-medium text-tierra-media mb-2 block">
+                Resolución:
+              </label>
               <Textarea
                 placeholder="Describe cómo se resolvió el problema..."
                 value={editForm.resolution}
-                onChange={(e) => setEditForm(prev => ({ ...prev, resolution: e.target.value }))}
+                onChange={(e) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    resolution: e.target.value,
+                  }))
+                }
                 rows={3}
               />
             </div>
           )}
 
           <DialogFooter>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => setEditDialogOpen(false)}
               disabled={updating}
             >
               Cancelar
             </Button>
-            <Button 
-              onClick={handleUpdateTicket}
-              disabled={updating}
-            >
-              {updating ? 'Actualizando...' : 'Actualizar Ticket'}
+            <Button onClick={handleUpdateTicket} disabled={updating}>
+              {updating ? "Actualizando..." : "Actualizar Ticket"}
             </Button>
           </DialogFooter>
         </DialogContent>

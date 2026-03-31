@@ -47,54 +47,56 @@ interface FeaturedLineSectionProps {
 }
 
 const productLines = [
-  { 
-    id: 'alma-terra', 
-    name: 'Alma Terra', 
-    description: 'Conexión con la tierra',
-    color: 'text-alma-primary',
-    bgColor: 'bg-alma-primary/10',
-    borderColor: 'border-alma-primary/20',
-    buttonColor: 'bg-alma-primary hover:bg-alma-primary/90'
+  {
+    id: "alma-terra",
+    name: "Alma Terra",
+    description: "Conexión con la tierra",
+    color: "text-alma-primary",
+    bgColor: "bg-alma-primary/10",
+    borderColor: "border-alma-primary/20",
+    buttonColor: "bg-alma-primary hover:bg-alma-primary/90",
   },
-  { 
-    id: 'ecos', 
-    name: 'Ecos', 
-    description: 'Ritmos naturales',
-    color: 'text-ecos-primary',
-    bgColor: 'bg-ecos-primary/10',
-    borderColor: 'border-ecos-primary/20',
-    buttonColor: 'bg-ecos-primary hover:bg-ecos-primary/90'
+  {
+    id: "ecos",
+    name: "Ecos",
+    description: "Ritmos naturales",
+    color: "text-ecos-primary",
+    bgColor: "bg-ecos-primary/10",
+    borderColor: "border-ecos-primary/20",
+    buttonColor: "bg-ecos-primary hover:bg-ecos-primary/90",
   },
-  { 
-    id: 'jade-ritual', 
-    name: 'Jade Ritual', 
-    description: 'Ceremonias sagradas',
-    color: 'text-jade-primary',
-    bgColor: 'bg-jade-primary/10',
-    borderColor: 'border-jade-primary/20',
-    buttonColor: 'bg-jade-primary hover:bg-jade-primary/90'
+  {
+    id: "jade-ritual",
+    name: "Jade Ritual",
+    description: "Ceremonias sagradas",
+    color: "text-jade-primary",
+    bgColor: "bg-jade-primary/10",
+    borderColor: "border-jade-primary/20",
+    buttonColor: "bg-jade-primary hover:bg-jade-primary/90",
   },
-  { 
-    id: 'umbral', 
-    name: 'Umbral', 
-    description: 'Transformación interior',
-    color: 'text-umbral-primary',
-    bgColor: 'bg-umbral-primary/10',
-    borderColor: 'border-umbral-primary/20',
-    buttonColor: 'bg-umbral-primary hover:bg-umbral-primary/90'
+  {
+    id: "umbral",
+    name: "Umbral",
+    description: "Transformación interior",
+    color: "text-umbral-primary",
+    bgColor: "bg-umbral-primary/10",
+    borderColor: "border-umbral-primary/20",
+    buttonColor: "bg-umbral-primary hover:bg-umbral-primary/90",
   },
-  { 
-    id: 'utopica', 
-    name: 'Utópica', 
-    description: 'Visión elevada',
-    color: 'text-utopica-primary',
-    bgColor: 'bg-utopica-primary/10',
-    borderColor: 'border-utopica-primary/20',
-    buttonColor: 'bg-utopica-primary hover:bg-utopica-primary/90'
-  }
+  {
+    id: "utopica",
+    name: "Utópica",
+    description: "Visión elevada",
+    color: "text-utopica-primary",
+    bgColor: "bg-utopica-primary/10",
+    borderColor: "border-utopica-primary/20",
+    buttonColor: "bg-utopica-primary hover:bg-utopica-primary/90",
+  },
 ];
 
-export default function FeaturedLineSection({ className }: FeaturedLineSectionProps) {
+export default function FeaturedLineSection({
+  className,
+}: FeaturedLineSectionProps) {
   const [selectedLine, setSelectedLine] = useState(productLines[0]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -107,20 +109,23 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
       try {
         const response = await fetch(`/api/products?limit=100&in_stock=true`);
         const data = await response.json();
-        
+
         if (response.ok) {
           const allProducts = data.products || [];
-          const linesWithProducts = productLines.filter(line => {
+          const linesWithProducts = productLines.filter((line) => {
             const lineName = line.name.toLowerCase();
             const lineId = line.id.toLowerCase();
-            
+
             return allProducts.some((product: any) => {
-              const name = product.name?.toLowerCase() || '';
-              const description = product.description?.toLowerCase() || '';
-              const shortDescription = product.short_description?.toLowerCase() || '';
-              const categoryName = product.categories?.name?.toLowerCase() || '';
-              const categorySlug = product.categories?.slug?.toLowerCase() || '';
-              
+              const name = product.name?.toLowerCase() || "";
+              const description = product.description?.toLowerCase() || "";
+              const shortDescription =
+                product.short_description?.toLowerCase() || "";
+              const categoryName =
+                product.categories?.name?.toLowerCase() || "";
+              const categorySlug =
+                product.categories?.slug?.toLowerCase() || "";
+
               return (
                 categoryName.includes(lineName) ||
                 categoryName.includes(lineId) ||
@@ -131,26 +136,34 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
                 description.includes(lineId) ||
                 shortDescription.includes(lineName) ||
                 shortDescription.includes(lineId) ||
-                (product.tags && product.tags.some((tag: string) => 
-                  tag.toLowerCase().includes(lineName) || tag.toLowerCase().includes(lineId)
-                )) ||
-                (product.collections && product.collections.some((collection: string) => 
-                  collection.toLowerCase().includes(lineName) || collection.toLowerCase().includes(lineId)
-                ))
+                (product.tags &&
+                  product.tags.some(
+                    (tag: string) =>
+                      tag.toLowerCase().includes(lineName) ||
+                      tag.toLowerCase().includes(lineId),
+                  )) ||
+                (product.collections &&
+                  product.collections.some(
+                    (collection: string) =>
+                      collection.toLowerCase().includes(lineName) ||
+                      collection.toLowerCase().includes(lineId),
+                  ))
               );
             });
           });
-          
+
           setAvailableLines(linesWithProducts);
-          
+
           // Select a random line from available lines
           if (linesWithProducts.length > 0) {
-            const randomIndex = Math.floor(Math.random() * linesWithProducts.length);
+            const randomIndex = Math.floor(
+              Math.random() * linesWithProducts.length,
+            );
             setSelectedLine(linesWithProducts[randomIndex]);
           }
         }
       } catch (error) {
-        console.error('Error finding available lines:', error);
+        console.error("Error finding available lines:", error);
         // Fallback to original behavior
         const randomIndex = Math.floor(Math.random() * productLines.length);
         setSelectedLine(productLines[randomIndex]);
@@ -168,23 +181,24 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
         // First, try to fetch products by category if it exists
         let response = await fetch(`/api/products?limit=50&in_stock=true`);
         let data = await response.json();
-        
+
         if (response.ok) {
           let filteredProducts: any[] = [];
-          
+
           // Try to find products by category first
           const allProducts = data.products || [];
-          
+
           // Look for products that belong to this specific line
           filteredProducts = allProducts.filter((product: any) => {
-            const name = product.name?.toLowerCase() || '';
-            const description = product.description?.toLowerCase() || '';
-            const shortDescription = product.short_description?.toLowerCase() || '';
-            const categoryName = product.categories?.name?.toLowerCase() || '';
-            const categorySlug = product.categories?.slug?.toLowerCase() || '';
+            const name = product.name?.toLowerCase() || "";
+            const description = product.description?.toLowerCase() || "";
+            const shortDescription =
+              product.short_description?.toLowerCase() || "";
+            const categoryName = product.categories?.name?.toLowerCase() || "";
+            const categorySlug = product.categories?.slug?.toLowerCase() || "";
             const lineName = selectedLine.name.toLowerCase();
             const lineId = selectedLine.id.toLowerCase();
-            
+
             // Check if product belongs to this line by:
             // 1. Category name/slug matches line
             // 2. Product name contains line name/id
@@ -200,15 +214,21 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
               description.includes(lineId) ||
               shortDescription.includes(lineName) ||
               shortDescription.includes(lineId) ||
-              (product.tags && product.tags.some((tag: string) => 
-                tag.toLowerCase().includes(lineName) || tag.toLowerCase().includes(lineId)
-              )) ||
-              (product.collections && product.collections.some((collection: string) => 
-                collection.toLowerCase().includes(lineName) || collection.toLowerCase().includes(lineId)
-              ))
+              (product.tags &&
+                product.tags.some(
+                  (tag: string) =>
+                    tag.toLowerCase().includes(lineName) ||
+                    tag.toLowerCase().includes(lineId),
+                )) ||
+              (product.collections &&
+                product.collections.some(
+                  (collection: string) =>
+                    collection.toLowerCase().includes(lineName) ||
+                    collection.toLowerCase().includes(lineId),
+                ))
             );
           });
-          
+
           // If we found products, limit to 6
           if (filteredProducts.length > 0) {
             setProducts(filteredProducts.slice(0, 4));
@@ -217,11 +237,11 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
             setProducts([]);
           }
         } else {
-          console.error('Error fetching featured products:', data);
+          console.error("Error fetching featured products:", data);
           setProducts([]);
         }
       } catch (error) {
-        console.error('Error fetching featured products:', error);
+        console.error("Error fetching featured products:", error);
         setProducts([]);
       } finally {
         setLoading(false);
@@ -234,11 +254,13 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
   }, [selectedLine.id]);
 
   const handleAddToCart = (productId: string, quantity: number) => {
-    const product = products.find(p => p.id === productId);
+    const product = products.find((p) => p.id === productId);
     if (!product) return;
 
-    const defaultVariant = product.product_variants?.find(v => v.is_default) || product.product_variants?.[0];
-    
+    const defaultVariant =
+      product.product_variants?.find((v) => v.is_default) ||
+      product.product_variants?.[0];
+
     addItem({
       productId: product.id,
       variantId: defaultVariant?.id,
@@ -257,10 +279,10 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
 
   if (loading) {
     return (
-      <div 
+      <div
         className={cn("py-12 relative overflow-hidden", className)}
         style={{
-          background: `linear-gradient(135deg, ${selectedLine.bgColor.replace('bg-', '')} 0%, ${selectedLine.bgColor.replace('bg-', '')}CC 100%)`,
+          background: `linear-gradient(135deg, ${selectedLine.bgColor.replace("bg-", "")} 0%, ${selectedLine.bgColor.replace("bg-", "")}CC 100%)`,
         }}
       >
         <div className="container mx-auto px-4 relative z-10">
@@ -270,7 +292,10 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-96 bg-white/20 animate-pulse rounded-lg" />
+              <div
+                key={i}
+                className="h-96 bg-white/20 animate-pulse rounded-lg"
+              />
             ))}
           </div>
         </div>
@@ -283,59 +308,63 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
   }
 
   return (
-    <div 
+    <div
       className={cn("py-12 relative overflow-hidden", className)}
       style={{
-        background: `linear-gradient(135deg, ${selectedLine.bgColor.replace('bg-', '')} 0%, ${selectedLine.bgColor.replace('bg-', '')}CC 100%)`,
+        background: `linear-gradient(135deg, ${selectedLine.bgColor.replace("bg-", "")} 0%, ${selectedLine.bgColor.replace("bg-", "")}CC 100%)`,
       }}
     >
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-8">
-          <Badge 
+          <Badge
             className={cn(
               "mb-4 px-4 py-2 text-sm font-semibold hover:bg-inherit hover:text-inherit",
               selectedLine.bgColor,
               selectedLine.borderColor,
-              selectedLine.color
+              selectedLine.color,
             )}
           >
             <Sparkles className="h-4 w-4 mr-2" />
             Línea Destacada
           </Badge>
-          
-          <h2 
+
+          <h2
             className={cn(
-              "text-3xl md:text-4xl font-normal mb-4 leading-tight tracking-wider",
-              selectedLine.color
+              "text-3xl md:text-4xl font-semibold mb-4 leading-tight tracking-wider text-center",
+              selectedLine.color,
             )}
             style={{
-              fontFamily: 'VELISTA, var(--font-velista), serif',
-              fontWeight: 'normal',
-              fontStyle: 'normal'
+              fontFamily: "Playfair Display, var(--font-playfair), serif",
+              fontWeight: 600,
+              fontStyle: "normal",
             }}
           >
             Descubre la línea {selectedLine.name}
           </h2>
-          
-          <p className="text-lg text-tierra-media max-w-2xl mx-auto mb-6">
-            {selectedLine.description}. Una selección especial de productos cuidadosamente elegidos para tu bienestar.
+
+          <p
+            className="text-lg text-tierra-media max-w-2xl mx-auto mb-6 text-center"
+            style={{ fontFamily: "EB Garamond, var(--font-text), serif" }}
+          >
+            {selectedLine.description}. Una selección especial de productos
+            cuidadosamente elegidos para tu bienestar.
           </p>
-          
+
           <Link href={`/categorias/linea-${selectedLine.id}`}>
-              <Button
-                className={cn(
-                  "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",
-                  selectedLine.buttonColor
-                )}
-                  style={{
-                  borderRadius: '50px'
-                }}
-              >
-                <span className="relative z-10">Ver toda la línea</span>
-                <div className="absolute inset-0 -top-1 -left-1 w-[calc(100%+8px)] h-[calc(100%+8px)] bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
-              </Button>
-            </Link>
+            <Button
+              className={cn(
+                "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",
+                selectedLine.buttonColor,
+              )}
+              style={{
+                borderRadius: "50px",
+              }}
+            >
+              <span className="relative z-10">Ver toda la línea</span>
+              <div className="absolute inset-0 -top-1 -left-1 w-[calc(100%+8px)] h-[calc(100%+8px)] bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+            </Button>
+          </Link>
         </div>
 
         {/* Products Grid */}
@@ -356,7 +385,9 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
               isNew={false}
               isOnSale={!!product.compare_at_price}
               stock={product.inventory_quantity}
-              size={product.product_variants?.find(v => v.is_default)?.option1}
+              size={
+                product.product_variants?.find((v) => v.is_default)?.option1
+              }
               lineTheme={selectedLine.id as any}
               onAddToCart={handleAddToCart}
               variant="elegant"
@@ -367,22 +398,22 @@ export default function FeaturedLineSection({ className }: FeaturedLineSectionPr
 
         {/* View More Button */}
         <div className="text-center mt-8">
-          
-            <Link href={`/categorias/linea-${selectedLine.id}`}>
-              <Button
-                className={cn(
-                  "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",
-                  selectedLine.buttonColor
-                )}
-                  style={{
-                  borderRadius: '50px'
-                }}
-              >
-                <span className="relative z-10">Ver más productos de {selectedLine.name}</span>
-                <div className="absolute inset-0 -top-1 -left-1 w-[calc(100%+8px)] h-[calc(100%+8px)] bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
-              </Button>
-            </Link>
-          
+          <Link href={`/categorias/linea-${selectedLine.id}`}>
+            <Button
+              className={cn(
+                "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",
+                selectedLine.buttonColor,
+              )}
+              style={{
+                borderRadius: "50px",
+              }}
+            >
+              <span className="relative z-10">
+                Ver más productos de {selectedLine.name}
+              </span>
+              <div className="absolute inset-0 -top-1 -left-1 w-[calc(100%+8px)] h-[calc(100%+8px)] bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
+            </Button>
+          </Link>
         </div>
       </div>
     </div>

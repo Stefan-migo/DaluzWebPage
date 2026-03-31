@@ -1,81 +1,88 @@
-import type { Metadata } from 'next'
-import { Inter, Playfair_Display, EB_Garamond } from 'next/font/google'
-import localFont from 'next/font/local'
-import { ThemeProvider as NextThemeProvider } from '@/components/theme-provider'
-import { ThemeProvider as ProductLineThemeProvider } from '@/contexts/ThemeContext'
-import { AuthProvider } from '@/contexts/AuthContext'
-import { CartProvider } from '@/contexts/CartContext'
-import { LikeProvider } from '@/contexts/LikeContext'
-import { Toaster } from 'sonner'
-import './globals.css'
+import type { Metadata } from "next";
+import { Inter, Playfair_Display, EB_Garamond } from "next/font/google";
+import localFont from "next/font/local";
+import { ThemeProvider as NextThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider as ProductLineThemeProvider } from "@/contexts/ThemeContext";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { CartProvider } from "@/contexts/CartContext";
+import { LikeProvider } from "@/contexts/LikeContext";
+import { Analytics } from "@/components/Analytics";
+import { Toaster } from "sonner";
+import "./globals.css";
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
 
-const playfair = Playfair_Display({ 
-  subsets: ['latin'],
-  variable: '--font-playfair',
-  display: 'swap',
-})
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
 
-const ebGaramond = EB_Garamond({ 
-  subsets: ['latin'],
-  variable: '--font-eb-garamond',
-  display: 'swap',
-})
+const ebGaramond = EB_Garamond({
+  subsets: ["latin"],
+  variable: "--font-eb-garamond",
+  display: "swap",
+});
 
 // Custom DA LUZ Fonts
 const malisha = localFont({
-  src: '../../public/fonts/Malisha.ttf',
-  variable: '--font-malisha',
-  display: 'swap',
-})
+  src: "../../public/fonts/Malisha.ttf",
+  variable: "--font-malisha",
+  display: "swap",
+});
 
 const velista = localFont({
-  src: '../../public/fonts/VELISTA.ttf',
-  variable: '--font-velista',
-  display: 'swap',
-})
+  src: "../../public/fonts/VELISTA.ttf",
+  variable: "--font-velista",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
-    default: 'DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo',
-    template: '%s | DA LUZ CONSCIENTE'
+    default: "DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo",
+    template: "%s | DA LUZ CONSCIENTE",
   },
-  description: 'DA LUZ CONSCIENTE presenta "Alkimyas para alma y cuerpo", unificando productos biocosmecéticos artesanales y servicios holísticos para la vida consciente.',
+  icons: {
+    icon: "/LOGO-ALKIMYA-CONSCIENTE.ico",
+  },
+  description:
+    'DA LUZ CONSCIENTE presenta "Alkimyas para alma y cuerpo", unificando productos biocosmecéticos artesanales y servicios holísticos para la vida consciente.',
   keywords: [
-    'alkimyas',
-    'biocosmética artesanal',
-    'productos naturales',
-    'vida consciente',
-    'transformación personal',
-    'ceramica personalizada',
-    'flores silvestres',
-    'viveros'
+    "alkimyas",
+    "biocosmética artesanal",
+    "productos naturales",
+    "vida consciente",
+    "transformación personal",
+    "ceramica personalizada",
+    "flores silvestres",
+    "viveros",
   ],
-  authors: [{ name: 'DA LUZ CONSCIENTE' }],
-  creator: 'DA LUZ CONSCIENTE',
-  publisher: 'DA LUZ CONSCIENTE',
+  authors: [{ name: "DA LUZ CONSCIENTE" }],
+  creator: "DA LUZ CONSCIENTE",
+  publisher: "DA LUZ CONSCIENTE",
   formatDetection: {
     email: false,
     address: false,
     telephone: false,
   },
   openGraph: {
-    type: 'website',
-    locale: 'es_ES',
-    url: 'https://daluzconsciente.com',
-    title: 'DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo',
-    description: 'Productos biocosmecéticos artesanales y servicios holísticos para la vida consciente.',
-    siteName: 'DA LUZ CONSCIENTE',
+    type: "website",
+    locale: "es_ES",
+    url: "https://daluzconsciente.com",
+    title: "DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo",
+    description:
+      "Productos biocosmecéticos artesanales y servicios holísticos para la vida consciente.",
+    siteName: "DA LUZ CONSCIENTE",
   },
   twitter: {
-    card: 'summary_large_image',
-    title: 'DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo',
-    description: 'Productos biocosmecéticos artesanales y servicios holísticos para la vida consciente.',
+    card: "summary_large_image",
+    title: "DA LUZ CONSCIENTE - Alkimyas para alma y cuerpo",
+    description:
+      "Productos biocosmecéticos artesanales y servicios holísticos para la vida consciente.",
   },
   robots: {
     index: true,
@@ -83,21 +90,23 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="es" suppressHydrationWarning>
-      <body className={`${inter.variable} ${playfair.variable} ${ebGaramond.variable} ${malisha.variable} ${velista.variable} font-text antialiased`}>
+      <body
+        className={`${inter.variable} ${playfair.variable} ${ebGaramond.variable} ${malisha.variable} ${velista.variable} font-text antialiased`}
+      >
         <NextThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -110,6 +119,7 @@ export default function RootLayout({
                 <LikeProvider>
                   {children}
                   <Toaster position="bottom-right" />
+                  <Analytics />
                 </LikeProvider>
               </CartProvider>
             </AuthProvider>
@@ -117,5 +127,5 @@ export default function RootLayout({
         </NextThemeProvider>
       </body>
     </html>
-  )
-} 
+  );
+}
