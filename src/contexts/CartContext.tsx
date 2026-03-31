@@ -130,8 +130,8 @@ const fireGlobalAnalytics = (
   if (typeof window === "undefined") return;
 
   // Google Analytics 4
-  if ((window as unknown as { gtag?: Function }).gtag) {
-    (window as unknown as { gtag: Function }).gtag(
+  if ((window as unknown as { gtag?: (...args: unknown[]) => void }).gtag) {
+    (window as unknown as { gtag: (...args: unknown[]) => void }).gtag(
       "event",
       eventName,
       eventData,
@@ -139,8 +139,12 @@ const fireGlobalAnalytics = (
   }
 
   // Facebook Pixel
-  if ((window as unknown as { fbq?: Function }).fbq) {
-    (window as unknown as { fbq: Function }).fbq("track", eventName, eventData);
+  if ((window as unknown as { fbq?: (...args: unknown[]) => void }).fbq) {
+    (window as unknown as { fbq: (...args: unknown[]) => void }).fbq(
+      "track",
+      eventName,
+      eventData,
+    );
   }
 };
 

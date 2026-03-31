@@ -379,9 +379,9 @@ function fireGlobalAnalytics(
   // Google Analytics 4
   if (
     typeof window !== "undefined" &&
-    (window as unknown as { gtag?: Function }).gtag
+    (window as unknown as { gtag?: (...args: unknown[]) => void }).gtag
   ) {
-    (window as unknown as { gtag: Function }).gtag(
+    (window as unknown as { gtag: (...args: unknown[]) => void }).gtag(
       "event",
       eventName,
       eventData,
@@ -391,9 +391,13 @@ function fireGlobalAnalytics(
   // Facebook Pixel
   if (
     typeof window !== "undefined" &&
-    (window as unknown as { fbq?: Function }).fbq
+    (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq
   ) {
-    (window as unknown as { fbq: Function }).fbq("track", eventName, eventData);
+    (window as unknown as { fbq: (...args: unknown[]) => void }).fbq(
+      "track",
+      eventName,
+      eventData,
+    );
   }
 }
 

@@ -107,7 +107,8 @@ function trackToGA4(
 ) {
   if (typeof window === "undefined") return;
 
-  const gtag = (window as unknown as { gtag?: Function }).gtag;
+  const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void })
+    .gtag;
   if (!gtag) {
     console.warn("[Analytics] GA4 not loaded");
     return;
@@ -139,7 +140,7 @@ function trackToFBPixel(
 ) {
   if (typeof window === "undefined") return;
 
-  const fbq = (window as unknown as { fbq?: Function }).fbq;
+  const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void }).fbq;
   if (!fbq) {
     console.warn("[Analytics] FB Pixel not loaded");
     return;
@@ -184,7 +185,8 @@ function trackCheckoutStart(cartTotal: number, itemCount: number) {
 
   // Track to GA4
   if (typeof window !== "undefined") {
-    const gtag = (window as unknown as { gtag?: Function }).gtag;
+    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void })
+      .gtag;
     gtag?.("event", "begin_checkout", {
       currency: "ARS",
       value: cartTotal,
@@ -194,7 +196,8 @@ function trackCheckoutStart(cartTotal: number, itemCount: number) {
 
   // Track to FB Pixel
   if (typeof window !== "undefined") {
-    const fbq = (window as unknown as { fbq?: Function }).fbq;
+    const fbq = (window as unknown as { fbq?: (...args: unknown[]) => void })
+      .fbq;
     fbq?.("track", "InitiateCheckout", {
       value: cartTotal,
       currency: "ARS",
@@ -237,7 +240,8 @@ function trackCartView(
 
   // Track to GA4
   if (typeof window !== "undefined") {
-    const gtag = (window as unknown as { gtag?: Function }).gtag;
+    const gtag = (window as unknown as { gtag?: (...args: unknown[]) => void })
+      .gtag;
     gtag?.("event", "view_cart", {
       currency: "ARS",
       value: cartTotal,

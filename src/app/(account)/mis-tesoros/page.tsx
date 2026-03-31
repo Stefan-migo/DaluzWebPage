@@ -34,6 +34,25 @@ export default function MisTesorosPage() {
   const { treasures, loading: treasuresLoading, hasAccess } = useTreasures();
   const [activeTab, setActiveTab] = useState("bienvenida");
 
+  // Determine available tabs based on treasures (must be at top level for useEffect)
+  const hasGeneralAccess =
+    treasures.length > 0 ? hasAccess("tesoro-gral") : false;
+  const lineaAccess = treasures.filter((t) => t.startsWith("linea-"));
+  const kitAccess = treasures.filter((t) => t.startsWith("kit-"));
+  const availableTabs = [
+    hasGeneralAccess ? "bienvenida" : null,
+    lineaAccess.length > 0 ? "lineas" : null,
+    kitAccess.length > 0 ? "kits" : null,
+  ].filter((tab): tab is string => tab !== null);
+
+  // Set first available tab if current tab is not accessible
+  useEffect(() => {
+    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
+      setActiveTab(availableTabs[0]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [treasures, availableTabs]);
+
   // Loading state
   if (authLoading || treasuresLoading) {
     return (
@@ -129,26 +148,6 @@ export default function MisTesorosPage() {
   }
 
   // User has treasures - show content
-  const hasGeneralAccess = hasAccess("tesoro-gral");
-  const lineaAccess = treasures.filter((t) => t.startsWith("linea-"));
-  const kitAccess = treasures.filter((t) => t.startsWith("kit-"));
-
-  // Determine active tabs based on access (memoized to prevent loops)
-  const availableTabs = [
-    hasGeneralAccess ? "bienvenida" : null,
-    lineaAccess.length > 0 ? "lineas" : null,
-    kitAccess.length > 0 ? "kits" : null,
-  ].filter((tab): tab is string => tab !== null);
-
-  // Set first available tab if current tab is not accessible
-  useEffect(() => {
-    if (availableTabs.length > 0 && !availableTabs.includes(activeTab)) {
-      setActiveTab(availableTabs[0]);
-    }
-    // Only run when treasures change, not when availableTabs array changes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [treasures]);
-
   return (
     <div className="space-y-6">
       {/* Header */}

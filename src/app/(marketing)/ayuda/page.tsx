@@ -1,4 +1,5 @@
-import { Metadata } from "next";
+"use client";
+
 import {
   Card,
   CardContent,
@@ -26,12 +27,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-
-export const metadata: Metadata = {
-  title: "Centro de Ayuda | DA LUZ CONSCIENTE",
-  description:
-    "Encuentra ayuda y soporte para todos tus productos y servicios de DA LUZ CONSCIENTE.",
-};
 
 const helpCategories = [
   {

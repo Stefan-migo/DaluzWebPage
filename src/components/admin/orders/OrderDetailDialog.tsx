@@ -88,7 +88,7 @@ export default function OrderDetailDialog({
           <div>
             <h4 className="font-semibold text-azul-profundo mb-3">Productos</h4>
             <div className="space-y-2">
-              {order.order_items.map((item, index) => (
+              {(order.order_items ?? []).map((item, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
