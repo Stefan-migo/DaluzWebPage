@@ -8,11 +8,19 @@
 
 /* Enhanced DA LUZ Custom Classes - Alkimya */
 .alkimya-gradient {
-  background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    var(--color-brand-secondary) 100%
+  );
 }
 
 .alkimya-hero {
-  background: linear-gradient(135deg, rgba(174, 0, 0, 0.8), rgba(220, 54, 0, 0.6));
+  background: linear-gradient(
+    135deg,
+    rgba(174, 0, 0, 0.8),
+    rgba(220, 54, 0, 0.6)
+  );
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -34,7 +42,6 @@
 
 /* Custom animations for style tester */
 @keyframes alkimya-float {
-
   0%,
   100% {
     transform: translateY(0px);
@@ -50,7 +57,6 @@
 }
 
 @keyframes alkimya-pulse {
-
   0%,
   100% {
     opacity: 1;
@@ -76,14 +82,18 @@
 }
 
 .alkimya-shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
   background-size: 200px 100%;
   animation: alkimya-shimmer 2s infinite;
 }
 
 /* Accessibility Enhancements */
 @media (prefers-reduced-motion: reduce) {
-
   .alkimya-float,
   .alkimya-pulse,
   .alkimya-shimmer,
@@ -110,7 +120,7 @@
    =========================== */
 
 .tesoros-page {
-  background-image: url('/svg/alkimia/tesoros/BgTesoros.webp');
+  background-image: url("/svg/alkimia/tesoros/BgTesoros.webp");
   background-repeat: repeat-y;
   background-position: top center;
   background-size: 100% auto;
@@ -128,7 +138,12 @@
   position: relative;
   z-index: 10;
   width: 100%;
-  background: linear-gradient(135deg, var(--color-brand-primary) 0%, #8a0000 50%, var(--color-brand-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    #8a0000 50%,
+    var(--color-brand-secondary) 100%
+  );
   padding: 2rem 1.5rem;
   margin: 0;
 }
@@ -159,7 +174,12 @@
 
 /* Content cards for Tesoros - red background variant (overrides Card variant) */
 .tesoros-page .tesoros-content-card {
-  background: linear-gradient(135deg, var(--color-brand-primary) 0%, #8a0000 50%, var(--color-brand-secondary) 100%) !important;
+  background: linear-gradient(
+    135deg,
+    var(--color-brand-primary) 0%,
+    #8a0000 50%,
+    var(--color-brand-secondary) 100%
+  ) !important;
   border-radius: 0 15px;
   padding: 1.5rem 2rem;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
@@ -213,11 +233,21 @@
 
 /* Place cards in bento layout - only on desktop (lg+) */
 @media (min-width: 1024px) {
-  .tesoros-bento-grid > *:nth-child(1) { grid-area: a; }
-  .tesoros-bento-grid > *:nth-child(2) { grid-area: b; }
-  .tesoros-bento-grid > *:nth-child(3) { grid-area: c; }
-  .tesoros-bento-grid > *:nth-child(4) { grid-area: d; }
-  .tesoros-bento-grid > *:nth-child(5) { grid-area: e; }
+  .tesoros-bento-grid > *:nth-child(1) {
+    grid-area: a;
+  }
+  .tesoros-bento-grid > *:nth-child(2) {
+    grid-area: b;
+  }
+  .tesoros-bento-grid > *:nth-child(3) {
+    grid-area: c;
+  }
+  .tesoros-bento-grid > *:nth-child(4) {
+    grid-area: d;
+  }
+  .tesoros-bento-grid > *:nth-child(5) {
+    grid-area: e;
+  }
 }
 
 /* Tesoros - Mobile responsive */
@@ -246,21 +276,32 @@
   }
 }
 
-/* Tesoros CTA - project default button style with borders (0 15px radius) */
+/* Tesoros CTA - UNIFICADO (Cliente 2026) */
 .tesoros-page .tesoros-cta-link {
   text-decoration: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 3rem;
+  min-height: 44px;
+  padding: 0.75rem 1.5rem;
+  /* Color: rojo oscuro fondo, beige texto (Alkimya) */
+  background-color: #7a160e;
+  color: #fff4e0;
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   border-radius: 0 15px;
-  border: 2px solid rgba(96, 16, 16, 0.4);
+  border: none;
+  transition: all 0.2s ease;
 }
 
 .tesoros-page .tesoros-cta-link:hover {
   text-decoration: none;
-  border-color: rgba(96, 16, 16, 0.8);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 /* Print: hide background for Tesoros */
@@ -305,7 +346,7 @@
   }
 
   /* Ensure container doesn't overflow */
-  .section-manifiesto-1>div[class*="absolute"] {
+  .section-manifiesto-1 > div[class*="absolute"] {
     width: 100% !important;
     max-width: 100% !important;
     overflow: hidden !important;
@@ -361,7 +402,11 @@
     /* Mobile: Smaller padding */
     padding: 1rem;
     min-height: auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 234, 206, 0.9) 100%
+    ) !important;
     border-radius: 0px 15px !important;
   }
 
@@ -387,7 +432,6 @@
     /* 12px */
     line-height: 1.6;
   }
-
 }
 
 /* Tablet section - Improved layout for better UX */
@@ -519,7 +563,11 @@
     padding: 1.5rem;
     /* 24px */
     min-height: auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 234, 206, 0.9) 100%
+    ) !important;
     border-radius: 0px 15px !important;
   }
 
@@ -551,7 +599,11 @@
     .manifiesto-card {
       padding: 2rem;
       /* 32px */
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(240, 234, 206, 0.9) 100%
+      ) !important;
       border-radius: 0px 15px !important;
     }
 
@@ -577,7 +629,11 @@
     .manifiesto-card {
       padding: 2.5rem;
       /* 40px */
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%) !important;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(240, 234, 206, 0.9) 100%
+      ) !important;
       border-radius: 0px 15px !important;
     }
 
@@ -673,7 +729,11 @@
     margin: 0;
     aspect-ratio: auto;
     min-height: auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 234, 206, 0.9) 100%
+    );
     border-radius: 0px 15px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   }
@@ -719,7 +779,8 @@
   }
 
   /* Remove margin from last text element */
-  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text:last-child {
+  .manifiesto-section2-merged-mobile-cards
+    .manifiesto-shaped-card-text:last-child {
     margin-bottom: 0;
   }
 
@@ -785,7 +846,10 @@
   left: var(--pos-left, 50%);
   right: var(--pos-right, auto);
   bottom: var(--pos-bottom, auto);
-  transform: translate(var(--pos-translate-x, -50%), var(--pos-translate-y, -50%));
+  transform: translate(
+    var(--pos-translate-x, -50%),
+    var(--pos-translate-y, -50%)
+  );
   width: var(--pos-width, 90%);
   max-width: var(--pos-max-width, 800px);
 }
@@ -899,7 +963,6 @@
 
 /* Desktop: Show text elements, hide mobile cards */
 @media (min-width: 1280px) {
-
   /* Hide mobile cards container */
   .manifiesto-section2-merged-mobile-cards {
     display: none !important;
@@ -1204,7 +1267,6 @@
     color: #fff2db;
   }
 
-
   .manifiesto-image-element {
     display: block;
     --img-top: 56%;
@@ -1368,7 +1430,6 @@
 
 /* Mobile/Tablet: Hide desktop text, show cards and title */
 @media (max-width: 1279px) {
-
   /* Hide desktop text elements (but keep title visible) */
   .manifiesto-section2-merged-subtitle-1,
   .manifiesto-section2-merged-subtitle-1a,
@@ -1450,7 +1511,11 @@
     aspect-ratio: auto;
     /* Remove fixed aspect ratio */
     min-height: auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 234, 206, 0.9) 100%
+    );
     border-radius: 0px 15px;
     padding: 1.5rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -1508,10 +1573,10 @@
   }
 
   /* Remove margin from last text element */
-  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text:last-child {
+  .manifiesto-section2-merged-mobile-cards
+    .manifiesto-shaped-card-text:last-child {
     margin-bottom: 0;
   }
-
 }
 
 /* Tablet: Larger title */
@@ -1531,7 +1596,11 @@
     aspect-ratio: auto;
     /* Remove fixed aspect ratio */
     min-height: auto;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 234, 206, 0.9) 100%
+    );
     border-radius: 0px 15px;
     padding: 2rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -1589,7 +1658,8 @@
   }
 
   /* Remove margin from last text element */
-  .manifiesto-section2-merged-mobile-cards .manifiesto-shaped-card-text:last-child {
+  .manifiesto-section2-merged-mobile-cards
+    .manifiesto-shaped-card-text:last-child {
     margin-bottom: 0;
   }
 
@@ -1639,7 +1709,10 @@
     left: var(--card-title-left, 50%);
     right: var(--card-title-right, auto);
     bottom: var(--card-title-bottom, auto);
-    transform: translate(var(--card-title-translate-x, -50%), var(--card-title-translate-y, 0));
+    transform: translate(
+      var(--card-title-translate-x, -50%),
+      var(--card-title-translate-y, 0)
+    );
     width: var(--card-title-width, 85%);
     max-width: var(--card-title-max-width, 100%);
     text-align: var(--card-title-align, center);
@@ -1660,7 +1733,10 @@
     left: var(--card-text-left, 50%);
     right: var(--card-text-right, auto);
     bottom: var(--card-text-bottom, auto);
-    transform: translate(var(--card-text-translate-x, -50%), var(--card-text-translate-y, 0));
+    transform: translate(
+      var(--card-text-translate-x, -50%),
+      var(--card-text-translate-y, 0)
+    );
     width: var(--card-text-width, 85%);
     max-width: var(--card-text-max-width, 100%);
     text-align: var(--card-text-align, center);
@@ -1675,7 +1751,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(2) {
     top: var(--card-title-2-top, 46%);
     left: var(--card-title-2-left, 50%);
-    transform: translate(var(--card-title-2-translate-x, -50%), var(--card-title-2-translate-y, 0));
+    transform: translate(
+      var(--card-title-2-translate-x, -50%),
+      var(--card-title-2-translate-y, 0)
+    );
     width: var(--card-title-2-width, 85%);
     color: var(--color-brand-primary);
   }
@@ -1684,7 +1763,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(3) {
     top: var(--card-title-3-top, 71%);
     left: var(--card-title-3-left, 50%);
-    transform: translate(var(--card-title-3-translate-x, -50%), var(--card-title-3-translate-y, 0));
+    transform: translate(
+      var(--card-title-3-translate-x, -50%),
+      var(--card-title-3-translate-y, 0)
+    );
     width: var(--card-title-3-width, 85%);
     color: var(--color-brand-primary);
   }
@@ -1693,7 +1775,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(2) {
     top: var(--card-text-2-top, 55%);
     left: var(--card-text-2-left, 50%);
-    transform: translate(var(--card-text-2-translate-x, -50%), var(--card-text-2-translate-y, 0));
+    transform: translate(
+      var(--card-text-2-translate-x, -50%),
+      var(--card-text-2-translate-y, 0)
+    );
     width: var(--card-text-2-width, 85%);
   }
 
@@ -1701,7 +1786,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(3) {
     top: var(--card-text-3-top, 80%);
     left: var(--card-text-3-left, 50%);
-    transform: translate(var(--card-text-3-translate-x, -50%), var(--card-text-3-translate-y, 0));
+    transform: translate(
+      var(--card-text-3-translate-x, -50%),
+      var(--card-text-3-translate-y, 0)
+    );
     width: var(--card-text-3-width, 85%);
   }
 
@@ -1724,7 +1812,6 @@
   .manifiesto-shaped-card-text6 {
     position: relative;
   }
-
 }
 
 @media (max-width: 767px) {
@@ -1733,7 +1820,6 @@
     margin-bottom: 2.5rem;
     color: #fff2db;
   }
-
 
   /* ===========================
    MANIFIESTO SHAPED CARDS - SVG Background Shape
@@ -1755,7 +1841,7 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/svg/card-shape-background.svg');
+    background-image: url("/svg/card-shape-background.svg");
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -1820,7 +1906,10 @@
     left: var(--card-title-left, 50%);
     right: var(--card-title-right, auto);
     bottom: var(--card-title-bottom, auto);
-    transform: translate(var(--card-title-translate-x, -50%), var(--card-title-translate-y, 0));
+    transform: translate(
+      var(--card-title-translate-x, -50%),
+      var(--card-title-translate-y, 0)
+    );
     width: var(--card-title-width, 85%);
     max-width: var(--card-title-max-width, 100%);
     text-align: var(--card-title-align, center);
@@ -1841,7 +1930,10 @@
     left: var(--card-text-left, 50%);
     right: var(--card-text-right, auto);
     bottom: var(--card-text-bottom, auto);
-    transform: translate(var(--card-text-translate-x, -50%), var(--card-text-translate-y, 0));
+    transform: translate(
+      var(--card-text-translate-x, -50%),
+      var(--card-text-translate-y, 0)
+    );
     width: var(--card-text-width, 85%);
     max-width: var(--card-text-max-width, 100%);
     text-align: var(--card-text-align, center);
@@ -1856,7 +1948,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(2) {
     top: var(--card-title-2-top, 50%);
     left: var(--card-title-2-left, 50%);
-    transform: translate(var(--card-title-2-translate-x, -50%), var(--card-title-2-translate-y, 0));
+    transform: translate(
+      var(--card-title-2-translate-x, -50%),
+      var(--card-title-2-translate-y, 0)
+    );
     width: var(--card-title-2-width, 85%);
     color: var(--color-brand-primary);
   }
@@ -1865,7 +1960,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(3) {
     top: var(--card-title-3-top, 72%);
     left: var(--card-title-3-left, 50%);
-    transform: translate(var(--card-title-3-translate-x, -50%), var(--card-title-3-translate-y, 0));
+    transform: translate(
+      var(--card-title-3-translate-x, -50%),
+      var(--card-title-3-translate-y, 0)
+    );
     width: var(--card-title-3-width, 85%);
     color: var(--color-brand-primary);
   }
@@ -1874,7 +1972,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(2) {
     top: var(--card-text-2-top, 57%);
     left: var(--card-text-2-left, 50%);
-    transform: translate(var(--card-text-2-translate-x, -50%), var(--card-text-2-translate-y, 0));
+    transform: translate(
+      var(--card-text-2-translate-x, -50%),
+      var(--card-text-2-translate-y, 0)
+    );
     width: var(--card-text-2-width, 85%);
   }
 
@@ -1882,14 +1983,13 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(3) {
     top: var(--card-text-3-top, 80%);
     left: var(--card-text-3-left, 50%);
-    transform: translate(var(--card-text-3-translate-x, -50%), var(--card-text-3-translate-y, 0));
+    transform: translate(
+      var(--card-text-3-translate-x, -50%),
+      var(--card-text-3-translate-y, 0)
+    );
     width: var(--card-text-3-width, 85%);
   }
-
-
 }
-
-
 
 @media (max-width: 450px) {
   .manifiesto-section2-merged-title {
@@ -1897,7 +1997,6 @@
     margin-bottom: 2.5rem;
     color: #fff2db;
   }
-
 
   /* ===========================
    MANIFIESTO SHAPED CARDS - SVG Background Shape
@@ -1922,7 +2021,7 @@
     inset: 0;
     width: 100%;
     height: 100%;
-    background-image: url('/svg/card-shape-background.svg');
+    background-image: url("/svg/card-shape-background.svg");
     background-size: 100% 150%;
     /* Makes SVG 50% taller to fit the taller card */
     background-position: center;
@@ -1988,7 +2087,10 @@
     left: var(--card-title-left, 50%);
     right: var(--card-title-right, auto);
     bottom: var(--card-title-bottom, auto);
-    transform: translate(var(--card-title-translate-x, -50%), var(--card-title-translate-y, 0));
+    transform: translate(
+      var(--card-title-translate-x, -50%),
+      var(--card-title-translate-y, 0)
+    );
     width: var(--card-title-width, 85%);
     max-width: var(--card-title-max-width, 100%);
     text-align: var(--card-title-align, center);
@@ -2009,7 +2111,10 @@
     left: var(--card-text-left, 50%);
     right: var(--card-text-right, auto);
     bottom: var(--card-text-bottom, auto);
-    transform: translate(var(--card-text-translate-x, -50%), var(--card-text-translate-y, 0));
+    transform: translate(
+      var(--card-text-translate-x, -50%),
+      var(--card-text-translate-y, 0)
+    );
     width: var(--card-text-width, 85%);
     max-width: var(--card-text-max-width, 100%);
     text-align: var(--card-text-align, center);
@@ -2024,7 +2129,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(2) {
     top: var(--card-title-2-top, 50%);
     left: var(--card-title-2-left, 50%);
-    transform: translate(var(--card-title-2-translate-x, -50%), var(--card-title-2-translate-y, 0));
+    transform: translate(
+      var(--card-title-2-translate-x, -50%),
+      var(--card-title-2-translate-y, 0)
+    );
     width: var(--card-title-2-width, 85%);
     color: var(--color-brand-primary);
   }
@@ -2033,7 +2141,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-title:nth-of-type(3) {
     top: var(--card-title-3-top, 72%);
     left: var(--card-title-3-left, 50%);
-    transform: translate(var(--card-title-3-translate-x, -50%), var(--card-title-3-translate-y, 0));
+    transform: translate(
+      var(--card-title-3-translate-x, -50%),
+      var(--card-title-3-translate-y, 0)
+    );
     width: var(--card-title-3-width, 85%);
     color: var(--color-brand-primary);
   }
@@ -2042,7 +2153,10 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(2) {
     top: var(--card-text-2-top, 57%);
     left: var(--card-text-2-left, 50%);
-    transform: translate(var(--card-text-2-translate-x, -50%), var(--card-text-2-translate-y, 0));
+    transform: translate(
+      var(--card-text-2-translate-x, -50%),
+      var(--card-text-2-translate-y, 0)
+    );
     width: var(--card-text-2-width, 85%);
   }
 
@@ -2050,13 +2164,13 @@
   .manifiesto-shaped-card-content .manifiesto-shaped-card-text:nth-of-type(3) {
     top: var(--card-text-3-top, 80%);
     left: var(--card-text-3-left, 50%);
-    transform: translate(var(--card-text-3-translate-x, -50%), var(--card-text-3-translate-y, 0));
+    transform: translate(
+      var(--card-text-3-translate-x, -50%),
+      var(--card-text-3-translate-y, 0)
+    );
     width: var(--card-text-3-width, 85%);
   }
-
-
 }
-
 
 /* Tablet styles consolidated in main tablet media query above */
 
@@ -2120,8 +2234,10 @@
   left: var(--pos-left, 50%);
   right: var(--pos-right, auto);
   bottom: var(--pos-bottom, auto);
-  transform: translate(var(--pos-translate-x, -50%),
-      var(--pos-translate-y, -50%));
+  transform: translate(
+    var(--pos-translate-x, -50%),
+    var(--pos-translate-y, -50%)
+  );
   width: var(--pos-width, 90%);
   max-width: var(--pos-max-width, 800px);
 }
@@ -2163,7 +2279,10 @@
   left: var(--img-left, 50%);
   right: var(--img-right, auto);
   bottom: var(--img-bottom, auto);
-  transform: translate(var(--img-translate-x, -50%), var(--img-translate-y, -50%));
+  transform: translate(
+    var(--img-translate-x, -50%),
+    var(--img-translate-y, -50%)
+  );
   width: var(--img-width, auto);
   max-width: var(--img-max-width, 600px);
   height: auto;
@@ -2282,7 +2401,7 @@
   /* Show main title on mobile/tablet - Better positioning with UX best practices */
   .manifiesto-title {
     display: block !important;
-    color: #F0EACE !important;
+    color: #f0eace !important;
     margin: 0 auto 2.5rem auto;
     text-align: center;
     width: 100%;
@@ -2308,7 +2427,11 @@
     position: relative;
     width: 100%;
     max-width: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 234, 206, 0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 234, 206, 0.9) 100%
+    );
     border-radius: 0px 15px;
     padding: 1.25rem;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -2356,7 +2479,6 @@
     margin-top: 0;
     margin-bottom: 2rem;
   }
-
 }
 
 /* Tablet text sizing - Consolidated in main tablet media query above */
@@ -2383,9 +2505,7 @@
   }
 }
 
-
 @media (min-width: 1450px) {
-
   /* Show and position the manifiesto image */
   .manifiesto-image-element {
     display: block;
@@ -2396,12 +2516,9 @@
     --img-width: auto;
     --img-max-width: 490px;
   }
-
 }
 
-
 @media (min-width: 1550px) {
-
   /* Show and position the manifiesto image */
   .manifiesto-image-element {
     display: block;
@@ -2412,10 +2529,7 @@
     --img-width: auto;
     --img-max-width: 615px;
   }
-
 }
-
-
 
 /* Desktop positioning starts at 1280px - see below */
 
@@ -2425,7 +2539,6 @@
     width: 100%;
     font-size: 6rem;
     left: 43%;
-
   }
 
   .manifiesto-text-1 {
@@ -2459,7 +2572,6 @@
     font-size: 1.35rem;
     max-width: 100%;
   }
-
 }
 
 @media (min-width: 1450px) {
@@ -2468,7 +2580,6 @@
     width: 100%;
     font-size: 6rem;
     left: 42%;
-
   }
 
   .manifiesto-text-1 {
@@ -2501,12 +2612,9 @@
     font-size: 1.65rem;
     max-width: 100%;
   }
-
 }
 
 @media (min-width: 1550px) {
-
-
   .manifiesto-text-1 {
     top: 18.5%;
     font-size: 1.8rem;
@@ -2530,7 +2638,6 @@
     top: 70%;
     font-size: 1.6rem;
     max-width: 80%;
-
   }
 
   .manifiesto-text-5 {
@@ -2538,14 +2645,11 @@
     font-size: 1.8rem;
     max-width: 100%;
   }
-
 }
 
 /* Mobile adjustments */
 @media (max-width: 767px) {
-
   .section-manifiesto-1-text-cards {
-
     padding-top: 3rem;
   }
 
@@ -2557,7 +2661,6 @@
   .manifiesto-title {
     font-size: 1.8rem;
     top: 2%;
-
   }
 
   .manifiesto-text-1 {
@@ -2582,22 +2685,22 @@
     font-size: 0.8125rem;
   }
 
-    /* Manifiesto Image - Mobile */
-    .manifiesto-image-element {
-      display: block;
-      position: relative;
-      width: 100%;
-      max-width: 280px;
-      margin: 1.5rem auto 2rem auto;
-      clip-path: ellipse(39% 42% at 50% 50%);
-      object-fit: cover;
-      top: 3rem;
-      left: auto;
-      right: auto;
-      bottom: auto;
-      transform: none;
-      z-index: 5;
-    }
+  /* Manifiesto Image - Mobile */
+  .manifiesto-image-element {
+    display: block;
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    margin: 1.5rem auto 2rem auto;
+    clip-path: ellipse(39% 42% at 50% 50%);
+    object-fit: cover;
+    top: 3rem;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    transform: none;
+    z-index: 5;
+  }
 }
 
 /* ===========================
@@ -2631,12 +2734,12 @@
 }
 
 .ayo-title-band {
-  background-image: url('/svg/alkimia/activosyorigen/AYOTitle.svg');
+  background-image: url("/svg/alkimia/activosyorigen/AYOTitle.svg");
   min-height: 280px;
 }
 
 .ayo-band-section {
-  background-image: url('/svg/alkimia/activosyorigen/AYOband.svg');
+  background-image: url("/svg/alkimia/activosyorigen/AYOband.svg");
   min-height: 275px;
   display: flex;
   align-items: center;
@@ -2693,7 +2796,11 @@
 
 /* Transparency card - reuses existing card styling */
 .ayo-transparency-card {
-  background: linear-gradient(135deg, rgba(146, 26, 28, 0.08) 0%, rgba(174, 0, 0, 0.06) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(146, 26, 28, 0.08) 0%,
+    rgba(174, 0, 0, 0.06) 100%
+  );
   border: 1px solid rgba(146, 26, 28, 0.2);
   border-radius: 0 15px;
   padding: 2rem;
@@ -2730,7 +2837,7 @@
 }
 
 .ayo-bullet-list li::before {
-  content: '•';
+  content: "•";
   position: absolute;
   left: 0;
   color: #921a1c;
@@ -2810,28 +2917,32 @@
 }
 
 .ayo-card-button {
-  display: inline-block;
+  /* UNIFICADO (Cliente 2026) - Botón Alkimya */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 0.875rem 1.5rem;
-  background: linear-gradient(135deg, #AE0000 0%, #DC3600 100%);
-  color: #fff2db;
-  font-family: var(--font-malisha), var(--font-title), serif;
-  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
+  padding: 0.75rem 1.5rem;
+  min-height: 44px;
+  /* Color: rojo oscuro fondo, beige texto (Alkimya) */
+  background-color: #7a160e;
+  color: #fff4e0;
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-size: 0.875rem;
   font-weight: 500;
-  letter-spacing: 0.05em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
   text-decoration: none;
   border: none;
   border-radius: 0 15px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
 }
 
 .ayo-card-button:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 12px rgba(174, 0, 0, 0.3);
-  background: linear-gradient(135deg, #C00000 0%, #E64000 100%);
-  filter: brightness(1.1);
+  opacity: 0.9;
+  transform: translateY(-1px);
+  /* Sin sombraextraña */
 }
 
 /* Footer */
@@ -2851,4 +2962,3 @@
   color: var(--color-text-primary);
   margin: 0;
 }
-

@@ -1,15 +1,15 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { ArrowLeft, Crown, Save, X } from 'lucide-react';
-import Link from 'next/link';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, Crown, Save, X } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 interface AdminUser {
   id: string;
@@ -32,7 +32,7 @@ export default function EditAdminUserPage() {
   const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     is_active: true,
-    permissions: {} as Record<string, string[]>
+    permissions: {} as Record<string, string[]>,
   });
 
   useEffect(() => {
@@ -45,25 +45,27 @@ export default function EditAdminUserPage() {
     try {
       setLoading(true);
       const response = await fetch(`/api/admin/admin-users/${adminId}`);
-      
+
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error('Administrador no encontrado');
+          throw new Error("Administrador no encontrado");
         }
-        throw new Error('Error al cargar el administrador');
+        throw new Error("Error al cargar el administrador");
       }
 
       const data = await response.json();
       setAdminUser(data.adminUser);
       setFormData({
         is_active: data.adminUser.is_active,
-        permissions: data.adminUser.permissions || {}
+        permissions: data.adminUser.permissions || {},
       });
       setError(null);
     } catch (err) {
-      console.error('Error fetching admin user:', err);
-      setError(err instanceof Error ? err.message : 'Error desconocido');
-      toast.error(err instanceof Error ? err.message : 'Error al cargar el administrador');
+      console.error("Error fetching admin user:", err);
+      setError(err instanceof Error ? err.message : "Error desconocido");
+      toast.error(
+        err instanceof Error ? err.message : "Error al cargar el administrador",
+      );
     } finally {
       setLoading(false);
     }
@@ -73,26 +75,32 @@ export default function EditAdminUserPage() {
     try {
       setSaving(true);
       const response = await fetch(`/api/admin/admin-users/${adminId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           is_active: formData.is_active,
-          permissions: formData.permissions
+          permissions: formData.permissions,
         }),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Error al actualizar el administrador');
+        throw new Error(
+          errorData.error || "Error al actualizar el administrador",
+        );
       }
 
-      toast.success('Administrador actualizado exitosamente');
+      toast.success("Administrador actualizado exitosamente");
       router.push(`/admin/admin-users/${adminId}`);
     } catch (err) {
-      console.error('Error updating admin user:', err);
-      toast.error(err instanceof Error ? err.message : 'Error al actualizar el administrador');
+      console.error("Error updating admin user:", err);
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Error al actualizar el administrador",
+      );
     } finally {
       setSaving(false);
     }
@@ -115,8 +123,12 @@ export default function EditAdminUserPage() {
         <Card className="bg-admin-bg-secondary">
           <CardContent className="p-6">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-azul-profundo mb-4">Error</h2>
-              <p className="text-tierra-media mb-6">{error || 'Administrador no encontrado'}</p>
+              <h2 className="text-2xl font-bold text-azul-profundo mb-4">
+                Error
+              </h2>
+              <p className="text-tierra-media mb-6">
+                {error || "Administrador no encontrado"}
+              </p>
               <Link href="/admin/admin-users">
                 <Button variant="outline">
                   <ArrowLeft className="mr-2 h-4 w-4" />
@@ -135,8 +147,12 @@ export default function EditAdminUserPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-azul-profundo">Editar Administrador</h1>
-          <p className="text-tierra-media">Modificar información del administrador</p>
+          <h1 className="font-title text-3xl text-azul-profundo">
+            Editar Administrador
+          </h1>
+          <p className="text-tierra-media">
+            Modificar información del administrador
+          </p>
         </div>
         <Link href={`/admin/admin-users/${adminId}`}>
           <Button variant="default" size="sm">
@@ -147,7 +163,7 @@ export default function EditAdminUserPage() {
       </div>
 
       {/* Form Card */}
-      <Card className="bg-admin-bg-secondary shadow-[0_1px_3px_rgba(0,0,0,0.3)]">
+      <Card className="bg-admin-bg-secondary admin-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Crown className="h-5 w-5" />
@@ -192,11 +208,13 @@ export default function EditAdminUserPage() {
                 <input
                   type="checkbox"
                   checked={formData.is_active}
-                  onChange={(e) => setFormData({...formData, is_active: e.target.checked})}
+                  onChange={(e) =>
+                    setFormData({ ...formData, is_active: e.target.checked })
+                  }
                   className="h-4 w-4 rounded border-gray-300"
                 />
                 <span className="text-sm">
-                  {formData.is_active ? 'Activo' : 'Inactivo'}
+                  {formData.is_active ? "Activo" : "Inactivo"}
                 </span>
               </label>
               {formData.is_active ? (
@@ -215,8 +233,8 @@ export default function EditAdminUserPage() {
             <Label>Permisos</Label>
             <div className="mt-2 p-4 bg-admin-bg-tertiary rounded-md">
               <p className="text-sm text-tierra-media">
-                Los administradores tienen acceso completo a todas las funciones del sistema.
-                Los permisos se gestionan automáticamente.
+                Los administradores tienen acceso completo a todas las funciones
+                del sistema. Los permisos se gestionan automáticamente.
               </p>
             </div>
           </div>
@@ -231,7 +249,7 @@ export default function EditAdminUserPage() {
             </Link>
             <Button onClick={handleSave} disabled={saving}>
               <Save className="mr-2 h-4 w-4" />
-              {saving ? 'Guardando...' : 'Guardar Cambios'}
+              {saving ? "Guardando..." : "Guardar Cambios"}
             </Button>
           </div>
         </CardContent>
@@ -239,4 +257,3 @@ export default function EditAdminUserPage() {
     </div>
   );
 }
-

@@ -9,14 +9,15 @@ import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  User, 
-  Settings, 
-  Package, 
-  Sparkles, 
+import {
+  User,
+  Settings,
+  Package,
+  Sparkles,
   LogOut,
   Loader2,
-  Shield 
+  Shield,
+  Gift,
 } from "lucide-react";
 
 interface AccountLayoutProps {
@@ -65,48 +66,55 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
       href: "/perfil",
       label: "Mi Perfil",
       icon: User,
-      description: "Información personal y contacto"
+      description: "Información personal y contacto",
+    },
+    {
+      href: "/mis-tesoros",
+      label: "Mis Tesoros",
+      icon: Gift,
+      description: "Contenido exclusivo de tus compras",
     },
     {
       href: "/mis-pedidos",
       label: "Mis Pedidos",
       icon: Package,
-      description: "Historial de compras y envíos"
+      description: "Historial de compras y envíos",
     },
     {
       href: "/mi-membresia",
       label: "Mi Membresía",
       icon: Sparkles,
       description: "Progreso del programa",
-      badge: hasActiveMembership ? 'Activa' : undefined
+      badge: hasActiveMembership ? "Activa" : undefined,
     },
     {
       href: "/configuracion",
       label: "Configuración",
       icon: Settings,
-      description: "Preferencias y seguridad"
-    }
+      description: "Preferencias y seguridad",
+    },
   ];
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-grow">
-        <div 
-          className="min-h-screen" 
+        <div
+          className="min-h-screen"
           style={{
-            backgroundColor: 'var(--admin-bg-tertiary)',
-            background: 'linear-gradient(180deg, rgba(240, 234, 206, 1) 0%, rgba(255, 244, 179, 0.5) 100%)',
-            backgroundImage: 'none'
+            backgroundColor: "var(--admin-bg-tertiary)",
+            background:
+              "linear-gradient(180deg, rgba(240, 234, 206, 1) 0%, rgba(255, 244, 179, 0.5) 100%)",
+            backgroundImage: "none",
           }}
         >
           <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
               {/* Sidebar Navigation */}
               <div className="lg:col-span-1">
-                <Card 
-                  className="sticky top-24" 
-                  style={{ backgroundColor: 'var(--admin-accent-primary)' }}
+                <Card
+                  className="sticky top-24"
+                  style={{ backgroundColor: "var(--admin-accent-primary)" }}
                 >
                   <CardContent className="p-6">
                     {/* User Info */}
@@ -149,7 +157,10 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
                                 {item.label}
                               </span>
                               {item.badge && (
-                                <Badge variant="secondary" className="text-xs bg-dorado/20 text-azul-profundo">
+                                <Badge
+                                  variant="secondary"
+                                  className="text-xs bg-dorado/20 text-azul-profundo"
+                                >
                                   {item.badge}
                                 </Badge>
                               )}
@@ -183,7 +194,8 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
                             Cuenta Protegida
                           </p>
                           <p>
-                            Tu información está segura con cifrado de extremo a extremo.
+                            Tu información está segura con cifrado de extremo a
+                            extremo.
                           </p>
                         </div>
                       </div>
@@ -193,9 +205,7 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
               </div>
 
               {/* Main Content */}
-              <div className="lg:col-span-3">
-                {children}
-              </div>
+              <div className="lg:col-span-3">{children}</div>
             </div>
           </div>
         </div>
@@ -203,4 +213,4 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
       <Footer />
     </div>
   );
-} 
+}

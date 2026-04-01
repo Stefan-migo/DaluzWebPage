@@ -1,34 +1,78 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
+
+interface TiendaSettings {
+  heroImage?: {
+    asset?: {
+      url?: string;
+    };
+    alt?: string;
+  };
+  heroTitle?: string;
+  heroSubtitle?: string;
+}
 
 interface TiendaHeroProps {
   className?: string;
 }
 
+// Default values
+const DEFAULT_IMAGE = "/images/hero-tienda.jpg";
+const DEFAULT_TITLE = "TIENDA DA LUZ ALKIMYA";
+const DEFAULT_SUBTITLE =
+  "Descubre nuestra colección completa de biocosmética artesanal";
+
 export default function TiendaHero({ className }: TiendaHeroProps) {
+  const [settings, setSettings] = useState<TiendaSettings>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchSettings() {
+      try {
+        const response = await fetch("/api/sanity/tienda-settings");
+        if (response.ok) {
+          const data = await response.json();
+          if (data.settings) {
+            setSettings(data.settings);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching tienda settings:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchSettings();
+  }, []);
+
+  // Use Sanity values or defaults
+  const heroImageUrl = settings.heroImage?.asset?.url || DEFAULT_IMAGE;
+  const heroTitle = settings.heroTitle || DEFAULT_TITLE;
+  const heroSubtitle = settings.heroSubtitle || DEFAULT_SUBTITLE;
+
   return (
     <div
       className={cn(
         "relative h-[350px] md:h-[300px] lg:h-[400px] overflow-hidden",
         "flex items-center justify-center group",
         "bg-cover bg-center bg-no-repeat",
-        className
+        className,
       )}
     >
       {/* Background Image with Filter */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat hero-mobile-clip"
         style={{
-          backgroundImage: "url('/images/hero-tienda.jpg')",
-          filter: "brightness(0.6) saturate(1.1) contrast(1.1)"
+          backgroundImage: `url('${heroImageUrl}')`,
+          filter: "brightness(0.6) saturate(1.1) contrast(1.1)",
         }}
       />
 
       {/* Overlay for better text readability */}
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/10 to-black/5 hero-mobile-clip"
-      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/10 to-black/5 hero-mobile-clip" />
 
       {/* Shimmer Effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
@@ -40,23 +84,23 @@ export default function TiendaHero({ className }: TiendaHeroProps) {
         <h1
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal leading-none tracking-wider drop-shadow-2xl text-white mb-6 group-hover:drop-shadow-[0_0_30px_rgba(255,255,255,0.8)] transition-all duration-700 group-hover:text-yellow-100"
           style={{
-            fontFamily: 'VELISTA, var(--font-velista), serif',
-            fontWeight: 'normal',
-            fontStyle: 'normal'
+            fontFamily: "Playfair Display, var(--font-playfair), serif",
+            fontWeight: 600,
+            fontStyle: "normal",
           }}
         >
-          TIENDA DA LUZ ALKIMYA
+          {heroTitle}
         </h1>
         <p
           className="text-lg sm:text-xl md:text-2xl text-white font-body max-w-3xl mx-auto leading-relaxed drop-shadow-lg"
           style={{
-            fontFamily: 'malisha, var(--font-malisha), cursive',
-            fontWeight: 'normal',
-            fontStyle: 'normal',
-            letterSpacing: '1.25px'
+            fontFamily: "EB Garamond, var(--font-text), serif",
+            fontWeight: "normal",
+            fontStyle: "normal",
+            letterSpacing: "1.25px",
           }}
         >
-          Descubre nuestra colección completa de biocosmética artesanal
+          {heroSubtitle}
         </p>
       </div>
 

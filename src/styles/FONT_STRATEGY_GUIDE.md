@@ -1,5 +1,8 @@
 # 🎨 DA LUZ CONSCIENTE - FONT STRATEGY GUIDE
 
+> ⚠️ **IMPORTANTE**: La fuente de body oficial es **EB Garamond** (serif), NO Inter.
+> Inter se usa únicamente para UI elements pequeños (captions, labels).
+
 ## 📊 **COMPLETE FONT SYSTEM**
 
 Your project now has a **professional 4-font typography system** that covers all use cases:
@@ -9,6 +12,7 @@ Your project now has a **professional 4-font typography system** that covers all
 ## 🎯 **FONT HIERARCHY**
 
 ### **1. 🎭 DISPLAY (Malisha) - Brand Identity**
+
 ```css
 Use: Hero titles, logos, decorative elements, special callouts
 Class: .font-display | font-display
@@ -17,14 +21,16 @@ Example: Main homepage hero "DA LUZ CONSCIENTE"
 ```
 
 ### **2. 📖 TITLE (VELISTA) - Section Headers**
+
 ```css
 Use: Page titles, section headers, elegant headings
-Class: .font-title | font-title  
+Class: .font-title | font-title
 Variable: var(--font-title)
 Example: "NUESTROS SERVICIOS", "LÍNEA ECOS"
 ```
 
 ### **3. 📰 SUBTITLE (Playfair Display) - Content Headers**
+
 ```css
 Use: Article titles, card headers, subsection headings
 Class: .font-subtitle | font-subtitle
@@ -32,7 +38,8 @@ Variable: var(--font-subtitle)
 Example: Blog post titles, product names
 ```
 
-### **4. 💬 TEXT (Inter) - Body Content**
+### **4. 💬 TEXT (EB Garamond) - Body Content**
+
 ```css
 Use: Paragraphs, forms, buttons, navigation, UI elements
 Class: .font-text | font-text
@@ -41,6 +48,7 @@ Example: Body paragraphs, form inputs, button text
 ```
 
 ### **5. 🏷️ CAPTION (Inter) - Small Text**
+
 ```css
 Use: Captions, labels, metadata, small descriptions
 Class: .font-caption | font-caption
@@ -53,6 +61,7 @@ Example: Image captions, form labels, dates
 ## 💻 **HOW TO USE IN CODE**
 
 ### **React/TSX Components**
+
 ```tsx
 // Hero section with display font
 <h1 className="font-display text-6xl text-white">
@@ -81,6 +90,7 @@ Example: Image captions, form labels, dates
 ```
 
 ### **CSS Variables**
+
 ```css
 .custom-hero {
   font-family: var(--font-display);
@@ -106,7 +116,7 @@ Your HTML elements now have **automatic font assignment**:
 <h4><!-- Uses Playfair Display automatically --></h4>
 <h5><!-- Uses Inter (bold) automatically --></h5>
 <h6><!-- Uses Inter (bold) automatically --></h6>
-<p> <!-- Uses Inter automatically --></p>
+<p><!-- Uses Inter automatically --></p>
 ```
 
 ---
@@ -114,6 +124,7 @@ Your HTML elements now have **automatic font assignment**:
 ## 📋 **USAGE GUIDELINES**
 
 ### **DO ✅**
+
 - Use **Malisha** for brand moments and hero elements
 - Use **VELISTA** for important section headers
 - Use **Playfair Display** for content headings
@@ -121,6 +132,7 @@ Your HTML elements now have **automatic font assignment**:
 - Maintain consistent font pairings
 
 ### **DON'T ❌**
+
 - Mix too many fonts in one component
 - Use display fonts for body text
 - Use body fonts for important headings
@@ -131,6 +143,7 @@ Your HTML elements now have **automatic font assignment**:
 ## 🚀 **PERFORMANCE OPTIMIZED**
 
 Your fonts are already optimized:
+
 - ✅ `font-display: swap` for fast loading
 - ✅ Google Fonts with Next.js optimization
 - ✅ Proper fallback fonts for each family
@@ -141,6 +154,7 @@ Your fonts are already optimized:
 ## 🌟 **BRAND CONSISTENCY**
 
 This system ensures:
+
 - **Consistent** visual hierarchy
 - **Professional** typography throughout
 - **Brand-aligned** custom font usage
@@ -154,9 +168,9 @@ This system ensures:
 ```
 🎭 Malisha (Display)     → Brand moments, heroes
 📖 VELISTA (Title)       → Section headers
-📰 Playfair (Subtitle)   → Content headings  
-💬 Inter (Text)          → Body content, UI
-🏷️ Inter (Caption)       → Small text, labels
+📰 Playfair (Subtitle)   → Content headings
+💬 EB Garamond (Text)    → Body content (NO Inter)
+🏷️ Inter (Caption)       → Small text, labels (NO body)
 ```
 
 **Your 4-font system is perfect for a professional website!** 🎉

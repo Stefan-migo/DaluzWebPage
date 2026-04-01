@@ -19,7 +19,13 @@
     "supabase:status": "npx supabase status",
     "supabase:reset": "npx supabase db reset",
     "admin:setup": "node setup-admin.js",
-    "notebooklm:upload": "bash scripts/upload-docs-to-notebooklm.sh"
+    "notebooklm:upload": "bash scripts/upload-docs-to-notebooklm.sh",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -46,9 +52,11 @@
     "@sanity/vision": "^3.99.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.52.0",
+    "@types/dompurify": "^3.0.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "dompurify": "^3.3.3",
     "dotenv": "^17.2.1",
     "framer-motion": "^11.18.2",
     "lucide-react": "^0.294.0",
@@ -70,11 +78,13 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@types/node": "^20.0.0",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "@vitest/ui": "^4.1.1",
     "autoprefixer": "^10.0.1",
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.0.0",
@@ -83,7 +93,8 @@
     "prettier-plugin-tailwindcss": "^0.5.0",
     "supabase": "^2.48.3",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.1"
   },
   "overrides": {
     "framer-motion": "$framer-motion",

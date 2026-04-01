@@ -1,18 +1,30 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from "next/server";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
 // Force dynamic rendering for this route
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
+// SECURITY: Only allow in development, reject in production
 export async function GET(req: NextRequest) {
+  // Block access in production
+  if (process.env.NODE_ENV === "production") {
+    return NextResponse.json(
+      { error: "Debug endpoint not available in production" },
+      { status: 403 },
+    );
+  }
+
   try {
     const cookieStore = cookies();
-    
+
     // Debug: Show all cookies
     const allCookies = cookieStore.getAll();
-    console.log('All cookies:', allCookies.map(c => ({ name: c.name, hasValue: !!c.value })));
-    
+    console.log(
+      "All cookies:",
+      allCookies.map((c) => ({ name: c.name, hasValue: !!c.value })),
+    );
+
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -25,33 +37,39 @@ export async function GET(req: NextRequest) {
             // API routes don't set cookies
           },
           remove(name: string, options: any) {
-            // API routes don't remove cookies  
+            // API routes don't remove cookies
           },
         },
-      }
+      },
     );
 
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
     return NextResponse.json({
       success: true,
       authenticated: !!user,
       user: user ? { id: user.id, email: user.email } : null,
       error: error?.message,
-      cookies: allCookies.map(c => ({ 
-        name: c.name, 
+      cookies: allCookies.map((c) => ({
+        name: c.name,
         hasValue: !!c.value,
-        isSupabase: c.name.startsWith('sb-')
+        isSupabase: c.name.startsWith("sb-"),
       })),
       environment: process.env.NODE_ENV,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    console.error('Debug auth error:', error);
-    return NextResponse.json({
-      success: false,
-      error: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
-    }, { status: 500 });
+    console.error("Debug auth error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+        timestamp: new Date().toISOString(),
+      },
+      { status: 500 },
+    );
   }
 }

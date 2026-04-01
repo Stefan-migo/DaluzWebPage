@@ -1,0 +1,3 @@
+// Product Management Components
+export { default as ProductGrid } from "./ProductGrid";
+export { default as ProductFilters } from "./ProductFilters";

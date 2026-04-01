@@ -408,6 +408,86 @@ const config = {
         ".space-alkimya-xl > * + *": {
           marginTop: "var(--space-12)",
         },
+        // ===============================================
+        // DA LUZ UNIFIED BUTTON SYSTEM (Cliente 2026)
+        // ===============================================
+        // Botón Global Unificado - USA ESTE ESTILO PARA TODOS
+        ".btn-global": {
+          fontFamily: "var(--font-title), VELISTA, serif",
+          textTransform: "uppercase",
+          fontSize: "0.875rem",
+          fontWeight: "500",
+          letterSpacing: "1px",
+          backgroundColor: "#FFF2DB",
+          color: "#791010",
+          border: "none",
+          borderRadius: "0px 15px",
+          padding: "0.75rem 1.5rem",
+          minHeight: "44px",
+          transition: "all 0.2s ease",
+          cursor: "pointer",
+          textDecoration: "none",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "0.5rem",
+        },
+        ".btn-global:hover": {
+          opacity: "0.9",
+          transform: "translateY(-1px)",
+        },
+        // Botón primario (beige con texto rojo)
+        ".btn-primary": {
+          backgroundColor: "#FFF2DB",
+          color: "#791010",
+        },
+        // Botón procesos (beige con verde)
+        ".btn-procesos": {
+          backgroundColor: "#FFF2DB",
+          color: "#011f18",
+        },
+        // Botón alkimya/tienda (rojo oscuro con beige)
+        ".btn-alkimya": {
+          backgroundColor: "#7A160E",
+          color: "#FFF4E0",
+        },
+        // Botón raíces/blog (azul con blanco)
+        ".btn-raices": {
+          backgroundColor: "#051341",
+          color: "#FFFFFF",
+        },
+        // Botón umbral (naranja con blanco)
+        ".btn-umbral": {
+          backgroundColor: "#EA4F12",
+          color: "#FFFFFF",
+        },
+        // Botón jade (verde oscuro con blanco)
+        ".btn-jade": {
+          backgroundColor: "#04412D",
+          color: "#FFFFFF",
+        },
+        // Botón ecos (azul con blanco)
+        ".btn-ecos": {
+          backgroundColor: "#12406F",
+          color: "#FFFFFF",
+        },
+        // Botón alma (rojo terracota con blanco)
+        ".btn-alma": {
+          backgroundColor: "#9B201A",
+          color: "#FFFFFF",
+        },
+        // Botón utópica (marrón con beige)
+        ".btn-utopica": {
+          backgroundColor: "#392E13",
+          color: "#FFF4E0",
+        },
+        // Texto en fondos
+        ".text-on-beige": {
+          color: "#791010",
+        },
+        ".text-on-color": {
+          color: "#FFF4E0",
+        },
       };
 
       addUtilities(newUtilities, ["responsive", "hover"]);

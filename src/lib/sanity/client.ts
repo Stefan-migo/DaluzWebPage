@@ -1,10 +1,10 @@
-import { createClient } from 'next-sanity'
-import imageUrlBuilder from '@sanity/image-url'
-import { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import { createClient } from "next-sanity";
+import imageUrlBuilder from "@sanity/image-url";
+import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!
-const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!
-const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2024-01-01'
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET!;
+const apiVersion = process.env.NEXT_PUBLIC_SANITY_API_VERSION || "2024-01-01";
 
 // Standard client for data fetching
 export const client = createClient({
@@ -14,7 +14,7 @@ export const client = createClient({
   useCdn: false, // Disable CDN for immediate updates
   // Enable CDN only for static content in production if needed
   // useCdn: process.env.NODE_ENV === 'production',
-})
+});
 
 // Preview client for draft content
 export const previewClient = createClient({
@@ -23,18 +23,18 @@ export const previewClient = createClient({
   apiVersion,
   useCdn: false,
   token: process.env.SANITY_API_READ_TOKEN,
-})
+});
 
 // Image URL builder
-const builder = imageUrlBuilder(client)
+const builder = imageUrlBuilder(client);
 
 export function urlFor(source: SanityImageSource) {
-  return builder.image(source)
+  return builder.image(source);
 }
 
 // Helper function to get client based on preview mode
 export function getClient(usePreview = false) {
-  return usePreview ? previewClient : client
+  return usePreview ? previewClient : client;
 }
 
 // Common GROQ queries
@@ -59,7 +59,7 @@ export const queries = {
     featured,
     "estimatedReadingTime": round(length(pt::text(content)) / 5 / 200)
   }`,
-  
+
   // Debug query to check all fields
   debugPostBySlug: `*[_type == "post" && slug.current == $slug][0] {
     _id,
@@ -192,56 +192,74 @@ export const queries = {
     bio,
     image,
     socialLinks
-  }`
-}
+  }`,
+
+  // Tienda Settings
+  tiendaSettings: `*[_type == "tiendaSettings"][0] {
+    _id,
+    heroImage {
+      asset->{
+        url
+      },
+      alt
+    },
+    heroTitle,
+    heroSubtitle
+  }`,
+};
 
 // Helper functions for fetching data
 export async function getAllPosts(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.allPosts)
+  const client = getClient(usePreview);
+  return await client.fetch(queries.allPosts);
 }
 
 export async function getPostBySlug(slug: string, usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.postBySlug, { slug })
+  const client = getClient(usePreview);
+  return await client.fetch(queries.postBySlug, { slug });
 }
 
 export async function getAllCategories(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.allCategories)
+  const client = getClient(usePreview);
+  return await client.fetch(queries.allCategories);
 }
 
 export async function getAllProducts(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.allProducts)
+  const client = getClient(usePreview);
+  return await client.fetch(queries.allProducts);
 }
 
 export async function getProductBySlug(slug: string, usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.productBySlug, { slug })
+  const client = getClient(usePreview);
+  return await client.fetch(queries.productBySlug, { slug });
 }
 
 export async function getMembershipContent(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.membershipContent)
+  const client = getClient(usePreview);
+  return await client.fetch(queries.membershipContent);
 }
 
 export async function getAllTestimonials(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.allTestimonials)
+  const client = getClient(usePreview);
+  return await client.fetch(queries.allTestimonials);
 }
 
 export async function getFeaturedTestimonials(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.featuredTestimonials)
+  const client = getClient(usePreview);
+  return await client.fetch(queries.featuredTestimonials);
 }
 
 export async function getPageBySlug(slug: string, usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.pageBySlug, { slug })
+  const client = getClient(usePreview);
+  return await client.fetch(queries.pageBySlug, { slug });
 }
 
 export async function getAllAuthors(usePreview = false) {
-  const client = getClient(usePreview)
-  return await client.fetch(queries.allAuthors)
-} 
+  const client = getClient(usePreview);
+  return await client.fetch(queries.allAuthors);
+}
+
+export async function getTiendaSettings(usePreview = false) {
+  const client = getClient(usePreview);
+  return await client.fetch(queries.tiendaSettings);
+}

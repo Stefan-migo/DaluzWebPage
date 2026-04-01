@@ -1,41 +1,83 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { NextRequest, NextResponse } from "next/server";
+import { createClient, createServiceRoleClient } from "@/utils/supabase/server";
+import { SupabaseClient } from "@supabase/supabase-js";
+
+async function verifyAdminUser(supabase: SupabaseClient) {
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) {
+    return { authorized: false, user: null, error: "Unauthorized" };
+  }
+
+  // Check if user is admin using the RPC function
+  const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
+    user_id: user.id,
+  });
+
+  if (adminError || !isAdmin) {
+    return {
+      authorized: false,
+      user,
+      error: "Forbidden: Admin access required",
+    };
+  }
+
+  return { authorized: true, user, error: null };
+}
 
 export async function GET(request: NextRequest) {
   try {
-    // TEMPORARY: Use service role to bypass RLS for debugging
-    // TODO: Revert to createClient() after fixing admin_users table
-    const supabase = createServiceRoleClient();
+    const supabase = await createClient();
+
+    // SECURITY: Verify user is admin
+    const adminCheck = await verifyAdminUser(supabase);
+    if (!adminCheck.authorized) {
+      return NextResponse.json(
+        { error: adminCheck.error },
+        { status: adminCheck.error === "Unauthorized" ? 401 : 403 },
+      );
+    }
+
+    // Use service role client for admin operations (bypasses RLS for full access)
+    const adminClient = createServiceRoleClient();
+
     const { searchParams } = new URL(request.url);
 
     // Pagination - Accept both page and offset parameters
-    const limit = parseInt(searchParams.get('limit') || '12');
-    const offsetParam = searchParams.get('offset');
-    const pageParam = searchParams.get('page');
-    
+    const limit = parseInt(searchParams.get("limit") || "12");
+    const offsetParam = searchParams.get("offset");
+    const pageParam = searchParams.get("page");
+
     // Use offset if provided, otherwise calculate from page
-    const offset = offsetParam ? parseInt(offsetParam) : (parseInt(pageParam || '1') - 1) * limit;
-    const page = offsetParam ? Math.floor(offset / limit) + 1 : parseInt(pageParam || '1');
+    const offset = offsetParam
+      ? parseInt(offsetParam)
+      : (parseInt(pageParam || "1") - 1) * limit;
+    const page = offsetParam
+      ? Math.floor(offset / limit) + 1
+      : parseInt(pageParam || "1");
 
     // Filters
-    const category = searchParams.get('category');
-    const search = searchParams.get('search');
-    const skinType = searchParams.get('skin_type');
-    const minPrice = searchParams.get('min_price');
-    const maxPrice = searchParams.get('max_price');
-    const featured = searchParams.get('featured');
-    const inStock = searchParams.get('in_stock');
-    const status = searchParams.get('status');
-    const includeArchived = searchParams.get('include_archived') === 'true';
+    const category = searchParams.get("category");
+    const search = searchParams.get("search");
+    const skinType = searchParams.get("skin_type");
+    const minPrice = searchParams.get("min_price");
+    const maxPrice = searchParams.get("max_price");
+    const featured = searchParams.get("featured");
+    const inStock = searchParams.get("in_stock");
+    const lowStock = searchParams.get("low_stock");
+    const status = searchParams.get("status");
+    const includeArchived = searchParams.get("include_archived") === "true";
 
     // Sort
-    const sortBy = searchParams.get('sort_by') || 'created_at';
-    const sortOrder = searchParams.get('sort_order') || 'desc';
+    const sortBy = searchParams.get("sort_by") || "created_at";
+    const sortOrder = searchParams.get("sort_order") || "desc";
 
-    // Build query with count option
-    let query = supabase
-      .from('products')
-      .select(`
+    // Build query with count option (use adminClient for bypass RLS)
+    let query = adminClient.from("products").select(
+      `
         *,
         categories:category_id (
           id,
@@ -52,11 +94,13 @@ export async function GET(request: NextRequest) {
           option3,
           is_default
         )
-      `, { count: 'exact' });
+      `,
+      { count: "exact" },
+    );
 
     // Apply filters
-    if (category && category !== 'all') {
-      query = query.eq('category_id', category);
+    if (category && category !== "all") {
+      query = query.eq("category_id", category);
     }
 
     if (search) {
@@ -64,49 +108,57 @@ export async function GET(request: NextRequest) {
     }
 
     if (skinType) {
-      query = query.contains('skin_type', [skinType]);
+      query = query.contains("skin_type", [skinType]);
     }
 
     if (minPrice) {
-      query = query.gte('price', parseFloat(minPrice));
+      query = query.gte("price", parseFloat(minPrice));
     }
 
     if (maxPrice) {
-      query = query.lte('price', parseFloat(maxPrice));
+      query = query.lte("price", parseFloat(maxPrice));
     }
 
-    if (featured === 'true') {
-      query = query.eq('is_featured', true);
+    if (featured === "true") {
+      query = query.eq("is_featured", true);
     }
 
-    if (inStock === 'true') {
-      query = query.gt('inventory_quantity', 0);
+    if (inStock === "true") {
+      query = query.gt("inventory_quantity", 0);
+    }
+
+    // Low stock filter (products with 5 or less units)
+    if (lowStock === "true") {
+      query = query.lte("inventory_quantity", 5);
     }
 
     // Status filtering - Admin can see all products
-    if (status && status !== 'all') {
-      query = query.eq('status', status);
+    if (status && status !== "all") {
+      query = query.eq("status", status);
     } else if (!includeArchived) {
       // Default to active products if no specific status requested
-      query = query.eq('status', 'active');
+      query = query.eq("status", "active");
     }
     // If includeArchived is true, show all products regardless of status
 
     // Apply sorting
     const sortColumn = getSortColumn(sortBy);
     const order = getSortOrder(sortBy);
-    query = query.order(sortColumn, { ascending: order === 'asc' });
+    query = query.order(sortColumn, { ascending: order === "asc" });
 
     // Execute query with pagination and get count
     // Note: range() must come AFTER select() for count to work properly
-    const { data: products, count, error } = await query
-      .range(offset, offset + limit - 1);
+    const {
+      data: products,
+      count,
+      error,
+    } = await query.range(offset, offset + limit - 1);
 
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return NextResponse.json(
-        { error: 'Failed to fetch products' },
-        { status: 500 }
+        { error: "Failed to fetch products" },
+        { status: 500 },
       );
     }
 
@@ -125,10 +177,10 @@ export async function GET(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error('API error:', error);
+    console.error("API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
@@ -140,51 +192,57 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
 
     const { data, error } = await supabase
-      .from('products')
+      .from("products")
       .insert([body])
       .select();
 
     if (error) {
-      console.error('Database error:', error);
+      console.error("Database error:", error);
       return NextResponse.json(
-        { error: 'Failed to create product' },
-        { status: 500 }
+        { error: "Failed to create product" },
+        { status: 500 },
       );
     }
 
     return NextResponse.json({ product: data[0] });
   } catch (error) {
-    console.error('API error:', error);
+    console.error("API error:", error);
     return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
+      { error: "Internal server error" },
+      { status: 500 },
     );
   }
 }
 
 function getSortColumn(sortBy: string): string {
   switch (sortBy) {
-    case 'price_asc':
-    case 'price_desc':
-      return 'price';
-    case 'name':
-      return 'name';
-    case 'newest':
-      return 'created_at';
-    case 'featured':
-      return 'is_featured';
+    case "price_asc":
+    case "price_desc":
+      return "price";
+    case "name":
+      return "name";
+    case "newest":
+      return "created_at";
+    case "featured":
+      return "is_featured";
     default:
-      return 'created_at';
+      return "created_at";
   }
 }
 
 function getSortOrder(sort: string) {
   switch (sort) {
-    case 'price_asc': return 'asc';
-    case 'price_desc': return 'desc';
-    case 'name': return 'asc';
-    case 'newest': return 'desc';
-    case 'featured': return 'desc';
-    default: return 'desc';
+    case "price_asc":
+      return "asc";
+    case "price_desc":
+      return "desc";
+    case "name":
+      return "asc";
+    case "newest":
+      return "desc";
+    case "featured":
+      return "desc";
+    default:
+      return "desc";
   }
 }

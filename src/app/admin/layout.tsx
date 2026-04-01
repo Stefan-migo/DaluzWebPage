@@ -1,20 +1,20 @@
 "use client";
 
-import { useEffect, useState, useRef } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { useAuthContext } from '@/contexts/AuthContext';
-import Link from 'next/link';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
-import Image from 'next/image';
-import { 
-  LayoutDashboard, 
-  ShoppingCart, 
-  Package, 
-  Users, 
-  BarChart3, 
+import { useEffect, useState, useRef } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import { useAuthContext } from "@/contexts/AuthContext";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
+import {
+  LayoutDashboard,
+  ShoppingCart,
+  Package,
+  Users,
+  BarChart3,
   Menu,
   LogOut,
   Bell,
@@ -23,9 +23,23 @@ import {
   Home,
   MessageSquare,
   Server,
-  Tag
-} from 'lucide-react';
-import AdminNotificationDropdown from '@/components/admin/AdminNotificationDropdown';
+  Tag,
+  Settings,
+  UserCircle,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import AdminNotificationDropdown from "@/components/admin/AdminNotificationDropdown";
+import {
+  ADMIN_STATS_REFRESH_INTERVAL,
+  ADMIN_CHECK_TIMEOUT,
+} from "@/constants/admin";
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -34,65 +48,65 @@ interface AdminLayoutProps {
 // Admin navigation items - will be populated dynamically
 const createNavigationItems = (ordersCount?: number) => [
   {
-    href: '/admin',
-    label: 'Dashboard',
+    href: "/admin",
+    label: "Dashboard",
     icon: LayoutDashboard,
-    description: 'Visión general y KPIs'
+    description: "Visión general y KPIs",
   },
   {
-    href: '/admin/orders',
-    label: 'Pedidos',
+    href: "/admin/orders",
+    label: "Pedidos",
     icon: ShoppingCart,
-    description: 'Gestión de pedidos',
-    badge: ordersCount !== undefined ? ordersCount.toString() : undefined
+    description: "Gestión de pedidos",
+    badge: ordersCount !== undefined ? ordersCount.toString() : undefined,
   },
   {
-    href: '/admin/products',
-    label: 'Productos',
+    href: "/admin/products",
+    label: "Productos",
     icon: Package,
-    description: 'Catálogo e inventario'
+    description: "Catálogo e inventario",
   },
   {
-    href: '/admin/categories',
-    label: 'Categorías',
+    href: "/admin/categories",
+    label: "Categorías",
     icon: Tag,
-    description: 'Gestión de categorías'
+    description: "Gestión de categorías",
   },
   {
-    href: '/admin/reviews',
-    label: 'Reseñas',
+    href: "/admin/reviews",
+    label: "Reseñas",
     icon: MessageSquare,
-    description: 'Moderación de reseñas'
+    description: "Moderación de reseñas",
   },
   {
-    href: '/admin/customers',
-    label: 'Clientes',
+    href: "/admin/customers",
+    label: "Clientes",
     icon: Users,
-    description: 'Gestión de clientes'
+    description: "Gestión de clientes",
   },
   {
-    href: '/admin/analytics',
-    label: 'Analíticas',
+    href: "/admin/analytics",
+    label: "Analíticas",
     icon: BarChart3,
-    description: 'Reportes y estadísticas'
+    description: "Reportes y estadísticas",
   },
   {
-    href: '/admin/support',
-    label: 'Soporte',
+    href: "/admin/support",
+    label: "Soporte",
     icon: MessageSquare,
-    description: 'Tickets y atención al cliente'
+    description: "Tickets y atención al cliente",
   },
   {
-    href: '/admin/admin-users',
-    label: 'Administradores',
+    href: "/admin/admin-users",
+    label: "Administradores",
     icon: Users,
-    description: 'Gestión de usuarios admin'
+    description: "Gestión de usuarios admin",
   },
   {
-    href: '/admin/system',
-    label: 'Sistema',
+    href: "/admin/system",
+    label: "Sistema",
     icon: Server,
-    description: 'Administración del sistema'
+    description: "Administración del sistema",
   },
 ];
 
@@ -112,7 +126,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     isChecking: true,
     isAdmin: false,
     hasChecked: false,
-    checkedUserId: null
+    checkedUserId: null,
   });
 
   // Dynamic stats state
@@ -125,17 +139,19 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     todayOrders: 0,
     totalOrders: 0,
     revenue: 0,
-    lowStock: 0
+    lowStock: 0,
   });
 
   // Add state to prevent multiple simultaneous admin checks
   const [isAdminCheckInProgress, setIsAdminCheckInProgress] = useState(false);
-  
+
   // Add ref to prevent multiple redirects
   const redirectInProgress = useRef(false);
-  
+
   // Debug mode - can be enabled via localStorage
-  const debugMode = typeof window !== 'undefined' && localStorage.getItem('admin-debug') === 'true';
+  const debugMode =
+    typeof window !== "undefined" &&
+    localStorage.getItem("admin-debug") === "true";
 
   // Fetch dashboard stats
   useEffect(() => {
@@ -143,46 +159,41 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       if (!adminState.isAdmin) return;
 
       try {
-        const response = await fetch('/api/admin/dashboard');
+        const response = await fetch("/api/admin/dashboard");
         if (response.ok) {
           const data = await response.json();
           setStats({
             todayOrders: data.todayOrders || 0,
             totalOrders: data.pendingOrders || 0,
             revenue: data.revenue || 0,
-            lowStock: data.lowStockProducts?.length || 0
+            lowStock: data.lowStockProducts?.length || 0,
           });
         }
       } catch (error) {
-        console.error('Error fetching stats:', error);
+        console.error("Error fetching stats:", error);
       }
     };
 
     fetchStats();
     // Refresh stats every 60 seconds
-    const interval = setInterval(fetchStats, 60000);
+    const interval = setInterval(fetchStats, ADMIN_STATS_REFRESH_INTERVAL);
     return () => clearInterval(interval);
   }, [adminState.isAdmin]);
 
   useEffect(() => {
     const checkAdminStatus = async () => {
-      console.log('🔍 Admin layout useEffect triggered:', { loading, user: !!user, userId: user?.id });
-      
       // Don't check admin status if auth is still loading
       if (loading) {
-        console.log('⏳ Auth still loading, waiting...');
-        // Don't set state here to avoid unnecessary re-renders
         return;
       }
 
       // Wait a bit longer after auth loads to ensure auth state is stable
       if (!user || !user.id) {
-        console.log('🔍 No user found, setting admin state to false');
         setAdminState({
           isChecking: false,
           isAdmin: false,
           hasChecked: true,
-          checkedUserId: null
+          checkedUserId: null,
         });
         return;
       }
@@ -190,69 +201,58 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       // Additional check: ensure we have a valid user with email
       // But don't wait for email - we can check admin with just user ID
       if (!user.email) {
-        console.log('🔍 User found but no email yet, waiting briefly...');
-        // Give it a small delay for email to populate, but don't block forever
         setTimeout(() => {
-          if (!user.email) {
-            console.log('⚠️ User still has no email after delay, proceeding with admin check anyway');
-          }
+          // Continue with admin check even without email
         }, 500);
       }
 
-      // 🚀 KEY FIX: Skip admin check if we already checked this exact user ID
-      // This prevents re-checking during token refresh events
-      if (adminState.hasChecked && adminState.checkedUserId === user.id && adminState.isAdmin) {
-        console.log('✅ Admin status already verified for user ID:', user.id, '- skipping re-check');
+      // Skip admin check if we already checked this exact user ID
+      if (
+        adminState.hasChecked &&
+        adminState.checkedUserId === user.id &&
+        adminState.isAdmin
+      ) {
         return;
       }
 
       // Prevent multiple simultaneous admin checks
       if (isAdminCheckInProgress) {
-        console.log('🔄 Admin check already in progress, skipping...');
         return;
       }
 
       // Start admin check
       setIsAdminCheckInProgress(true);
-      setAdminState(prev => ({ ...prev, isChecking: true, hasChecked: false }));
-      
+      setAdminState((prev) => ({
+        ...prev,
+        isChecking: true,
+        hasChecked: false,
+      }));
+
       try {
-        console.log('🔍 Checking admin status for user:', user.email);
-      
-      if (debugMode) {
-        console.log('🐛 DEBUG MODE: Bypassing admin check for debugging');
-        setAdminState({
-          isChecking: false,
-          isAdmin: true, // Force admin access in debug mode
-          hasChecked: true,
-          checkedUserId: user.id
-        });
-        setIsAdminCheckInProgress(false);
-        return;
-      }
-        
-        const { createClient } = await import('@/utils/supabase/client');
+        const { createClient } = await import("@/utils/supabase/client");
         const supabase = createClient();
 
         // Add timeout to admin check - reduced to 5 seconds for faster response
-        const adminCheckPromise = supabase.rpc('is_admin', { user_id: user.id });
-        const timeoutPromise = new Promise((_, reject) => 
-          setTimeout(() => reject(new Error('Admin check timeout')), 5000) // Reduced to 5 seconds
+        const adminCheckPromise = supabase.rpc("is_admin", {
+          user_id: user.id,
+        });
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(
+            () => reject(new Error("Admin check timeout")),
+            ADMIN_CHECK_TIMEOUT,
+          ),
         );
 
-        const { data, error } = await Promise.race([adminCheckPromise, timeoutPromise]) as any;
-        
+        const { data, error } = (await Promise.race([
+          adminCheckPromise,
+          timeoutPromise,
+        ])) as any;
+
         let isAdminResult = false;
-        
+
         if (error) {
-          if (error.message === 'Admin check timeout') {
-            console.error('⏱️ Admin check timed out');
-          } else {
-            console.error('❌ Error checking admin status:', error);
-          }
           isAdminResult = false;
         } else {
-          console.log('✅ Admin check result:', !!data);
           isAdminResult = !!data;
         }
 
@@ -261,32 +261,23 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           isChecking: false,
           isAdmin: isAdminResult,
           hasChecked: true,
-          checkedUserId: user.id // 🚀 KEY FIX: Store the user ID we checked
+          checkedUserId: user.id,
         });
         setIsAdminCheckInProgress(false);
-
-        console.log('🏁 Admin check completed, isAdmin:', isAdminResult);
-        
       } catch (error: any) {
-        if (error.message === 'Admin check timeout') {
-          console.error('⏱️ Admin check timed out - assuming not admin');
-        } else {
-          console.error('❌ Error checking admin status:', error);
-        }
-        
         // Atomic state update for error case
         setAdminState({
           isChecking: false,
           isAdmin: false,
           hasChecked: true,
-          checkedUserId: user.id
+          checkedUserId: user.id,
         });
         setIsAdminCheckInProgress(false);
       }
     };
 
     checkAdminStatus();
-  }, [user?.id, loading]); // 🚀 KEY FIX: Only depend on user.id instead of entire user object
+  }, [user?.id, loading]);
 
   useEffect(() => {
     // Skip if redirect is already in progress
@@ -296,18 +287,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
     // Only redirect after both auth and admin checks are COMPLETELY finished
     if (!loading && adminState.hasChecked && !adminState.isChecking) {
-      console.log('🔄 Admin redirect check:', { 
-        user: !!user, 
-        userEmail: user?.email,
-        isAdmin: adminState.isAdmin, 
-        loading, 
-        isChecking: adminState.isChecking,
-        hasChecked: adminState.hasChecked
-      });
-      
       // If user is admin, just mark as done and return early
       if (user && user.email && adminState.isAdmin) {
-        console.log('✅ Admin access confirmed immediately, showing dashboard');
         return;
       }
 
@@ -316,25 +297,30 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         redirectInProgress.current = true;
         setTimeout(() => {
           if (!user || !user.email) {
-            console.log('🚪 No user or email found after delay, redirecting to login');
-            router.push('/login');
+            router.push("/login");
             return;
           }
 
           // Check admin access - only redirect if we've definitely checked and user is not admin
           if (!adminState.isAdmin) {
-            console.log('🚫 User not admin after delay, redirecting to home');
-            router.push('/');
+            router.push("/");
             return;
           }
-        }, 500); // 500ms delay to let auth stabilize
+        }, 500);
       };
-      
+
       if (!user || !user.email || !adminState.isAdmin) {
         delayRedirect();
       }
     }
-  }, [user?.id, adminState.hasChecked, adminState.isChecking, adminState.isAdmin, loading, router]);
+  }, [
+    user?.id,
+    adminState.hasChecked,
+    adminState.isChecking,
+    adminState.isAdmin,
+    loading,
+    router,
+  ]);
 
   // Reset redirect flag when user changes
   useEffect(() => {
@@ -343,7 +329,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleSignOut = async () => {
     await signOut();
-    router.push('/');
+    router.push("/");
   };
 
   // Show loading while auth or admin check is in progress
@@ -354,16 +340,29 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-dorado mx-auto"></div>
           <div className="space-y-2">
             <p className="text-azul-profundo font-semibold">
-              {loading ? 'Cargando autenticación...' : 'Verificando permisos de admin...'}
+              {loading
+                ? "Cargando autenticación..."
+                : "Verificando permisos de admin..."}
             </p>
             <p className="text-tierra-media text-sm">
-              {loading ? 'Iniciando sesión...' : user?.email ? `Verificando acceso para ${user.email}` : 'Verificando permisos...'}
+              {loading
+                ? "Iniciando sesión..."
+                : user?.email
+                  ? `Verificando acceso para ${user.email}`
+                  : "Verificando permisos..."}
             </p>
-            <div className="text-xs text-gray-500 mt-2">
-              Estado: {loading ? 'Auth loading' : adminState.isChecking ? 'Admin checking' : adminState.hasChecked ? 'Check complete' : 'Not checked'} | 
-              User: {user ? '✓' : '✗'} | 
-              Admin: {adminState.isAdmin ? '✓' : '✗'} |
-              Checked: {adminState.hasChecked ? '✓' : '✗'}
+            <div className="text-xs text-tierra-media mt-2">
+              Estado:{" "}
+              {loading
+                ? "Auth loading"
+                : adminState.isChecking
+                  ? "Admin checking"
+                  : adminState.hasChecked
+                    ? "Check complete"
+                    : "Not checked"}{" "}
+              | User: {user ? "✓" : "✗"} | Admin:{" "}
+              {adminState.isAdmin ? "✓" : "✗"} | Checked:{" "}
+              {adminState.hasChecked ? "✓" : "✗"}
             </div>
           </div>
         </div>
@@ -374,36 +373,25 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   // If auth is loaded but user is not found or not admin, let the redirect useEffect handle it
   // Don't render the admin interface until we confirm admin access
   if (!user || !adminState.isAdmin) {
-    console.log('🚨 Access denied - showing redirect screen:', { 
-      user: !!user, 
-      isAdmin: adminState.isAdmin, 
-      loading, 
-      isChecking: adminState.isChecking,
-      hasChecked: adminState.hasChecked,
-      userEmail: user?.email 
-    });
-    
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center space-y-4">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-red-500 mx-auto"></div>
           <p className="text-red-600">
-            {!user ? 'Redirigiendo al login...' : 'Acceso no autorizado, redirigiendo...'}
+            {!user
+              ? "Redirigiendo al login..."
+              : "Acceso no autorizado, redirigiendo..."}
           </p>
-          <div className="text-xs text-gray-500">
-            User: {user ? '✓' : '✗'} | 
-            Admin: {adminState.isAdmin ? '✓' : '✗'} | 
-            Loading: {loading ? '✓' : '✗'} | 
-            Checking: {adminState.isChecking ? '✓' : '✗'} |
-            HasChecked: {adminState.hasChecked ? '✓' : '✗'}
+          <div className="text-xs text-tierra-media">
+            User: {user ? "✓" : "✗"} | Admin: {adminState.isAdmin ? "✓" : "✗"} |
+            Loading: {loading ? "✓" : "✗"} | Checking:{" "}
+            {adminState.isChecking ? "✓" : "✗"} | HasChecked:{" "}
+            {adminState.hasChecked ? "✓" : "✗"}
           </div>
         </div>
       </div>
     );
   }
-
-  // If we reach here, user is authenticated and is admin
-  console.log('🎉 Admin dashboard rendering for:', user.email);
 
   return (
     <div className="admin-layout">
@@ -414,21 +402,36 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" color="#F0EACE" />
+                  <Menu
+                    className="h-5 w-5"
+                    style={{ color: "var(--admin-text-inverse)" }}
+                  />
                 </Button>
               </SheetTrigger>
               <SheetContent side="left" className="w-80 p-0">
-                <AdminSidebar pathname={pathname} onNavigate={() => setSidebarOpen(false)} stats={stats} />
+                <AdminSidebar
+                  pathname={pathname}
+                  onNavigate={() => setSidebarOpen(false)}
+                  stats={stats}
+                />
               </SheetContent>
             </Sheet>
-            
-            <h1 className="admin-header-title">Admin</h1>
+
+            <h1
+              className="admin-header-title"
+              style={{ color: "var(--admin-text-inverse)" }}
+            >
+              Admin
+            </h1>
           </div>
-          
+
           <div className="admin-header-actions">
             <AdminNotificationDropdown />
             <Button variant="ghost" size="icon" onClick={handleSignOut}>
-              <LogOut className="h-5 w-5" color="#F0EACE" />
+              <LogOut
+                className="h-5 w-5"
+                style={{ color: "var(--admin-text-inverse)" }}
+              />
             </Button>
           </div>
         </div>
@@ -441,59 +444,102 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         </div>
 
         {/* Main Content */}
-        <div className="lg:pl-72"
-        style={{width: '-webkit-fill-available'}}
-        >
+        <div className="lg:pl-72" style={{ width: "-webkit-fill-available" }}>
           {/* Desktop Header */}
           <div className="hidden lg:block admin-header">
             <div className="admin-header-content">
               <div>
-                <h1 className="admin-header-title font-malisha text-[#F0EACE]">
+                <h1
+                  className="admin-header-title font-malisha"
+                  style={{ color: "var(--admin-text-inverse)" }}
+                >
                   DA LUZ CONSCIENTE
                 </h1>
-                <p className="admin-header-subtitle font-caption text-[#F0EACE]">Panel de Administración</p>
+                <p
+                  className="admin-header-subtitle font-caption"
+                  style={{ color: "var(--admin-text-inverse)", opacity: 0.8 }}
+                >
+                  Panel de Administración
+                </p>
               </div>
-              
+
               <div className="admin-header-actions">
+                {/* Notificaciones */}
                 <AdminNotificationDropdown />
-                
-                <div className="admin-header-user">
-                  <div className="admin-header-user-info">
-                    <p className="admin-header-user-name font-caption text-[#F0EACE]">
-                      {profile?.first_name ? `${profile.first_name} ${profile.last_name || ''}`.trim() : user.email}
-                    </p>
-                    <p className="admin-header-user-role font-caption text-[#F0EACE]">
-                      Administrador
-                    </p>
-                  </div>
-                  <Link href="/perfil">
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="hover:bg-[#AE000020] transition-colors"
-                      title="Ver perfil"
+
+                {/* Usuario - Dropdown Menu */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      className="admin-header-user-dropdown"
+                      aria-label="Menú de usuario"
                     >
-                      <User className="h-5 w-5" color="#F0EACE" />
-                    </Button>
-                  </Link>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    onClick={handleSignOut}
-                    className="hover:bg-[#AE000020] transition-colors"
-                    title="Cerrar sesión"
+                      <div className="admin-header-user-avatar">
+                        {profile?.first_name
+                          ? `${profile.first_name[0]}${profile.last_name?.[0] || ""}`.toUpperCase()
+                          : user.email?.[0]?.toUpperCase() || "U"}
+                      </div>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="admin-header-dropdown-content"
+                    align="end"
+                    sideOffset={8}
                   >
-                    <LogOut className="h-5 w-5" color="#F0EACE" />
-                  </Button>
-                </div>
+                    <DropdownMenuLabel className="admin-header-dropdown-label">
+                      <div className="admin-header-dropdown-user">
+                        <div className="admin-header-dropdown-avatar">
+                          {profile?.first_name
+                            ? `${profile.first_name[0]}${profile.last_name?.[0] || ""}`.toUpperCase()
+                            : user.email?.[0]?.toUpperCase() || "U"}
+                        </div>
+                        <div className="admin-header-dropdown-user-info">
+                          <p className="admin-header-dropdown-name">
+                            {profile?.first_name
+                              ? `${profile.first_name} ${profile.last_name || ""}`.trim()
+                              : user.email?.split("@")[0] || "Usuario"}
+                          </p>
+                          <p className="admin-header-dropdown-role">
+                            Administrador
+                          </p>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator className="admin-header-dropdown-separator" />
+                    <DropdownMenuItem
+                      asChild
+                      className="admin-header-dropdown-item"
+                    >
+                      <Link href="/perfil">
+                        <UserCircle className="h-4 w-4 mr-2" />
+                        Mi Perfil
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      asChild
+                      className="admin-header-dropdown-item"
+                    >
+                      <Link href="/configuracion">
+                        <Settings className="h-4 w-4 mr-2" />
+                        Configuración
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator className="admin-header-dropdown-separator" />
+                    <DropdownMenuItem
+                      onSelect={handleSignOut}
+                      className="admin-header-dropdown-logout"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Cerrar Sesión
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
 
           {/* Page Content */}
-          <main className="admin-content">
-            {children}
-          </main>
+          <main className="admin-content">{children}</main>
         </div>
       </div>
     </div>
@@ -501,12 +547,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 }
 
 // Sidebar Component
-function AdminSidebar({ 
-  pathname, 
+function AdminSidebar({
+  pathname,
   onNavigate,
-  stats
-}: { 
-  pathname: string; 
+  stats,
+}: {
+  pathname: string;
   onNavigate?: () => void;
   stats: {
     todayOrders: number;
@@ -521,38 +567,83 @@ function AdminSidebar({
       <div className="admin-sidebar-header">
         <Link href="/" className="admin-sidebar-logo">
           <div className="admin-sidebar-logo-icon">
-            <Image 
-                  src="/svg/logo.svg" 
-                  alt="DA LUZ Logo" 
-                  width={60} 
-                  height={60}
-                  className="transition-transform duration-300 hover:scale-105"
-                  style={{color: '#F0EACE'}}
-                />
+            <Image
+              src="/svg/logo.svg"
+              alt="DA LUZ Logo"
+              width={60}
+              height={60}
+              className="transition-transform duration-300 hover:scale-105"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
           </div>
-          <span className="font-malisha text-[#F0EACE]">DA LUZ</span>
+          <span
+            className="font-title"
+            style={{ color: "var(--admin-text-inverse)" }}
+          >
+            DA LUZ
+          </span>
         </Link>
       </div>
 
       {/* Quick Stats */}
       <div className="px-6">
-        <div className="admin-card">
+        <div
+          className="admin-card"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.1)",
+            borderColor: "rgba(253,243,227,0.3)",
+          }}
+        >
           <div className="admin-card-content">
-            <h3 className="admin-card-title">Resumen Rápido</h3>
+            <h3
+              className="admin-card-title"
+              style={{ color: "var(--admin-text-inverse)" }}
+            >
+              Resumen Rápido
+            </h3>
             <div className="space-y-2">
               <div className="flex justify-between text-xs">
-                <span className="text-gray-600">Pedidos Hoy</span>
-                <span className="font-medium text-gray-900">{stats.todayOrders}</span>
-              </div>
-              <div className="flex justify-between text-xs">
-                <span className="text-gray-600">Ventas</span>
-                <span className="font-medium text-green-600">
-                  ${stats.revenue.toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                <span
+                  style={{ color: "var(--admin-text-inverse)", opacity: 0.7 }}
+                >
+                  Pedidos Hoy
+                </span>
+                <span
+                  className="font-medium"
+                  style={{ color: "var(--admin-text-inverse)" }}
+                >
+                  {stats.todayOrders}
                 </span>
               </div>
               <div className="flex justify-between text-xs">
-                <span className="text-gray-600">Stock Bajo</span>
-                <span className="font-medium text-red-500">{stats.lowStock}</span>
+                <span
+                  style={{ color: "var(--admin-text-inverse)", opacity: 0.7 }}
+                >
+                  Ventas
+                </span>
+                <span
+                  className="font-medium"
+                  style={{ color: "var(--admin-accent-primary)" }}
+                >
+                  $
+                  {stats.revenue.toLocaleString("es-AR", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                  })}
+                </span>
+              </div>
+              <div className="flex justify-between text-xs">
+                <span
+                  style={{ color: "var(--admin-text-inverse)", opacity: 0.7 }}
+                >
+                  Stock Bajo
+                </span>
+                <span
+                  className="font-medium"
+                  style={{ color: "var(--admin-accent-tertiary)" }}
+                >
+                  {stats.lowStock}
+                </span>
               </div>
             </div>
           </div>
@@ -564,11 +655,7 @@ function AdminSidebar({
         <ul role="list" className="flex flex-1 flex-col gap-y-1">
           {/* Quick Return to Site */}
           <li className="mb-4">
-            <Link
-              href="/"
-              className="admin-nav-item"
-              onClick={onNavigate}
-            >
+            <Link href="/" className="admin-nav-item" onClick={onNavigate}>
               <Home className="h-5 w-5 shrink-0" />
               <span>Volver al Sitio</span>
               <ChevronRight className="h-4 w-4 ml-auto opacity-50 group-hover:opacity-100" />
@@ -576,33 +663,41 @@ function AdminSidebar({
           </li>
 
           {createNavigationItems(stats.totalOrders).map((item) => {
-            const isActive = pathname === item.href || 
-              (item.href !== '/admin' && pathname.startsWith(item.href));
-            
+            const isActive =
+              pathname === item.href ||
+              (item.href !== "/admin" && pathname.startsWith(item.href));
+
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   onClick={onNavigate}
-                  className={cn(
-                    'admin-nav-item',
-                    isActive && 'active'
-                  )}
+                  className={cn("admin-nav-item", isActive && "active")}
                 >
                   <item.icon className="h-5 w-5 shrink-0" />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <span>{item.label}</span>
                       {item.badge && (
-                        <Badge 
-                          variant="secondary" 
+                        <Badge
+                          variant="secondary"
                           className="admin-badge admin-badge-error"
+                          style={{
+                            backgroundColor: "var(--admin-accent-tertiary)",
+                            color: "white",
+                          }}
                         >
                           {item.badge}
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-1">
+                    <p
+                      className="text-xs mt-1"
+                      style={{
+                        color: "var(--admin-text-inverse)",
+                        opacity: 0.6,
+                      }}
+                    >
                       {item.description}
                     </p>
                   </div>
@@ -614,12 +709,21 @@ function AdminSidebar({
       </nav>
 
       {/* Footer */}
-      <div className="border-t border-gray-200 p-6">
+      <div
+        className="border-t p-4"
+        style={{ borderColor: "var(--admin-border-secondary)" }}
+      >
         <div className="text-center">
-          <p className="text-xs text-gray-500">
-            DA LUZ CONSCIENTE v1.0
+          <p
+            className="text-[10px]"
+            style={{ color: "var(--admin-text-inverse)", opacity: 0.6 }}
+          >
+            DA LUZ CONSCIENTE v2.0
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p
+            className="text-[10px] mt-1"
+            style={{ color: "var(--admin-text-inverse)", opacity: 0.6 }}
+          >
             Admin Panel
           </p>
         </div>
