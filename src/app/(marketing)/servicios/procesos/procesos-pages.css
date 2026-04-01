@@ -1,14 +1,16 @@
 /**
  * Procesos Pages - Shared Styles
  * Used by: /servicios/procesos, /servicios/procesos/ciclos-alquimicos, /servicios/procesos/sesiones-integrales
- * Design: Organic Z/S composition, dark forest green theme
+ * Design: Shared layout components and theme variables
  */
 
 /* ===========================
    COLOR VARIABLES & WRAPPER
    =========================== */
 .procesos-pages {
-  --procesos-bg: #011f18;
+  --procesos-bg: #0D3221;
+  --procesos-bg-mid: #0A432B;
+  --procesos-bg-light: #285D30;
   --procesos-cream: #fdfcf0;
   --procesos-text-on-cream: #011f18;
   --procesos-accent: #ffffff;
@@ -25,43 +27,28 @@
   position: relative;
   min-height: 100vh;
   width: 100%;
+  /* Rich gradient background using brand colors */
   background-color: var(--procesos-bg);
+  background-image:
+    radial-gradient(ellipse at 0% 0%, #285D30 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 30%, #0A432B 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 70%, #0A432B 0%, transparent 45%),
+    radial-gradient(ellipse at 80% 100%, #285D30 0%, transparent 50%),
+    linear-gradient(160deg, #0D3221 0%, #0A432B 40%, #285D30 75%, #0A432B 100%);
   overflow-x: hidden;
 }
 
-/* Background - full viewport coverage edge to edge */
+/* Background layer - kept for legacy support but no longer renders image */
 .procesos-page-bg {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100vw;
-  min-width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  background-color: var(--procesos-bg);
-  z-index: 0;
-  overflow: hidden;
+  display: none;
 }
 
 .procesos-bg-img {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  min-width: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  display: none;
 }
 
-/* BgGeneral - repeats vertically for long pages (ciclos-alquimicos) */
 .procesos-bg-general {
-  background-image: url("/svg/procesos/BgGeneral.webp");
-  background-repeat: repeat-y;
-  background-size: 100% auto;
-  background-position: top center;
+  display: none;
 }
 
 /* ===========================
@@ -71,17 +58,25 @@
 .procesos-header-band {
   position: relative;
   z-index: 10;
-  width: 100%;
-  background-color: rgba(253, 252, 240, 0.12);
-  padding: 2rem 1.5rem;
-  margin: 0;
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 290' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bfill:%230d3221;filter:url(%23ds-1)%7D%3C/style%3E%3Cfilter id='ds-1' x='-50' y='-20' width='2020' height='350' filterUnits='userSpaceOnUse'%3E%3CfeOffset dx='-7' dy='7'/%3E%3CfeGaussianBlur result='blur' stdDeviation='5'/%3E%3CfeFlood flood-color='%23000' flood-opacity='.5'/%3E%3CfeComposite in2='blur' operator='in'/%3E%3CfeComposite in='SourceGraphic'/%3E%3C/filter%3E%3C/defs%3E%3Cpath class='cls-1' d='M1920,0v65c-155,90-355,173-595,188-278,18-321-74-652-73C362,180,152,263,0,285V0h1920Z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: top center;
+  padding: 1.5rem 2rem 4rem;
+  margin-top: 0rem;
+  margin-bottom: -1rem;
 }
 
 .procesos-header-band-inner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
 }
 
 .procesos-band-title {
@@ -100,7 +95,8 @@
   background-color: var(--procesos-cream);
   color: var(--procesos-text-on-cream);
   padding: 2rem 2rem;
-  border-radius: 0 15px; /* Project default button style */
+  border-radius: 0 15px;
+  /* Project default button style */
   border: 1px solid rgba(1, 31, 24, 0.08);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   font-family: var(--font-text), var(--font-body), serif;
@@ -170,31 +166,6 @@
   transform: rotate(5deg);
 }
 
-/* Ciclos: tarjetas con borde default (igual que responsivo) */
-.ciclos-main .procesos-oval-box {
-  background-color: transparent;
-  border: 2px solid rgba(253, 252, 240, 0.6);
-  border-radius: 0 15px;
-  box-shadow: none;
-  width: 100%;
-  max-width: 100%;
-  padding: 1.5rem 1.25rem;
-  transform: none;
-}
-
-.ciclos-main .procesos-oval-box-inner {
-  transform: none;
-  color: var(--procesos-accent);
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: clamp(0.9375rem, 1.4vw, 1rem);
-  line-height: 1.65;
-}
-
-.ciclos-main .procesos-oval-box-inner strong {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-weight: 600;
-  color: var(--procesos-accent);
-}
 
 .procesos-oval-box-inner {
   transform: rotate(-5deg);
@@ -209,298 +180,6 @@
   font-weight: 600;
 }
 
-/* Ciclos page - main container */
-.ciclos-main {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-bottom: env(safe-area-inset-bottom, 2rem);
-}
-
-/* Ciclos page - alignment utilities (ovals) */
-.ciclos-oval-left {
-  margin-right: auto;
-}
-.ciclos-oval-right {
-  margin-left: auto;
-}
-.ciclos-oval-center {
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.ciclos-text-center .procesos-oval-box-inner {
-  text-align: center;
-}
-
-/* Ciclos section title box */
-.ciclos-cycle-title {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-weight: 600;
-  font-size: clamp(1.25rem, 3vw, 1.5rem);
-  color: var(--procesos-text-on-cream);
-  background-color: var(--procesos-cream);
-  padding: 0.75rem 1.5rem;
-  border-radius: 0 15px;
-  display: inline-block;
-}
-
-/* Ciclos section header (CICLOS ALQUIMICOS) */
-.ciclos-section-header {
-  font-family: var(--font-title), var(--font-velista), serif;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 400;
-  color: var(--procesos-accent);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-/* Ciclos link button - min 44px touch target */
-a.procesos-btn-cream.ciclos-detail-link {
-  font-size: 0.875rem;
-  padding: 0.75rem 1.5rem;
-  min-height: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Ciclos page - intro block */
-.ciclos-intro {
-  position: relative;
-  z-index: 10;
-  padding: 3rem 1.5rem 2.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.ciclos-intro-item {
-  margin-bottom: 1.5rem;
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: clamp(1rem, 2vw, 1.0625rem);
-  line-height: 1.7;
-  color: var(--procesos-accent);
-  max-width: 520px;
-}
-
-.ciclos-intro-item:last-of-type {
-  margin-bottom: 0;
-}
-
-.ciclos-intro-left {
-  margin-right: auto;
-  margin-left: 0;
-}
-
-.ciclos-intro-right {
-  margin-left: auto;
-  margin-right: 0;
-  text-align: right;
-}
-
-.ciclos-intro-cta {
-  text-align: center;
-  margin-top: 2rem;
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-size: clamp(1rem, 2.5vw, 1.125rem);
-  color: var(--procesos-accent);
-  line-height: 1.6;
-}
-
-/* Ciclos header band - full width como Sesiones */
-.ciclos-header-band {
-  position: relative;
-  z-index: 10;
-  width: 100%;
-  background-color: rgba(253, 252, 240, 0.12);
-  padding: 2rem 1.5rem;
-  margin: 0;
-}
-
-.ciclos-header-band-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-}
-
-/* Ciclos cycle block */
-.ciclos-cycle-block {
-  position: relative;
-  z-index: 10;
-  max-width: 1200px;
-  margin: 0 auto 4rem;
-  padding: 0 1.5rem;
-}
-
-.ciclos-cycle-block-last {
-  margin-bottom: 3rem;
-}
-
-.ciclos-cycle-header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.ciclos-cycle-subtitle {
-  text-align: center;
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: clamp(0.9375rem, 2vw, 1rem);
-  color: var(--procesos-accent);
-  margin-top: 0.5rem;
-  line-height: 1.6;
-}
-
-.ciclos-cycle-ovals {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  align-items: start;
-  margin: 2.5rem 0;
-}
-
-.ciclos-cycle-ovals-single {
-  grid-template-columns: 1fr;
-  justify-items: center;
-}
-
-.ciclos-cycle-cta {
-  margin-top: 2rem;
-  text-align: center;
-}
-
-.ciclos-cycle-cta .procesos-btn-cream {
-  display: inline-flex;
-  margin: 0 auto;
-}
-
-/* ===========================
-   SESIONES INTEGRALES PAGE
-   =========================== */
-.sesiones-header-band {
-  position: relative;
-  z-index: 10;
-  background-color: rgba(253, 252, 240, 0.12);
-  padding: 2rem 1.5rem;
-  margin: 0;
-}
-
-.sesiones-header-band-inner {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.sesiones-page-title {
-  font-family: var(--font-title), var(--font-velista), serif;
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
-  font-weight: 400;
-  color: var(--procesos-accent);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
-.sesiones-intro {
-  position: relative;
-  z-index: 10;
-  padding: 4rem 1.5rem 3rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.sesiones-intro-block {
-  margin-bottom: 2rem;
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: clamp(0.95rem, 2vw, 1.0625rem);
-  line-height: 1.65;
-  color: var(--procesos-accent);
-}
-
-.sesiones-intro-block:last-of-type {
-  margin-bottom: 0;
-}
-
-.sesiones-intro-block.sesiones-intro-left {
-  margin-right: auto;
-  max-width: 560px;
-}
-
-.sesiones-intro-block.sesiones-intro-right {
-  margin-left: auto;
-  max-width: 560px;
-  text-align: right;
-}
-
-.sesiones-grid {
-  position: relative;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto 4rem;
-  padding: 0 1.5rem;
-}
-
-.sesiones-card {
-  background-color: var(--procesos-cream);
-  color: var(--procesos-text-on-cream);
-  padding: 2rem 1.5rem;
-  border-radius: 0 15px;
-  border: 1px solid rgba(1, 31, 24, 0.08);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.sesiones-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-}
-
-.sesiones-card-title {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-weight: 600;
-  font-size: 1.125rem;
-  color: var(--procesos-text-on-cream);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 1.25rem;
-}
-
-.sesiones-card-body {
-  font-family: var(--font-text), var(--font-body), serif;
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  flex: 1;
-}
-
-.sesiones-card-body p {
-  margin-bottom: 0.875rem;
-}
-
-.sesiones-card-body p:last-child {
-  margin-bottom: 0;
-}
-
-.sesiones-card-body strong {
-  font-family: var(--font-subtitle), var(--font-heading), serif;
-  font-weight: 600;
-}
-
-.sesiones-card-cta {
-  margin-top: 1.5rem;
-}
-
-.sesiones-card-cta .procesos-btn-cream {
-  width: 100%;
-  font-size: 0.8125rem;
-  padding: 0.625rem 1rem;
-  text-align: center;
-}
 
 /* ===========================
    FOOTER CTA SECTION
@@ -528,34 +207,32 @@ a.procesos-btn-cream.ciclos-detail-link {
   align-items: center;
 }
 
-/* Procesos button - UNIFICADO (Cliente 2026) */
+/* Procesos button - cream style (Link styled as button) */
 a.procesos-btn-cream {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  /* Usar el sistema unificado de botones */
-  font-family: var(--font-title), var(--font-velista), serif;
-  text-transform: uppercase;
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 1px;
-  /* Color: beige fondo con verde oscuro texto (Procesos) */
-  background-color: var(--procesos-cream, #fff2db);
-  color: var(--procesos-text-on-cream, #011f18);
-  border: none;
+  background-color: var(--procesos-cream);
+  color: var(--procesos-text-on-cream);
+  border: 2px solid rgba(1, 31, 24, 0.2);
   border-radius: 0 15px;
-  padding: 0.75rem 2rem;
-  min-height: 44px;
+  font-family: var(--font-title), var(--font-velista), serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1rem 3rem;
+  min-height: 3.5rem;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
 a.procesos-btn-cream:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  /* Sin sombraextraña - solo transición suave */
-  color: var(--procesos-text-on-cream, #011f18);
+  background-color: #0b231ae8 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  color: #fffef5 !important;
 }
 
 /* ===========================
@@ -697,7 +374,7 @@ a.procesos-btn-cream:hover {
 
 .procesos-herramienta-desc {
   font-family: var(--font-text), var(--font-body), serif;
-  font-size: 0.9375rem;
+  font-size: 1.1rem;
   line-height: 1.65;
 }
 
@@ -748,10 +425,7 @@ a.procesos-btn-cream:hover {
   font-weight: 600;
 }
 
-.procesos-btn-inline {
-  display: inline-flex;
-  margin-top: 0.5rem;
-}
+
 
 .procesos-ciclo-featured .procesos-ciclo-body {
   border-left: 3px solid rgba(253, 252, 240, 0.5);
@@ -901,60 +575,6 @@ a.procesos-btn-cream:hover {
   .procesos-ciclo-featured .procesos-ciclo-body {
     margin-left: 0;
   }
-
-  .procesos-sesiones-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  /* Ciclos responsive - tablet */
-  .ciclos-main {
-    padding: 0 1rem 2rem;
-  }
-
-  .ciclos-intro {
-    padding: 2.5rem 1rem 2rem;
-  }
-
-  .ciclos-intro-right {
-    text-align: left;
-  }
-
-  .ciclos-header-band {
-    padding: 1.5rem 1rem;
-  }
-
-  .ciclos-cycle-block {
-    margin-bottom: 3rem;
-    padding: 0 1rem;
-  }
-
-  .ciclos-cycle-ovals {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-  }
-
-  .ciclos-cycle-cta .procesos-btn-cream {
-    width: 100%;
-    max-width: 320px;
-  }
-
-  /* Sesiones responsive */
-  .sesiones-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 0 1rem;
-    margin-bottom: 3rem;
-  }
-
-  .sesiones-intro {
-    padding: 3rem 1rem 2rem;
-  }
-
-  .sesiones-intro-block.sesiones-intro-right {
-    text-align: left;
-  }
 }
 
 /* ===========================
@@ -1005,86 +625,12 @@ a.procesos-btn-cream:hover {
   .procesos-page-cta-text {
     font-size: 0.9375rem;
   }
-
-  a.procesos-btn-cream {
-    max-width: 100%;
-    padding: 0.875rem 1.5rem;
-  }
-
-  /* Ciclos responsive - small mobile */
-  .ciclos-main {
-    padding: 0 0.75rem 1.5rem;
-  }
-
-  .ciclos-intro {
-    padding: 2rem 0.75rem 1.5rem;
-  }
-
-  .ciclos-intro-item {
-    font-size: 1rem;
-    max-width: 100%;
-  }
-
-  .ciclos-header-band {
-    padding: 1.25rem 0.75rem;
-  }
-
-  .ciclos-section-header {
-    font-size: clamp(1.25rem, 6vw, 1.5rem);
-  }
-
-  .ciclos-cycle-block {
-    margin-bottom: 2.5rem;
-    padding: 0 0.75rem;
-  }
-
-  .ciclos-cycle-block-last {
-    margin-bottom: 2rem;
-  }
-
-  .ciclos-cycle-title {
-    font-size: 1.125rem;
-    padding: 0.625rem 1.25rem;
-  }
-
-  .ciclos-cycle-subtitle {
-    font-size: 0.9375rem;
-  }
-
-  .ciclos-cycle-ovals {
-    gap: 1.25rem;
-    margin: 1.25rem 0;
-  }
-
-  .ciclos-main .procesos-oval-box {
-    padding: 1.25rem 1rem;
-  }
-
-  .ciclos-cycle-cta .procesos-btn-cream {
-    max-width: 100%;
-    min-height: 48px;
-    font-size: 0.8125rem;
-    padding: 0.875rem 1rem;
-  }
-
-  .sesiones-grid {
-    padding: 0 0.75rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .sesiones-card {
-    padding: 1.5rem 1.25rem;
-  }
-
-  .sesiones-intro {
-    padding: 2.5rem 0.75rem 1.5rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .procesos-organic-box,
-  .procesos-btn-cream,
-  .sesiones-card {
+  .procesos-btn-cream {
     transition: none;
   }
 
