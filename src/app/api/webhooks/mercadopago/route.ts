@@ -186,9 +186,9 @@ export async function POST(req: NextRequest) {
             paymentInfo.net_received_amount || paymentInfo.transaction_amount;
           updateData.fees = paymentInfo.fee_details
             ? paymentInfo.fee_details.reduce(
-                (sum: number, fee: any) => sum + fee.amount,
-                0,
-              )
+              (sum: number, fee: any) => sum + fee.amount,
+              0,
+            )
             : 0;
           // Update total_amount if not set
           if (!updateData.total_amount) {

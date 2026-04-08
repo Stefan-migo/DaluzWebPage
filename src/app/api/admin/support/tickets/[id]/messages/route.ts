@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function POST(
   request: NextRequest,
@@ -15,18 +15,9 @@ export async function POST(
       attachments = null
     } = body;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Verify ticket exists and get full details for email
     const { data: ticket, error: ticketError } = await supabase
@@ -135,18 +126,9 @@ export async function GET(
   try {
     const ticketId = params.id;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get all messages for the ticket
     const { data: messages, error } = await supabase

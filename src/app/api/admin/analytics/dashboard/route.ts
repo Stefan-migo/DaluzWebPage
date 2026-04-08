@@ -1,27 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServiceRoleClient } from '@/lib/supabase';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
     console.log('🔍 Analytics Dashboard API called');
     
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error('❌ User authentication failed:', userError);
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      console.log('❌ User is not admin:', user.email);
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const supabaseServiceRole = createServiceRoleClient();
+    const supabaseServiceRole = getServiceClient();
     const { searchParams } = new URL(request.url);
     const period = parseInt(searchParams.get('period') || '30');
 

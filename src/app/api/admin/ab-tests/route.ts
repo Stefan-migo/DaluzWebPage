@@ -1,28 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { requireAdmin } from '@/lib/auth/helpers';
 
 // GET: List all experiments with results
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Check if user is admin
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: adminData } = await supabase
-      .from("admin_users")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!adminData || !["admin", "super_admin"].includes(adminData.role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get experiments with results
     const { data: experiments, error } = await supabase
@@ -61,25 +45,9 @@ export async function GET(request: NextRequest) {
 // POST: Create new experiment
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Check if user is admin
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: adminData } = await supabase
-      .from("admin_users")
-      .select("role")
-      .eq("user_id", user.id)
-      .single();
-
-    if (!adminData || !["admin", "super_admin"].includes(adminData.role)) {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     const body = await request.json();
     const {

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { createServiceRoleClient } from "@/lib/supabase";
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 /**
  * GET /api/admin/system/backups
@@ -14,28 +13,11 @@ export async function GET(request: NextRequest) {
     const filename = searchParams.get("filename");
     const action = searchParams.get("action");
 
-    const supabase = await createClient();
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
-
-    const supabaseService = createServiceRoleClient();
+    const supabaseService = getServiceClient();
 
     // If filename and action=details, return backup details
     if (filename && action === "details") {
@@ -189,32 +171,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     console.log(
       `🔄 Starting backup restoration: ${backup_filename} by ${user.email}`,
     );
 
-    const supabaseService = createServiceRoleClient();
+    const supabaseService = getServiceClient();
     const restoreStartTime = new Date();
 
     // Step 1: Create safety backup if requested
@@ -755,30 +720,13 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     console.log(`🗑️ Deleting backup: ${backup_filename} by ${user.email}`);
 
-    const supabaseService = createServiceRoleClient();
+    const supabaseService = getServiceClient();
 
     // Delete the backup file from storage
     const { error: deleteError } = await supabaseService.storage

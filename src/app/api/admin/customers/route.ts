@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -14,28 +14,9 @@ export async function GET(request: NextRequest) {
 
     console.log('📊 Query params:', { search, membership_tier, status, page, limit });
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    console.log('🔐 Checking user authentication...');
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error('❌ User authentication failed:', userError);
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    console.log('✅ User authenticated:', user.email);
-
-    console.log('🔒 Checking admin privileges...');
-    const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (adminError) {
-      console.error('❌ Admin check error:', adminError);
-      return NextResponse.json({ error: 'Admin verification failed' }, { status: 500 });
-    }
-    if (!isAdmin) {
-      console.log('❌ User is not admin:', user.email);
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-    console.log('✅ Admin access confirmed for:', user.email);
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Build the query to get customers from profiles table
     console.log('🗄️ Building database query...');
@@ -119,28 +100,9 @@ export async function GET(request: NextRequest) {
 // Handle both analytics and customer creation
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    console.log('🔐 Checking user authentication...');
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error('❌ User authentication failed:', userError);
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    console.log('✅ User authenticated:', user.email);
-
-    console.log('🔒 Checking admin privileges...');
-    const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (adminError) {
-      console.error('❌ Admin check error:', adminError);
-      return NextResponse.json({ error: 'Admin verification failed' }, { status: 500 });
-    }
-    if (!isAdmin) {
-      console.log('❌ User is not admin:', user.email);
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-    console.log('✅ Admin access confirmed for:', user.email);
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get request body to determine action
     const body = await request.json();
@@ -174,7 +136,7 @@ export async function POST(request: NextRequest) {
       }
 
       // Use service role client to create auth user
-      const supabaseServiceRole = await createServiceRoleClient();
+      const supabaseServiceRole = getServiceClient();
 
       // Generate a random password (customer will reset it later)
       const randomPassword = crypto.randomUUID();

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,18 +7,9 @@ export async function GET(request: NextRequest) {
     const category_id = searchParams.get('category_id') || '';
     const active_only = searchParams.get('active_only') === 'true';
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Build the query
     let query = supabase
@@ -73,18 +64,9 @@ export async function POST(request: NextRequest) {
       variables = []
     } = body;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Create the template
     const { data: template, error: templateError } = await supabase
@@ -135,18 +117,9 @@ export async function PUT(request: NextRequest) {
       variables = {}
     } = body;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get the template
     const { data: template, error: templateError } = await supabase

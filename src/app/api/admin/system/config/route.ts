@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createServiceRoleClient } from "@/utils/supabase/server";
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -7,27 +7,9 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category") || "";
     const public_only = searchParams.get("public_only") === "true";
 
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Build the query
     let query = supabase.from("system_config").select("*");
@@ -98,27 +80,9 @@ export async function POST(request: NextRequest) {
       validation_rules,
     } = body;
 
-    const supabase = await createClient();
-
-    // Check admin authorization (only super admin can create config)
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Validate input
     if (!config_key || config_value === undefined) {
@@ -201,27 +165,9 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     const results = [];
 
@@ -257,7 +203,7 @@ export async function PUT(request: NextRequest) {
             config_key.includes("key"));
 
         // For sensitive configs, use service role client to bypass RLS
-        const dbClient = isSensitive ? createServiceRoleClient() : supabase;
+        const dbClient = isSensitive ? getServiceClient() : supabase;
 
         // If config doesn't exist, create it (upsert behavior)
         if (!existingConfig) {
@@ -296,7 +242,7 @@ export async function PUT(request: NextRequest) {
 
           // Create the config (use service role client for sensitive configs)
           const insertClient = configIsSensitive
-            ? createServiceRoleClient()
+            ? getServiceClient()
             : supabase;
           const { data: newConfig, error: createError } = await insertClient
             .from("system_config")

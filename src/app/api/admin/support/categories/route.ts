@@ -1,31 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 Support Categories API GET called');
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    console.log('🔐 Checking user authentication...');
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      console.error('❌ User authentication failed:', userError);
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-    console.log('✅ User authenticated:', user.email);
-
-    console.log('🔒 Checking admin privileges...');
-    const { data: isAdmin, error: adminError } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (adminError) {
-      console.error('❌ Admin check error:', adminError);
-      return NextResponse.json({ error: 'Admin verification failed' }, { status: 500 });
-    }
-    if (!isAdmin) {
-      console.log('❌ User is not admin:', user.email);
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-    console.log('✅ Admin access confirmed for:', user.email);
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get all support categories from database
     console.log('🗄️ Fetching support categories from database...');
@@ -71,18 +51,9 @@ export async function POST(request: NextRequest) {
       sort_order = 0
     } = body;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Create the category
     const { data: category, error: categoryError } = await supabase

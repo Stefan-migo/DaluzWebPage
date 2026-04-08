@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 import { EmailNotificationService } from '@/lib/email/notifications';
 
 export async function PATCH(
@@ -7,19 +7,9 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    console.log('🔍 Admin Orders PATCH called for order:', params.id);
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     const body = await request.json();
     const { status, payment_status, tracking_number, carrier } = body;
@@ -93,7 +83,7 @@ export async function PATCH(
     // Send email notifications based on status changes
     if (status && status !== currentOrder?.status) {
       try {
-        const supabaseAdmin = createServiceRoleClient();
+        const supabaseAdmin = getServiceClient();
         
         // Get full order details for email
         const { data: fullOrder } = await supabaseAdmin
@@ -179,19 +169,9 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    console.log('🔍 Admin Orders GET single order:', params.id);
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get order details
     const { data: order, error: orderError } = await supabase
@@ -237,19 +217,9 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    console.log('🗑️ Admin Orders DELETE called for order:', params.id);
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // First, delete all order items for this order
     console.log('🗑️ Deleting order items for order:', params.id);

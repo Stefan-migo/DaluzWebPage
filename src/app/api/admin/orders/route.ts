@@ -1,36 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: isAdmin, error: adminError } = await supabase.rpc(
-      "is_admin",
-      { user_id: user.id },
-    );
-    if (adminError) {
-      console.error("Admin verification error:", adminError);
-      return NextResponse.json(
-        { error: "Admin verification failed" },
-        { status: 500 },
-      );
-    }
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     const url = new URL(request.url);
     const status = url.searchParams.get("status");
@@ -121,27 +96,9 @@ export async function GET(request: NextRequest) {
 // Create manual order or get statistics
 export async function POST(request: NextRequest) {
   try {
-    console.log("🔍 Admin Orders API POST called");
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc("is_admin", {
-      user_id: user.id,
-    });
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     const body = await request.json();
     const { action } = body;
@@ -341,34 +298,9 @@ export async function POST(request: NextRequest) {
 // Delete a specific order by ID
 export async function DELETE(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Check admin authorization
-    const {
-      data: { user },
-      error: userError,
-    } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    const { data: isAdmin, error: adminError } = await supabase.rpc(
-      "is_admin",
-      { user_id: user.id },
-    );
-    if (adminError) {
-      console.error("Admin verification error:", adminError);
-      return NextResponse.json(
-        { error: "Admin verification failed" },
-        { status: 500 },
-      );
-    }
-    if (!isAdmin) {
-      return NextResponse.json(
-        { error: "Admin access required" },
-        { status: 403 },
-      );
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get order ID from URL params
     const { searchParams } = new URL(request.url);
