@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireAdmin } from '@/lib/auth/helpers';
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
