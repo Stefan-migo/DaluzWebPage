@@ -1,52 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
-import { MercadoPagoConfig, Preference } from "mercadopago";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
-import { createClient } from "@supabase/supabase-js";
-import {
-  getMercadoPagoConfig,
-  getMercadoPagoAccessToken,
-} from "@/lib/mercadopago/config";
+import { CheckoutService } from "@/lib/services/checkout.service";
+import type { CartItem, CustomerInfo } from "@/lib/services/checkout.service";
 
-// Type definitions for better type safety
-interface CartItem {
-  productId: string;
-  variantId?: string | null;
-  name: string;
-  price: number;
-  quantity: number;
-  image?: string;
-  size?: string | null;
-  sku?: string | null;
-}
-
-interface CustomerInfo {
-  email: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  address?: string;
-  addressNumber: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-  country?: string;
-  notes?: string;
-}
-
-interface CheckoutRequestBody {
-  items: CartItem[];
-  customerInfo: CustomerInfo;
-}
-
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
+const checkoutService = new CheckoutService();
 
 export async function POST(req: NextRequest) {
   try {
-    // Get Authorization header as fallback for cookie-based auth
+    // Authentication
     const authHeader = req.headers.get("authorization");
     const bearerToken = authHeader?.replace("Bearer ", "");
 
@@ -59,318 +21,99 @@ export async function POST(req: NextRequest) {
           get(name: string) {
             return cookieStore.get(name)?.value;
           },
-          set(name: string, value: string, options: any) {
-            // For API routes, we don't set cookies
-          },
-          remove(name: string, options: any) {
-            // For API routes, we don't remove cookies
-          },
+          set(name: string, value: string, options: any) {},
+          remove(name: string, options: any) {},
         },
       },
     );
 
-    // Simplified authentication - try token first, then cookies
     let user = null;
 
     if (bearerToken) {
-      const {
-        data: { user: tokenUser },
-      } = await supabase.auth.getUser(bearerToken);
+      const { data: { user: tokenUser } } = await supabase.auth.getUser(bearerToken);
       user = tokenUser;
     }
 
     if (!user) {
-      const {
-        data: { user: cookieUser },
-      } = await supabase.auth.getUser();
+      const { data: { user: cookieUser } } = await supabase.auth.getUser();
       user = cookieUser;
     }
 
     if (!user) {
       return NextResponse.json(
-        {
-          error: "Authentication required. Please log in and try again.",
-        },
+        { error: "Authentication required. Please log in and try again." },
         { status: 401 },
       );
     }
 
+    // Validate request body
     const body = await req.json();
-    const { items, customerInfo } = body;
+    const { items, customerInfo } = body as { items: CartItem[]; customerInfo: CustomerInfo };
 
     console.log("Checkout request received:", {
       itemsCount: items?.length,
       hasCustomerInfo: !!customerInfo,
-      customerInfoKeys: customerInfo ? Object.keys(customerInfo) : [],
     });
 
     if (!items || items.length === 0) {
-      console.error("Checkout validation failed: No items in cart");
       return NextResponse.json({ error: "No items in cart" }, { status: 400 });
     }
 
-    // Validate customerInfo exists
     if (!customerInfo) {
-      console.error("Checkout validation failed: Missing customerInfo");
       return NextResponse.json(
         { error: "Customer information is required" },
         { status: 400 },
       );
     }
 
-    // Validate addressNumber - make it more flexible
-    if (!customerInfo.addressNumber) {
-      console.error("Checkout validation failed: Missing addressNumber");
+    if (!customerInfo.addressNumber || customerInfo.addressNumber.trim() === "") {
       return NextResponse.json(
         { error: "Address number is required" },
         { status: 400 },
       );
     }
 
-    const streetNumber = parseInt(customerInfo.addressNumber, 10);
-    if (isNaN(streetNumber) || streetNumber <= 0) {
-      console.error(
-        "Checkout validation failed: Invalid address number",
-        customerInfo.addressNumber,
-      );
-      return NextResponse.json(
-        {
-          error: "Invalid address number",
-          details: `Address number must be a positive number. Received: ${customerInfo.addressNumber}`,
-        },
-        { status: 400 },
-      );
-    }
-
-    const totalAmount = items.reduce(
-      (acc: number, item: CartItem) => acc + item.price * item.quantity,
-      0,
-    );
-    const { data: order, error: orderError } = await supabaseAdmin
-      .from("orders")
-      .insert({
-        order_number: `DL-${Date.now()}`,
-        user_id: user.id,
-        email: customerInfo.email,
-        status: "pending",
-        subtotal: totalAmount,
-        total_amount: totalAmount,
-        currency: "ARS",
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error("Error creating order:", orderError);
-      return NextResponse.json(
-        { error: "Failed to create order" },
-        { status: 500 },
-      );
-    }
-
-    // Create order items
-    const orderItems = items.map((item: CartItem) => ({
-      order_id: order.id,
-      product_id: item.productId,
-      variant_id: item.variantId || null,
-      quantity: item.quantity,
-      unit_price: item.price,
-      total_price: item.price * item.quantity,
-      product_name: item.name,
-      variant_title: item.size || null,
-      sku: item.sku || null,
-    }));
-
-    const { error: orderItemsError } = await supabaseAdmin
-      .from("order_items")
-      .insert(orderItems);
-
-    if (orderItemsError) {
-      console.error("Error creating order items:", orderItemsError);
-      // Don't fail the whole process, but log the error
-      console.warn("Order created but order items failed:", order.id);
-    }
-
-    // Get MercadoPago configuration from database
-    const mpConfig = await getMercadoPagoConfig();
-    const accessToken = await getMercadoPagoAccessToken();
-
-    // Validate access token
-    if (
-      !accessToken ||
-      accessToken === "PROD_ACCESS_TOKEN_HERE" ||
-      accessToken.trim() === ""
-    ) {
-      console.error("Invalid or missing MercadoPago access token");
-      return NextResponse.json(
-        {
-          error: "MercadoPago configuration error",
-          details:
-            "Access token is not configured. Please configure MercadoPago credentials in the admin panel.",
-        },
-        { status: 500 },
-      );
-    }
-
-    // Create MercadoPago client
-    const mpClientConfig = new MercadoPagoConfig({
-      accessToken,
-      options: {
-        timeout: 5000,
-        idempotencyKey: "abc",
-      },
-    });
-
-    const preference = new Preference(mpClientConfig);
-
-    const preferenceItems = items.map((item: CartItem) => ({
-      id: item.productId,
-      title: item.name,
-      description: item.size,
-      picture_url: item.image,
-      quantity: item.quantity,
-      unit_price: item.price,
-      currency_id: "ARS",
-    }));
-
-    // Build payment methods configuration from database config
-    interface PaymentMethodsConfig {
-      excluded_payment_methods?: { id: string }[];
-      installments?: number;
-    }
-    const paymentMethodsConfig: PaymentMethodsConfig = {};
-    if (mpConfig.paymentMethods && mpConfig.paymentMethods.length > 0) {
-      // If specific methods are configured, exclude all others
-      // Note: account_money cannot be excluded per MercadoPago API restrictions
-      const allMethods = ["credit_card", "debit_card", "cash", "bank_transfer"];
-      const excludedMethods = allMethods.filter(
-        (m) => !mpConfig.paymentMethods.includes(m),
-      );
-      if (excludedMethods.length > 0) {
-        paymentMethodsConfig.excluded_payment_methods = excludedMethods.map(
-          (m) => ({ id: m }),
-        );
-      }
-    }
-
-    if (mpConfig.maxInstallments) {
-      paymentMethodsConfig.installments = mpConfig.maxInstallments;
-    }
+    // === Business Logic via Service ===
+    const order = await checkoutService.createOrder(user.id, customerInfo.email, items);
+    await checkoutService.createOrderItems(order.id, items);
 
     try {
-      const result = await preference.create({
-        body: {
-          items: preferenceItems,
-          payer: {
-            name: customerInfo.firstName,
-            surname: customerInfo.lastName,
-            email: customerInfo.email,
-          },
-          back_urls: {
-            success: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL}/checkout/success`,
-            failure: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL}/checkout/failure`,
-          },
-          auto_return: mpConfig.autoReturn ? "approved" : undefined,
-          binary_mode: mpConfig.binaryMode,
-          external_reference: order.id.toString(),
-          notification_url: `${process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL}/api/webhooks/mercadopago`,
-          payment_methods:
-            Object.keys(paymentMethodsConfig).length > 0
-              ? paymentMethodsConfig
-              : undefined,
-        },
-      });
-
-      await supabaseAdmin
-        .from("orders")
-        .update({ mercadopago_preference_id: result.id })
-        .eq("id", order.id);
-
+      const result = await checkoutService.createMercadoPagoPreference(order, items, customerInfo);
       return NextResponse.json({
-        id: result.id,
-        init_point: result.init_point,
+        id: result.preferenceId,
+        init_point: result.initPoint,
       });
     } catch (mpError: unknown) {
-      const error = mpError as Error & {
-        message?: string;
-        status?: number;
-        response?: unknown;
-        cause?: unknown;
-      };
+      const error = mpError as Error & { status?: number; response?: unknown };
       console.error("MercadoPago preference creation error:", error);
 
-      // Try to extract more detailed error information
-      let errorMessage =
-        error?.message || "Error creating MercadoPago preference";
-      let errorDetails: {
-        message: string;
-        response?: unknown;
-        mercadopagoResponse?: unknown;
-      } = {
-        message: errorMessage,
-      };
+      const errorMessage = error?.message || "Error creating MercadoPago preference";
 
-      // Check if there's a response with error details
-      if (error?.response) {
-        try {
-          const responseData =
-            typeof error.response === "string"
-              ? JSON.parse(error.response as string)
-              : error.response;
-          errorDetails = {
-            ...errorDetails,
-            response: error.response,
-            mercadopagoResponse: responseData,
-          };
-          if (
-            typeof responseData === "object" &&
-            responseData !== null &&
-            "message" in responseData
-          ) {
-            errorMessage = (responseData as { message: string }).message;
-          }
-        } catch (e) {
-          console.warn("Could not parse MercadoPago error response:", e);
-        }
-      }
+      // Rollback: mark order as failed
+      await checkoutService.markOrderFailed(order.id, errorMessage);
 
       const errorStatus = error?.status || 500;
-
       return NextResponse.json(
         {
           error: "Failed to create payment preference",
           details: errorMessage,
-          ...(process.env.NODE_ENV === "development" || errorStatus === 400
-            ? errorDetails
-            : {}),
         },
         { status: errorStatus >= 400 && errorStatus < 600 ? errorStatus : 500 },
       );
     }
   } catch (error) {
     console.error("Checkout API error:", error);
-    console.error("Error details:", {
-      message: error instanceof Error ? error.message : "Unknown error",
-      stack: error instanceof Error ? error.stack : "No stack trace",
-      name: error instanceof Error ? error.name : "Unknown error type",
-    });
     return NextResponse.json(
       {
         error: "Failed to process checkout",
         details: error instanceof Error ? error.message : "Unknown error",
-        stack:
-          process.env.NODE_ENV === "development"
-            ? error instanceof Error
-              ? error.stack
-              : "No stack"
-            : undefined,
       },
       { status: 500 },
     );
   }
 }
 
-// GET method to retrieve existing preference
+// GET method to retrieve existing order/preference
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -383,47 +126,31 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    const cookieStore = cookies();
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
           get(name: string) {
-            return cookies().get(name)?.value;
+            return cookieStore.get(name)?.value;
           },
-          set(name: string, value: string, options: any) {
-            // For API routes, we don't set cookies
-          },
-          remove(name: string, options: any) {
-            // For API routes, we don't remove cookies
-          },
+          set(name: string, value: string, options: any) {},
+          remove(name: string, options: any) {},
         },
       },
     );
 
-    // Get order from database
-    const { data: order, error: orderError } = await supabase
-      .from("orders")
-      .select("*")
-      .eq("id", orderId)
-      .single();
+    const orderData = await checkoutService.getOrder(orderId, supabase);
 
-    if (orderError || !order) {
+    if (!orderData) {
       return NextResponse.json(
         { error: "Orden no encontrada." },
         { status: 404 },
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      order_id: order.id,
-      status: order.status,
-      total_amount: order.total_amount || order.total,
-      currency: order.currency,
-      preference_id: order.mercadopago_preference_id,
-      created_at: order.created_at,
-    });
+    return NextResponse.json({ success: true, ...orderData });
   } catch (error) {
     console.error("Error retrieving checkout session:", error);
     return NextResponse.json(
