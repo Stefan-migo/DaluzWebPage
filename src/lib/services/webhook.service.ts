@@ -1,7 +1,9 @@
-import { createClient } from "@supabase/supabase-js";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { getMercadoPagoAccessToken } from "@/lib/mercadopago/config";
 import { EmailNotificationService } from "@/lib/email/notifications";
+import { OrdersRepository } from "@/lib/repositories/orders.repository";
+import { ProductsRepository } from "@/lib/repositories/products.repository";
+import { SystemRepository } from "@/lib/repositories/system.repository";
 
 // ============================================
 // Types
@@ -65,12 +67,13 @@ const STATUS_MAPPING: Record<MercadoPagoStatus, string> = {
 // Service
 // ============================================
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
-
 export class WebhookService {
+  constructor(
+    private ordersRepo: OrdersRepository,
+    private productsRepo: ProductsRepository,
+    private systemRepo: SystemRepository,
+  ) {}
+
   /**
    * Log webhook receipt in the database.
    */
@@ -80,7 +83,7 @@ export class WebhookService {
     options?: { responseCode?: number; errorMessage?: string },
   ): Promise<void> {
     try {
-      await supabaseAdmin.from("webhook_logs").insert({
+      await this.systemRepo.insertWebhookLog({
         webhook_type: "mercadopago",
         event_type: body?.type || "unknown",
         payload: status === "failed" && options?.errorMessage
@@ -104,18 +107,12 @@ export class WebhookService {
     options?: { responseCode?: number; errorMessage?: string },
   ): Promise<void> {
     try {
-      await supabaseAdmin
-        .from("webhook_logs")
-        .update({
-          status,
-          response_code: options?.responseCode || (status === "success" ? 200 : 500),
-          error_message: options?.errorMessage,
-          processed_at: new Date().toISOString(),
-        })
-        .eq("webhook_type", "mercadopago")
-        .eq("status", "pending")
-        .order("created_at", { ascending: false })
-        .limit(1);
+      await this.systemRepo.updateLatestPendingWebhookLog({
+        status,
+        response_code: options?.responseCode || (status === "success" ? 200 : 500),
+        error_message: options?.errorMessage,
+        processed_at: new Date().toISOString(),
+      });
     } catch (logError) {
       console.error("Error updating webhook log:", logError);
     }
@@ -170,12 +167,9 @@ export class WebhookService {
     }
 
     // Update order
-    const { error } = await supabaseAdmin
-      .from("orders")
-      .update(updateData)
-      .eq("id", orderId);
-
-    if (error) {
+    try {
+      await this.ordersRepo.update(orderId, updateData as unknown as Record<string, unknown>);
+    } catch (error) {
       console.error("Error updating order status:", error);
       throw new Error("Failed to update order");
     }
@@ -197,18 +191,7 @@ export class WebhookService {
    */
   private async sendConfirmationEmail(orderId: string): Promise<void> {
     try {
-      const { data: order } = await supabaseAdmin
-        .from("orders")
-        .select(`
-          *,
-          order_items (
-            *,
-            product_name,
-            variant_title
-          )
-        `)
-        .eq("id", orderId)
-        .single();
+      const order = await this.ordersRepo.findByIdWithItems(orderId);
 
       if (order && order.email) {
         await EmailNotificationService.sendOrderConfirmation(order);
@@ -224,49 +207,33 @@ export class WebhookService {
    */
   async updateInventory(orderId: string): Promise<void> {
     try {
-      const { data: orderItems } = await supabaseAdmin
-        .from("order_items")
-        .select("product_id, quantity")
-        .eq("order_id", orderId);
+      const orderItems = await this.ordersRepo.getItemsByOrderId(orderId);
 
       if (!orderItems || orderItems.length === 0) return;
 
       for (const item of orderItems) {
         try {
-          const { error: stockError } = await supabaseAdmin.rpc(
-            "decrease_product_stock",
-            {
-              product_id: item.product_id,
-              quantity: item.quantity,
-            },
-          );
+          await this.productsRepo.decreaseStock(item.product_id, item.quantity);
+        } catch (stockError) {
+          console.warn("RPC function failed, updating inventory directly:", stockError);
+          const product = await this.productsRepo.findById(item.product_id);
 
-          if (stockError) {
-            console.warn("RPC function failed, updating inventory directly:", stockError);
-            const { data: product } = await supabaseAdmin
-              .from("products")
-              .select("inventory_quantity, stock_quantity")
-              .eq("id", item.product_id)
-              .single();
-
-            if (product) {
-              const newInventory = Math.max(0, (product.inventory_quantity ?? 0) - item.quantity);
-              const newStock = Math.max(
-                0,
-                (product.stock_quantity ?? product.inventory_quantity ?? 0) - item.quantity,
-              );
-              await supabaseAdmin
-                .from("products")
-                .update({
-                  inventory_quantity: newInventory,
-                  stock_quantity: newStock,
-                  updated_at: new Date().toISOString(),
-                })
-                .eq("id", item.product_id);
+          if (product) {
+            const newInventory = Math.max(0, (product.inventory_quantity ?? 0) - item.quantity);
+            const newStock = Math.max(
+              0,
+              (product.stock_quantity ?? product.inventory_quantity ?? 0) - item.quantity,
+            );
+            try {
+              await this.productsRepo.update(item.product_id, {
+                inventory_quantity: newInventory,
+                stock_quantity: newStock,
+                updated_at: new Date().toISOString(),
+              });
+            } catch (updateErr) {
+              console.error(`Failed to update inventory for product ${item.product_id}:`, updateErr);
             }
           }
-        } catch (err) {
-          console.error(`Failed to update inventory for product ${item.product_id}:`, err);
         }
       }
     } catch (inventoryError) {
@@ -279,29 +246,19 @@ export class WebhookService {
    */
   async grantTreasures(orderId: string): Promise<void> {
     try {
-      const { data: orderData } = await supabaseAdmin
-        .from("orders")
-        .select("user_id")
-        .eq("id", orderId)
-        .single();
+      const orderData = await this.ordersRepo.findById(orderId);
 
       if (!orderData?.user_id) return;
 
-      const { data: treasureResults, error: treasureError } =
-        await supabaseAdmin.rpc("grant_treasures_from_order", {
-          p_user_id: orderData.user_id,
-          p_order_id: orderId,
-          p_access_ids: [] as string[],
-        });
+      const treasureResults = await this.systemRepo.grantTreasures(
+        orderData.user_id,
+        orderId,
+      );
 
-      if (treasureError) {
-        console.error("Error granting treasures:", treasureError);
-      } else {
-        console.log(
-          `Treasures granted to user ${orderData.user_id}:`,
-          treasureResults,
-        );
-      }
+      console.log(
+        `Treasures granted to user ${orderData.user_id}:`,
+        treasureResults,
+      );
     } catch (treasureError) {
       console.error("Error in tesoro grant process:", treasureError);
     }
@@ -312,14 +269,11 @@ export class WebhookService {
    */
   async getWebhookSecret(): Promise<string | undefined> {
     try {
-      const { data: configs } = await supabaseAdmin
-        .from("system_config")
-        .select("config_key, config_value")
-        .in("config_key", [
-          "mercadopago_test_mode",
-          "mercadopago_webhook_secret",
-          "mercadopago_test_webhook_secret",
-        ]);
+      const configs = await this.systemRepo.getConfigs([
+        "mercadopago_test_mode",
+        "mercadopago_webhook_secret",
+        "mercadopago_test_webhook_secret",
+      ]);
 
       if (configs && configs.length > 0) {
         const configMap: Record<string, string | boolean> = {};

@@ -1,9 +1,9 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { MercadoPagoConfig, Preference } from "mercadopago";
 import {
   getMercadoPagoConfig,
   getMercadoPagoAccessToken,
 } from "@/lib/mercadopago/config";
+import { OrdersRepository } from "@/lib/repositories/orders.repository";
 
 // ============================================
 // Types
@@ -54,12 +54,9 @@ export interface OrderRecord {
 // Service
 // ============================================
 
-const supabaseAdmin = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-);
-
 export class CheckoutService {
+  constructor(private ordersRepo: OrdersRepository) {}
+
   /**
    * Create an order in the database.
    */
@@ -69,9 +66,8 @@ export class CheckoutService {
       0,
     );
 
-    const { data: order, error } = await supabaseAdmin
-      .from("orders")
-      .insert({
+    try {
+      const order = await this.ordersRepo.insert({
         order_number: `DL-${Date.now()}`,
         user_id: userId,
         email,
@@ -79,16 +75,13 @@ export class CheckoutService {
         subtotal: totalAmount,
         total_amount: totalAmount,
         currency: "ARS",
-      })
-      .select()
-      .single();
+      });
 
-    if (error) {
+      return order as OrderRecord;
+    } catch (error) {
       console.error("Error creating order:", error);
       throw new Error("Failed to create order");
     }
-
-    return order as OrderRecord;
   }
 
   /**
@@ -107,11 +100,9 @@ export class CheckoutService {
       sku: item.sku || null,
     }));
 
-    const { error } = await supabaseAdmin
-      .from("order_items")
-      .insert(orderItems);
-
-    if (error) {
+    try {
+      await this.ordersRepo.insertItems(orderItems);
+    } catch (error) {
       console.error("Error creating order items:", error);
       // Rollback: delete the orphan order
       await this.rollbackOrder(orderId);
@@ -204,10 +195,7 @@ export class CheckoutService {
     });
 
     // Save preference ID to the order
-    await supabaseAdmin
-      .from("orders")
-      .update({ mercadopago_preference_id: result.id })
-      .eq("id", order.id);
+    await this.ordersRepo.update(order.id, { mercadopago_preference_id: result.id });
 
     return {
       preferenceId: result.id!,
@@ -219,7 +207,11 @@ export class CheckoutService {
    * Delete an orphan order (used when items or MP fails).
    */
   async rollbackOrder(orderId: string): Promise<void> {
-    await supabaseAdmin.from("orders").delete().eq("id", orderId);
+    try {
+      await this.ordersRepo.remove(orderId);
+    } catch (err) {
+      console.error(`Failed to rollback order ${orderId}:`, err);
+    }
     console.error(`🔄 Rolled back order ${orderId}`);
   }
 
@@ -228,13 +220,10 @@ export class CheckoutService {
    */
   async markOrderFailed(orderId: string, reason: string): Promise<void> {
     try {
-      await supabaseAdmin
-        .from("orders")
-        .update({
-          status: "failed",
-          customer_notes: `MercadoPago Error: ${reason.substring(0, 200)}`,
-        })
-        .eq("id", orderId);
+      await this.ordersRepo.update(orderId, {
+        status: "failed",
+        customer_notes: `MercadoPago Error: ${reason.substring(0, 200)}`,
+      });
       console.error(`🔄 Order ${orderId} marked as failed`);
     } catch (rollbackError) {
       console.error("Failed to rollback order status:", rollbackError);
@@ -244,14 +233,10 @@ export class CheckoutService {
   /**
    * Retrieve an order by ID.
    */
-  async getOrder(orderId: string, supabase: SupabaseClient) {
-    const { data: order, error } = await supabase
-      .from("orders")
-      .select("*")
-      .eq("id", orderId)
-      .single();
+  async getOrder(orderId: string) {
+    const order = await this.ordersRepo.findById(orderId);
 
-    if (error || !order) {
+    if (!order) {
       return null;
     }
 

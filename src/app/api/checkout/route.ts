@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import { getServiceClient } from "@/lib/auth/helpers";
+import { OrdersRepository } from "@/lib/repositories/orders.repository";
 import { CheckoutService } from "@/lib/services/checkout.service";
 import type { CartItem, CustomerInfo } from "@/lib/services/checkout.service";
-
-const checkoutService = new CheckoutService();
 
 export async function POST(req: NextRequest) {
   try {
@@ -72,6 +72,10 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
+
+    // === Instantiate service chain (service client bypasses RLS) ===
+    const ordersRepo = new OrdersRepository(getServiceClient());
+    const checkoutService = new CheckoutService(ordersRepo);
 
     // === Business Logic via Service ===
     const order = await checkoutService.createOrder(user.id, customerInfo.email, items);
@@ -141,7 +145,11 @@ export async function GET(request: NextRequest) {
       },
     );
 
-    const orderData = await checkoutService.getOrder(orderId, supabase);
+    // User-scoped repo respects RLS
+    const ordersRepo = new OrdersRepository(supabase);
+    const checkoutService = new CheckoutService(ordersRepo);
+
+    const orderData = await checkoutService.getOrder(orderId);
 
     if (!orderData) {
       return NextResponse.json(

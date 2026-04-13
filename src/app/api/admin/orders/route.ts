@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/helpers";
+import { OrdersRepository } from "@/lib/repositories/orders.repository";
 import { OrdersService } from "@/lib/services/orders.service";
 import type { ManualOrderData } from "@/lib/services/orders.service";
 
@@ -8,7 +9,8 @@ export async function GET(request: NextRequest) {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
 
-    const service = new OrdersService(auth.supabase);
+    const ordersRepo = new OrdersRepository(auth.supabase);
+    const service = new OrdersService(ordersRepo);
     const url = new URL(request.url);
 
     const result = await service.listOrders({
@@ -32,7 +34,8 @@ export async function POST(request: NextRequest) {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
 
-    const service = new OrdersService(auth.supabase);
+    const ordersRepo = new OrdersRepository(auth.supabase);
+    const service = new OrdersService(ordersRepo);
     const body = await request.json();
     const { action } = body;
 
@@ -76,7 +79,8 @@ export async function DELETE(request: NextRequest) {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
 
-    const service = new OrdersService(auth.supabase);
+    const ordersRepo = new OrdersRepository(auth.supabase);
+    const service = new OrdersService(ordersRepo);
     const { searchParams } = new URL(request.url);
     const orderId = searchParams.get("id");
 

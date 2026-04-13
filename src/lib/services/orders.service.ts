@@ -1,14 +1,11 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { OrdersRepository } from "@/lib/repositories/orders.repository";
+import type { OrderListFilters } from "@/lib/repositories/orders.repository";
 
 // ============================================
 // Types
 // ============================================
 
-export interface OrderFilters {
-  status?: string | null;
-  limit: number;
-  offset: number;
-}
+export type { OrderListFilters as OrderFilters };
 
 export interface ManualOrderData {
   email: string;
@@ -57,57 +54,18 @@ interface TransformedOrder {
 // ============================================
 
 export class OrdersService {
-  constructor(private supabase: SupabaseClient) {}
+  constructor(private ordersRepo: OrdersRepository) {}
 
   /**
    * List orders with pagination and optional status filter.
    */
-  async listOrders(filters: OrderFilters): Promise<{
+  async listOrders(filters: OrderListFilters): Promise<{
     orders: TransformedOrder[];
     total: number;
     offset: number;
     limit: number;
   }> {
-    let query = this.supabase
-      .from("orders")
-      .select(
-        `
-        id,
-        order_number,
-        email,
-        status,
-        payment_status,
-        total_amount,
-        currency,
-        created_at,
-        updated_at,
-        mp_payment_id,
-        mp_payment_method,
-        mp_payment_type,
-        order_items (
-          id,
-          product_name,
-          variant_title,
-          quantity,
-          unit_price,
-          total_price
-        )
-      `,
-        { count: "exact" },
-      )
-      .order("created_at", { ascending: false })
-      .range(filters.offset, filters.offset + filters.limit - 1);
-
-    if (filters.status && filters.status !== "all") {
-      query = query.eq("status", filters.status);
-    }
-
-    const { data: orders, error, count } = await query;
-
-    if (error) {
-      console.error("Error fetching admin orders:", error);
-      throw new Error("Failed to fetch orders");
-    }
+    const { data: orders, count } = await this.ordersRepo.list(filters);
 
     const transformedOrders: TransformedOrder[] = (orders || []).map((order: Record<string, unknown>) => ({
       id: order.id as string,
@@ -150,14 +108,7 @@ export class OrdersService {
     }>;
   }> {
     // Get order counts by status
-    const { data: allOrders, error: statusError } = await this.supabase
-      .from("orders")
-      .select("status");
-
-    if (statusError) {
-      console.error("❌ Error getting order stats:", statusError);
-      throw statusError;
-    }
+    const allOrders = await this.ordersRepo.getAllStatuses();
 
     const statusCounts: Record<string, number> =
       allOrders?.reduce((acc: Record<string, number>, order: { status: string }) => {
@@ -170,36 +121,20 @@ export class OrdersService {
     startOfMonth.setDate(1);
     startOfMonth.setHours(0, 0, 0, 0);
 
-    const { data: revenueData, error: revenueError } = await this.supabase
-      .from("orders")
-      .select("total_amount")
-      .eq("payment_status", "paid")
-      .gte("created_at", startOfMonth.toISOString());
-
-    if (revenueError) {
-      console.error("❌ Error getting revenue stats:", revenueError);
-      throw revenueError;
-    }
+    const revenueData = await this.ordersRepo.getPaidRevenueSince(
+      startOfMonth.toISOString(),
+    );
 
     const totalRevenue =
       revenueData?.reduce((sum: number, order: { total_amount: number }) => sum + order.total_amount, 0) || 0;
 
     // Get recent orders
-    const { data: recentOrders, error: recentError } = await this.supabase
-      .from("orders")
-      .select("id, order_number, email, status, total_amount, created_at")
-      .order("created_at", { ascending: false })
-      .limit(10);
-
-    if (recentError) {
-      console.error("❌ Error getting recent orders:", recentError);
-      throw recentError;
-    }
+    const recentOrdersRaw = await this.ordersRepo.getRecent(10);
 
     return {
       orderCounts: statusCounts,
       totalRevenue,
-      recentOrders: (recentOrders || []).map((order: Record<string, unknown>) => ({
+      recentOrders: (recentOrdersRaw || []).map((order: Record<string, unknown>) => ({
         id: order.id as string,
         order_number: order.order_number as string,
         customer_name: "Cliente",
@@ -223,9 +158,9 @@ export class OrdersService {
 
     const orderNumber = `DL-${Date.now()}`;
 
-    const { data: newOrder, error: orderError } = await this.supabase
-      .from("orders")
-      .insert({
+    let newOrder: Record<string, unknown>;
+    try {
+      newOrder = await this.ordersRepo.insert({
         order_number: orderNumber,
         email: orderData.email,
         status: dbStatus,
@@ -242,13 +177,10 @@ export class OrdersService {
         shipping_state: orderData.shipping?.state,
         shipping_postal_code: orderData.shipping?.postal_code,
         shipping_phone: orderData.shipping?.phone,
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      console.error("❌ Error creating manual order:", orderError);
-      throw new Error(`Failed to create order: ${orderError.message}`);
+      });
+    } catch (error: any) {
+      console.error("❌ Error creating manual order:", error);
+      throw new Error(`Failed to create order: ${error.message}`);
     }
 
     // Create order items if provided
@@ -263,11 +195,9 @@ export class OrdersService {
         variant_title: item.variant_title,
       }));
 
-      const { error: itemsError } = await this.supabase
-        .from("order_items")
-        .insert(orderItems);
-
-      if (itemsError) {
+      try {
+        await this.ordersRepo.insertItems(orderItems);
+      } catch (itemsError) {
         console.error("❌ Error creating order items:", itemsError);
       }
     }
@@ -281,35 +211,25 @@ export class OrdersService {
    */
   async deleteOrder(orderId: string): Promise<string> {
     // Verify order exists
-    const { data: existingOrder, error: orderCheckError } = await this.supabase
-      .from("orders")
-      .select("id, order_number")
-      .eq("id", orderId)
-      .single();
+    const existingOrder = await this.ordersRepo.findById(orderId);
 
-    if (orderCheckError || !existingOrder) {
+    if (!existingOrder) {
       throw new Error("Order not found");
     }
 
     // Delete order items first
-    const { error: itemsError } = await this.supabase
-      .from("order_items")
-      .delete()
-      .eq("order_id", orderId);
-
-    if (itemsError) {
-      console.error("Error deleting order items:", itemsError);
+    try {
+      await this.ordersRepo.removeItemsByOrderId(orderId);
+    } catch (error) {
+      console.error("Error deleting order items:", error);
       throw new Error("Failed to delete order items");
     }
 
     // Delete the order
-    const { error: deleteError } = await this.supabase
-      .from("orders")
-      .delete()
-      .eq("id", orderId);
-
-    if (deleteError) {
-      console.error("Error deleting order:", deleteError);
+    try {
+      await this.ordersRepo.remove(orderId);
+    } catch (error) {
+      console.error("Error deleting order:", error);
       throw new Error("Failed to delete order");
     }
 

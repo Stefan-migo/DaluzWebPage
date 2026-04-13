@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
+import { getServiceClient } from "@/lib/auth/helpers";
+import { OrdersRepository } from "@/lib/repositories/orders.repository";
+import { ProductsRepository } from "@/lib/repositories/products.repository";
+import { SystemRepository } from "@/lib/repositories/system.repository";
 import { WebhookService } from "@/lib/services/webhook.service";
 import type { WebhookPayload } from "@/lib/services/webhook.service";
-
-const webhookService = new WebhookService();
 
 // ============================================
 // Signature Verification
 // ============================================
 
-const verifySignature = async (req: NextRequest): Promise<boolean> => {
+const verifySignature = async (
+  req: NextRequest,
+  webhookService: WebhookService,
+): Promise<boolean> => {
   const signature = req.headers.get("x-signature");
   const timestamp = req.headers.get("x-request-id");
 
@@ -43,9 +48,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
+  // Instantiate service chain (service client bypasses RLS)
+  const supabaseService = getServiceClient();
+  const ordersRepo = new OrdersRepository(supabaseService);
+  const productsRepo = new ProductsRepository(supabaseService);
+  const systemRepo = new SystemRepository(supabaseService);
+  const webhookService = new WebhookService(ordersRepo, productsRepo, systemRepo);
+
   // Verify signature in production
   if (process.env.NODE_ENV === "production") {
-    const isValid = await verifySignature(req);
+    const isValid = await verifySignature(req, webhookService);
     if (!isValid) {
       console.error("Invalid webhook signature detected");
       await webhookService.logWebhook(body, "failed", {
