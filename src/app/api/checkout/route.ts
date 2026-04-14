@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 import { getServiceClient } from "@/lib/auth/helpers";
 import { OrdersRepository } from "@/lib/repositories/orders.repository";
 import { CheckoutService } from "@/lib/services/checkout.service";
-import type { CartItem, CustomerInfo } from "@/lib/services/checkout.service";
+import { checkoutPayloadSchema } from "@/lib/validations/checkout.schema";
+import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
   try {
@@ -46,32 +47,23 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate request body
+    // Validate request body with Zod
     const body = await req.json();
-    const { items, customerInfo } = body as { items: CartItem[]; customerInfo: CustomerInfo };
+    const parsed = checkoutPayloadSchema.safeParse(body);
 
-    console.log("Checkout request received:", {
-      itemsCount: items?.length,
-      hasCustomerInfo: !!customerInfo,
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Validation error" },
+        { status: 400 },
+      );
+    }
+
+    const { items, customerInfo } = parsed.data;
+
+    logger.info("Checkout request received", {
+      source: "checkout",
+      itemsCount: items.length,
     });
-
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: "No items in cart" }, { status: 400 });
-    }
-
-    if (!customerInfo) {
-      return NextResponse.json(
-        { error: "Customer information is required" },
-        { status: 400 },
-      );
-    }
-
-    if (!customerInfo.addressNumber || customerInfo.addressNumber.trim() === "") {
-      return NextResponse.json(
-        { error: "Address number is required" },
-        { status: 400 },
-      );
-    }
 
     // === Instantiate service chain (service client bypasses RLS) ===
     const ordersRepo = new OrdersRepository(getServiceClient());
@@ -89,7 +81,7 @@ export async function POST(req: NextRequest) {
       });
     } catch (mpError: unknown) {
       const error = mpError as Error & { status?: number; response?: unknown };
-      console.error("MercadoPago preference creation error:", error);
+      logger.error("MercadoPago preference creation error", error, { source: "checkout" });
 
       const errorMessage = error?.message || "Error creating MercadoPago preference";
 
@@ -106,7 +98,7 @@ export async function POST(req: NextRequest) {
       );
     }
   } catch (error) {
-    console.error("Checkout API error:", error);
+    logger.error("Checkout API error", error instanceof Error ? error : undefined, { source: "checkout" });
     return NextResponse.json(
       {
         error: "Failed to process checkout",

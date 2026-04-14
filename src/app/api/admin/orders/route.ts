@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/helpers";
 import { OrdersRepository } from "@/lib/repositories/orders.repository";
 import { OrdersService } from "@/lib/services/orders.service";
-import type { ManualOrderData } from "@/lib/services/orders.service";
+import { adminOrderActionSchema } from "@/lib/validations/orders.schema";
+import { logger } from "@/lib/logger";
 
 export async function GET(request: NextRequest) {
   try {
@@ -21,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, ...result });
   } catch (error) {
-    console.error("Admin orders API error:", error);
+    logger.error("Admin orders GET error", error instanceof Error ? error : undefined, { source: "admin/orders" });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -37,36 +38,29 @@ export async function POST(request: NextRequest) {
     const ordersRepo = new OrdersRepository(auth.supabase);
     const service = new OrdersService(ordersRepo);
     const body = await request.json();
-    const { action } = body;
 
-    if (action === "get_stats") {
-      console.log("📊 Getting order statistics...");
+    // Validate with Zod
+    const parsed = adminOrderActionSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json(
+        { error: parsed.error.issues[0]?.message || "Validation error" },
+        { status: 400 },
+      );
+    }
+
+    if (parsed.data.action === "get_stats") {
       const stats = await service.getStats();
       return NextResponse.json({ success: true, stats });
     }
 
-    if (action === "create_manual_order") {
-      console.log("📝 Creating manual order...");
-      const { orderData } = body as { orderData: ManualOrderData };
-
-      if (!orderData.email) {
-        return NextResponse.json({ error: "Email is required" }, { status: 400 });
-      }
-
-      if (!orderData.total_amount || orderData.total_amount <= 0) {
-        return NextResponse.json(
-          { error: "Total amount must be greater than 0" },
-          { status: 400 },
-        );
-      }
-
-      const newOrder = await service.createManualOrder(orderData);
+    if (parsed.data.action === "create_manual_order") {
+      const newOrder = await service.createManualOrder(parsed.data.orderData);
       return NextResponse.json({ success: true, order: newOrder });
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
   } catch (error) {
-    console.error("❌ Admin orders POST error:", error);
+    logger.error("Admin orders POST error", error instanceof Error ? error : undefined, { source: "admin/orders" });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Internal server error" },
       { status: 500 },
@@ -100,7 +94,7 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: message }, { status });
     }
   } catch (error) {
-    console.error("Admin orders DELETE error:", error);
+    logger.error("Admin orders DELETE error", error instanceof Error ? error : undefined, { source: "admin/orders" });
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

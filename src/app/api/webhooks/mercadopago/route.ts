@@ -5,7 +5,8 @@ import { OrdersRepository } from "@/lib/repositories/orders.repository";
 import { ProductsRepository } from "@/lib/repositories/products.repository";
 import { SystemRepository } from "@/lib/repositories/system.repository";
 import { WebhookService } from "@/lib/services/webhook.service";
-import type { WebhookPayload } from "@/lib/services/webhook.service";
+import { webhookPayloadSchema } from "@/lib/validations/webhook.schema";
+import { logger } from "@/lib/logger";
 
 // ============================================
 // Signature Verification
@@ -40,11 +41,18 @@ const verifySignature = async (
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
 
-  let body: WebhookPayload;
+  // Parse + validate with Zod
+  let body;
   try {
-    body = JSON.parse(rawBody) as WebhookPayload;
+    const raw = JSON.parse(rawBody);
+    const parsed = webhookPayloadSchema.safeParse(raw);
+    if (!parsed.success) {
+      logger.warn("Invalid webhook payload", { source: "webhook/mp", issues: parsed.error.issues });
+      return NextResponse.json({ error: "Invalid webhook payload" }, { status: 400 });
+    }
+    body = parsed.data;
   } catch {
-    console.error("Error parsing webhook body");
+    logger.warn("Error parsing webhook body", { source: "webhook/mp" });
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
 
@@ -59,7 +67,7 @@ export async function POST(req: NextRequest) {
   if (process.env.NODE_ENV === "production") {
     const isValid = await verifySignature(req, webhookService);
     if (!isValid) {
-      console.error("Invalid webhook signature detected");
+      logger.warn("Invalid webhook signature detected", { source: "webhook/mp" });
       await webhookService.logWebhook(body, "failed", {
         responseCode: 401,
         errorMessage: "Invalid webhook signature",
@@ -77,7 +85,7 @@ export async function POST(req: NextRequest) {
       await webhookService.processPayment(body.data.id);
       await webhookService.updateWebhookLog("success", { responseCode: 200 });
     } catch (error) {
-      console.error("Error processing payment webhook:", error);
+      logger.error("Error processing payment webhook", error instanceof Error ? error : undefined, { source: "webhook/mp" });
       await webhookService.updateWebhookLog("failed", {
         responseCode: 500,
         errorMessage: error instanceof Error ? error.message : "Unknown error",
