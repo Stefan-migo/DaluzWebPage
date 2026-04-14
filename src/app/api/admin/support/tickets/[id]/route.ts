@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function GET(
   request: NextRequest,
@@ -8,18 +8,9 @@ export async function GET(
   try {
     const ticketId = params.id;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Get ticket with full details (without customer join to avoid null issues)
     const { data: ticket, error: ticketError } = await supabase
@@ -143,18 +134,9 @@ export async function PUT(
       customer_satisfaction_rating
     } = body;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Prepare update data
     const updateData: any = {
@@ -303,13 +285,12 @@ export async function DELETE(
   try {
     const ticketId = params.id;
 
-    const supabase = await createClient();
-    
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
     // Check admin authorization (only super admin can delete tickets)
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    
+    
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
     if (adminRole !== 'admin') {

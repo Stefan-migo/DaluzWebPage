@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { requireAdmin } from '@/lib/auth/helpers';
 
 interface ProductStats {
   totalProducts: number;
@@ -9,40 +8,11 @@ interface ProductStats {
   totalValue: number;
 }
 
-async function verifyAdminUser(supabase: SupabaseClient) {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    return { authorized: false, user: null, error: "Unauthorized" };
-  }
-
-  const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
-    user_id: user.id,
-  });
-
-  if (adminError || !isAdmin) {
-    return {
-      authorized: false,
-      user,
-      error: "Forbidden: Admin access required",
-    };
-  }
-
-  return { authorized: true, user, error: null };
-}
-
 export async function GET(_request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // Verify admin user
-    const auth = await verifyAdminUser(supabase);
-    if (!auth.authorized) {
-      return NextResponse.json({ error: auth.error }, { status: 401 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Query for product stats
     const { data, error } = await supabase.from("products").select(`

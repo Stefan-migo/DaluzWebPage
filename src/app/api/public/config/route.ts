@@ -1,74 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@/utils/supabase/server";
+import { unstable_cache } from "next/cache";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
-/**
- * GET /api/public/config
- * Returns public system configuration values.
- *
- * Query params:
- *   - keys: comma-separated list of config keys to fetch (optional)
- *   - category: filter by category (optional)
- *
- * Example: GET /api/public/config?keys=contact_email,phone_number,address
- * Example: GET /api/public/config?category=contact
- */
-export async function GET(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const keysParam = searchParams.get("keys");
-    const category = searchParams.get("category");
+// Cached config fetch — revalidates every 5 min or on 'config' tag
+// Arguments (keys, category) are included in the cache key automatically
+const getPublicConfigCached = unstable_cache(
+  async (keys: string | null, category: string | null) => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } });
 
-    // Parse keys array if provided
-    const keys = keysParam ? keysParam.split(",").map((k) => k.trim()) : null;
-
-    const supabase = await createClient();
-
-    // Build query - only public configs
     let query = supabase
       .from("system_config")
       .select("config_key, config_value, value_type, category")
       .eq("is_public", true);
 
-    // Apply key filter if specified
-    if (keys && keys.length > 0) {
-      query = query.in("config_key", keys);
+    if (keys) {
+      const keyList = keys.split(",").map((k) => k.trim());
+      query = query.in("config_key", keyList);
     }
 
-    // Apply category filter if specified
     if (category) {
       query = query.eq("category", category);
     }
 
     const { data: configs, error } = await query;
+    if (error) throw error;
 
-    if (error) {
-      console.error("Error fetching public config:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch configuration" },
-        { status: 500 },
-      );
-    }
-
-    // Parse values and transform to key-value format
     const result: Record<string, string | number | boolean | object> = {};
-
     configs?.forEach((config) => {
       let parsedValue: any = config.config_value;
-
-      // Try to parse JSON strings
       if (typeof config.config_value === "string") {
         try {
           parsedValue = JSON.parse(config.config_value);
         } catch {
-          // Keep original string if not valid JSON
+          // keep original
         }
       }
-
       result[config.config_key] = parsedValue;
     });
 
+    return result;
+  },
+  ["public-config"],
+  { revalidate: 300, tags: ["config"] },
+);
+
+/**
+ * GET /api/public/config
+ * Returns public system configuration values (cached).
+ */
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const keys = searchParams.get("keys");
+    const category = searchParams.get("category");
+
+    const configs = await getPublicConfigCached(keys, category);
+
     return NextResponse.json({
-      configs: result,
+      configs,
       timestamp: new Date().toISOString(),
     });
   } catch (error) {

@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createClient } from '@/utils/supabase/server';
 
 interface Params {
   slug: string;
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: Params }
-) {
-  try {
+// Cached product+reviews fetch — revalidates every 2 min or on 'products' tag
+const getProductBySlugCached = unstable_cache(
+  async (slug: string) => {
     const supabase = await createClient();
-    const { slug } = params;
 
     const { data: product, error } = await supabase
       .from('products')
@@ -44,20 +42,11 @@ export async function GET(
       .single();
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return NextResponse.json(
-          { error: 'Product not found' },
-          { status: 404 }
-        );
-      }
-      console.error('Error fetching product by slug:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch product' },
-        { status: 500 }
-      );
+      if (error.code === 'PGRST116') return null; // not found
+      throw error;
     }
 
-    // Fetch review data for the product
+    // Fetch review data
     const { data: reviews } = await supabase
       .from('reviews' as any)
       .select('rating')
@@ -69,14 +58,32 @@ export async function GET(
       ? reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / reviewCount
       : 0;
 
-    // Add review data to product
-    const productWithReviews = {
+    return {
       ...product,
       reviewCount,
-      averageRating: Math.round(averageRating * 10) / 10, // Round to 1 decimal place
+      averageRating: Math.round(averageRating * 10) / 10,
     };
+  },
+  ['product-by-slug'],
+  { revalidate: 120, tags: ['products'] },
+);
 
-    return NextResponse.json({ product: productWithReviews });
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Params }
+) {
+  try {
+    const { slug } = params;
+    const product = await getProductBySlugCached(slug);
+
+    if (!product) {
+      return NextResponse.json(
+        { error: 'Product not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ product });
   } catch (error) {
     console.error('Unexpected error:', error);
     return NextResponse.json(
@@ -84,4 +91,4 @@ export async function GET(
       { status: 500 }
     );
   }
-} 
+}

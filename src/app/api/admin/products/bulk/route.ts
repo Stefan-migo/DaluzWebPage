@@ -1,23 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient, createServiceRoleClient } from '@/utils/supabase/server';
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { operation, product_ids, updates } = body;
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     if (!Array.isArray(product_ids) || product_ids.length === 0) {
       return NextResponse.json({ error: 'Product IDs are required' }, { status: 400 });
@@ -180,7 +171,7 @@ export async function POST(request: NextRequest) {
       case 'hard_delete':
         // Hard delete - permanently remove from database
         try {
-          const serviceSupabase = createServiceRoleClient();
+          const serviceSupabase = getServiceClient();
           
           // First, get the products to be deleted for logging
           const { data: productsToDelete, error: fetchError } = await serviceSupabase
@@ -330,18 +321,9 @@ export async function GET(request: NextRequest) {
     const category_id = searchParams.get('category_id');
     const status = searchParams.get('status');
 
-    const supabase = await createClient();
-    
-    // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: isAdmin } = await supabase.rpc('is_admin', { user_id: user.id });
-    if (!isAdmin) {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     // Build query
     let query = supabase

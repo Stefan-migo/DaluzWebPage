@@ -1,19 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createServiceRoleClient } from '@/lib/supabase'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { createSuccessResponse } from '@/lib/api/errors'
 
 export async function GET(request: NextRequest) {
   try {
     const startTime = Date.now()
     
-    // Check database connectivity
-    const supabase = createServiceRoleClient()
+    // Check database connectivity safely
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+    const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } });
+    
+    // Test connectivity using a basic request. If it fails with PGRST116 (No rows), it's still healthy.
     const { error: dbError } = await supabase
-      .from('profiles')
+      .from('categories')
       .select('id')
       .limit(1)
     
-    const dbStatus = dbError ? 'error' : 'healthy'
+    const isDbError = dbError ? (dbError.code !== 'PGRST116' && dbError.code !== '42P01') : false;
+    const dbStatus = isDbError ? 'error' : 'healthy'
     const responseTime = Date.now() - startTime
     
     // System health data

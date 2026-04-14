@@ -490,11 +490,20 @@ a.procesos-btn-cream:hover {
    =========================== */
 @media (max-width: 768px) {
   .procesos-header-band {
-    padding: 1.5rem 1rem;
+    background-image: none;
+    background-color: #0d3221;
+    width: 100%;
+    left: auto;
+    right: auto;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 2rem 1rem;
+    margin-bottom: 2rem;
+
   }
 
   .procesos-band-title {
-    font-size: clamp(1.5rem, 6vw, 2rem);
+    font-size: 1.5rem;
   }
 
   .procesos-central-content {

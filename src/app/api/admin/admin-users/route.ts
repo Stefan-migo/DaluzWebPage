@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,13 +8,12 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') || '';
     const search = searchParams.get('search') || '';
 
-    const supabase = await createClient();
-    
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
     // Check admin authorization (only admins can manage admin users)
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    
+    
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
     if (adminRole !== 'admin') {
@@ -94,13 +93,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, role, permissions, is_active = true } = body;
 
-    const supabase = await createClient();
-    
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
     // Check admin authorization (only super admin can create admin users)
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    
+    
 
     const { data: adminRole } = await supabase.rpc('get_admin_role', { user_id: user.id });
     if (adminRole !== 'admin') {

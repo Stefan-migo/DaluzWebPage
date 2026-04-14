@@ -1,15 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/utils/supabase/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-    
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
     // Check admin authorization
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    
+    
 
     // Get webhook statistics
     const { data: stats } = await supabase

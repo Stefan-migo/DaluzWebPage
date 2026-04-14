@@ -1,48 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient, createServiceRoleClient } from "@/utils/supabase/server";
-import { SupabaseClient } from "@supabase/supabase-js";
-
-async function verifyAdminUser(supabase: SupabaseClient) {
-  const {
-    data: { user },
-    error: userError,
-  } = await supabase.auth.getUser();
-
-  if (userError || !user) {
-    return { authorized: false, user: null, error: "Unauthorized" };
-  }
-
-  // Check if user is admin using the RPC function
-  const { data: isAdmin, error: adminError } = await supabase.rpc("is_admin", {
-    user_id: user.id,
-  });
-
-  if (adminError || !isAdmin) {
-    return {
-      authorized: false,
-      user,
-      error: "Forbidden: Admin access required",
-    };
-  }
-
-  return { authorized: true, user, error: null };
-}
+import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 
 export async function GET(request: NextRequest) {
   try {
-    const supabase = await createClient();
-
-    // SECURITY: Verify user is admin
-    const adminCheck = await verifyAdminUser(supabase);
-    if (!adminCheck.authorized) {
-      return NextResponse.json(
-        { error: adminCheck.error },
-        { status: adminCheck.error === "Unauthorized" ? 401 : 403 },
-      );
-    }
-
-    // Use service role client for admin operations (bypasses RLS for full access)
-    const adminClient = createServiceRoleClient();
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
 
     const { searchParams } = new URL(request.url);
 
@@ -75,8 +38,12 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get("sort_by") || "created_at";
     const sortOrder = searchParams.get("sort_order") || "desc";
 
-    // Build query with count option (use adminClient for bypass RLS)
-    let query = adminClient.from("products").select(
+    // Build query with count option (requireAdmin provides a service role client when needed or a standard one)
+    // Note: requireAdmin() by default returns a standard client, but for admin ops 
+    // we often need the Service Role if RLS is strict.
+    // However, our helper can also provide that if we want.
+
+    let query = supabase.from("products").select(
       `
         *,
         categories:category_id (
@@ -139,7 +106,6 @@ export async function GET(request: NextRequest) {
       // Default to active products if no specific status requested
       query = query.eq("status", "active");
     }
-    // If includeArchived is true, show all products regardless of status
 
     // Apply sorting
     const sortColumn = getSortColumn(sortBy);
@@ -147,7 +113,6 @@ export async function GET(request: NextRequest) {
     query = query.order(sortColumn, { ascending: order === "asc" });
 
     // Execute query with pagination and get count
-    // Note: range() must come AFTER select() for count to work properly
     const {
       data: products,
       count,
@@ -162,7 +127,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Calculate pagination info
     const totalPages = Math.ceil((count || 0) / limit);
     const hasMore = page < totalPages;
 
@@ -185,10 +149,12 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST method for creating products (same as public API for now)
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createClient();
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+    const { user, supabase } = auth;
+
     const body = await request.json();
 
     const { data, error } = await supabase

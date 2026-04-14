@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server'
+import { logger } from '@/lib/logger'
 
-// Custom error classes for different types of API errors
+// ============================================
+// Custom Error Classes
+// ============================================
+
 export class APIError extends Error {
   public statusCode: number
   public code: string
@@ -12,8 +16,7 @@ export class APIError extends Error {
     this.statusCode = statusCode
     this.code = code
     this.isOperational = true
-    
-    // Capture stack trace
+
     Error.captureStackTrace(this, this.constructor)
   }
 }
@@ -67,7 +70,10 @@ export class PaymentError extends APIError {
   }
 }
 
-// Standard error response format
+// ============================================
+// Response Types
+// ============================================
+
 export interface ErrorResponse {
   error: {
     message: string
@@ -78,16 +84,26 @@ export interface ErrorResponse {
   }
 }
 
-// Error response builder
+export interface SuccessResponse<T = any> {
+  success: true
+  data: T
+  timestamp: string
+  requestId?: string
+}
+
+// ============================================
+// Response Builders
+// ============================================
+
 export function createErrorResponse(
   error: APIError | Error,
   requestId?: string
 ): NextResponse<ErrorResponse> {
   const isAPIError = error instanceof APIError
-  
+
   const statusCode = isAPIError ? error.statusCode : 500
   const code = isAPIError ? error.code : 'INTERNAL_ERROR'
-  
+
   // Don't expose internal errors in production
   const message = process.env.NODE_ENV === 'production' && !isAPIError
     ? 'Internal server error'
@@ -102,43 +118,15 @@ export function createErrorResponse(
     }
   }
 
-  // Log error for monitoring
-  console.error('API Error:', {
-    message: error.message,
-    code,
-    statusCode,
-    stack: error.stack,
-    requestId
-  })
+  // Persist via centralized logger (replaces bare console.error)
+  const logLevel = statusCode >= 500 ? 'error' : 'warn';
+  if (logLevel === 'error') {
+    logger.error(error.message, error, { requestId, code, statusCode, source: 'api' })
+  } else {
+    logger.warn(error.message, { requestId, code, statusCode, source: 'api' })
+  }
 
   return NextResponse.json(errorResponse, { status: statusCode })
-}
-
-// Error handler middleware wrapper
-export function withErrorHandler(
-  handler: (request: Request, context?: any) => Promise<NextResponse>
-) {
-  return async (request: Request, context?: any): Promise<NextResponse> => {
-    try {
-      return await handler(request, context)
-    } catch (error) {
-      // Generate request ID for tracking
-      const requestId = crypto.randomUUID()
-      
-      return createErrorResponse(
-        error instanceof Error ? error : new Error('Unknown error'),
-        requestId
-      )
-    }
-  }
-}
-
-// Success response builder
-export interface SuccessResponse<T = any> {
-  success: true
-  data: T
-  timestamp: string
-  requestId?: string
 }
 
 export function createSuccessResponse<T>(
@@ -156,7 +144,34 @@ export function createSuccessResponse<T>(
   return NextResponse.json(response, { status: statusCode })
 }
 
-// Async handler wrapper with error handling
+// ============================================
+// Handler Wrappers
+// ============================================
+
+/**
+ * Wraps a route handler with standardised error catching and logging.
+ * Caught errors become structured JSON responses via `createErrorResponse`.
+ */
+export function withErrorHandler(
+  handler: (request: Request, context?: any) => Promise<NextResponse>
+) {
+  return async (request: Request, context?: any): Promise<NextResponse> => {
+    try {
+      return await handler(request, context)
+    } catch (error) {
+      const requestId = crypto.randomUUID()
+
+      return createErrorResponse(
+        error instanceof Error ? error : new Error('Unknown error'),
+        requestId
+      )
+    }
+  }
+}
+
+/**
+ * Async handler wrapper — shorthand for fire-and-catch.
+ */
 export function asyncHandler(
   fn: (request: Request, context?: any) => Promise<NextResponse>
 ) {
@@ -166,4 +181,4 @@ export function asyncHandler(
       return createErrorResponse(error, requestId)
     })
   }
-} 
+}

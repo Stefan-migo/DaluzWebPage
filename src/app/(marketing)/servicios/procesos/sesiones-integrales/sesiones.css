@@ -172,10 +172,13 @@
   .sesiones-intro {
     padding: 3rem 1rem 2rem;
     background-image: none;
+    text-align: center;
+    transform: translateX(0.8rem);
+
   }
 
   .sesiones-intro-block.sesiones-intro-right {
-    text-align: left;
+    text-align: center;
   }
 }
 
@@ -195,6 +198,10 @@
   .sesiones-intro {
     padding: 2.5rem 0.75rem 1.5rem;
     background-image: none;
+    text-align: center;
+    font-size: 1rem;
+    font-family: var(--font-text), var(--font-body), serif;
+    transform: translateX(0.5rem);
   }
 }
 

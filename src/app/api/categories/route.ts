@@ -1,29 +1,39 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { unstable_cache } from 'next/cache';
 import { createServiceRoleClient } from '@/lib/supabase';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
-// GET - Fetch all categories
-export async function GET() {
-  try {
-    const supabase = createServiceRoleClient();
-    
+// Cached fetch — revalidates every 5 min or on 'categories' tag
+const getCategoriesCached = unstable_cache(
+  async () => {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } });
+
     const { data: categories, error } = await supabase
       .from('categories' as any)
       .select('*')
       .order('name', { ascending: true });
 
     if (error) {
-      console.error('Database error:', error);
-      return NextResponse.json(
-        { error: 'Failed to fetch categories' },
-        { status: 500 }
-      );
+      console.error('Categories cache error:', error);
+      return [];
     }
+    return categories || [];
+  },
+  ['all-categories'],
+  { revalidate: 300, tags: ['categories'] },
+);
 
+// GET - Fetch all categories (cached)
+export async function GET() {
+  try {
+    const categories = await getCategoriesCached();
     return NextResponse.json({ categories });
   } catch (error) {
-    console.error('API error:', error);
+    console.error('Database error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to fetch categories' },
       { status: 500 }
     );
   }
@@ -73,7 +83,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Database error:', error);
-      
+
       // Handle unique constraint violations
       if (error.code === '23505') {
         if (error.message.includes('slug')) {
@@ -87,7 +97,7 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
-      
+
       return NextResponse.json(
         { error: 'Failed to create category' },
         { status: 500 }
