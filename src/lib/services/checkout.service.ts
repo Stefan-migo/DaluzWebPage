@@ -55,7 +55,7 @@ export interface OrderRecord {
 // ============================================
 
 export class CheckoutService {
-  constructor(private ordersRepo: OrdersRepository) {}
+  constructor(private ordersRepo: OrdersRepository) { }
 
   /**
    * Create an order in the database.
@@ -212,7 +212,7 @@ export class CheckoutService {
     } catch (err) {
       console.error(`Failed to rollback order ${orderId}:`, err);
     }
-    console.error(`🔄 Rolled back order ${orderId}`);
+    console.error(`Rolled back order ${orderId}`);
   }
 
   /**

@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { unstable_cache } from "next/cache";
-import { createClient } from "@/utils/supabase/server";
+import { createClient as createSupabaseClient } from "@supabase/supabase-js";
 
 // Cached config fetch — revalidates every 5 min or on 'config' tag
 // Arguments (keys, category) are included in the cache key automatically
 const getPublicConfigCached = unstable_cache(
   async (keys: string | null, category: string | null) => {
-    const supabase = await createClient();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } });
 
     let query = supabase
       .from("system_config")

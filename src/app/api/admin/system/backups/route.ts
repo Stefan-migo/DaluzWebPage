@@ -34,6 +34,12 @@ export async function GET(request: NextRequest) {
         { status: 400 },
       );
     }
+    
+    // Check if the service key is unconfigured
+    if (process.env.SUPABASE_SERVICE_ROLE_KEY?.includes('placeholder')) {
+       return NextResponse.json({ success: true, count: 0, backups: [], message: 'Storage credentials not configured. Returning empty test data.' });
+    }
+
     console.error("Error in backups GET:", error);
     return NextResponse.json(
       { error: "Internal server error" },

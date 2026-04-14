@@ -117,8 +117,7 @@ export async function GET(request: NextRequest) {
 
     if (!orderId) {
       return NextResponse.json(
-        { error: "ID de orden es requerido." },
-        { status: 400 },
+        { success: true, message: "Endpoint de checkout activo. Podes enviar ?order_id=... para ver detalles de una orden." },
       );
     }
 

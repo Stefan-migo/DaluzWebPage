@@ -1,19 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { unstable_cache } from 'next/cache';
 import { createServiceRoleClient } from '@/lib/supabase';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
 // Cached fetch — revalidates every 5 min or on 'categories' tag
 const getCategoriesCached = unstable_cache(
   async () => {
-    const supabase = createServiceRoleClient();
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+    const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, { auth: { persistSession: false } });
 
     const { data: categories, error } = await supabase
       .from('categories' as any)
       .select('*')
       .order('name', { ascending: true });
 
-    if (error) throw error;
-    return categories;
+    if (error) {
+      console.error('Categories cache error:', error);
+      return [];
+    }
+    return categories || [];
   },
   ['all-categories'],
   { revalidate: 300, tags: ['categories'] },
