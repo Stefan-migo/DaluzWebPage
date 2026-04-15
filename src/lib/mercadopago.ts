@@ -5,18 +5,39 @@ import { getMercadoPagoAccessToken } from './mercadopago/config';
 // Use getMercadoPagoClient() or createMercadoPagoClient() instead of these exports
 // These are kept for backward compatibility but will use env vars only
 
-// Legacy configuration (uses env vars only - for backward compatibility)
-const legacyMercadopagoConfig = new MercadoPagoConfig({
-  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-  options: {
-    timeout: 5000,
-    idempotencyKey: 'abc'
-  }
-});
+// Legacy configuration — lazy-initialized so the module can be imported at
+// build time without crashing when the env var is not yet available.
+let _payment: Payment | null = null;
+let _preference: Preference | null = null;
 
-// Legacy clients (use env vars only)
-export const payment = new Payment(legacyMercadopagoConfig);
-export const preference = new Preference(legacyMercadopagoConfig);
+function getLegacyConfig(): MercadoPagoConfig {
+  const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
+  if (!token) {
+    throw new Error('MERCADOPAGO_ACCESS_TOKEN is not configured');
+  }
+  return new MercadoPagoConfig({
+    accessToken: token,
+    options: { timeout: 5000, idempotencyKey: 'abc' },
+  });
+}
+
+export function getLegacyPayment(): Payment {
+  if (!_payment) _payment = new Payment(getLegacyConfig());
+  return _payment;
+}
+
+export function getLegacyPreference(): Preference {
+  if (!_preference) _preference = new Preference(getLegacyConfig());
+  return _preference;
+}
+
+// Keep named exports for backward compatibility (lazy proxies)
+export const payment = new Proxy({} as Payment, {
+  get(_, prop) { return (getLegacyPayment() as any)[prop]; },
+});
+export const preference = new Proxy({} as Preference, {
+  get(_, prop) { return (getLegacyPreference() as any)[prop]; },
+});
 
 /**
  * Create a new MercadoPago client with database config (preferred method)

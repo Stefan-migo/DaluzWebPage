@@ -35,10 +35,20 @@ function validateEnv() {
   }
 
   if (missing.length > 0) {
-    throw new Error(
+    const message =
       `Missing required environment variables:\n  ${missing.join('\n  ')}\n\n` +
-      'Set them in .env.local or your hosting provider\'s environment settings.',
-    );
+      'Set them in .env.local or your hosting provider\'s environment settings.';
+
+    // During `next build` (static generation phase) we warn instead of
+    // crashing so the build can complete. The vars will be validated again
+    // when the server actually starts serving requests.
+    const isBuildPhase = process.env.NEXT_PHASE === 'phase-production-build';
+
+    if (isBuildPhase) {
+      console.warn(`⚠️  [env] ${message}`);
+    } else {
+      throw new Error(message);
+    }
   }
 }
 
