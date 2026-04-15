@@ -177,7 +177,7 @@ export default function ProductForm({
     try {
       setLoading(true);
       const productResponse = await fetch(
-        `/api/products/${productId}?include_archived=true`,
+        `/api/admin/products/${productId}`,
       );
       if (!productResponse.ok) throw new Error("Failed to fetch product");
       const productData = await productResponse.json();
@@ -315,7 +315,7 @@ export default function ProductForm({
       };
 
       const url =
-        mode === "edit" ? `/api/products/${productId}` : "/api/products";
+        mode === "edit" ? `/api/admin/products/${productId}` : "/api/admin/products";
       const method = mode === "edit" ? "PUT" : "POST";
 
       const response = await fetch(url, {

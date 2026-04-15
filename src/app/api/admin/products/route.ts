@@ -5,7 +5,7 @@ export async function GET(request: NextRequest) {
   try {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
-    const { user, supabase } = auth;
+    const serviceClient = getServiceClient();
 
     const { searchParams } = new URL(request.url);
 
@@ -38,12 +38,8 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get("sort_by") || "created_at";
     const sortOrder = searchParams.get("sort_order") || "desc";
 
-    // Build query with count option (requireAdmin provides a service role client when needed or a standard one)
-    // Note: requireAdmin() by default returns a standard client, but for admin ops 
-    // we often need the Service Role if RLS is strict.
-    // However, our helper can also provide that if we want.
-
-    let query = supabase.from("products").select(
+    // Build query — service client bypasses RLS so admin can see all statuses
+    let query = serviceClient.from("products").select(
       `
         *,
         categories:category_id (
@@ -153,11 +149,11 @@ export async function POST(request: NextRequest) {
   try {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
-    const { user, supabase } = auth;
 
     const body = await request.json();
+    const serviceClient = getServiceClient();
 
-    const { data, error } = await supabase
+    const { data, error } = await serviceClient
       .from("products")
       .insert([body])
       .select();

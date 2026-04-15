@@ -8,9 +8,9 @@ export async function GET(
   try {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
-    const { user, supabase } = auth;
+    const serviceClient = getServiceClient();
 
-    const { data: product, error } = await supabase
+    const { data: product, error } = await serviceClient
       .from("products")
       .select(`
         *,
@@ -58,14 +58,14 @@ export async function PUT(
   try {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
-    const { user, supabase } = auth;
 
     const body = await request.json();
+    const serviceClient = getServiceClient();
     
     // Safety: Remove sensitive or non-updatable fields
     const { id, created_at, ...updateData } = body;
 
-    const { data: updatedProduct, error } = await supabase
+    const { data: updatedProduct, error } = await serviceClient
       .from("products")
       .update({
         ...updateData,
@@ -100,10 +100,10 @@ export async function DELETE(
   try {
     const auth = await requireAdmin();
     if (!auth.ok) return auth.response;
-    const { user, supabase } = auth;
+    const serviceClient = getServiceClient();
 
     // Verify existence
-    const { data: existing, error: checkError } = await supabase
+    const { data: existing, error: checkError } = await serviceClient
       .from("products")
       .select("id, name")
       .eq("id", params.id)
@@ -114,7 +114,7 @@ export async function DELETE(
     }
 
     // Delete variants first
-    const { error: variantsError } = await supabase
+    const { error: variantsError } = await serviceClient
       .from("product_variants")
       .delete()
       .eq("product_id", params.id);
@@ -124,7 +124,7 @@ export async function DELETE(
     }
 
     // Delete the product
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await serviceClient
       .from("products")
       .delete()
       .eq("id", params.id);
