@@ -1,3 +1,4 @@
+import "@/lib/env"; // SECURITY: fail-fast if required env vars are missing
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, EB_Garamond } from "next/font/google";
 import localFont from "next/font/local";

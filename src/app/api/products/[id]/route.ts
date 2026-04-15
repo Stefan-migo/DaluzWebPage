@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireAdmin } from "@/lib/auth/helpers";
 import { createServiceRoleClient } from "@/lib/supabase";
 
 interface Params {
@@ -119,6 +120,9 @@ export async function PUT(
   { params }: { params: Params },
 ) {
   try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+
     const supabase = createServiceRoleClient();
     const { id } = params;
     const body = await request.json();
@@ -249,6 +253,9 @@ export async function DELETE(
   { params }: { params: Params },
 ) {
   try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+
     const supabase = createServiceRoleClient();
     const { id } = params;
 
