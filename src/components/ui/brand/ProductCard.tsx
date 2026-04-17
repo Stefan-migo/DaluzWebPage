@@ -23,6 +23,7 @@ import RichTextDisplay from "@/components/ui/RichTextDisplay";
 
 interface ProductCardProps {
   id: string;
+  slug?: string;
   name: string;
   description: string;
   price: number;
@@ -142,6 +143,7 @@ const lineThemeClasses = {
 
 export default function ProductCard({
   id,
+  slug,
   name,
   description,
   price,
@@ -163,6 +165,7 @@ export default function ProductCard({
   discountTransferPercent,
   discountCashPercent,
 }: ProductCardProps) {
+  const productHref = `/productos/${slug || id}`;
   const [quantity, setQuantity] = useState(1);
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -315,7 +318,7 @@ export default function ProductCard({
               isHovered ? "opacity-100" : "opacity-0",
             )}
           >
-            <Link href={`/productos/${id}`} className="block">
+            <Link href={productHref} className="block">
               <div className="bg-white/90 text-gray-800 px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-semibold shadow-lg hover:bg-white hover:scale-105 transition-all duration-300 text-xs sm:text-sm">
                 Ver producto
               </div>
@@ -389,7 +392,7 @@ export default function ProductCard({
               </div>
 
               {/* Name */}
-              <Link href={`/productos/${id}`} className="block group/link">
+              <Link href={productHref} className="block group/link">
                 <h3
                   className="font-semibold text-base lg:text-lg text-[#791010] line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight"
                   style={{
@@ -623,7 +626,7 @@ export default function ProductCard({
               </div>
 
               {/* Name - Smaller, Left aligned */}
-              <Link href={`/productos/${id}`} className="block group/link">
+              <Link href={productHref} className="block group/link">
                 <h3
                   className="font-semibold text-sm text-[#791010] line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight text-left"
                   style={{

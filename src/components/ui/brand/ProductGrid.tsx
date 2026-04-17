@@ -27,6 +27,7 @@ import {
 
 interface Product {
   id: string;
+  slug?: string;
   name: string;
   description: string;
   price: number;
@@ -400,6 +401,7 @@ export default function ProductGrid({
             <ProductCard
               key={product.id}
               id={product.id}
+              slug={product.slug}
               name={product.name}
               description={product.description}
               price={product.price}

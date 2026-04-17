@@ -24,6 +24,7 @@ const getLineThemeFromSlug = (slug: string): 'alma-terra' | 'ecos' | 'jade-ritua
 
 interface Product {
   id: string;
+  slug?: string;
   name: string;
   description: string;
   short_description?: string;
@@ -284,6 +285,7 @@ export default function CategoryPage() {
               <ProductCard
                 key={product.id}
                 id={product.id}
+                slug={product.slug}
                 name={product.name}
                 description={product.short_description || product.description}
                 price={product.price}

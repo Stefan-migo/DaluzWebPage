@@ -1744,6 +1744,7 @@ export default function ProductDetailPage() {
                     className="p-[0]"
                     key={relatedProduct.id}
                     id={relatedProduct.id}
+                    slug={relatedProduct.slug}
                     name={relatedProduct.name}
                     description={
                       relatedProduct.short_description ||
@@ -1811,6 +1812,7 @@ export default function ProductDetailPage() {
                       <ProductCard
                         className="p-[0] h-full"
                         id={relatedProduct.id}
+                        slug={relatedProduct.slug}
                         name={relatedProduct.name}
                         description={
                           relatedProduct.short_description ||

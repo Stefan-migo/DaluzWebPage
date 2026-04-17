@@ -555,6 +555,7 @@ function ProductsContent() {
                   <ProductCard
                     key={product.id}
                     id={product.id}
+                    slug={product.slug}
                     name={product.name}
                     description={
                       product.short_description || product.description
