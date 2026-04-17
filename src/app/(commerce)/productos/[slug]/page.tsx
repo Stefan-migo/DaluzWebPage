@@ -160,7 +160,9 @@ export default function ProductDetailPage() {
             ) || data.product.product_variants?.[0];
           setSelectedVariant(defaultVariant);
           setSelectedImage(
-            defaultVariant?.image_url || data.product.featured_image,
+            resolveImage(
+              defaultVariant?.image_url || data.product.featured_image,
+            ),
           );
 
           // Fetch related products from the same line
@@ -488,21 +490,31 @@ export default function ProductDetailPage() {
     );
   };
 
+  const PLACEHOLDER_IMAGE = "/images/placeholder-product.jpg";
+
+  const isValidImage = (url?: string | null) =>
+    !!url && !url.startsWith("file://");
+
+  const resolveImage = (url?: string | null) =>
+    isValidImage(url) ? (url as string) : PLACEHOLDER_IMAGE;
+
   const getImages = () => {
     if (!product) return [];
-    const images = [product.featured_image];
-    if (product.gallery) {
-      images.push(...product.gallery);
+    const images: string[] = [];
+    if (isValidImage(product.featured_image)) {
+      images.push(product.featured_image);
     }
-    // Add variant images
+    if (product.gallery) {
+      product.gallery.forEach((img) => {
+        if (isValidImage(img) && !images.includes(img)) images.push(img);
+      });
+    }
     product.product_variants?.forEach((variant) => {
-      if (variant.image_url && !images.includes(variant.image_url)) {
-        images.push(variant.image_url);
+      if (isValidImage(variant.image_url) && !images.includes(variant.image_url!)) {
+        images.push(variant.image_url!);
       }
     });
-
-    // Return all available images (no minimum requirement)
-    return images.filter(Boolean);
+    return images.length > 0 ? images : [PLACEHOLDER_IMAGE];
   };
 
   // Calculate intelligent thumbnail sizing based on number of images
@@ -617,7 +629,7 @@ export default function ProductDetailPage() {
                 onClick={() => setShowImageModal(true)}
               >
                 <Image
-                  src={selectedImage || product.featured_image}
+                  src={resolveImage(selectedImage || product.featured_image)}
                   alt={product.name}
                   fill
                   className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -767,7 +779,7 @@ export default function ProductDetailPage() {
                     onClick={() => setShowImageModal(true)}
                   >
                     <Image
-                      src={selectedImage || product.featured_image}
+                      src={resolveImage(selectedImage || product.featured_image)}
                       alt={product.name}
                       fill
                       className="object-cover"
@@ -1911,7 +1923,7 @@ export default function ProductDetailPage() {
           <div className="relative flex items-center justify-center min-h-[50vh] max-h-[90vh]">
             <div className="relative max-w-full max-h-full">
               <Image
-                src={selectedImage || product.featured_image}
+                src={resolveImage(selectedImage || product.featured_image)}
                 alt={product.name}
                 width={1200}
                 height={1200}
