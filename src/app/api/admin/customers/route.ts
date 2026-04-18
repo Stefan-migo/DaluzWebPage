@@ -19,36 +19,30 @@ export async function GET(request: NextRequest) {
     const { user, supabase } = auth;
 
     // Build the query to get customers from profiles table
-    console.log('🗄️ Building database query...');
     let query = supabase
       .from('profiles')
-      .select(`
-        *
-      `);
+      .select('*');
 
     // Apply filters
     if (search) {
       query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`);
     }
-    
+
     if (membership_tier && membership_tier !== 'all') {
       query = query.eq('membership_tier', membership_tier);
     }
 
-    // Get total count for pagination
-    console.log('📊 Getting customer count...');
-    const { count, error: countError } = await supabase
-      .from('profiles')
-      .select('*', { count: 'exact', head: true });
+    // Get total count for pagination (apply same filters)
+    let countQuery = supabase.from('profiles').select('*', { count: 'exact', head: true });
+    if (search) countQuery = countQuery.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%,email.ilike.%${search}%`);
+    if (membership_tier && membership_tier !== 'all') countQuery = countQuery.eq('membership_tier', membership_tier);
+    const { count, error: countError } = await countQuery;
 
     if (countError) {
       console.error('❌ Error getting customer count:', countError);
       return NextResponse.json({ error: 'Failed to count customers' }, { status: 500 });
     }
-    console.log('✅ Customer count:', count);
 
-    // Apply pagination and ordering
-    console.log('📋 Executing main query with pagination...');
     const { data: customers, error } = await query
       .range(offset, offset + limit - 1)
       .order('created_at', { ascending: false });
@@ -57,26 +51,51 @@ export async function GET(request: NextRequest) {
       console.error('❌ Error fetching customers:', error);
       return NextResponse.json({ error: 'Failed to fetch customers' }, { status: 500 });
     }
-    console.log('✅ Customers fetched successfully:', customers?.length || 0);
 
-    // Calculate customer analytics
-    console.log('📊 Calculating customer analytics...');
-    const customerStats = customers?.map(customer => {
-      // Basic segment classification based on membership
+    // Fetch order aggregates for this page of customers in one query
+    const customerIds = (customers ?? []).map(c => c.id);
+    let orderAggMap: Record<string, { totalSpent: number; orderCount: number; lastOrderDate: string | null }> = {};
+
+    if (customerIds.length > 0) {
+      const { data: orderAggs } = await supabase
+        .from('orders')
+        .select('user_id, total_amount, created_at')
+        .in('user_id', customerIds)
+        .in('status', ['completed', 'delivered', 'shipped', 'processing', 'paid']);
+
+      if (orderAggs) {
+        for (const row of orderAggs) {
+          if (!orderAggMap[row.user_id]) {
+            orderAggMap[row.user_id] = { totalSpent: 0, orderCount: 0, lastOrderDate: null };
+          }
+          const agg = orderAggMap[row.user_id];
+          agg.totalSpent += row.total_amount ?? 0;
+          agg.orderCount += 1;
+          if (!agg.lastOrderDate || row.created_at > agg.lastOrderDate) {
+            agg.lastOrderDate = row.created_at;
+          }
+        }
+      }
+    }
+
+    const customerStats = (customers ?? []).map(customer => {
       let segment = 'new';
       if (customer.is_member) {
         segment = customer.membership_tier === 'premium' ? 'vip' : 'regular';
       }
 
+      const agg = orderAggMap[customer.id] ?? { totalSpent: 0, orderCount: 0, lastOrderDate: null };
+      const avgOrderValue = agg.orderCount > 0 ? agg.totalSpent / agg.orderCount : 0;
+
       return {
         ...customer,
         analytics: {
-          totalSpent: 0, // TODO: Calculate from orders
-          orderCount: 0, // TODO: Calculate from orders
-          lastOrderDate: null, // TODO: Get from orders
-          avgOrderValue: 0, // TODO: Calculate from orders
+          totalSpent: agg.totalSpent,
+          orderCount: agg.orderCount,
+          lastOrderDate: agg.lastOrderDate,
+          avgOrderValue,
           segment,
-          lifetimeValue: 0 // TODO: Calculate from orders
+          lifetimeValue: agg.totalSpent
         }
       };
     });

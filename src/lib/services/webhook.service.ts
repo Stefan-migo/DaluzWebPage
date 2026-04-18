@@ -141,6 +141,14 @@ export class WebhookService {
     const mpStatus = (paymentInfo.status || "pending") as MercadoPagoStatus;
     const orderStatus = STATUS_MAPPING[mpStatus] || "pending";
 
+    // Idempotency: if this payment was already processed for this order, skip
+    // post-approval side-effects (email, inventory, treasures) to avoid duplicates
+    const existingOrder = await this.ordersRepo.findById(orderId);
+    const alreadyApproved =
+      existingOrder &&
+      String(existingOrder.mercadopago_payment_id) === String(paymentId) &&
+      ["paid", "completed", "processing", "shipped", "delivered"].includes(existingOrder.status);
+
     // Build update data
     const updateData: OrderUpdateData = {
       status: orderStatus,
@@ -174,8 +182,8 @@ export class WebhookService {
       throw new Error("Failed to update order");
     }
 
-    // Post-approval actions
-    if (paymentInfo.status === "approved") {
+    // Post-approval actions — skip if already processed (idempotency)
+    if (paymentInfo.status === "approved" && !alreadyApproved) {
       await this.sendConfirmationEmail(orderId);
       await this.updateInventory(orderId);
       await this.grantTreasures(orderId);

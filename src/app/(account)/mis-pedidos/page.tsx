@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAuthContext } from "@/contexts/AuthContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ interface Order {
 
 export default function OrdersPage() {
   const { user } = useAuthContext();
+  const router = useRouter();
   const [selectedOrder, setSelectedOrder] = useState<string | null>(null);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
@@ -210,7 +212,10 @@ export default function OrdersPage() {
             <p className="text-tierra-media mb-6">
               Cuando realices tu primera compra, aparecerá aquí
             </p>
-            <Button className="bg-dorado hover:bg-dorado/90 text-azul-profundo">
+            <Button
+              className="bg-dorado hover:bg-dorado/90 text-azul-profundo"
+              onClick={() => router.push('/productos')}
+            >
               Explorar Productos
             </Button>
           </CardContent>
@@ -330,6 +335,7 @@ export default function OrdersPage() {
                       variant="outline"
                       size="sm"
                       className="border-verde-suave text-verde-suave hover:bg-verde-suave hover:text-white"
+                      onClick={() => router.push('/productos')}
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Recomprar
