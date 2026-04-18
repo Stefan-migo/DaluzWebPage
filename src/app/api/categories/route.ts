@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { unstable_cache } from 'next/cache';
+import { requireAdmin } from '@/lib/auth/helpers';
 import { createServiceRoleClient } from '@/lib/supabase';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
@@ -39,9 +40,12 @@ export async function GET() {
   }
 }
 
-// POST - Create new category
+// POST - Create new category (admin only)
 export async function POST(request: NextRequest) {
   try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+
     const supabase = createServiceRoleClient();
     const categoryData = await request.json();
 

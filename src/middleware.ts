@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Create a response to modify
-  let response = NextResponse.next();
+  const response = NextResponse.next();
 
   // Create Supabase server client with cookie handling
   const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
@@ -55,13 +55,14 @@ export async function middleware(request: NextRequest) {
     },
   });
 
-  // Get session - this will also refresh the token if needed
+  // SECURITY: Use getUser() for server-side verification (validates JWT against auth server)
+  // getSession() only checks the JWT locally and can be spoofed with expired/revoked tokens
   const {
-    data: { session },
+    data: { user },
     error,
-  } = await supabase.auth.getSession();
+  } = await supabase.auth.getUser();
 
-  const isAuthenticated = !!session && !error;
+  const isAuthenticated = !!user && !error;
 
   // Debug log in development
   if (process.env.NODE_ENV === "development") {
@@ -82,11 +83,24 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  // Admin routes require special handling
-  if (isAdminRoute && !isAuthenticated) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
+  // Admin routes: verify authentication AND admin role
+  if (isAdminRoute) {
+    if (!isAuthenticated) {
+      const loginUrl = new URL("/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+
+    // Verify admin role via RPC
+    const { data: isAdmin, error: adminError } = await supabase.rpc(
+      "is_admin",
+      { user_id: user!.id },
+    );
+
+    if (adminError || !isAdmin) {
+      // Not admin — redirect to home
+      return NextResponse.redirect(new URL("/", request.url));
+    }
   }
 
   // Add security headers to all responses

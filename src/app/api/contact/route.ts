@@ -1,10 +1,50 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EmailNotificationService } from '@/lib/email/notifications'
 
+// SECURITY: Simple in-process rate limiter for contact form (3 requests per IP per hour)
+const contactRateLimit = new Map<string, { count: number; resetAt: number }>();
+const CONTACT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const CONTACT_MAX_REQUESTS = 3;
+
+function checkContactRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = contactRateLimit.get(ip);
+
+  // Cleanup stale entries periodically
+  if (contactRateLimit.size > 1000) {
+    for (const [key, val] of contactRateLimit.entries()) {
+      if (val.resetAt < now) contactRateLimit.delete(key);
+    }
+  }
+
+  if (!entry || entry.resetAt < now) {
+    contactRateLimit.set(ip, { count: 1, resetAt: now + CONTACT_WINDOW_MS });
+    return true;
+  }
+  if (entry.count >= CONTACT_MAX_REQUESTS) return false;
+  entry.count++;
+  return true;
+}
+
 export async function POST(request: NextRequest) {
   try {
+    // Rate limiting
+    const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+      || request.headers.get('x-real-ip')
+      || 'unknown';
+    if (!checkContactRateLimit(clientIp)) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: 'Demasiados mensajes enviados',
+          details: 'Por favor esperá un momento antes de enviar otro mensaje'
+        },
+        { status: 429 }
+      )
+    }
+
     const body = await request.json()
-    
+
     const { name, email, message } = body
 
     // Validate required fields
@@ -63,10 +103,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Contact form API error:', error)
     return NextResponse.json(
-      { 
-        success: false, 
+      {
+        success: false,
         error: 'Error del servidor',
-        details: error instanceof Error ? error.message : 'Error desconocido'
+        details: 'Por favor intenta nuevamente más tarde'
       },
       { status: 500 }
     )

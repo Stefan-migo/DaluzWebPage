@@ -63,8 +63,9 @@ export async function POST(req: NextRequest) {
   const systemRepo = new SystemRepository(supabaseService);
   const webhookService = new WebhookService(ordersRepo, productsRepo, systemRepo);
 
-  // Verify signature in production
-  if (process.env.NODE_ENV === "production") {
+  // SECURITY: Always verify webhook signature (skip only in local dev with no secret configured)
+  const webhookSecret = await webhookService.getWebhookSecret();
+  if (webhookSecret) {
     const isValid = await verifySignature(req, webhookService);
     if (!isValid) {
       logger.warn("Invalid webhook signature detected", { source: "webhook/mp" });
@@ -74,6 +75,10 @@ export async function POST(req: NextRequest) {
       });
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
+  } else if (process.env.NODE_ENV === "production") {
+    // In production, a missing webhook secret is a configuration error — reject
+    logger.error("Webhook secret not configured in production", undefined, { source: "webhook/mp" });
+    return NextResponse.json({ error: "Webhook misconfigured" }, { status: 500 });
   }
 
   // Log receipt

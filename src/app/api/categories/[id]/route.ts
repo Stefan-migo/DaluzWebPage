@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/auth/helpers';
 import { createServiceRoleClient } from '@/lib/supabase';
 
-// PUT - Update category
+// PUT - Update category (admin only)
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+
     const supabase = createServiceRoleClient();
     const categoryData = await request.json();
 
@@ -87,12 +91,15 @@ export async function PUT(
   }
 }
 
-// DELETE - Delete category
+// DELETE - Delete category (admin only)
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
+    const auth = await requireAdmin();
+    if (!auth.ok) return auth.response;
+
     const supabase = createServiceRoleClient();
 
     // Check if category has products

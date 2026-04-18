@@ -13,8 +13,13 @@ const SANITY_WEBHOOK_SECRET = process.env.SANITY_WEBHOOK_SECRET;
 // Function to verify Sanity webhook signature
 function verifySignature(body: string, signature: string): boolean {
   if (!SANITY_WEBHOOK_SECRET) {
-    console.warn('⚠️ SANITY_WEBHOOK_SECRET not configured, skipping signature verification');
-    return true; // Allow in development if secret not set
+    // SECURITY: In production, missing secret = reject. In dev, allow.
+    if (process.env.NODE_ENV === 'production') {
+      console.error('SANITY_WEBHOOK_SECRET not configured in production — rejecting webhook');
+      return false;
+    }
+    console.warn('⚠️ SANITY_WEBHOOK_SECRET not configured, skipping signature verification (dev only)');
+    return true;
   }
 
   const computedSignature = crypto
@@ -22,7 +27,10 @@ function verifySignature(body: string, signature: string): boolean {
     .update(body)
     .digest('hex');
 
-  return signature === computedSignature;
+  return crypto.timingSafeEqual(
+    Buffer.from(computedSignature, 'hex'),
+    Buffer.from(signature, 'hex')
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -30,8 +38,8 @@ export async function POST(request: NextRequest) {
     const body = await request.text();
     const signature = request.headers.get('sanity-webhook-signature') || '';
 
-    // Verify webhook signature for security
-    if (process.env.NODE_ENV === 'production' && !verifySignature(body, signature)) {
+    // SECURITY: Always verify webhook signature
+    if (!verifySignature(body, signature)) {
       console.error('❌ Invalid Sanity webhook signature');
       return NextResponse.json({ error: 'Invalid signature' }, { status: 401 });
     }

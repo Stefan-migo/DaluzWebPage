@@ -83,26 +83,24 @@ export async function POST(req: NextRequest) {
       const error = mpError as Error & { status?: number; response?: unknown };
       logger.error("MercadoPago preference creation error", error, { source: "checkout" });
 
-      const errorMessage = error?.message || "Error creating MercadoPago preference";
+      const internalMessage = error?.message || "Error creating MercadoPago preference";
+      logger.error("MercadoPago preference error detail", new Error(internalMessage), { source: "checkout", orderId: order.id });
 
       // Rollback: mark order as failed
-      await checkoutService.markOrderFailed(order.id, errorMessage);
+      await checkoutService.markOrderFailed(order.id, internalMessage);
 
-      const errorStatus = error?.status || 500;
       return NextResponse.json(
         {
-          error: "Failed to create payment preference",
-          details: errorMessage,
+          error: "No pudimos procesar tu pago. Por favor intentá nuevamente.",
         },
-        { status: errorStatus >= 400 && errorStatus < 600 ? errorStatus : 500 },
+        { status: 502 },
       );
     }
   } catch (error) {
     logger.error("Checkout API error", error instanceof Error ? error : undefined, { source: "checkout" });
     return NextResponse.json(
       {
-        error: "Failed to process checkout",
-        details: error instanceof Error ? error.message : "Unknown error",
+        error: "Error al procesar el checkout. Por favor intentá nuevamente.",
       },
       { status: 500 },
     );
