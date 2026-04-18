@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
+import { sanitizeProductPayload } from "@/lib/products/sanitize";
 
 export async function GET(request: NextRequest) {
   try {
@@ -152,16 +153,17 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json();
     const serviceClient = getServiceClient();
+    const payload = sanitizeProductPayload(body);
 
     const { data, error } = await serviceClient
       .from("products")
-      .insert([body])
+      .insert([payload])
       .select();
 
     if (error) {
       console.error("Database error:", error);
       return NextResponse.json(
-        { error: "Failed to create product" },
+        { error: "Failed to create product", details: error.message },
         { status: 500 },
       );
     }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
+import { sanitizeProductPayload } from "@/lib/products/sanitize";
 
 export async function GET(
   request: NextRequest,
@@ -61,9 +62,7 @@ export async function PUT(
 
     const body = await request.json();
     const serviceClient = getServiceClient();
-    
-    // Safety: Remove sensitive or non-updatable fields
-    const { id, created_at, ...updateData } = body;
+    const updateData = sanitizeProductPayload(body);
 
     const { data: updatedProduct, error } = await serviceClient
       .from("products")
@@ -78,7 +77,7 @@ export async function PUT(
     if (error) {
       console.error("Error updating product:", error);
       return NextResponse.json(
-        { error: "Failed to update product" },
+        { error: "Failed to update product", details: error.message },
         { status: 500 }
       );
     }
