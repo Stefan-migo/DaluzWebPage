@@ -74,42 +74,57 @@ export async function POST(
         .eq('status', 'open'); // Only update if currently open
 
       // Send email notification to customer for admin responses (not internal notes)
-      try {
-        const { sendNewResponseEmail } = await import('@/lib/email/templates/support');
-        await sendNewResponseEmail(
-          {
-            id: ticket.id,
-            ticket_number: ticket.ticket_number || ticketId,
-            subject: ticket.subject || 'Support Ticket',
-            description: ticket.description || '',
-            status: ticket.status || 'open',
-            priority: ticket.priority || 'medium',
-            customer_name: ticket.customer_name,
-            customer_email: ticket.customer_email
-          },
-          {
-            message: newMessage.message,
-            created_at: newMessage.created_at,
-            is_from_customer: false
+      if (ticket.customer_email) {
+        try {
+          const { sendNewResponseEmail } = await import('@/lib/email/templates/support');
+          const emailResult = await sendNewResponseEmail(
+            {
+              id: ticket.id,
+              ticket_number: ticket.ticket_number || ticketId,
+              subject: ticket.subject || 'Support Ticket',
+              description: ticket.description || '',
+              status: ticket.status || 'open',
+              priority: ticket.priority || 'medium',
+              customer_name: ticket.customer_name,
+              customer_email: ticket.customer_email
+            },
+            {
+              message: newMessage.message,
+              created_at: newMessage.created_at,
+              is_from_customer: false
+            }
+          );
+          if (emailResult?.success) {
+            console.log('✅ Response email sent successfully');
+          } else {
+            console.error('⚠️ Response email not delivered:', emailResult?.error);
           }
-        );
-        console.log('✅ Response email sent successfully');
-      } catch (emailError) {
-        console.error('⚠️ Failed to send response email:', emailError);
-        // Don't fail the request if email fails
+        } catch (emailError) {
+          console.error('⚠️ Failed to send response email:', emailError);
+          // Don't fail the request if email fails
+        }
+      } else {
+        console.warn('⚠️ Ticket has no customer_email; skipping response email');
       }
     }
 
-    // Log admin activity
-    await supabase.rpc('log_admin_activity', {
-      action: 'create_support_message',
-      resource_type: 'support_message',
-      resource_id: newMessage.id,
-      details: { 
-        ticket_id: ticketId,
-        message_type: is_internal ? 'internal_note' : 'response'
+    // Log admin activity (non-blocking — never fail the request over an audit log)
+    try {
+      const { error: rpcError } = await supabase.rpc('log_admin_activity', {
+        p_action: 'create_support_message',
+        p_resource_type: 'support_message',
+        p_resource_id: newMessage.id,
+        p_details: {
+          ticket_id: ticketId,
+          message_type: is_internal ? 'internal_note' : 'response'
+        }
+      });
+      if (rpcError) {
+        console.error('⚠️ log_admin_activity RPC error:', rpcError);
       }
-    });
+    } catch (rpcError) {
+      console.error('⚠️ log_admin_activity threw:', rpcError);
+    }
 
     return NextResponse.json({ message: newMessage });
 

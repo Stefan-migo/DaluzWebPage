@@ -55,6 +55,15 @@ export async function sendEmail(data: {
       reply_to: data.replyTo || emailConfig.replyTo,
     })
 
+    // Resend v2 returns { data, error } without throwing on API failures
+    if (result.error) {
+      const errorMessage = typeof result.error === 'string'
+        ? result.error
+        : (result.error as { message?: string })?.message || JSON.stringify(result.error)
+      console.error('Resend returned error:', result.error)
+      return { success: false, error: errorMessage }
+    }
+
     console.log('Email sent successfully:', result.data?.id)
     return { success: true, id: result.data?.id }
   } catch (error) {
