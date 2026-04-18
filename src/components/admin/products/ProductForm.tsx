@@ -338,7 +338,7 @@ export default function ProductForm({
         const error = await response.json();
         toast.error(
           error.message ||
-            `Error al ${mode === "edit" ? "actualizar" : "crear"} el producto`,
+          `Error al ${mode === "edit" ? "actualizar" : "crear"} el producto`,
         );
         markAsSaved();
       }
@@ -489,10 +489,9 @@ export default function ProductForm({
                     flex items-center gap-2 px-4 py-3 rounded-md text-sm font-medium
                     data-[state=active]:shadow-none border-b-2 -mb-px
                     transition-all duration-200
-                    ${
-                      activeTab === tab.id
-                        ? "border-b-2 border-current"
-                        : "border-transparent hover:bg-admin-bg-tertiary"
+                    ${activeTab === tab.id
+                      ? "border-b-2 border-current"
+                      : "border-transparent hover:bg-admin-bg-tertiary"
                     }
                   `}
                   style={{
