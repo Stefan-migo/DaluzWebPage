@@ -72,7 +72,18 @@ export function sanitizeProductPayload(
   }
 
   for (const field of NULLABLE_TEXT_FIELDS) {
-    if (field in output && output[field] === "") output[field] = null;
+    if (field in output) {
+      const val = output[field];
+      if (
+        val === "" ||
+        val === "none" ||
+        val === "null" ||
+        val === "undefined" ||
+        (typeof val === "string" && val.trim() === "")
+      ) {
+        output[field] = null;
+      }
+    }
   }
 
   if ("dimensions" in output) {
