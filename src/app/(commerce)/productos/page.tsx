@@ -26,8 +26,10 @@ import {
   ChevronRight,
   ArrowUpDown,
   X,
+  Heart,
 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useLike } from "@/contexts/LikeContext";
 import { toast } from "sonner";
 
 interface Product {
@@ -83,6 +85,7 @@ interface ProductsResponse {
 function ProductsContent() {
   const searchParams = useSearchParams();
   const { addItem } = useCart();
+  const { isLiked, likedProducts } = useLike();
 
   // State
   const [products, setProducts] = useState<Product[]>([]);
@@ -121,6 +124,7 @@ function ProductsContent() {
     sort: false,
   });
   const [showFilters, setShowFilters] = useState(false);
+  const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
 
   // Fetch categories
   useEffect(() => {
@@ -251,6 +255,7 @@ function ProductsContent() {
     setPriceRange({ min: "", max: "" });
     setSortBy("featured");
     setCurrentPage(1);
+    setShowOnlyFavorites(false);
   };
 
   const hasActiveFilters = Boolean(
@@ -258,8 +263,13 @@ function ProductsContent() {
       selectedCategory ||
       (selectedSkinType && selectedSkinType !== "all") ||
       priceRange.min ||
-      priceRange.max,
+      priceRange.max ||
+      showOnlyFavorites,
   );
+
+  const displayedProducts = showOnlyFavorites
+    ? products.filter((p) => isLiked(p.id))
+    : products;
 
   const skinTypes = ["seca", "grasa", "mixta", "sensible", "normal"];
 
@@ -425,6 +435,20 @@ function ProductsContent() {
                       </div>
                     </div>
 
+                    <Button
+                      variant={showOnlyFavorites ? "line-primary" : "outline"}
+                      onClick={() => setShowOnlyFavorites((v) => !v)}
+                      className="w-full text-xs h-6"
+                    >
+                      <Heart
+                        className={cn(
+                          "h-3 w-3 mr-1",
+                          showOnlyFavorites && "fill-current",
+                        )}
+                      />
+                      {showOnlyFavorites ? "Mostrando favoritos" : "Solo favoritos"}
+                    </Button>
+
                     {hasActiveFilters && (
                       <Button
                         variant="outline"
@@ -508,6 +532,9 @@ function ProductsContent() {
               categories={categories}
               onClearFilters={clearFilters}
               hasActiveFilters={hasActiveFilters}
+              showOnlyFavorites={showOnlyFavorites}
+              setShowOnlyFavorites={setShowOnlyFavorites}
+              favoritesCount={likedProducts.size}
             />
           </div>
 
@@ -532,15 +559,37 @@ function ProductsContent() {
                   />
                 ))}
               </div>
-            ) : products.length === 0 ? (
+            ) : displayedProducts.length === 0 ? (
               <div className="text-center py-12">
-                <p className="text-tierra-media mb-4">
-                  No se encontraron productos
-                </p>
-                {hasActiveFilters && (
-                  <Button variant="outline" onClick={clearFilters}>
-                    Limpiar filtros
-                  </Button>
+                {showOnlyFavorites && likedProducts.size === 0 ? (
+                  <>
+                    <Heart className="h-12 w-12 text-tierra-media mx-auto mb-4" />
+                    <p className="text-tierra-media mb-2 text-lg font-medium">
+                      Todavía no tenés favoritos
+                    </p>
+                    <p className="text-gray-500 mb-4 text-sm">
+                      Marcá productos con el corazón para verlos acá.
+                    </p>
+                    <Button
+                      variant="outline"
+                      onClick={() => setShowOnlyFavorites(false)}
+                    >
+                      Ver todos los productos
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-tierra-media mb-4">
+                      {showOnlyFavorites
+                        ? "Ninguno de tus favoritos coincide con los filtros actuales"
+                        : "No se encontraron productos"}
+                    </p>
+                    {hasActiveFilters && (
+                      <Button variant="outline" onClick={clearFilters}>
+                        Limpiar filtros
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
             ) : (
@@ -551,7 +600,7 @@ function ProductsContent() {
                     : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 }`}
               >
-                {products.map((product) => (
+                {displayedProducts.map((product) => (
                   <ProductCard
                     key={product.id}
                     id={product.id}
@@ -583,7 +632,7 @@ function ProductsContent() {
             )}
 
             {/* Pagination */}
-            {pagination.totalPages > 1 && (
+            {pagination.totalPages > 1 && !showOnlyFavorites && (
               <div className="mt-12 flex justify-center gap-2 relative z-10 px-4 lg:px-0">
                 <Button
                   variant="outline"

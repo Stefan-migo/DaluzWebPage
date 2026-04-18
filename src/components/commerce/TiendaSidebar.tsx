@@ -22,6 +22,7 @@ import {
   Grid3X3,
   Grid2X2,
   SlidersHorizontal,
+  Heart,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -41,6 +42,9 @@ interface TiendaSidebarProps {
   categories: Array<{ id: string; name: string; slug: string }>;
   onClearFilters: () => void;
   hasActiveFilters: boolean;
+  showOnlyFavorites?: boolean;
+  setShowOnlyFavorites?: (value: boolean) => void;
+  favoritesCount?: number;
   className?: string;
 }
 
@@ -89,6 +93,9 @@ export default function TiendaSidebar({
   categories,
   onClearFilters,
   hasActiveFilters,
+  showOnlyFavorites = false,
+  setShowOnlyFavorites,
+  favoritesCount = 0,
   className,
 }: TiendaSidebarProps) {
   const [expandedSections, setExpandedSections] = useState({
@@ -291,6 +298,25 @@ export default function TiendaSidebar({
               </div>
             </div>
 
+            {/* Favorites Toggle */}
+            {setShowOnlyFavorites && (
+              <Button
+                variant={showOnlyFavorites ? "line-primary" : "outline"}
+                onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
+                className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
+              >
+                <Heart
+                  className={cn(
+                    "h-4 w-4",
+                    showOnlyFavorites && "fill-current",
+                  )}
+                />
+                {showOnlyFavorites
+                  ? `Mostrando favoritos (${favoritesCount})`
+                  : "Mis favoritos"}
+              </Button>
+            )}
+
             {/* Clear Filters */}
             {hasActiveFilters && (
               <Button
@@ -429,6 +455,11 @@ export default function TiendaSidebar({
                 {(priceRange.min || priceRange.max) && (
                   <Badge variant="secondary" className="text-xs">
                     Precio: {priceRange.min || "0"} - {priceRange.max || "∞"}
+                  </Badge>
+                )}
+                {showOnlyFavorites && (
+                  <Badge variant="secondary" className="text-xs">
+                    Solo favoritos
                   </Badge>
                 )}
               </div>
