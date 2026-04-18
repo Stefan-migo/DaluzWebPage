@@ -176,7 +176,7 @@ export async function POST(
       );
     }
 
-    // Create the review (auto-approved by default)
+    // Create the review in pending state — admin must approve before publication
     const { data: review, error } = await supabase
       .from('reviews')
       .insert({
@@ -186,7 +186,7 @@ export async function POST(
         title: title || null,
         comment: comment || null,
         is_verified_purchase: false, // TODO: Implement purchase verification
-        is_approved: true // Auto-approve reviews by default
+        is_approved: false
       })
       .select()
       .single();
@@ -201,7 +201,7 @@ export async function POST(
 
     return NextResponse.json({
       review,
-      message: '¡Gracias por tu reseña! Tu opinión es muy valiosa para nosotros.'
+      message: '¡Gracias por tu reseña! La revisaremos antes de publicarla.'
     }, { status: 201 });
 
   } catch (error) {

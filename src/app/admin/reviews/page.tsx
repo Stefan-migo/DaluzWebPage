@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { StarDisplay } from "@/components/ui/reviews/StarRating";
-import { Search, Filter, Eye, Trash2, RefreshCw } from "lucide-react";
+import { Search, Filter, Eye, Trash2, RefreshCw, Check } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -75,6 +75,27 @@ export default function AdminReviewsPage() {
   useEffect(() => {
     fetchReviews();
   }, [searchTerm, statusFilter, ratingFilter]);
+
+  const handleApproveReview = async (reviewId: string) => {
+    try {
+      const response = await fetch(
+        `/api/admin/reviews/${reviewId}/approve`,
+        { method: "POST" },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Error al aprobar reseña");
+      }
+
+      toast.success("Reseña publicada");
+      fetchReviews();
+    } catch (error) {
+      console.error("Error approving review:", error);
+      toast.error("Error al aprobar la reseña");
+    }
+  };
 
   const handleDeleteReview = async (reviewId: string) => {
     if (!confirm("¿Estás seguro de que quieres eliminar esta reseña?")) {
@@ -471,6 +492,20 @@ export default function AdminReviewsPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Button>
+                          {!review.is_approved && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleApproveReview(review.id)}
+                              title="Aprobar y publicar reseña"
+                              style={{
+                                borderColor: "var(--admin-border-secondary)",
+                                color: "var(--admin-success)",
+                              }}
+                            >
+                              <Check className="w-4 h-4" />
+                            </Button>
+                          )}
                           <Button
                             size="sm"
                             variant="outline"
