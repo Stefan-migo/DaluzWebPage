@@ -187,16 +187,22 @@ export default function EmailTemplatesManager() {
       );
 
       const data = await response.json();
-      if (data.success) {
+      if (response.ok && data.success) {
         toast.success(data.message || "Email de prueba enviado");
         setShowTestDialog(false);
         setTestEmail("");
       } else {
-        toast.error(data.error || "Error al enviar email de prueba");
+        const message = data.error || "Error al enviar email de prueba";
+        const detail = data.details ? ` — ${data.details}` : "";
+        toast.error(`${message}${detail}`, { duration: 8000 });
       }
     } catch (error) {
       console.error("Error testing email:", error);
-      toast.error("Error al enviar email de prueba");
+      toast.error(
+        error instanceof Error
+          ? `Error al enviar email de prueba: ${error.message}`
+          : "Error al enviar email de prueba",
+      );
     } finally {
       setTesting(null);
     }
