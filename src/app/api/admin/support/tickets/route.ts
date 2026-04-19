@@ -271,43 +271,61 @@ export async function POST(request: NextRequest) {
 
     // Log admin activity (non-blocking)
     try {
-      await supabase.rpc('log_admin_activity', {
-        action: 'create_support_ticket',
-        resource_type: 'support_ticket',
-        resource_id: newTicket.id,
-        details: { 
+      const { error: rpcError } = await supabase.rpc('log_admin_activity', {
+        p_action: 'create_support_ticket',
+        p_resource_type: 'support_ticket',
+        p_resource_id: newTicket.id,
+        p_details: {
           ticket_number: newTicket.ticket_number,
           customer_email,
-          priority 
+          priority
         }
       });
+      if (rpcError) {
+        console.error('⚠️ log_admin_activity RPC error:', rpcError);
+      }
     } catch (logError) {
       console.error('⚠️ Failed to log admin activity:', logError);
       // Don't fail the request if logging fails
     }
 
-    // Send email notification to customer using Resend (non-blocking)
-    try {
-      // Check if Resend is configured
-      if (process.env.RESEND_API_KEY) {
-        const { sendTicketCreatedEmail } = await import('@/lib/email/templates/support');
-        await sendTicketCreatedEmail({
-          id: newTicket.id,
-          ticket_number: newTicket.ticket_number,
-          subject: title,
-          description,
-          status: newTicket.status,
-          priority: newTicket.priority,
-          customer_name: customer_name,
-          customer_email: customer_email
-        });
-        console.log('✅ Ticket creation email sent successfully');
-      } else {
-        console.log('⚠️ Resend not configured, skipping email notification');
+    // Send email notifications using Resend (non-blocking):
+    // 1) Customer confirmation to ticket.customer_email
+    // 2) Admin notification to SUPPORT_ADMIN_EMAIL
+    if (process.env.RESEND_API_KEY) {
+      const ticketPayload = {
+        id: newTicket.id,
+        ticket_number: newTicket.ticket_number,
+        subject: title,
+        description,
+        status: newTicket.status,
+        priority: newTicket.priority,
+        customer_name: customer_name,
+        customer_email: customer_email
+      };
+
+      try {
+        const { sendTicketCreatedEmail, sendAdminNewTicketNotification } = await import('@/lib/email/templates/support');
+
+        const customerResult = await sendTicketCreatedEmail(ticketPayload);
+        if (customerResult?.success) {
+          console.log('✅ Customer ticket confirmation email sent');
+        } else {
+          console.error('⚠️ Customer ticket email not delivered:', customerResult?.error);
+        }
+
+        const adminResult = await sendAdminNewTicketNotification(ticketPayload);
+        if (adminResult?.success) {
+          console.log('✅ Admin notification email sent');
+        } else {
+          console.error('⚠️ Admin notification email not delivered:', adminResult?.error);
+        }
+      } catch (emailError) {
+        console.error('⚠️ Failed to send ticket emails:', emailError);
+        // Don't fail the request if email fails
       }
-    } catch (emailError) {
-      console.error('⚠️ Failed to send ticket creation email:', emailError);
-      // Don't fail the request if email fails
+    } else {
+      console.log('⚠️ Resend not configured, skipping email notifications');
     }
 
     // Create admin notification for new ticket (non-blocking)

@@ -1,4 +1,4 @@
-import { sendEmail } from './client'
+import { sendEmail, SUPPORT_ADMIN_EMAIL } from './client'
 import { 
   loadEmailTemplate, 
   incrementTemplateUsage
@@ -761,11 +761,12 @@ export class EmailNotificationService {
     message: string;
   }): Promise<{ success: boolean; error?: string }> {
     try {
-      // For Resend onboarding domain (resend.dev), we can only send to the registered email
-      // When proper domain is configured, use the business contact email
+      // Route contact form notifications to the admin inbox.
+      // If Resend's onboarding domain is still in use (resend.dev), fall back
+      // to the address registered with Resend — it's the only one allowed to receive.
       const recipientEmail = process.env.RESEND_FROM_EMAIL?.includes('resend.dev')
-        ? process.env.RESEND_FROM_EMAIL // Use the onboarding email (registered email with Resend)
-        : 'contacto@daluzconsciente.com' // Use business email when domain is configured
+        ? process.env.RESEND_FROM_EMAIL
+        : SUPPORT_ADMIN_EMAIL
       
       const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

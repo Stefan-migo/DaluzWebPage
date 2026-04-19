@@ -14,6 +14,10 @@ export const emailConfig = {
   domain: process.env.NEXT_PUBLIC_APP_URL || 'https://daluzconsciente.com'
 }
 
+// Admin inbox — receives all admin-facing support/contact notifications
+export const SUPPORT_ADMIN_EMAIL =
+  process.env.SUPPORT_ADMIN_EMAIL || 'daluzalkimya@gmail.com'
+
 // Email types
 export type EmailType = 
   | 'order-confirmation'

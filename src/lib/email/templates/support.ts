@@ -1,4 +1,4 @@
-import { sendEmail } from '../client';
+import { sendEmail, SUPPORT_ADMIN_EMAIL } from '../client';
 
 interface SupportTicket {
   id: string;
@@ -434,6 +434,72 @@ Ver ticket: ${process.env.NEXT_PUBLIC_APP_URL || 'https://daluzconsciente.com'}/
     html,
     text,
     replyTo: 'soporte@daluzconsciente.com'
+  });
+}
+
+/**
+ * Notify the admin inbox that a new support ticket has been opened.
+ * Separate from sendTicketCreatedEmail (which confirms receipt to the customer).
+ */
+export async function sendAdminNewTicketNotification(ticket: SupportTicket) {
+  const subject = `[Soporte] Nuevo ticket #${ticket.ticket_number}: ${ticket.subject}`;
+
+  const html = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><title>Nuevo Ticket</title></head>
+<body style="margin:0;padding:0;font-family:Helvetica,Arial,sans-serif;background:#f4f4f4;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f4;padding:20px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
+        <tr><td style="background:linear-gradient(135deg,#8B4513 0%,#D2691E 100%);padding:24px;text-align:center;">
+          <h1 style="margin:0;color:#fff;font-size:22px;">Nuevo ticket de soporte</h1>
+        </td></tr>
+        <tr><td style="padding:30px;">
+          <p style="margin:0 0 16px;color:#333;font-size:15px;">Se ha creado un nuevo ticket en el panel de soporte.</p>
+          <table width="100%" cellpadding="8" cellspacing="0" style="background:#f8f8f8;border-radius:6px;border:1px solid #e0e0e0;">
+            <tr><td style="color:#8B4513;font-weight:600;width:140px;">Ticket:</td><td style="color:#333;">#${ticket.ticket_number}</td></tr>
+            <tr><td style="color:#8B4513;font-weight:600;">Asunto:</td><td style="color:#333;">${ticket.subject}</td></tr>
+            <tr><td style="color:#8B4513;font-weight:600;">Cliente:</td><td style="color:#333;">${ticket.customer_name || '—'} &lt;${ticket.customer_email}&gt;</td></tr>
+            <tr><td style="color:#8B4513;font-weight:600;">Prioridad:</td><td style="color:#333;">${getPriorityLabel(ticket.priority)}</td></tr>
+            <tr><td style="color:#8B4513;font-weight:600;">Estado:</td><td style="color:#333;">${getStatusLabel(ticket.status)}</td></tr>
+          </table>
+          <div style="background:#fff;border-left:4px solid #8B4513;padding:15px;margin:20px 0;">
+            <p style="margin:0 0 6px;color:#999;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Descripción</p>
+            <div style="color:#333;font-size:14px;line-height:1.6;white-space:pre-wrap;">${ticket.description || '(sin descripción)'}</div>
+          </div>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin:24px 0 0;"><tr><td align="center">
+            <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://daluzconsciente.com'}/admin/support/tickets/${ticket.id}"
+               style="display:inline-block;background:linear-gradient(135deg,#8B4513 0%,#D2691E 100%);color:#fff;text-decoration:none;padding:12px 28px;border-radius:6px;font-weight:600;">
+              Abrir en el panel
+            </a>
+          </td></tr></table>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+
+  const text = `Nuevo ticket de soporte
+
+Ticket: #${ticket.ticket_number}
+Asunto: ${ticket.subject}
+Cliente: ${ticket.customer_name || '—'} <${ticket.customer_email}>
+Prioridad: ${getPriorityLabel(ticket.priority)}
+Estado: ${getStatusLabel(ticket.status)}
+
+Descripción:
+${ticket.description || '(sin descripción)'}
+
+Abrir en el panel: ${process.env.NEXT_PUBLIC_APP_URL || 'https://daluzconsciente.com'}/admin/support/tickets/${ticket.id}`;
+
+  return sendEmail({
+    to: SUPPORT_ADMIN_EMAIL,
+    subject,
+    html,
+    text,
+    replyTo: ticket.customer_email
   });
 }
 
