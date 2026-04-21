@@ -3,7 +3,11 @@
     "allow": [
       "Bash(npx tsc:*)",
       "Bash(npm install *)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(nslookup daluzconsciente.com 8.8.8.8)",
+      "Bash(nslookup -type=NS daluzconsciente.com. 1.1.1.1)",
+      "Bash(nslookup daluzconsciente.com. 1.1.1.1)",
+      "Bash(nslookup www.daluzconsciente.com. 1.1.1.1)"
     ]
   }
 }
