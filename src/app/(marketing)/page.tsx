@@ -226,7 +226,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
 
-              <Link href="/nuestra-historia">
+              <Link href="/filosofia-proposito">
                 <Button
                   variant="ghost"
                   className="group px-8 py-4 text-lg font-medium text-white border-2 border-white/40 hover:bg-white glass-card transition-all duration-500"
@@ -403,7 +403,7 @@ export default async function HomePage() {
 
                   {/* Enhanced CTA with responsive sizing */}
                   <div className="pt-3 sm:pt-4 md:pt-5 lg:pt-6">
-                    <Link href="/productos">
+                    <Link href="/raices">
                       <Button className="group btn-enhanced px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 lg:px-7 lg:py-3.5 xl:px-8 xl:py-4 text-white font-semibold text-xs sm:text-sm md:text-sm lg:text-base xl:text-base w-full sm:w-auto">
                         NUESTRO MANIFIESTO DA LUZ
                       </Button>

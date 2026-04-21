@@ -25,7 +25,7 @@ export default function RaicesPage() {
               </h1>
             </div>
           </section>
-          <p className="raices-band-subtitle raices-band-subtitle-white">FILOSOFÍA Y PROPÓSITO</p>
+          <p id="filosofia-proposito" className="raices-band-subtitle raices-band-subtitle-white">FILOSOFÍA Y PROPÓSITO</p>
           <section className="raices-main-text-section">
             <p className="raices-intro raices-intro-deep raices-intro-1">
               <em>La vida se transforma cuando cada acción se convierte en un acto sagrado de atención y amor incondicional.</em>
@@ -51,7 +51,7 @@ export default function RaicesPage() {
           <section className="raices-header-band raices-hero-mobile-band" aria-labelledby="raices-title-mobile">
             <div className="raices-header-band-inner">
               <h1 id="raices-title-mobile" className="raices-band-title">RAÍCES DA LUZ</h1>
-              <p className="raices-band-subtitle">FILOSOFÍA Y PROPÓSITO</p>
+              <p id="filosofia-proposito-mobile" className="raices-band-subtitle">FILOSOFÍA Y PROPÓSITO</p>
             </div>
           </section>
           <div className="raices-content raices-hero-mobile-content">
