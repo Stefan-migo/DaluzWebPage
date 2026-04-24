@@ -77,12 +77,20 @@ const saveToLocalStorage = (items: CartItem[]) => {
   }
 };
 
+const FALLBACK_IMAGE = "/images/placeholder-product.jpg";
+
+const normalizeItem = (item: CartItem): CartItem => ({
+  ...item,
+  image: item.image && item.image.trim() !== "" ? item.image : FALLBACK_IMAGE,
+});
+
 const loadFromLocalStorage = (): CartItem[] => {
   if (typeof window !== "undefined") {
     const saved = localStorage.getItem("daluz-cart");
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved) as CartItem[];
+        return Array.isArray(parsed) ? parsed.map(normalizeItem) : [];
       } catch {
         return [];
       }
@@ -177,11 +185,11 @@ function cartReducer(state: CartState, action: CartAction): CartState {
           action.payload.quantity || 1,
           action.payload.stock,
         );
-        const newItem: CartItem = {
+        const newItem: CartItem = normalizeItem({
           ...action.payload,
           id: `${action.payload.productId}-${action.payload.variantId || "default"}`,
           quantity,
-        };
+        } as CartItem);
         newItems = [...state.items, newItem];
 
         // Track add to cart event

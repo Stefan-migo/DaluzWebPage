@@ -1932,13 +1932,13 @@ export default async function HomePage() {
                 consciente y conexión con la naturaleza.
               </p>
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/daluzconsciente"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <Button className="group btn-enhanced px-8 py-4 text-lg text-white font-semibold rounded-full">
                   <Heart className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                  Síguenos en Instagram
+                  Seguinos en Instagram
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
                 </Button>
               </a>
