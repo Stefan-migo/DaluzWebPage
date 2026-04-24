@@ -30,11 +30,15 @@ type SignupForm = z.infer<typeof signupSchema>;
 
 export default function SignupPage() {
   const router = useRouter();
-  const { signUp, signUpWithGoogle, loading, error } = useAuth();
+  const { signUp, signUpWithGoogle, resendConfirmation, loading, error } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState<string>("");
+  const [resendStatus, setResendStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [resendMessage, setResendMessage] = useState<string>("");
+  const [formError, setFormError] = useState<string>("");
 
   const {
     register,
@@ -45,6 +49,7 @@ export default function SignupPage() {
   });
 
   const onSubmit = async (data: SignupForm) => {
+    setFormError("");
     try {
       await signUp(
         data.email,
@@ -55,9 +60,36 @@ export default function SignupPage() {
           phone: data.phone,
         }
       );
+      setSubmittedEmail(data.email);
       setIsSuccess(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Signup error:", err);
+      const rawMessage: string =
+        err?.message || "No pudimos crear la cuenta. Intentá de nuevo en unos minutos.";
+      // Normalize Supabase's default English messages for the duplicate-email case.
+      const normalized = /already registered|already been registered|user already/i.test(rawMessage)
+        ? "Ya existe una cuenta registrada con ese email. Iniciá sesión o recuperá tu contraseña."
+        : rawMessage;
+      setFormError(normalized);
+    }
+  };
+
+  const handleResend = async () => {
+    if (!submittedEmail || resendStatus === "sending") return;
+    setResendStatus("sending");
+    setResendMessage("");
+    try {
+      const { error: resendError } = await resendConfirmation(submittedEmail);
+      if (resendError) {
+        setResendStatus("error");
+        setResendMessage(resendError.message || "No pudimos reenviar el email. Intentá de nuevo en unos minutos.");
+      } else {
+        setResendStatus("sent");
+        setResendMessage("Te reenviamos el email de confirmación.");
+      }
+    } catch (err: any) {
+      setResendStatus("error");
+      setResendMessage(err?.message || "Error inesperado al reenviar el email.");
     }
   };
 
@@ -91,12 +123,54 @@ export default function SignupPage() {
         <CardContent className="bg-bg-light p-6 space-y-5">
           <Alert className="bg-white border-brand-primary/20">
             <AlertDescription className="text-text-primary font-text">
-              Te hemos enviado un email de confirmación. Por favor, revisa tu bandeja de entrada
-              y haz clic en el enlace para activar tu cuenta.
+              Te enviamos un email de confirmación a <strong>{submittedEmail}</strong>.
+              Hacé clic en el enlace para activar tu cuenta.
+              <br /><br />
+              <span className="text-sm text-text-primary/70">
+                ¿No lo ves? Revisá tu carpeta de <strong>spam / correo no deseado</strong>.
+                Puede tardar unos minutos en llegar.
+              </span>
             </AlertDescription>
           </Alert>
-          <Button 
-            asChild 
+
+          {resendMessage && (
+            <Alert
+              className={
+                resendStatus === "error"
+                  ? "bg-red-50 border-red-200"
+                  : "bg-green-50 border-green-200"
+              }
+            >
+              <AlertDescription
+                className={resendStatus === "error" ? "text-red-800" : "text-green-800"}
+              >
+                {resendMessage}
+              </AlertDescription>
+            </Alert>
+          )}
+
+          <Button
+            type="button"
+            onClick={handleResend}
+            disabled={resendStatus === "sending" || resendStatus === "sent"}
+            variant="outline"
+            className="w-full py-6 text-base font-text"
+            style={{ borderRadius: '0px 15px' }}
+          >
+            {resendStatus === "sending" ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Reenviando...
+              </>
+            ) : resendStatus === "sent" ? (
+              "Email reenviado"
+            ) : (
+              "Reenviar email de confirmación"
+            )}
+          </Button>
+
+          <Button
+            asChild
             className="w-full bg-brand-primary hover:bg-brand-secondary text-white font-text font-semibold py-6 text-base transition-all duration-300 shadow-md hover:shadow-lg"
             style={{ borderRadius: '0px 15px' }}
           >
@@ -119,9 +193,11 @@ export default function SignupPage() {
       </CardHeader>
       <CardContent className="bg-bg-light p-6 space-y-5">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          {error && (
+          {(formError || error) && (
             <Alert variant="destructive" className="bg-red-50 border-red-200">
-              <AlertDescription className="text-red-800">{error.message}</AlertDescription>
+              <AlertDescription className="text-red-800">
+                {formError || error?.message}
+              </AlertDescription>
             </Alert>
           )}
 

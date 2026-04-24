@@ -303,6 +303,13 @@ export function useAuth() {
     setAuthState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
+      // Resolve the site origin for the confirmation email link.
+      // Prefer NEXT_PUBLIC_SITE_URL (stable across environments) and fall back to window.location.origin.
+      const siteUrl =
+        process.env.NEXT_PUBLIC_SITE_URL ||
+        process.env.NEXT_PUBLIC_APP_URL ||
+        (typeof window !== "undefined" ? window.location.origin : "");
+
       // Create auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -311,13 +318,31 @@ export function useAuth() {
           data: {
             first_name: userData?.firstName,
             last_name: userData?.lastName,
+            phone: userData?.phone,
           },
+          emailRedirectTo: siteUrl ? `${siteUrl}/auth/callback?next=/perfil` : undefined,
         },
       });
 
       if (authError) {
         setAuthState((prev) => ({ ...prev, error: authError, loading: false }));
         throw authError;
+      }
+
+      // Supabase returns a "fake" user with identities: [] when the email is
+      // already registered (to prevent user enumeration). Treat that as an error.
+      if (
+        authData.user &&
+        Array.isArray(authData.user.identities) &&
+        authData.user.identities.length === 0
+      ) {
+        const duplicateError = {
+          name: "AuthApiError",
+          message: "Ya existe una cuenta registrada con ese email. Iniciá sesión o recuperá tu contraseña.",
+          status: 409,
+        } as AuthError;
+        setAuthState((prev) => ({ ...prev, error: duplicateError, loading: false }));
+        throw duplicateError;
       }
 
       // If user was created, also create their profile
@@ -438,6 +463,23 @@ export function useAuth() {
     }
   };
 
+  const resendConfirmation = async (email: string) => {
+    const supabase = supabaseRef.current || getSupabaseClient();
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (typeof window !== "undefined" ? window.location.origin : "");
+
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email,
+      options: {
+        emailRedirectTo: siteUrl ? `${siteUrl}/auth/callback?next=/perfil` : undefined,
+      },
+    });
+    return { error };
+  };
+
   const signInWithGoogle = async () => {
     const supabase = supabaseRef.current || getSupabaseClient();
     setAuthState((prev) => ({ ...prev, loading: true, error: null }));
@@ -480,6 +522,7 @@ export function useAuth() {
     signOut,
     updateProfile,
     resetPassword,
+    resendConfirmation,
     signInWithGoogle,
     signUpWithGoogle,
     refetchProfile: () =>

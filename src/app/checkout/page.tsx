@@ -532,7 +532,7 @@ export default function CheckoutPage() {
                   <div className="mt-3 flex justify-center">
                     <Badge
                       variant="default"
-                      className="bg-admin-success/20 border-admin-success/30"
+                      className=" border-admin-success/30"
                     >
                       Pago 100% seguro
                     </Badge>

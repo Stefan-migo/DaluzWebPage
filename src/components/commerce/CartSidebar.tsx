@@ -85,13 +85,14 @@ export default function CartSidebar() {
               <p className="text-text-primary/70 font-text text-center mb-6 max-w-sm">
                 Agrega productos a tu carrito para comenzar tu compra
               </p>
-              <Button
-                onClick={() => setCartOpen(false)}
-                className="bg-brand-primary hover:bg-brand-secondary text-white font-text font-semibold"
-                style={{ borderRadius: '0px 15px' }}
-              >
-                Continuar Comprando
-              </Button>
+              <Link href="/productos" onClick={() => setCartOpen(false)}>
+                <Button
+                  className="bg-brand-primary hover:bg-brand-secondary text-white font-text font-semibold"
+                  style={{ borderRadius: '0px 15px' }}
+                >
+                  Continuar Comprando
+                </Button>
+              </Link>
             </div>
           ) : (
             <>
