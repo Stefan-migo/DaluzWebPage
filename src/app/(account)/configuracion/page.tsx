@@ -75,15 +75,14 @@ export default function SettingsPage() {
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(() => {
-    if (typeof window === "undefined") return false;
-    try {
-      return localStorage.getItem("2fa_enabled") === "true";
-    } catch {
-      return false;
-    }
-  });
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
   const [twoFactorLoading, setTwoFactorLoading] = useState(false);
+
+  useEffect(() => {
+    if (profile) {
+      setTwoFactorEnabled(profile.two_factor_enabled ?? false);
+    }
+  }, [profile]);
 
   // Initialize with safe defaults; useEffect below syncs from profile + localStorage
   const [notifications, setNotifications] = useState(() => {
@@ -298,7 +297,6 @@ export default function SettingsPage() {
                         const data = await response.json();
                         if (response.ok && data.success) {
                           setTwoFactorEnabled(checked);
-                          localStorage.setItem('2fa_enabled', String(checked));
                           if (checked) {
                             toast.success('2FA activado. Te enviamos un email de confirmación.');
                           } else {

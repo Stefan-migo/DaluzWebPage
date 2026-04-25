@@ -36,6 +36,7 @@ export type Database = {
           updated_at: string;
           // From migration 20260323000001 - denormalized treasures for fast queries
           treasures: string[] | null;
+          two_factor_enabled: boolean;
         };
         Insert: {
           id: string;
@@ -62,6 +63,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           treasures?: string[] | null;
+          two_factor_enabled?: boolean;
         };
         Update: {
           id?: string;
@@ -88,6 +90,7 @@ export type Database = {
           created_at?: string;
           updated_at?: string;
           treasures?: string[] | null;
+          two_factor_enabled?: boolean;
         };
         Relationships: [];
       };

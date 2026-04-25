@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuth } from "@/hooks/useAuth";
+import { createClient } from "@/utils/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -39,18 +40,41 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginForm) => {
     try {
       const result = await signIn(data.email, data.password);
-      if (result.error) {
-        // Error is handled by the useAuth hook
+      if (result.error || !result.data?.user) {
         return;
       }
-      // Small delay to let auth state update, then redirect
-      // The redirect will happen via auth state change, but we can also do it here
+
+      const supabase = createClient();
+      const { data: profileRow } = await supabase
+        .from("profiles")
+        .select("two_factor_enabled")
+        .eq("id", result.data.user.id)
+        .single();
+
+      if (profileRow?.two_factor_enabled) {
+        await supabase.auth.signOut();
+        const sendRes = await fetch("/api/auth/2fa/send-code", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: data.email, password: data.password }),
+        });
+        if (!sendRes.ok) {
+          const err = await sendRes.json().catch(() => ({}));
+          console.error("2FA send-code failed:", err);
+          alert(err.error || "No se pudo enviar el código de verificación");
+          return;
+        }
+        sessionStorage.setItem("pending_2fa_password", data.password);
+        sessionStorage.setItem("pending_2fa_email", data.email);
+        router.push("/verify-2fa");
+        return;
+      }
+
       setTimeout(() => {
-        router.push("/"); // Redirect to home after successful login
-        router.refresh(); // Refresh to update auth state
+        router.push("/");
+        router.refresh();
       }, 100);
     } catch (err) {
-      // Error is handled by the useAuth hook
       console.error("Login error:", err);
     }
   };

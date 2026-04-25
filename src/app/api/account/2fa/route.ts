@@ -31,6 +31,19 @@ export async function POST(request: Request) {
       )
     }
 
+    const { error: updateError } = await supabase
+      .from('profiles')
+      .update({ two_factor_enabled: enabled })
+      .eq('id', user.id)
+
+    if (updateError) {
+      console.error('Error updating two_factor_enabled:', updateError)
+      return NextResponse.json(
+        { error: 'No se pudo actualizar la configuración de 2FA' },
+        { status: 500 }
+      )
+    }
+
     if (enabled) {
       // Send confirmation email when 2FA is activated
       const emailResult = await sendEmail({
