@@ -9,9 +9,9 @@ import { usePublicConfig } from "@/hooks/usePublicConfig";
 
 // Default values as fallbacks (used until config is loaded or if not set in DB)
 const DEFAULT_CONTACT_EMAIL = "contacto@daluzconsciente.com";
-const DEFAULT_PHONE = "+54 9 11 1234-5678";
+const DEFAULT_PHONE = "+54 9 3512 344580";
 const DEFAULT_ADDRESS = "Córdoba, Argentina";
-const DEFAULT_WHATSAPP = "5493511234567";
+const DEFAULT_WHATSAPP = "5493512344580";
 const DEFAULT_INSTAGRAM = "https://instagram.com/daluzconsciente";
 const DEFAULT_FACEBOOK = "https://facebook.com/daluzconsciente";
 
@@ -189,14 +189,16 @@ export default function Footer() {
                   {contactEmail}
                 </a>
               </div>
-              {/* Phone */}
+              {/* Phone / WhatsApp */}
               <div className="flex items-center justify-center space-x-3 px-4">
-                <Phone
+                <MessageCircle
                   className="h-4 w-4 flex-shrink-0 lucide"
                   style={{ color: "#F8D794" }}
                 />
                 <a
-                  href={`tel:${contactPhone.replace(/\s+/g, "")}`}
+                  href={`https://wa.me/${contactWhatsApp.replace(/\s+/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm hover:text-white transition-colors duration-300 flex-1 text-center"
                 >
                   {contactPhone}
@@ -383,12 +385,14 @@ export default function Footer() {
                   </a>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <Phone
+                  <MessageCircle
                     className="h-4 w-4 lucide"
                     style={{ color: "#F8D794" }}
                   />
                   <a
-                    href={`tel:${contactPhone.replace(/\s+/g, "")}`}
+                    href={`https://wa.me/${contactWhatsApp.replace(/\s+/g, "")}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="transition-colors duration-300 hover:bg-white/10 hover:text-white px-2 py-1 rounded"
                   >
                     {contactPhone}

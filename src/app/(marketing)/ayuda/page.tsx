@@ -134,9 +134,9 @@ const contactMethods = [
     title: "WhatsApp",
     description: "Lunes a Viernes: 9:00 - 18:00 hs",
     icon: Phone,
-    href: "https://wa.me/5490000000000",
+    href: "https://wa.me/5493512344580",
     color: "jade",
-    badge: "Atención inmediata",
+    badge: "+54 9 3512 344580",
   },
 ];
 

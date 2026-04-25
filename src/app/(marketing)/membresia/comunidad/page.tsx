@@ -40,10 +40,10 @@ export default function ComunidadPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/membresia">Ver Membresía</Link>
+              <Link href="/membresia" style={{ backgroundColor: '#6A1111', border: '2px solid #6A1111', color: '#FFF4B3' }}>Ver Membresía</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <Link href="/contacto">Contactar</Link>
+              <a href="https://wa.me/5493512344580" target="_blank" rel="noopener noreferrer" style={{ backgroundColor: 'transparent', border: '2px solid #6A1111', color: '#6A1111' }}>Contactar</a>
             </Button>
           </div>
         </div>

@@ -250,9 +250,9 @@ function CheckoutFailureContent() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button variant="outline" asChild className="flex-1">
-                <Link href="/contacto">
+                <a href="https://wa.me/5493512344580" target="_blank" rel="noopener noreferrer">
                   Contactar Soporte
-                </Link>
+                </a>
               </Button>
               <Button variant="outline" asChild className="flex-1">
                 <Link href="/ayuda/pagos">

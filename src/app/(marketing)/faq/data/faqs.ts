@@ -202,5 +202,5 @@ export const FAQ_CONTACT_CTA = {
   title: "¿No encontrás tu respuesta?",
   subtitle: "Nuestra sabiduría está disponible para acompañarte.",
   buttonText: "Escríbeme tu consulta personal",
-  buttonLink: "https://wa.me/5490000000000", // TODO: Reemplazar con número real de WhatsApp antes de production
+  buttonLink: "https://wa.me/5493512344580",
 };

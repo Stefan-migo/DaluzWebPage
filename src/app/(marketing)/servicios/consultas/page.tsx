@@ -158,7 +158,7 @@ export default function ConsultasPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link href="/contacto">Contactar Ahora</Link>
+              <a href="https://wa.me/5493512344580" target="_blank" rel="noopener noreferrer">Contactar Ahora</a>
             </Button>
             <Button variant="outline" size="lg" asChild>
               <Link href="/servicios">Ver Todos los Servicios</Link>

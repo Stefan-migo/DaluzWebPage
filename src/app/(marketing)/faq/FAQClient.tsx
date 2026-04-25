@@ -311,7 +311,7 @@ export default function FAQClient() {
                 Te respondemos en menos de 24hs
               </p>
               <Button variant="alma" className="w-full" asChild>
-                <Link href="mailto:info@daluzconsciente.com">
+                <Link href="mailto:daluzconsciente@gmail.com">
                   <Mail className="w-4 h-4 mr-2" />
                   Enviar Email
                 </Link>

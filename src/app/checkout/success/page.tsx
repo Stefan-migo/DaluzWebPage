@@ -328,7 +328,7 @@ function CheckoutSuccessContent() {
               contactarnos
             </p>
             <Button variant="outline" asChild>
-              <Link href="/contacto">Contactar Soporte</Link>
+              <a href="https://wa.me/5493512344580" target="_blank" rel="noopener noreferrer">Contactar Soporte</a>
             </Button>
           </CardContent>
         </Card>
