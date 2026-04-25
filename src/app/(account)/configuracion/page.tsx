@@ -16,11 +16,11 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
-import { 
-  Shield, 
-  Key, 
-  Bell, 
-  Eye, 
+import {
+  Shield,
+  Key,
+  Bell,
+  Eye,
   EyeOff,
   Mail,
   Smartphone,
@@ -28,7 +28,7 @@ import {
   CheckCircle,
   Settings,
   Lock,
-  Trash2 
+  Trash2
 } from "lucide-react";
 
 const passwordSchema = z.object({
@@ -74,7 +74,7 @@ export default function SettingsPage() {
   const onPasswordSubmit = async (data: PasswordForm) => {
     setIsChangingPassword(true);
     setPasswordError(null);
-    
+
     try {
       // Update password with Supabase Auth
       const supabase = createClient()
@@ -106,7 +106,7 @@ export default function SettingsPage() {
 
   const handleNotificationChange = async (setting: keyof typeof notifications) => {
     const newValue = !notifications[setting];
-    
+
     setNotifications(prev => ({
       ...prev,
       [setting]: newValue
@@ -138,7 +138,7 @@ export default function SettingsPage() {
       // Sign out the user directly (profile deletion would be handled server-side)
       const supabase = createClient()
       await supabase.auth.signOut();
-      
+
       toast.success('Cuenta eliminada correctamente');
       router.push('/');
     } catch (error) {
@@ -181,9 +181,9 @@ export default function SettingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Security Settings */}
-        <Card 
+        <Card
           className="shadow-alkimya border-0 overflow-hidden"
-          style={{ 
+          style={{
             borderRadius: '0px 15px',
             backgroundColor: 'var(--admin-accent-primary)'
           }}
@@ -243,8 +243,8 @@ export default function SettingsPage() {
                       className="absolute right-0 top-0 h-full px-3"
                       onClick={() => togglePasswordVisibility('current')}
                     >
-                      {showPasswords.current ? 
-                        <EyeOff className="h-4 w-4" /> : 
+                      {showPasswords.current ?
+                        <EyeOff className="h-4 w-4" /> :
                         <Eye className="h-4 w-4" />
                       }
                     </Button>
@@ -271,8 +271,8 @@ export default function SettingsPage() {
                       className="absolute right-0 top-0 h-full px-3"
                       onClick={() => togglePasswordVisibility('new')}
                     >
-                      {showPasswords.new ? 
-                        <EyeOff className="h-4 w-4" /> : 
+                      {showPasswords.new ?
+                        <EyeOff className="h-4 w-4" /> :
                         <Eye className="h-4 w-4" />
                       }
                     </Button>
@@ -299,8 +299,8 @@ export default function SettingsPage() {
                       className="absolute right-0 top-0 h-full px-3"
                       onClick={() => togglePasswordVisibility('confirm')}
                     >
-                      {showPasswords.confirm ? 
-                        <EyeOff className="h-4 w-4" /> : 
+                      {showPasswords.confirm ?
+                        <EyeOff className="h-4 w-4" /> :
                         <Eye className="h-4 w-4" />
                       }
                     </Button>
@@ -314,7 +314,7 @@ export default function SettingsPage() {
                   type="submit"
                   disabled={isChangingPassword}
                   className="w-full bg-dorado hover:bg-dorado/90 text-azul-profundo"
-                  style={{ 
+                  style={{
                     backgroundColor: 'var(--admin-bg-secondary)',
                     color: 'var(--admin-accent-primary)',
                     fontWeight: 600
@@ -328,9 +328,9 @@ export default function SettingsPage() {
         </Card>
 
         {/* Notification Settings */}
-        <Card 
+        <Card
           className="shadow-alkimya border-0 overflow-hidden"
-          style={{ 
+          style={{
             borderRadius: '0px 15px',
             backgroundColor: 'var(--admin-accent-primary)'
           }}
@@ -351,7 +351,7 @@ export default function SettingsPage() {
                 <Mail className="h-4 w-4" />
                 Notificaciones por Email
               </h4>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div>
@@ -363,7 +363,7 @@ export default function SettingsPage() {
                     onCheckedChange={() => handleNotificationChange('orders')}
                   />
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium">Newsletter</p>
@@ -374,7 +374,7 @@ export default function SettingsPage() {
                     onCheckedChange={() => handleNotificationChange('newsletter')}
                   />
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium">Membresía</p>
@@ -396,7 +396,7 @@ export default function SettingsPage() {
                 <Smartphone className="h-4 w-4" />
                 Notificaciones SMS
               </h4>
-              
+
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium">Envíos urgentes</p>
@@ -407,7 +407,7 @@ export default function SettingsPage() {
                   onCheckedChange={() => handleNotificationChange('sms')}
                 />
               </div>
-              
+
               {!profile?.phone && (
                 <Alert>
                   <AlertDescription className="text-sm">
@@ -420,9 +420,9 @@ export default function SettingsPage() {
         </Card>
 
         {/* Account Management */}
-        <Card 
+        <Card
           className="lg:col-span-2 shadow-alkimya border-0 overflow-hidden"
-          style={{ 
+          style={{
             borderRadius: '0px 15px',
             backgroundColor: 'var(--admin-accent-primary)'
           }}
@@ -437,19 +437,6 @@ export default function SettingsPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Data Export */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-azul-profundo">Exportar Datos</h4>
-              <p className="text-sm text-tierra-media">
-                Descarga una copia de todos tus datos personales, pedidos y actividad.
-              </p>
-              <Button variant="outline" className="border-azul-profundo text-azul-profundo hover:bg-azul-profundo hover:text-white">
-                Solicitar Exportación
-              </Button>
-            </div>
-
-            <Separator />
-
             {/* Delete Account */}
             <div className="space-y-3">
               <h4 className="font-semibold text-red-600 flex items-center gap-2">
@@ -459,8 +446,8 @@ export default function SettingsPage() {
               <p className="text-sm text-tierra-media">
                 Una vez eliminada tu cuenta, no podrás recuperarla. Esta acción es permanente.
               </p>
-              <Button 
-                variant="destructive" 
+              <Button
+                variant="destructive"
                 className="bg-red-600 hover:bg-red-700"
                 onClick={handleAccountDeletion}
               >
