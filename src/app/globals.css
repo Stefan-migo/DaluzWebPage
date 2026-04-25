@@ -193,34 +193,52 @@
 
     /* ADMIN-SPECIFIC COLOR SYSTEM - Nueva paleta basada en cliente */
     /* Sidebar y Header */
-    --admin-bg-primary: #ffffff; /* Blanco Puro - Fondo contenido */
-    --admin-bg-secondary: #8b0000; /* Rojo Sangre - Sidebar/Header */
-    --admin-bg-tertiary: #fdf3e3; /* Crema Beige - Fondos alternativos */
+    --admin-bg-primary: #ffffff;
+    /* Blanco Puro - Fondo contenido */
+    --admin-bg-secondary: #8b0000;
+    /* Rojo Sangre - Sidebar/Header */
+    --admin-bg-tertiary: #fdf3e3;
+    /* Crema Beige - Fondos alternativos */
 
     /* Sidebar States */
-    --admin-sidebar-hover: #6a1111; /* Burdeos Oscuro - Hover */
-    --admin-sidebar-active: #4a0d0d; /* Marrón Rojizo - Activo */
+    --admin-sidebar-hover: #6a1111;
+    /* Burdeos Oscuro - Hover */
+    --admin-sidebar-active: #4a0d0d;
+    /* Marrón Rojizo - Activo */
 
     /* Bordes */
-    --admin-border-primary: #fdf3e3; /* Crema */
-    --admin-border-secondary: #8b000020; /* Rojo con opacidad */
+    --admin-border-primary: #fdf3e3;
+    /* Crema */
+    --admin-border-secondary: #8b000020;
+    /* Rojo con opacidad */
 
     /* Texto */
-    --admin-text-primary: #4a0d0d; /* Marrón Rojizo - Texto principal */
-    --admin-text-secondary: #6a1111; /* Burdeos Oscuro - Texto secundario */
-    --admin-text-tertiary: #8b000080; /* Rojo con opacidad - Texto muted */
-    --admin-text-inverse: #fdf3e3; /* Crema - Texto en fondos oscuros */
+    --admin-text-primary: #4a0d0d;
+    /* Marrón Rojizo - Texto principal */
+    --admin-text-secondary: #6a1111;
+    /* Burdeos Oscuro - Texto secundario */
+    --admin-text-tertiary: #8b000080;
+    /* Rojo con opacidad - Texto muted */
+    --admin-text-inverse: #fdf3e3;
+    /* Crema - Texto en fondos oscuros */
 
     /* Acentos */
-    --admin-accent-primary: #fdf3e3; /* Crema - Acentos claros */
-    --admin-accent-secondary: #6a1111; /* Burdeos Oscuro - Acentos oscuros */
-    --admin-accent-tertiary: #ff4e21; /* Naranja Alkimya - Énfasis */
+    --admin-accent-primary: #fdf3e3;
+    /* Crema - Acentos claros */
+    --admin-accent-secondary: #6a1111;
+    /* Burdeos Oscuro - Acentos oscuros */
+    --admin-accent-tertiary: #ff4e21;
+    /* Naranja Alkimya - Énfasis */
 
     /* Estados */
-    --admin-success: #285d30; /* Verde Alkimya */
-    --admin-warning: #ff4e21; /* Naranja Alkimya */
-    --admin-error: #8b0000; /* Rojo Sangre */
-    --admin-info: #1d3f6a; /* Azul Acero */
+    --admin-success: #285d30;
+    /* Verde Alkimya */
+    --admin-warning: #ff4e21;
+    /* Naranja Alkimya */
+    --admin-error: #8b0000;
+    /* Rojo Sangre */
+    --admin-info: #1d3f6a;
+    /* Azul Acero */
   }
 
   .dark {
@@ -646,6 +664,7 @@ p {
 
 /* Accessibility Enhancements */
 @media (prefers-reduced-motion: reduce) {
+
   .react-bits-fade-in,
   .react-bits-slide-in,
   .react-bits-scale-in,
@@ -658,6 +677,7 @@ p {
 
 /* 🎨 NEXT-LEVEL ANIMATIONS & EFFECTS */
 @keyframes float-gentle {
+
   0%,
   100% {
     transform: translateY(0px) rotate(0deg);
@@ -669,6 +689,7 @@ p {
 }
 
 @keyframes pulse-glow {
+
   0%,
   100% {
     box-shadow: 0 0 20px rgba(174, 0, 0, 0.3);
@@ -692,6 +713,7 @@ p {
 }
 
 @keyframes gradient-shift {
+
   0%,
   100% {
     background-position: 0% 50%;
@@ -767,12 +789,10 @@ p {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
+  background: linear-gradient(90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent);
   transition: left 0.5s ease;
 }
 
@@ -906,11 +926,9 @@ input[type="submit"]:not(.btn-no-radius) {
 /* Enhanced Cards */
 .card-enhanced {
   position: relative;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.9) 0%,
-    rgba(240, 234, 206, 0.8) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(240, 234, 206, 0.8) 100%);
   border: 1px solid rgba(174, 0, 0, 0.1);
   border-radius: 20px;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -964,14 +982,12 @@ input[type="submit"]:not(.btn-no-radius) {
 
 /* Hero Logo Text Animation */
 .hero-logo-text {
-  background: linear-gradient(
-    90deg,
-    #ffffff 0%,
-    #f8f8f8 25%,
-    #ffffff 50%,
-    #f8f8f8 75%,
-    #ffffff 100%
-  );
+  background: linear-gradient(90deg,
+      #ffffff 0%,
+      #f8f8f8 25%,
+      #ffffff 50%,
+      #f8f8f8 75%,
+      #ffffff 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -993,16 +1009,12 @@ input[type="submit"]:not(.btn-no-radius) {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(
-      circle at 20% 20%,
+    radial-gradient(circle at 20% 20%,
       rgba(255, 255, 255, 0.1) 0%,
-      transparent 50%
-    ),
-    radial-gradient(
-      circle at 80% 80%,
+      transparent 50%),
+    radial-gradient(circle at 80% 80%,
       rgba(255, 255, 255, 0.1) 0%,
-      transparent 50%
-    );
+      transparent 50%);
   pointer-events: none;
 }
 
@@ -1177,6 +1189,7 @@ input[type="submit"]:not(.btn-no-radius) {
    =========================== */
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1196,6 +1209,7 @@ input[type="submit"]:not(.btn-no-radius) {
 
 /* Mobile-specific SVG optimizations */
 @media (max-width: 768px) {
+
   /* Ensure SVG backgrounds scale properly on mobile - EXCLUDE small icons */
   svg[viewBox]:not(.lucide):not([width]):not([height]) {
     min-width: 100%;
@@ -1231,7 +1245,7 @@ input[type="submit"]:not(.btn-no-radius) {
   }
 
   /* Mobile-specific SVG container */
-  .section-enhanced > div[class*="absolute"] {
+  .section-enhanced>div[class*="absolute"] {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: translateZ(0);
@@ -1241,6 +1255,7 @@ input[type="submit"]:not(.btn-no-radius) {
 
 /* Touch device optimizations */
 @media (pointer: coarse) {
+
   /* Optimize for touch devices */
   svg {
     touch-action: none;
@@ -1254,7 +1269,8 @@ input[type="submit"]:not(.btn-no-radius) {
 }
 
 /* High DPI mobile screens */
-@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
   svg {
     image-rendering: crisp-edges;
     image-rendering: -webkit-optimize-contrast;
@@ -1263,6 +1279,7 @@ input[type="submit"]:not(.btn-no-radius) {
 
 /* Very small mobile screens */
 @media (max-width: 480px) {
+
   /* Adjust SVG positioning for very small screens */
   .section-enhanced svg {
     transform: scale(1.1) translateZ(0);
@@ -1330,7 +1347,8 @@ input[type="submit"]:not(.btn-no-radius) {
 }
 
 .admin-sidebar {
-  background-color: var(--admin-bg-secondary); /* #8B0000 - Rojo Sangre */
+  background-color: var(--admin-bg-secondary);
+  /* #8B0000 - Rojo Sangre */
   border-right: 1px solid var(--admin-border-secondary);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
@@ -1348,7 +1366,8 @@ input[type="submit"]:not(.btn-no-radius) {
 
 /* Admin Navigation - Adaptado para sidebar oscuro */
 .admin-nav-item {
-  color: var(--admin-text-inverse); /* Crema en fondo rojo */
+  color: var(--admin-text-inverse);
+  /* Crema en fondo rojo */
   opacity: 0.85;
   transition: all 0.2s ease;
   border-radius: 0.5rem;
@@ -1363,7 +1382,8 @@ input[type="submit"]:not(.btn-no-radius) {
 }
 
 .admin-nav-item:hover {
-  background-color: var(--admin-sidebar-hover); /* #6A1111 */
+  background-color: var(--admin-sidebar-hover);
+  /* #6A1111 */
   color: var(--admin-text-inverse);
   opacity: 1;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -1371,10 +1391,12 @@ input[type="submit"]:not(.btn-no-radius) {
 }
 
 .admin-nav-item.active {
-  background-color: var(--admin-sidebar-active); /* #4A0D0D */
+  background-color: var(--admin-sidebar-active);
+  /* #4A0D0D */
   color: var(--admin-text-inverse);
   opacity: 1;
-  border-left: 3px solid var(--admin-accent-tertiary); /* Naranja énfasis */
+  border-left: 3px solid var(--admin-accent-tertiary);
+  /* Naranja énfasis */
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -1387,7 +1409,8 @@ input[type="submit"]:not(.btn-no-radius) {
 .admin-card {
   border: 1px solid var(--admin-border-secondary);
   border-radius: 0.75rem;
-  background-color: var(--admin-bg-primary); /* Blanco */
+  background-color: var(--admin-bg-primary);
+  /* Blanco */
   box-shadow: 0 1px 3px rgba(74, 13, 13, 0.08);
   transition: all 0.2s ease;
 }
@@ -2231,11 +2254,9 @@ button.pagination-current-page:hover {
 
 /* Admin Header Enhancements */
 .admin-header {
-  background: linear-gradient(
-    135deg,
-    var(--admin-bg-secondary) 0%,
-    #6a1111 100%
-  );
+  background: linear-gradient(135deg,
+      var(--admin-bg-secondary) 0%,
+      #6a1111 100%);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -2285,11 +2306,9 @@ button.pagination-current-page:hover {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--admin-accent-primary) 0%,
-    var(--admin-accent-secondary) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--admin-accent-primary) 0%,
+      var(--admin-accent-secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2329,11 +2348,9 @@ button.pagination-current-page:hover {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--admin-accent-primary) 0%,
-    var(--admin-accent-secondary) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--admin-accent-primary) 0%,
+      var(--admin-accent-secondary) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2436,6 +2453,7 @@ button.pagination-current-page:hover {
 }
 
 @media (max-width: 768px) {
+
   .admin-grid-cols-2,
   .admin-grid-cols-3,
   .admin-grid-cols-4 {
@@ -2444,6 +2462,7 @@ button.pagination-current-page:hover {
 }
 
 @media (max-width: 1024px) {
+
   .admin-grid-cols-3,
   .admin-grid-cols-4 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2477,61 +2496,59 @@ button.pagination-current-page:hover {
 /* Mobile Hero Clip Path - Correct wavy design for 350px height */
 @media (max-width: 1023px) {
   .hero-mobile-clip {
-    clip-path: polygon(
-      100% 0%,
-      0% 0%,
-      0% 93.71%,
-      2% 94.72%,
-      4% 95.78%,
-      6% 96.82%,
-      8% 97.78%,
-      10% 98.6%,
-      12% 99.22%,
-      14% 99.61%,
-      16% 99.74%,
-      18% 99.6%,
-      20% 99.2%,
-      22% 98.58%,
-      24% 97.76%,
-      26% 96.8%,
-      28% 95.75%,
-      30% 94.69%,
-      32% 93.69%,
-      34% 92.79%,
-      36% 92.07%,
-      38% 91.56%,
-      40% 91.3%,
-      42% 91.31%,
-      44% 91.57%,
-      46% 92.09%,
-      48% 92.82%,
-      50% 93.71%,
-      52% 94.72%,
-      54% 95.78%,
-      56% 96.82%,
-      58% 97.78%,
-      60% 98.6%,
-      62% 99.22%,
-      64% 99.61%,
-      66% 99.74%,
-      68% 99.6%,
-      70% 99.2%,
-      72% 98.58%,
-      74% 97.76%,
-      76% 96.8%,
-      78% 95.75%,
-      80% 94.69%,
-      82% 93.69%,
-      84% 92.79%,
-      86% 92.07%,
-      88% 91.56%,
-      90% 91.3%,
-      92% 91.31%,
-      94% 91.57%,
-      96% 92.09%,
-      98% 92.82%,
-      100% 93.71%
-    );
+    clip-path: polygon(100% 0%,
+        0% 0%,
+        0% 93.71%,
+        2% 94.72%,
+        4% 95.78%,
+        6% 96.82%,
+        8% 97.78%,
+        10% 98.6%,
+        12% 99.22%,
+        14% 99.61%,
+        16% 99.74%,
+        18% 99.6%,
+        20% 99.2%,
+        22% 98.58%,
+        24% 97.76%,
+        26% 96.8%,
+        28% 95.75%,
+        30% 94.69%,
+        32% 93.69%,
+        34% 92.79%,
+        36% 92.07%,
+        38% 91.56%,
+        40% 91.3%,
+        42% 91.31%,
+        44% 91.57%,
+        46% 92.09%,
+        48% 92.82%,
+        50% 93.71%,
+        52% 94.72%,
+        54% 95.78%,
+        56% 96.82%,
+        58% 97.78%,
+        60% 98.6%,
+        62% 99.22%,
+        64% 99.61%,
+        66% 99.74%,
+        68% 99.6%,
+        70% 99.2%,
+        72% 98.58%,
+        74% 97.76%,
+        76% 96.8%,
+        78% 95.75%,
+        80% 94.69%,
+        82% 93.69%,
+        84% 92.79%,
+        86% 92.07%,
+        88% 91.56%,
+        90% 91.3%,
+        92% 91.31%,
+        94% 91.57%,
+        96% 92.09%,
+        98% 92.82%,
+        100% 93.71%);
   }
 }
 

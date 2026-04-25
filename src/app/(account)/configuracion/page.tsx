@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +42,27 @@ const passwordSchema = z.object({
 
 type PasswordForm = z.infer<typeof passwordSchema>;
 
+// Helper to load notification prefs from localStorage
+function loadLocalNotificationPrefs(): Partial<Record<string, boolean>> {
+  if (typeof window === "undefined") return {};
+  try {
+    const stored = localStorage.getItem("notification_prefs");
+    return stored ? JSON.parse(stored) : {};
+  } catch {
+    return {};
+  }
+}
+
+// Helper to save notification prefs to localStorage
+function saveLocalNotificationPrefs(prefs: Record<string, boolean>) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("notification_prefs", JSON.stringify(prefs));
+  } catch {
+    // Silently fail
+  }
+}
+
 export default function SettingsPage() {
   const router = useRouter();
   const { user, profile, updateProfile } = useAuthContext();
@@ -54,13 +75,45 @@ export default function SettingsPage() {
   const [passwordSuccess, setPasswordSuccess] = useState(false);
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
-  const [notifications, setNotifications] = useState({
-    email: profile?.newsletter_subscribed || true,
-    sms: false,
-    orders: true,
-    newsletter: profile?.newsletter_subscribed || true,
-    membership: true,
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(() => {
+    if (typeof window === "undefined") return false;
+    try {
+      return localStorage.getItem("2fa_enabled") === "true";
+    } catch {
+      return false;
+    }
   });
+  const [twoFactorLoading, setTwoFactorLoading] = useState(false);
+
+  // Initialize with safe defaults; useEffect below syncs from profile + localStorage
+  const [notifications, setNotifications] = useState(() => {
+    const localPrefs = loadLocalNotificationPrefs();
+    return {
+      email: localPrefs.email ?? true,
+      sms: localPrefs.sms ?? false,
+      orders: localPrefs.orders ?? true,
+      newsletter: localPrefs.newsletter ?? true,
+      membership: localPrefs.membership ?? true,
+    };
+  });
+
+  // Sync notification state when profile loads/changes
+  useEffect(() => {
+    if (profile) {
+      setNotifications(prev => {
+        const localPrefs = loadLocalNotificationPrefs();
+        return {
+          // newsletter_subscribed from DB takes priority
+          email: profile.newsletter_subscribed ?? localPrefs.email ?? true,
+          newsletter: profile.newsletter_subscribed ?? localPrefs.newsletter ?? true,
+          // These are only stored locally
+          sms: localPrefs.sms ?? prev.sms,
+          orders: localPrefs.orders ?? prev.orders,
+          membership: localPrefs.membership ?? prev.membership,
+        };
+      });
+    }
+  }, [profile]);
 
   const {
     register,
@@ -107,24 +160,33 @@ export default function SettingsPage() {
   const handleNotificationChange = async (setting: keyof typeof notifications) => {
     const newValue = !notifications[setting];
 
-    setNotifications(prev => ({
-      ...prev,
+    const updatedNotifications = {
+      ...notifications,
       [setting]: newValue
-    }));
+    };
 
-    // Update newsletter subscription in profile if it's the newsletter setting
+    setNotifications(updatedNotifications);
+
+    // Persist all settings to localStorage
+    saveLocalNotificationPrefs(updatedNotifications);
+
+    // Update newsletter subscription in profile if it's the newsletter or email setting
     if (setting === 'newsletter' || setting === 'email') {
       try {
         await updateProfile({
           newsletter_subscribed: newValue
         });
+        toast.success(`Preferencia de ${setting === 'newsletter' ? 'newsletter' : 'email'} actualizada`);
       } catch (error) {
         console.error("Error updating notification preference:", error);
+        toast.error("Error al actualizar la preferencia");
         // Revert the change if it failed
-        setNotifications(prev => ({
-          ...prev,
+        const revertedNotifications = {
+          ...updatedNotifications,
           [setting]: !newValue
-        }));
+        };
+        setNotifications(revertedNotifications);
+        saveLocalNotificationPrefs(revertedNotifications);
       }
     }
   };
@@ -211,9 +273,49 @@ export default function SettingsPage() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Lock className="h-4 w-4 text-dorado" />
-                  <span className="text-sm">Autenticación de dos factores</span>
+                  <div>
+                    <span className="text-sm">Autenticación de dos factores</span>
+                    <p className="text-xs text-tierra-media">Recibí un email de confirmación al iniciar sesión</p>
+                  </div>
                 </div>
-                <Badge variant="outline">Inactivo</Badge>
+                <div className="flex items-center gap-2">
+                  {twoFactorEnabled ? (
+                    <Badge className="bg-verde-suave" style={{ color: 'var(--admin-bg-secondary)' }}>Activo</Badge>
+                  ) : (
+                    <Badge variant="outline">Inactivo</Badge>
+                  )}
+                  <Switch
+                    checked={twoFactorEnabled}
+                    disabled={twoFactorLoading}
+                    onCheckedChange={async (checked) => {
+                      setTwoFactorLoading(true);
+                      try {
+                        const response = await fetch('/api/account/2fa', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ enabled: checked }),
+                        });
+                        const data = await response.json();
+                        if (response.ok && data.success) {
+                          setTwoFactorEnabled(checked);
+                          localStorage.setItem('2fa_enabled', String(checked));
+                          if (checked) {
+                            toast.success('2FA activado. Te enviamos un email de confirmación.');
+                          } else {
+                            toast.success('2FA desactivado.');
+                          }
+                        } else {
+                          toast.error(data.error || 'Error al cambiar 2FA');
+                        }
+                      } catch (error) {
+                        console.error('Error toggling 2FA:', error);
+                        toast.error('Error al cambiar la autenticación de dos factores');
+                      } finally {
+                        setTwoFactorLoading(false);
+                      }
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
