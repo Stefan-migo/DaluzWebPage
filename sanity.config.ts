@@ -17,8 +17,13 @@ import { tiendaSettingsSchema } from "./src/sanity/schemas/tiendaSettings";
 export default defineConfig({
   name: "da-luz-consciente",
   title: "DA LUZ CONSCIENTE - CMS",
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
-  dataset: process.env.SANITY_STUDIO_DATASET!,
+  projectId:
+    process.env.SANITY_STUDIO_PROJECT_ID ||
+    process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
+  dataset:
+    process.env.SANITY_STUDIO_DATASET ||
+    process.env.NEXT_PUBLIC_SANITY_DATASET ||
+    "production",
 
   plugins: [
     deskTool({

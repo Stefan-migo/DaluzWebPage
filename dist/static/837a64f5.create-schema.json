@@ -121,6 +121,43 @@
         "title": "Fecha de Publicación"
       },
       {
+        "options": {
+          "list": [
+            {
+              "title": "Pendiente",
+              "value": "pendiente"
+            },
+            {
+              "title": "Publicado",
+              "value": "publicado"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "pendiente",
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "valid",
+                "constraint": [
+                  "pendiente",
+                  "publicado"
+                ]
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "status",
+        "type": "string",
+        "title": "Estado"
+      },
+      {
         "initialValue": false,
         "description": "Mostrar en la sección de artículos destacados",
         "name": "featured",
