@@ -47,6 +47,20 @@ export const postType = defineType({
       type: 'datetime',
     }),
     defineField({
+      name: 'status',
+      title: 'Estado',
+      type: 'string',
+      options: {
+        list: [
+          {title: 'Pendiente', value: 'pendiente'},
+          {title: 'Publicado', value: 'publicado'},
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'pendiente',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'body',
       type: 'blockContent',
     }),

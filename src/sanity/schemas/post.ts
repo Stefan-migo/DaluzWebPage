@@ -66,6 +66,20 @@ export const postSchema = defineType({
       initialValue: () => new Date().toISOString()
     }),
     defineField({
+      name: 'status',
+      title: 'Estado',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Pendiente', value: 'pendiente' },
+          { title: 'Publicado', value: 'publicado' }
+        ],
+        layout: 'radio'
+      },
+      initialValue: 'pendiente',
+      validation: Rule => Rule.required()
+    }),
+    defineField({
       name: 'featured',
       title: 'Artículo Destacado',
       type: 'boolean',

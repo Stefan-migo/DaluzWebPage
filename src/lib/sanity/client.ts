@@ -25,6 +25,17 @@ export const previewClient = createClient({
   token: process.env.SANITY_API_READ_TOKEN,
 });
 
+// Write client for server-side mutations (admin operations).
+// Requires SANITY_API_WRITE_TOKEN with editor/write permissions.
+// Never import this from client components.
+export const writeClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: process.env.SANITY_API_WRITE_TOKEN,
+});
+
 // Image URL builder
 const builder = imageUrlBuilder(client);
 

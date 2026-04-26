@@ -26,6 +26,7 @@ import {
   Tag,
   Settings,
   UserCircle,
+  FileText,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -77,6 +78,12 @@ const createNavigationItems = (ordersCount?: number) => [
     label: "Reseñas",
     icon: MessageSquare,
     description: "Moderación de reseñas",
+  },
+  {
+    href: "/admin/blogs",
+    label: "Blogs",
+    icon: FileText,
+    description: "Gestión de artículos del blog",
   },
   {
     href: "/admin/customers",
