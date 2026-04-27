@@ -468,6 +468,26 @@ export function useAuth() {
     }
   };
 
+  const updatePassword = async (newPassword: string) => {
+    const supabase = supabaseRef.current || getSupabaseClient();
+    setAuthState((prev) => ({ ...prev, loading: true, error: null }));
+
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+
+      if (error) {
+        setAuthState((prev) => ({ ...prev, error, loading: false }));
+        throw error;
+      }
+
+      setAuthState((prev) => ({ ...prev, loading: false }));
+      return { error: null };
+    } catch (error: any) {
+      setAuthState((prev) => ({ ...prev, error, loading: false }));
+      throw error;
+    }
+  };
+
   const resendConfirmation = async (email: string) => {
     const supabase = supabaseRef.current || getSupabaseClient();
     const siteUrl =
@@ -527,6 +547,7 @@ export function useAuth() {
     signOut,
     updateProfile,
     resetPassword,
+    updatePassword,
     resendConfirmation,
     signInWithGoogle,
     signUpWithGoogle,
