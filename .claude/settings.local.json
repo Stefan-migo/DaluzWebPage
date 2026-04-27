@@ -10,7 +10,9 @@
       "Bash(nslookup www.daluzconsciente.com. 1.1.1.1)",
       "Bash(nslookup daluzconsciente.com. 8.8.8.8)",
       "Bash(gh repo *)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
