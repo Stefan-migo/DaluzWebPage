@@ -34,11 +34,13 @@ interface Blog {
 }
 
 const SANITY_PROJECT_ID = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
-const SANITY_DATASET = process.env.NEXT_PUBLIC_SANITY_DATASET || "production";
+const SANITY_STUDIO_HOSTNAME =
+  process.env.NEXT_PUBLIC_SANITY_STUDIO_HOSTNAME || "daluzconsciente";
 
 function getStudioEditUrl(id: string) {
-  if (!SANITY_PROJECT_ID) return null;
-  return `https://${SANITY_PROJECT_ID}.sanity.studio/structure/post;${id}`;
+  const host = SANITY_STUDIO_HOSTNAME || SANITY_PROJECT_ID;
+  if (!host) return null;
+  return `https://${host}.sanity.studio/structure/post;${id}`;
 }
 
 function formatDate(value: string | null) {
