@@ -15,8 +15,12 @@ const protectedRoutes = [
 // Routes that require admin role
 const adminRoutes = ["/admin"];
 
-// Routes that are only for unauthenticated users (login, register, etc)
-const authRoutes = ["/login", "/register", "/reset-password"];
+// Routes that are only for unauthenticated users (login, register, etc).
+// NOTE: /reset-password is intentionally excluded — the password recovery
+// flow leaves the user with a valid session (created by verifyOtp in the
+// /auth/callback route), and the page needs that session active to call
+// supabase.auth.updateUser({ password }).
+const authRoutes = ["/login", "/register"];
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
