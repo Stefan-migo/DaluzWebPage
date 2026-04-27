@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1088.71">
+  <defs>
+    <style>
+      .background-fill { fill: var(--bg-color, #faf7ef); }
+      .wave-fill { fill: var(--wave-color, #920000); }
+    </style>
+  </defs>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Capa_1" data-name="Capa 1">
+      <polyline points="1.99 1088.71 1.99 8.61 1918.01 8.61 1918.01 1088.71" class="background-fill"/>
+      <path d="M0,0C627.2,57.28,1291.13,26.69,1920,175.35V0" class="wave-fill"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080.02">
+  <defs>
+    <style>
+      .background-fill { fill: var(--bg-color, #920000); }
+    </style>
+  </defs>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="Capa_1" data-name="Capa 1">
+      <path d="M1920,1080V0H0V1080" class="background-fill"/>
+    </g>
+  </g>
+</svg>
