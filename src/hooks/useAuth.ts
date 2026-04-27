@@ -445,9 +445,14 @@ export function useAuth() {
     const supabase = supabaseRef.current || getSupabaseClient();
     setAuthState((prev) => ({ ...prev, loading: true, error: null }));
 
+    const siteUrl =
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (typeof window !== "undefined" ? window.location.origin : "");
+
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${siteUrl}/auth/callback?type=recovery&next=/reset-password`,
       });
 
       if (error) {
