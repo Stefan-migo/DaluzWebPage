@@ -16,15 +16,23 @@ export async function GET(request: Request) {
 
   const supabase = await createClient()
 
-  // --- Flow 1: OAuth PKCE ---
+  // --- Flow 1: PKCE (OAuth Google + Supabase email recovery/confirmation) ---
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (error) {
-      console.error('OAuth callback error:', error)
+      console.error('OAuth/PKCE callback error:', error)
       return NextResponse.redirect(
         new URL(`/login?error=${encodeURIComponent(error.message)}`, requestUrl.origin),
       )
     }
+
+    // Password recovery comes through the same PKCE flow now (Supabase moved
+    // away from raw token_hash links). Send the user to the reset page with
+    // the flag so the page renders the new-password form.
+    if (type === 'recovery') {
+      return NextResponse.redirect(new URL('/reset-password?recovery=1', requestUrl.origin))
+    }
+
     return NextResponse.redirect(new URL(next, requestUrl.origin))
   }
 

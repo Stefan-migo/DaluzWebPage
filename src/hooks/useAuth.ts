@@ -480,6 +480,11 @@ export function useAuth() {
         throw error;
       }
 
+      // Sign out the recovery session so the user has to log in with the
+      // new password. Without this, the recovery cookie stays alive and
+      // bouncing back to / would silently re-auth them.
+      await supabase.auth.signOut();
+
       setAuthState((prev) => ({ ...prev, loading: false }));
       return { error: null };
     } catch (error: any) {
