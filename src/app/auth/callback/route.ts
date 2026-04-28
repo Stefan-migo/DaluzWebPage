@@ -44,9 +44,12 @@ export async function GET(request: Request) {
       )
     }
 
-    // For password recovery, send the user to the reset page
+    // For password recovery, send the user to the reset page with a flag
+    // so the page knows to render the "update password" form instead of the
+    // "request reset email" form. We can't rely on the PASSWORD_RECOVERY
+    // event here because verifyOtp ran on the server, not the client.
     if (type === 'recovery') {
-      return NextResponse.redirect(new URL('/reset-password', requestUrl.origin))
+      return NextResponse.redirect(new URL('/reset-password?recovery=1', requestUrl.origin))
     }
 
     // For signup/invite/email_change, send to the next param or profile

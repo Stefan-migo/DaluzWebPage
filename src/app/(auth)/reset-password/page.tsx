@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -33,8 +34,18 @@ type UpdateForm = z.infer<typeof updateSchema>;
 type Mode = "request" | "update";
 
 export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<Loader2 className="h-6 w-6 animate-spin text-azul-profundo" />}>
+      <ResetPasswordContent />
+    </Suspense>
+  );
+}
+
+function ResetPasswordContent() {
   const { resetPassword, updatePassword, loading, error } = useAuth();
-  const [mode, setMode] = useState<Mode>("request");
+  const searchParams = useSearchParams();
+  const initialMode: Mode = searchParams.get("recovery") === "1" ? "update" : "request";
+  const [mode, setMode] = useState<Mode>(initialMode);
   const [isRequestSuccess, setIsRequestSuccess] = useState(false);
   const [isUpdateSuccess, setIsUpdateSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
