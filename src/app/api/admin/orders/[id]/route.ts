@@ -12,9 +12,26 @@ export async function PATCH(
     const { user, supabase } = auth;
 
     const body = await request.json();
-    const { status, payment_status, tracking_number, carrier } = body;
+    const {
+      status,
+      payment_status,
+      tracking_number,
+      carrier,
+      shipping,
+      items,
+      notes,
+      subtotal,
+      total_amount,
+    } = body;
 
-    console.log('📝 Updating order with:', { status, payment_status, tracking_number, carrier });
+    console.log('📝 Updating order with:', {
+      status,
+      payment_status,
+      tracking_number,
+      carrier,
+      hasShipping: !!shipping,
+      itemsCount: Array.isArray(items) ? items.length : null,
+    });
 
     // Get current order to check status changes
     const { data: currentOrder } = await supabase
@@ -50,6 +67,36 @@ export async function PATCH(
 
     if (carrier !== undefined) {
       updateData.carrier = carrier;
+    }
+
+    if (notes !== undefined) {
+      updateData.customer_notes = notes;
+    }
+
+    if (subtotal !== undefined) {
+      updateData.subtotal = subtotal;
+    }
+
+    if (total_amount !== undefined) {
+      updateData.total_amount = total_amount;
+    }
+
+    if (shipping && typeof shipping === 'object') {
+      const allowedShipping = [
+        'first_name',
+        'last_name',
+        'address_1',
+        'address_2',
+        'city',
+        'state',
+        'postal_code',
+        'phone',
+      ] as const;
+      for (const key of allowedShipping) {
+        if (shipping[key] !== undefined) {
+          updateData[`shipping_${key}`] = shipping[key];
+        }
+      }
     }
 
     // Update the order
