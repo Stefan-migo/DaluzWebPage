@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import CreateManualOrderForm from "@/components/admin/CreateManualOrderForm";
 import OrderTable from "@/components/admin/orders/OrderTable";
 import OrderDetailDialog from "@/components/admin/orders/OrderDetailDialog";
+import EditOrderDialog from "@/components/admin/orders/EditOrderDialog";
 import type { Order, OrderStatus, PaymentStatus } from "@/types/admin";
 
 export default function OrdersPage() {
@@ -37,6 +38,7 @@ export default function OrdersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [totalOrders, setTotalOrders] = useState(0);
   const [deletingOrder, setDeletingOrder] = useState<string | null>(null);
+  const [editingOrderId, setEditingOrderId] = useState<string | null>(null);
   const ordersPerPage = 10;
 
   const fetchOrders = useCallback(async () => {
@@ -492,6 +494,7 @@ export default function OrdersPage() {
             onUpdateStatus={updateOrderStatus}
             onUpdatePaymentStatus={updatePaymentStatus}
             onViewDetails={setSelectedOrder}
+            onEditOrder={(order) => setEditingOrderId(order.id)}
             onSendNotification={sendEmailNotification}
             onDeleteOrder={deleteOrder}
             onPageChange={setCurrentPage}
@@ -504,6 +507,14 @@ export default function OrdersPage() {
         order={selectedOrder}
         open={!!selectedOrder}
         onOpenChange={(open) => !open && setSelectedOrder(null)}
+      />
+
+      {/* Edit Order Dialog */}
+      <EditOrderDialog
+        orderId={editingOrderId}
+        open={!!editingOrderId}
+        onOpenChange={(open) => !open && setEditingOrderId(null)}
+        onSaved={fetchOrders}
       />
 
       {/* Create Manual Order Dialog */}
