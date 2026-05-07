@@ -330,24 +330,7 @@ export default function AdminNotificationDropdown() {
           )}
         </ScrollArea>
 
-        {/* Footer */}
-        {notifications.length > 0 && (
-          <>
-            <DropdownMenuSeparator className="bg-[#AE0000]/10" />
-            <div className="p-2">
-              <Button
-                variant="ghost"
-                className="w-full justify-center text-xs text-[#AE0000] hover:bg-[#AE000020]"
-                onClick={() => {
-                  setIsOpen(false);
-                  router.push("/admin/notifications");
-                }}
-              >
-                Ver todas las notificaciones
-              </Button>
-            </div>
-          </>
-        )}
+
       </DropdownMenuContent>
     </DropdownMenu>
   );
