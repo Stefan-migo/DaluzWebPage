@@ -319,17 +319,8 @@ describe("PATCH /api/admin/orders/[id]", () => {
     expect(ops).not.toContain("orders:update");
   });
 
-  it("PATCH with manual item (no product_id) does not affect stock", async () => {
-    const supabase = makeSupabaseMock((table, op) => {
-      if (table === "orders" && op === "select") {
-        return { data: { status: "pending", shipped_at: null, delivered_at: null } };
-      }
-      if (table === "order_items" && op === "select") return { data: [] };
-      if (table === "orders" && op === "update") {
-        return { data: { id: "order-1", order_items: [] }, error: null };
-      }
-      return { data: null, error: null };
-    });
+  it("PATCH rejects items without product_id", async () => {
+    const supabase = makeSupabaseMock(() => ({ data: null, error: null }));
     requireAdminMock.mockResolvedValue({ ok: true, user: { id: "admin" }, supabase: { from: supabase.from } });
     const PATCH = await loadHandler();
     const res = await PATCH(
@@ -338,9 +329,9 @@ describe("PATCH /api/admin/orders/[id]", () => {
       }),
       { params: { id: "order-1" } },
     );
-    expect(res.status).toBe(200);
-    const ops = supabase.calls.map((c) => `${c.table}:${c.op}`);
-    expect(ops).not.toContain("products:update");
+    expect(res.status).toBe(400);
+    const json = await res.json();
+    expect(json.error).toMatch(/product_id/);
   });
 
   it("PATCH with two items same product_id sums quantities for stock validation", async () => {

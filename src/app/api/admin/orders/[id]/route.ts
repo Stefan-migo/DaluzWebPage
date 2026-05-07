@@ -123,6 +123,15 @@ export async function PATCH(
             { status: 400 },
           );
         }
+        if (!it.product_id || typeof it.product_id !== 'string') {
+          return NextResponse.json(
+            {
+              error: 'Cada item debe tener product_id',
+              product_name: it.product_name,
+            },
+            { status: 400 },
+          );
+        }
       }
 
       // Read current items for delta calculation
@@ -191,6 +200,7 @@ export async function PATCH(
         *,
         order_items (
           id,
+          product_id,
           product_name,
           variant_title,
           quantity,
@@ -228,7 +238,7 @@ export async function PATCH(
       if (items.length > 0) {
         const itemsToInsert = items.map((it: any) => ({
           order_id: params.id,
-          product_id: it.product_id ?? null,
+          product_id: it.product_id,
           product_name: it.product_name,
           variant_title: it.variant_title ?? null,
           quantity: it.quantity,
@@ -242,8 +252,13 @@ export async function PATCH(
 
         if (insertItemsError) {
           console.error('❌ Error inserting new order items:', insertItemsError);
+          console.error('❌ Items payload:', JSON.stringify(itemsToInsert, null, 2));
           return NextResponse.json(
-            { error: 'Failed to insert new order items' },
+            {
+              error: 'Failed to insert new order items',
+              details: insertItemsError.message,
+              code: insertItemsError.code,
+            },
             { status: 500 },
           );
         }
@@ -371,6 +386,7 @@ export async function GET(
         *,
         order_items (
           id,
+          product_id,
           product_name,
           variant_title,
           quantity,
