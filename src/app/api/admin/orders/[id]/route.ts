@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, getServiceClient } from '@/lib/auth/helpers';
 import { EmailNotificationService } from '@/lib/email/notifications';
+import { computeStockDelta } from '@/lib/admin/orderStock';
 
 export async function PATCH(
   request: NextRequest,
@@ -99,6 +100,88 @@ export async function PATCH(
       }
     }
 
+    // Items replacement + stock adjustment
+    let stockDelta: Record<string, number> = {};
+    let oldItems: Array<{ id: string; product_id: string | null; quantity: number }> = [];
+    if (Array.isArray(items)) {
+      // Validate item shape
+      for (const it of items) {
+        if (
+          typeof it !== 'object' ||
+          it === null ||
+          typeof it.product_name !== 'string' ||
+          it.product_name.trim() === '' ||
+          typeof it.quantity !== 'number' ||
+          !Number.isFinite(it.quantity) ||
+          it.quantity < 1 ||
+          typeof it.unit_price !== 'number' ||
+          !Number.isFinite(it.unit_price) ||
+          it.unit_price < 0
+        ) {
+          return NextResponse.json(
+            { error: 'Invalid item payload' },
+            { status: 400 },
+          );
+        }
+      }
+
+      // Read current items for delta calculation
+      const { data: existingItems, error: existingItemsError } = await supabase
+        .from('order_items')
+        .select('id, product_id, quantity')
+        .eq('order_id', params.id);
+
+      if (existingItemsError) {
+        console.error('❌ Error reading existing items:', existingItemsError);
+        return NextResponse.json(
+          { error: 'Failed to read existing items' },
+          { status: 500 },
+        );
+      }
+      oldItems = existingItems || [];
+
+      // Compute delta and validate stock
+      stockDelta = computeStockDelta(
+        oldItems.map((i) => ({ product_id: i.product_id, quantity: i.quantity })),
+        items.map((i: any) => ({ product_id: i.product_id ?? null, quantity: i.quantity })),
+      );
+
+      const productIdsToCheck = Object.entries(stockDelta)
+        .filter(([, d]) => d > 0)
+        .map(([id]) => id);
+
+      if (productIdsToCheck.length > 0) {
+        const { data: productsForCheck, error: productsError } = await supabase
+          .from('products')
+          .select('id, name, inventory_quantity')
+          .in('id', productIdsToCheck);
+
+        if (productsError) {
+          console.error('❌ Error reading products for stock check:', productsError);
+          return NextResponse.json(
+            { error: 'Failed to verify stock' },
+            { status: 500 },
+          );
+        }
+
+        for (const product of productsForCheck || []) {
+          const need = stockDelta[product.id];
+          const available = product.inventory_quantity ?? 0;
+          if (available < need) {
+            return NextResponse.json(
+              {
+                error: 'Stock insuficiente',
+                product_id: product.id,
+                product_name: product.name,
+                available,
+              },
+              { status: 409 },
+            );
+          }
+        }
+      }
+    }
+
     // Update the order
     const { data: updatedOrder, error: updateError } = await supabase
       .from('orders')
@@ -126,6 +209,67 @@ export async function PATCH(
     }
 
     console.log('✅ Order updated successfully');
+
+    // If items were provided, replace order_items and adjust stock
+    if (Array.isArray(items)) {
+      const { error: deleteItemsError } = await supabase
+        .from('order_items')
+        .delete()
+        .eq('order_id', params.id);
+
+      if (deleteItemsError) {
+        console.error('❌ Error deleting old order items:', deleteItemsError);
+        return NextResponse.json(
+          { error: 'Failed to replace order items' },
+          { status: 500 },
+        );
+      }
+
+      if (items.length > 0) {
+        const itemsToInsert = items.map((it: any) => ({
+          order_id: params.id,
+          product_id: it.product_id ?? null,
+          product_name: it.product_name,
+          variant_title: it.variant_title ?? null,
+          quantity: it.quantity,
+          unit_price: it.unit_price,
+          total_price: it.quantity * it.unit_price,
+        }));
+
+        const { error: insertItemsError } = await supabase
+          .from('order_items')
+          .insert(itemsToInsert);
+
+        if (insertItemsError) {
+          console.error('❌ Error inserting new order items:', insertItemsError);
+          return NextResponse.json(
+            { error: 'Failed to insert new order items' },
+            { status: 500 },
+          );
+        }
+      }
+
+      // Apply stock deltas: subtract delta from inventory_quantity
+      for (const [productId, delta] of Object.entries(stockDelta)) {
+        const { data: prod, error: readErr } = await supabase
+          .from('products')
+          .select('inventory_quantity')
+          .eq('id', productId)
+          .single();
+        if (readErr || !prod) {
+          console.error('⚠️ Could not read product for stock adjustment:', productId, readErr);
+          continue;
+        }
+        const newQty = (prod.inventory_quantity ?? 0) - delta;
+        const { error: updErr } = await supabase
+          .from('products')
+          .update({ inventory_quantity: newQty })
+          .eq('id', productId);
+        if (updErr) {
+          console.error('⚠️ Could not update product inventory:', productId, updErr);
+        }
+      }
+    }
 
     // Send email notifications based on status changes
     if (status && status !== currentOrder?.status) {
