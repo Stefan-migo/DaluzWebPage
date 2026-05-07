@@ -148,7 +148,7 @@ describe("PATCH /api/admin/orders/[id]", () => {
       }),
       { params: { id: "order-1" } },
     );
-    const updateCall = supabase.calls.find((c) => c.table === "orders" && c.op === "update");
+    const updateCall = supabase.calls.find((c) => c.table === "orders" && c.op === "update")!;
     expect(updateCall.payload.shipping_first_name).toBe("Ana");
     expect(updateCall.payload.shipping_last_name).toBe("Pérez");
     expect(updateCall.payload.shipping_address_1).toBe("Calle 1");
@@ -193,7 +193,7 @@ describe("PATCH /api/admin/orders/[id]", () => {
     expect(ops).toContain("order_items:delete");
     expect(ops).toContain("order_items:insert");
     expect(ops).toContain("products:update");
-    const insertCall = supabase.calls.find((c) => c.table === "order_items" && c.op === "insert");
+    const insertCall = supabase.calls.find((c) => c.table === "order_items" && c.op === "insert")!;
     expect(insertCall.payload[0]).toMatchObject({
       order_id: "order-1",
       product_id: "p-new",
@@ -230,7 +230,7 @@ describe("PATCH /api/admin/orders/[id]", () => {
       }),
       { params: { id: "order-1" } },
     );
-    const productUpdate = supabase.calls.find((c) => c.table === "products" && c.op === "update");
+    const productUpdate = supabase.calls.find((c) => c.table === "products" && c.op === "update")!;
     // 100 - (5-2) = 97
     expect(productUpdate.payload.inventory_quantity).toBe(97);
   });
