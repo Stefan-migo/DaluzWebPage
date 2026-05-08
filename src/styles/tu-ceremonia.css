@@ -22,6 +22,11 @@
   background-color: var(--color-bg-cream, #F6FBD6);
 }
 
+/* Mesh background is mobile/tablet only — hidden on desktop */
+.tu-ceremonia-mesh-bg {
+  display: none;
+}
+
 /* SVG Background Container - Height determined by content */
 .tu-ceremonia-bg-container {
   position: absolute;
@@ -276,20 +281,19 @@
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
+    background-color: transparent;
   }
-  
+
+  /* Hide the desktop SVG image background on mobile/tablet — mesh bg takes over */
   .tu-ceremonia-bg-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;
-    z-index: 0;
-    pointer-events: none;
+    display: none !important;
   }
-  
+
+  /* Mesh background reuses biotipos-mesh-bg-global; only show it on mobile/tablet */
+  .tu-ceremonia-mesh-bg {
+    display: block;
+  }
+
   .tu-ceremonia-content {
     position: relative;
     z-index: 10;
@@ -300,8 +304,24 @@
     padding: max(1.5rem, env(safe-area-inset-top)) 1rem 2.5rem;
     gap: 1.5rem;
   }
-  
-  /* Titles - flow layout */
+
+  /* Title card — wraps main title + subtitle in a single cream card */
+  .tu-ceremonia-title-card {
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+    background: #FFF2DB;
+    border-radius: 0px 18px;
+    padding: 1.5rem 1.25rem;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: center;
+  }
+
+  /* Titles inside the title-card */
   .tu-ceremonia-main-title {
     position: relative;
     top: auto;
@@ -309,13 +329,15 @@
     transform: none;
     width: 100%;
     max-width: 100%;
-    font-size: clamp(1.25rem, 5.5vw, 1.75rem);
-    line-height: 1.2;
+    font-family: var(--font-velista, 'VELISTA', serif);
+    font-size: clamp(1.4rem, 5.5vw, 1.9rem);
+    line-height: 1.15;
+    letter-spacing: 1px;
+    color: #791010;
     margin: 0;
-    padding: 0 0.5rem;
-    order: 1;
+    padding: 0;
   }
-  
+
   .tu-ceremonia-secondary-title {
     position: relative;
     top: auto;
@@ -323,11 +345,13 @@
     transform: none;
     width: 100%;
     max-width: 100%;
-    font-size: clamp(1rem, 4vw, 1.25rem);
-    color: var(--color-text-primary, #1C1B1A);
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: clamp(1rem, 3.4vw, 1.2rem);
+    line-height: 1.4;
+    color: #791010;
     margin: 0;
-    padding: 0 0.5rem;
-    order: 2;
+    padding: 0;
   }
   
   /* Text cards - no decorative SVG, simple card style */
@@ -412,15 +436,20 @@
     padding: max(1.25rem, env(safe-area-inset-top)) max(0.875rem, env(safe-area-inset-right)) calc(2rem + env(safe-area-inset-bottom, 0px)) max(0.875rem, env(safe-area-inset-left));
     gap: 1.25rem;
   }
-  
-  .tu-ceremonia-main-title {
-    font-size: 1.25rem;
-    padding: 0 0.25rem;
+
+  .tu-ceremonia-title-card {
+    padding: 1.25rem 1rem;
+    gap: 0.5rem;
   }
-  
+
+  .tu-ceremonia-main-title {
+    font-size: 1.4rem;
+    padding: 0;
+  }
+
   .tu-ceremonia-secondary-title {
     font-size: 1rem;
-    padding: 0 0.25rem;
+    padding: 0;
   }
   
   .tu-ceremonia-text-card-content {

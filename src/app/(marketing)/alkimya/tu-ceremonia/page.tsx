@@ -10,7 +10,10 @@ export const metadata: Metadata = {
 export default function TuCeremoniaPage() {
   return (
     <div className="tu-ceremonia-page">
-      {/* SVG Background */}
+      {/* Mobile/Tablet mesh background (shared with biotipos-doshas, hidden on desktop) */}
+      <div className="biotipos-mesh-bg-global tu-ceremonia-mesh-bg"></div>
+
+      {/* SVG Background (desktop only) */}
       <div className="tu-ceremonia-bg-container">
         <img
           src="/svg/ceremonias/TuCeremoniaPagebg2.svg"
@@ -33,15 +36,16 @@ export default function TuCeremoniaPage() {
 
       {/* Page Content */}
       <div className="tu-ceremonia-content">
-        {/* Main Title */}
-        <h1 className="tu-ceremonia-main-title">
-          CONOCE TU CEREMONIA DIARIA
-        </h1>
+        {/* Title + Subtitle wrapped in a single card on mobile/tablet */}
+        <div className="tu-ceremonia-title-card">
+          <h1 className="tu-ceremonia-main-title">
+            CONOCE TU CEREMONIA DIARIA
+          </h1>
 
-        {/* Secondary Title */}
-        <h2 className="tu-ceremonia-secondary-title">
-          ¡Transformá tu Rutina en un Ritual Consciente!
-        </h2>
+          <h2 className="tu-ceremonia-secondary-title">
+            ¡Transformá tu Rutina en un Ritual Consciente!
+          </h2>
+        </div>
 
         {/* Text Card 1 */}
         <div className="tu-ceremonia-text-card tu-ceremonia-text-card-1">

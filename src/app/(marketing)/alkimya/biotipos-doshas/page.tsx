@@ -349,11 +349,11 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Normal (Eudérmica)</td>
-                    <td>Tridoshic (Equilibrada)</td>
-                    <td>Piel lisa, suave, color uniforme y brillo moderado. Representa el equilibrio perfecto.</td>
-                    <td>Mantenimiento y prevención. Foco en antioxidantes y humectantes ligeros.</td>
-                    <td>SERENA</td>
+                    <td data-label="Biotipo Cutáneo">Normal (Eudérmica)</td>
+                    <td data-label="Correspondencia a Dosha/s">Tridoshic (Equilibrada)</td>
+                    <td data-label="Características Clave">Piel lisa, suave, color uniforme y brillo moderado. Representa el equilibrio perfecto.</td>
+                    <td data-label="Necesidades Esenciales">Mantenimiento y prevención. Foco en antioxidantes y humectantes ligeros.</td>
+                    <td data-label="ALKIMYA Recomendada">SERENA</td>
                   </tr>
                 </tbody>
               </table>
@@ -388,11 +388,11 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Seca (Alípica)</td>
-                    <td>Vata (Éter y Aire)</td>
-                    <td>Piel fina, tirante, con tendencia a la descamación y arrugas. Déficit en secreción sebácea.</td>
-                    <td>Nutrición intensa (aceites pesados), lípidos, ceramidas y alta humectación.</td>
-                    <td>NUTRE</td>
+                    <td data-label="Biotipo Cutáneo">Seca (Alípica)</td>
+                    <td data-label="Correspondencia a Dosha/s">Vata (Éter y Aire)</td>
+                    <td data-label="Características Clave">Piel fina, tirante, con tendencia a la descamación y arrugas. Déficit en secreción sebácea.</td>
+                    <td data-label="Necesidades Esenciales">Nutrición intensa (aceites pesados), lípidos, ceramidas y alta humectación.</td>
+                    <td data-label="ALKIMYA Recomendada">NUTRE</td>
                   </tr>
                 </tbody>
               </table>
@@ -427,11 +427,11 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Grasa y/o Acnéica</td>
-                    <td>Kapha (Tierra y Agua)</td>
-                    <td>Piel gruesa, brillante, con poros dilatados, tendencia a comedones y/o acné. Exceso de secreción sebácea.</td>
-                    <td>Regulación de sebo, activos astringentes (arcillas) y texturas ligeras.</td>
-                    <td>ILUMINA</td>
+                    <td data-label="Biotipo Cutáneo">Grasa y/o Acnéica</td>
+                    <td data-label="Correspondencia a Dosha/s">Kapha (Tierra y Agua)</td>
+                    <td data-label="Características Clave">Piel gruesa, brillante, con poros dilatados, tendencia a comedones y/o acné. Exceso de secreción sebácea.</td>
+                    <td data-label="Necesidades Esenciales">Regulación de sebo, activos astringentes (arcillas) y texturas ligeras.</td>
+                    <td data-label="ALKIMYA Recomendada">ILUMINA</td>
                   </tr>
                 </tbody>
               </table>
@@ -466,11 +466,11 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Mixta</td>
-                    <td>Vata/Kapha o Pitta/Kapha</td>
-                    <td>Sebo excesivo en la Zona T y áreas normales/secas en las mejillas.</td>
-                    <td>Balancear. Regulación en Zona T y nutrición ligera en el resto del rostro.</td>
-                    <td>ILUMINA (Zona T) / SERENA (Resto)</td>
+                    <td data-label="Biotipo Cutáneo">Mixta</td>
+                    <td data-label="Correspondencia a Dosha/s">Vata/Kapha o Pitta/Kapha</td>
+                    <td data-label="Características Clave">Sebo excesivo en la Zona T y áreas normales/secas en las mejillas.</td>
+                    <td data-label="Necesidades Esenciales">Balancear. Regulación en Zona T y nutrición ligera en el resto del rostro.</td>
+                    <td data-label="ALKIMYA Recomendada">ILUMINA (Zona T) / SERENA (Resto)</td>
                   </tr>
                 </tbody>
               </table>
@@ -505,11 +505,11 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Sensible</td>
-                    <td>Pitta (Fuego y Agua)</td>
-                    <td>Piel que reacciona fácilmente a estímulos externos, con tendencia a rojeces, picazón e inflamación.</td>
-                    <td>Calma, reparación de la barrera cutánea, activos desinflamatorios (Árnica, Manzanilla).</td>
-                    <td>CALMA</td>
+                    <td data-label="Biotipo Cutáneo">Sensible</td>
+                    <td data-label="Correspondencia a Dosha/s">Pitta (Fuego y Agua)</td>
+                    <td data-label="Características Clave">Piel que reacciona fácilmente a estímulos externos, con tendencia a rojeces, picazón e inflamación.</td>
+                    <td data-label="Necesidades Esenciales">Calma, reparación de la barrera cutánea, activos desinflamatorios (Árnica, Manzanilla).</td>
+                    <td data-label="ALKIMYA Recomendada">CALMA</td>
                   </tr>
                 </tbody>
               </table>
@@ -544,11 +544,11 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Madura</td>
-                    <td>Vata (Envejecimiento)</td>
-                    <td>Piel con pérdida de firmeza, elasticidad, volumen y líneas de expresión profundas.</td>
-                    <td>Reafirmación, alta nutrición, colágeno vegetal y activos anti-edad.</td>
-                    <td>NUTRE / SERENA</td>
+                    <td data-label="Biotipo Cutáneo">Madura</td>
+                    <td data-label="Correspondencia a Dosha/s">Vata (Envejecimiento)</td>
+                    <td data-label="Características Clave">Piel con pérdida de firmeza, elasticidad, volumen y líneas de expresión profundas.</td>
+                    <td data-label="Necesidades Esenciales">Reafirmación, alta nutrición, colágeno vegetal y activos anti-edad.</td>
+                    <td data-label="ALKIMYA Recomendada">NUTRE / SERENA</td>
                   </tr>
                 </tbody>
               </table>
@@ -627,10 +627,10 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Normal (Equilibrado)</td>
-                    <td>Tridoshic (Equilibrada)</td>
-                    <td>Pelo suave, con brillo natural y cuero cabelludo equilibrado.</td>
-                    <td>Mantenimiento, prevención y protección diaria.</td>
+                    <td data-label="Biotipo Capilar">Normal (Equilibrado)</td>
+                    <td data-label="Correspondencia a Dosha">Tridoshic (Equilibrada)</td>
+                    <td data-label="Características Clave">Pelo suave, con brillo natural y cuero cabelludo equilibrado.</td>
+                    <td data-label="Necesidades Esenciales">Mantenimiento, prevención y protección diaria.</td>
                   </tr>
                 </tbody>
               </table>
@@ -664,10 +664,10 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Seco, Dañado y/o Rizado/Crespo</td>
-                    <td>Vata (Éter y Aire)</td>
-                    <td>Pelo poroso, con frizz, quebradizo, puntas abiertas. Incluye patrones rizados/crespos (naturalmente secos).</td>
-                    <td>Nutrición e hidratación intensa (aceites, mantecas) y terapias calmantes.</td>
+                    <td data-label="Biotipo Capilar">Seco, Dañado y/o Rizado/Crespo</td>
+                    <td data-label="Correspondencia a Dosha">Vata (Éter y Aire)</td>
+                    <td data-label="Características Clave">Pelo poroso, con frizz, quebradizo, puntas abiertas. Incluye patrones rizados/crespos (naturalmente secos).</td>
+                    <td data-label="Necesidades Esenciales">Nutrición e hidratación intensa (aceites, mantecas) y terapias calmantes.</td>
                   </tr>
                 </tbody>
               </table>
@@ -701,10 +701,10 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Graso / Pesado</td>
-                    <td>Kapha (Tierra y Agua)</td>
-                    <td>Pelo grueso, pesado, con cuero cabelludo oleoso y tendencia a la congestión.</td>
-                    <td>Regulación del sebo, detox, activos astringentes y texturas ligeras.</td>
+                    <td data-label="Biotipo Capilar">Graso / Pesado</td>
+                    <td data-label="Correspondencia a Dosha">Kapha (Tierra y Agua)</td>
+                    <td data-label="Características Clave">Pelo grueso, pesado, con cuero cabelludo oleoso y tendencia a la congestión.</td>
+                    <td data-label="Necesidades Esenciales">Regulación del sebo, detox, activos astringentes y texturas ligeras.</td>
                   </tr>
                 </tbody>
               </table>
@@ -738,10 +738,10 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Cuero Cabelludo Irritado/Caspa</td>
-                    <td>Pitta/Kapha</td>
-                    <td>Descamación, picazón, enrojecimiento o exceso de grasa. Signo de desequilibrio.</td>
-                    <td>Calma, control de la inflamación, regulación del pH. Solución clave: Tónico Capilar.</td>
+                    <td data-label="Biotipo Capilar">Cuero Cabelludo Irritado/Caspa</td>
+                    <td data-label="Correspondencia a Dosha">Pitta/Kapha</td>
+                    <td data-label="Características Clave">Descamación, picazón, enrojecimiento o exceso de grasa. Signo de desequilibrio.</td>
+                    <td data-label="Necesidades Esenciales">Calma, control de la inflamación, regulación del pH. Solución clave: Tónico Capilar.</td>
                   </tr>
                 </tbody>
               </table>
@@ -775,10 +775,10 @@ export default function BiotiposDoshasPage() {
                 </thead>
                 <tbody>
                   <tr>
-                    <td>Caída y/o Crecimiento Lento</td>
-                    <td>Vata/Pitta</td>
-                    <td>Pérdida excesiva o lento crecimiento. Ligada a estrés, deficiencias o inflamación.</td>
-                    <td>Fortalecimiento folicular, nutrición de la raíz, estimulación circulatoria. Solución clave: Tónico Capilar.</td>
+                    <td data-label="Biotipo Capilar">Caída y/o Crecimiento Lento</td>
+                    <td data-label="Correspondencia a Dosha">Vata/Pitta</td>
+                    <td data-label="Características Clave">Pérdida excesiva o lento crecimiento. Ligada a estrés, deficiencias o inflamación.</td>
+                    <td data-label="Necesidades Esenciales">Fortalecimiento folicular, nutrición de la raíz, estimulación circulatoria. Solución clave: Tónico Capilar.</td>
                   </tr>
                 </tbody>
               </table>

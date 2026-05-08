@@ -13,7 +13,12 @@
       "WebFetch(domain:github.com)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('src/styles/biotipos.css','utf8'\\); const o=\\(s.match\\(/\\\\{/g\\)||[]\\).length; const c=\\(s.match\\(/\\\\}/g\\)||[]\\).length; console.log\\('open:',o,'close:',c,'diff:',o-c\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(git stash *)",
+      "Bash(git status *)",
+      "Bash(node -e \"const s=require\\('fs'\\).readFileSync\\('src/styles/tu-ceremonia.css','utf8'\\); const o=\\(s.match\\(/\\\\{/g\\)||[]\\).length; const c=\\(s.match\\(/\\\\}/g\\)||[]\\).length; console.log\\('open:',o,'close:',c,'diff:',o-c\\)\")"
     ]
   }
 }
