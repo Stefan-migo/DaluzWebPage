@@ -36,6 +36,7 @@ import {
   Clock,
   Trash2,
   ExternalLink,
+  Pencil,
 } from "lucide-react";
 import type { Order } from "@/types/admin";
 
@@ -51,6 +52,7 @@ interface OrderTableProps {
   onUpdateStatus?: (orderId: string, status: string) => void;
   onUpdatePaymentStatus?: (orderId: string, status: string) => void;
   onViewDetails?: (order: Order) => void;
+  onEditOrder?: (order: Order) => void;
   onSendNotification?: (order: Order) => void;
   onDeleteOrder?: (orderId: string) => void;
   onPageChange?: (page: number) => void;
@@ -204,6 +206,7 @@ function getPaymentBadge(status: string) {
 function OrderActions({
   order,
   onViewDetails,
+  onEditOrder,
   onUpdateStatus,
   onSendNotification,
   onDeleteOrder,
@@ -226,6 +229,12 @@ function OrderActions({
           <DropdownMenuItem onClick={() => onViewDetails(order)}>
             <Eye className="h-4 w-4 mr-2" />
             Ver Detalles
+          </DropdownMenuItem>
+        )}
+        {onEditOrder && (
+          <DropdownMenuItem onClick={() => onEditOrder(order)}>
+            <Pencil className="h-4 w-4 mr-2" />
+            Editar
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
@@ -446,6 +455,7 @@ const OrderTable = memo(function OrderTable(props: OrderTableProps) {
     onUpdateStatus,
     onUpdatePaymentStatus,
     onViewDetails,
+    onEditOrder,
     onSendNotification,
     onDeleteOrder,
     onPageChange,
@@ -590,6 +600,7 @@ const OrderTable = memo(function OrderTable(props: OrderTableProps) {
                   <OrderActions
                     order={order}
                     onViewDetails={onViewDetails}
+                    onEditOrder={onEditOrder}
                     onUpdateStatus={onUpdateStatus}
                     onSendNotification={onSendNotification}
                     onDeleteOrder={onDeleteOrder}

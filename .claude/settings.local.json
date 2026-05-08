@@ -12,7 +12,14 @@
       "Bash(gh repo *)",
       "WebFetch(domain:github.com)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git -C c:/Users/juan/Desktop/DaluzWebPage status)",
+      "Bash(npm test *)",
+      "Bash(git -C c:/Users/juan/Desktop/DaluzWebPage add \"src/app/api/admin/orders/[id]/__tests__/route.test.ts\" vitest.config.ts)",
+      "Bash(git -C c:/Users/juan/Desktop/DaluzWebPage commit -m 'test\\(api\\): cover admin PATCH order edits \\(items, stock, regression\\) *)",
+      "Bash(git -C c:/Users/juan/Desktop/DaluzWebPage add src/components/admin/orders/EditOrderDialog.tsx \"src/app/api/admin/orders/[id]/__tests__/route.test.ts\")",
+      "Bash(git -C c:/Users/juan/Desktop/DaluzWebPage commit -m 'feat\\(admin\\): add EditOrderDialog for editing orders *)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }
