@@ -178,6 +178,7 @@ export async function PUT(
       featured_image: body.featured_image,
       gallery: body.gallery || [],
       skin_type: body.skin_type,
+      hair_type: body.hair_type,
       benefits: body.benefits,
       certifications: body.certifications,
       ingredients: body.ingredients,

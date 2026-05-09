@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get("category");
     const search = searchParams.get("search");
     const skinType = searchParams.get("skin_type");
+    const hairType = searchParams.get("hair_type");
     const minPrice = searchParams.get("min_price");
     const maxPrice = searchParams.get("max_price");
     const featured = searchParams.get("featured");
@@ -61,6 +62,10 @@ export async function GET(request: NextRequest) {
 
     if (skinType) {
       query = query.contains("skin_type", [skinType]);
+    }
+
+    if (hairType) {
+      query = query.contains("hair_type", [hairType]);
     }
 
     if (minPrice) {
@@ -211,6 +216,7 @@ export async function POST(request: NextRequest) {
       featured_image: productData.featured_image || "",
       gallery: productData.gallery || [],
       skin_type: productData.skin_type || [],
+      hair_type: productData.hair_type || [],
       benefits: productData.benefits || [],
       usage_instructions: productData.usage_instructions || "",
       precautions: productData.precautions || "",

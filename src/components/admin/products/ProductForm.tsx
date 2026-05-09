@@ -80,6 +80,14 @@ export default function ProductForm({
     { value: "normal", label: "Normal" },
     { value: "mature", label: "Maduro" },
   ];
+  const hairTypes = [
+    { value: "oily", label: "Graso" },
+    { value: "dry", label: "Seco" },
+    { value: "normal", label: "Normal" },
+    { value: "combination", label: "Mixto" },
+    { value: "curly", label: "Rizado" },
+    { value: "straight", label: "Lacio" },
+  ];
   const benefitOptions = [
     "Hidratante",
     "Anti-edad",
@@ -115,6 +123,7 @@ export default function ProductForm({
     is_featured: false,
     status: "active",
     skin_type: [] as string[],
+    hair_type: [] as string[],
     benefits: [] as string[],
     certifications: [] as string[],
     usage_instructions: "",
@@ -198,6 +207,7 @@ export default function ProductForm({
         dimensions: product.dimensions || "",
         package_characteristics: product.package_characteristics || "",
         skin_type: product.skin_type || [],
+        hair_type: product.hair_type || [],
         benefits: product.benefits || [],
         certifications: product.certifications || [],
         ingredients: product.ingredients || [],
@@ -245,7 +255,7 @@ export default function ProductForm({
   };
 
   const addToArray = (
-    field: "skin_type" | "benefits" | "certifications",
+    field: "skin_type" | "hair_type" | "benefits" | "certifications",
     value: string,
   ) => {
     if (!formData[field].includes(value)) {
@@ -256,7 +266,7 @@ export default function ProductForm({
   };
 
   const removeFromArray = (
-    field: "skin_type" | "benefits" | "certifications",
+    field: "skin_type" | "hair_type" | "benefits" | "certifications",
     value: string,
   ) => {
     updateFormData({
@@ -956,6 +966,52 @@ export default function ProductForm({
                       {skinTypes
                         .filter(
                           (type) => !formData.skin_type.includes(type.value),
+                        )
+                        .map((type) => (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Hair Types */}
+                <div className="space-y-3">
+                  <Label>Tipos de Cabello</Label>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.hair_type.map((type: string) => {
+                      const hairTypeLabel =
+                        hairTypes.find((ht) => ht.value === type)?.label ||
+                        type;
+                      return (
+                        <Badge
+                          key={type}
+                          className="flex items-center gap-1 px-3 py-1"
+                          style={{
+                            backgroundColor: "var(--admin-bg-secondary)",
+                            color: "white",
+                          }}
+                        >
+                          {hairTypeLabel}
+                          <X
+                            className="h-3 w-3 cursor-pointer hover:text-red-200"
+                            onClick={() => removeFromArray("hair_type", type)}
+                          />
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                  <Select
+                    onValueChange={(value) => addToArray("hair_type", value)}
+                  >
+                    <SelectTrigger className="w-full admin-select">
+                      <SelectValue placeholder="Agregar tipo de cabello" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {hairTypes
+                        .filter(
+                          (type) => !formData.hair_type.includes(type.value),
                         )
                         .map((type) => (
                           <SelectItem key={type.value} value={type.value}>

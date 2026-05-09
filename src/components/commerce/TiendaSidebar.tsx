@@ -34,6 +34,8 @@ interface TiendaSidebarProps {
   setSelectedCategory: (category: string) => void;
   selectedSkinType: string;
   setSelectedSkinType: (type: string) => void;
+  selectedHairType: string;
+  setSelectedHairType: (type: string) => void;
   priceRange: { min: string; max: string };
   setPriceRange: (range: { min: string; max: string }) => void;
   sortBy: string;
@@ -68,6 +70,15 @@ const skinTypes = [
   { value: "normal", label: "Normal" },
 ];
 
+const hairTypes = [
+  { value: "oily", label: "Graso" },
+  { value: "dry", label: "Seco" },
+  { value: "normal", label: "Normal" },
+  { value: "combination", label: "Mixto" },
+  { value: "curly", label: "Rizado" },
+  { value: "straight", label: "Lacio" },
+];
+
 const sortOptions = [
   { value: "featured", label: "Destacados" },
   { value: "newest", label: "Más recientes" },
@@ -83,6 +94,8 @@ export default function TiendaSidebar({
   setSelectedCategory,
   selectedSkinType,
   setSelectedSkinType,
+  selectedHairType,
+  setSelectedHairType,
   priceRange,
   setPriceRange,
   sortBy,
@@ -261,6 +274,29 @@ export default function TiendaSidebar({
                 <SelectContent>
                   <SelectItem value="all">Todos los tipos</SelectItem>
                   {skinTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Hair Type */}
+            <div>
+              <label className="text-xs lg:text-sm font-medium mb-2 block">
+                Tipo de Cabello
+              </label>
+              <Select
+                value={selectedHairType}
+                onValueChange={setSelectedHairType}
+              >
+                <SelectTrigger className="h-8 lg:h-10 text-sm">
+                  <SelectValue placeholder="Todos los tipos" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Todos los tipos</SelectItem>
+                  {hairTypes.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
@@ -460,6 +496,12 @@ export default function TiendaSidebar({
                   <Badge variant="secondary" className="text-xs">
                     Piel:{" "}
                     {skinTypes.find((s) => s.value === selectedSkinType)?.label}
+                  </Badge>
+                )}
+                {selectedHairType && selectedHairType !== "all" && (
+                  <Badge variant="secondary" className="text-xs">
+                    Cabello:{" "}
+                    {hairTypes.find((h) => h.value === selectedHairType)?.label}
                   </Badge>
                 )}
                 {(priceRange.min || priceRange.max) && (

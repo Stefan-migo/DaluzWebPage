@@ -109,6 +109,9 @@ function ProductsContent() {
   const [selectedSkinType, setSelectedSkinType] = useState(
     searchParams.get("skin_type") || "",
   );
+  const [selectedHairType, setSelectedHairType] = useState(
+    searchParams.get("hair_type") || "",
+  );
   const [sortBy, setSortBy] = useState(
     searchParams.get("sort_by") || "featured",
   );
@@ -163,6 +166,8 @@ function ProductsContent() {
         if (selectedCategory) params.append("category", selectedCategory);
         if (selectedSkinType && selectedSkinType !== "all")
           params.append("skin_type", selectedSkinType);
+        if (selectedHairType && selectedHairType !== "all")
+          params.append("hair_type", selectedHairType);
         if (priceRange.min) params.append("min_price", priceRange.min);
         if (priceRange.max) params.append("max_price", priceRange.max);
         if (showOnlySale) params.append("on_sale", "true");
@@ -196,6 +201,7 @@ function ProductsContent() {
     searchTerm,
     selectedCategory,
     selectedSkinType,
+    selectedHairType,
     priceRange,
     sortBy,
     currentPage,
@@ -264,6 +270,7 @@ function ProductsContent() {
     setSearchTerm("");
     setSelectedCategory("");
     setSelectedSkinType("");
+    setSelectedHairType("");
     setPriceRange({ min: "", max: "" });
     setSortBy("featured");
     setCurrentPage(1);
@@ -275,6 +282,7 @@ function ProductsContent() {
     searchTerm ||
       selectedCategory ||
       (selectedSkinType && selectedSkinType !== "all") ||
+      (selectedHairType && selectedHairType !== "all") ||
       priceRange.min ||
       priceRange.max ||
       showOnlyFavorites ||
@@ -418,6 +426,24 @@ function ProductsContent() {
                       </SelectContent>
                     </Select>
 
+                    <Select
+                      value={selectedHairType}
+                      onValueChange={setSelectedHairType}
+                    >
+                      <SelectTrigger className="h-6 text-xs">
+                        <SelectValue placeholder="Cabello" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Todos</SelectItem>
+                        <SelectItem value="oily">Graso</SelectItem>
+                        <SelectItem value="dry">Seco</SelectItem>
+                        <SelectItem value="normal">Normal</SelectItem>
+                        <SelectItem value="combination">Mixto</SelectItem>
+                        <SelectItem value="curly">Rizado</SelectItem>
+                        <SelectItem value="straight">Lacio</SelectItem>
+                      </SelectContent>
+                    </Select>
+
                     {/* Price Range */}
                     <div className="space-y-1">
                       <label className="text-xs text-gray-600">Precio</label>
@@ -546,6 +572,8 @@ function ProductsContent() {
               setSelectedCategory={setSelectedCategory}
               selectedSkinType={selectedSkinType}
               setSelectedSkinType={setSelectedSkinType}
+              selectedHairType={selectedHairType}
+              setSelectedHairType={setSelectedHairType}
               priceRange={priceRange}
               setPriceRange={setPriceRange}
               sortBy={sortBy}
