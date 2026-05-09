@@ -18,7 +18,7 @@ export async function GET(
       return NextResponse.json({
         category: {
           id: 'linea-utopica-id',
-          name: 'Línea Utópica',
+          name: 'Línea Prisma',
           slug: 'linea-utopica',
           description: 'Línea de maquillaje consciente y ceremonial.',
           is_active: true

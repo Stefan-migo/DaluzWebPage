@@ -23,6 +23,7 @@ import {
   Grid2X2,
   SlidersHorizontal,
   Heart,
+  Tag,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -45,20 +46,18 @@ interface TiendaSidebarProps {
   showOnlyFavorites?: boolean;
   setShowOnlyFavorites?: (value: boolean) => void;
   favoritesCount?: number;
+  showOnlySale?: boolean;
+  setShowOnlySale?: (value: boolean) => void;
   className?: string;
 }
 
 const productLines = [
-  { id: "alma-terra", name: "Alma Terra", color: "text-alma-primary" },
-  { id: "ecos", name: "Ecos", color: "text-ecos-primary" },
-  { id: "jade-ritual", name: "Jade Ritual", color: "text-jade-primary" },
-  {
-    id: "kits-experiencia",
-    name: "Kits y Experiencia",
-    color: "text-brand-primary",
-  },
-  { id: "umbral", name: "Umbral", color: "text-umbral-primary" },
-  { id: "utopica", name: "Utópica", color: "text-utopica-primary" },
+  { id: "alma-terra", name: "Alma Terra" },
+  { id: "ecos", name: "Ecos" },
+  { id: "jade-ritual", name: "Jade Ritual" },
+  { id: "kits-experiencia", name: "Kits y Experiencia" },
+  { id: "umbral", name: "Umbral" },
+  { id: "utopica", name: "Prisma" },
 ];
 
 const skinTypes = [
@@ -96,6 +95,8 @@ export default function TiendaSidebar({
   showOnlyFavorites = false,
   setShowOnlyFavorites,
   favoritesCount = 0,
+  showOnlySale = false,
+  setShowOnlySale,
   className,
 }: TiendaSidebarProps) {
   const [expandedSections, setExpandedSections] = useState({
@@ -201,12 +202,9 @@ export default function TiendaSidebar({
                   variant={
                     selectedCategory === line.id ? "line-primary" : "line-ghost"
                   }
-                  className={cn(
-                    "w-full justify-start text-sm h-8 lg:h-9",
-                    line.color,
-                  )}
+                  className="w-full justify-start text-sm h-8 lg:h-9"
+                  style={{ color: "#791010" }}
                   onClick={() => {
-                    // Redirect to specific category page instead of filtering
                     window.location.href = `/categorias/linea-${line.id}`;
                   }}
                 >
@@ -314,6 +312,18 @@ export default function TiendaSidebar({
                 {showOnlyFavorites
                   ? `Mostrando favoritos (${favoritesCount})`
                   : "Mis favoritos"}
+              </Button>
+            )}
+
+            {/* Sale Toggle */}
+            {setShowOnlySale && (
+              <Button
+                variant={showOnlySale ? "line-primary" : "outline"}
+                onClick={() => setShowOnlySale(!showOnlySale)}
+                className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
+              >
+                <Tag className="h-4 w-4" />
+                {showOnlySale ? "Mostrando ofertas" : "Solo ofertas"}
               </Button>
             )}
 
@@ -460,6 +470,11 @@ export default function TiendaSidebar({
                 {showOnlyFavorites && (
                   <Badge variant="secondary" className="text-xs">
                     Solo favoritos
+                  </Badge>
+                )}
+                {showOnlySale && (
+                  <Badge variant="secondary" className="text-xs">
+                    Solo ofertas
                   </Badge>
                 )}
               </div>

@@ -822,7 +822,7 @@ export default async function HomePage() {
             {/* Enhanced Header */}
             <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-7 md:mb-8">
               <h2 className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-6xl text-white leading-tight drop-shadow-2xl">
-                LÍNEA UTÓPICA
+                LÍNEA PRISMA
               </h2>
               <div className="w-32 h-1 bg-gradient-to-r from-transparent via-white/60 to-transparent mx-auto" />
             </div>
@@ -838,7 +838,7 @@ export default async function HomePage() {
               >
                 <Image
                   src="/images/lineas/utopica/utopica-producto-1.jpg"
-                  alt="Línea UTÓPICA - Producto 1"
+                  alt="Línea PRISMA - Producto 1"
                   width={192}
                   height={192}
                   className="w-full h-full object-cover"

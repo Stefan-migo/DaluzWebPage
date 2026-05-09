@@ -85,7 +85,7 @@ const productLines = [
   },
   {
     id: "utopica",
-    name: "Utópica",
+    name: "Prisma",
     description: "Visión elevada",
     color: "text-utopica-primary",
     bgColor: "bg-utopica-primary/10",

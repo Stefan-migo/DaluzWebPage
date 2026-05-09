@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
     const maxPrice = searchParams.get("max_price");
     const featured = searchParams.get("featured");
     const inStock = searchParams.get("in_stock");
+    const onSale = searchParams.get("on_sale");
     const status = searchParams.get("status"); // For admin use
     const includeArchived = searchParams.get("include_archived") === "true"; // For admin use
 
@@ -76,6 +77,10 @@ export async function GET(request: NextRequest) {
 
     if (inStock === "true") {
       query = query.gt("inventory_quantity", 0);
+    }
+
+    if (onSale === "true") {
+      query = query.eq("is_on_sale", true);
     }
 
     // Status filtering - only show active products for public consumption

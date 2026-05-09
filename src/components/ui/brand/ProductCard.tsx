@@ -40,21 +40,21 @@ interface ProductCardProps {
   className?: string;
   variant?: "default" | "elegant" | "artisanal" | "glass";
   lineTheme?:
-    | "alma-terra"
-    | "ecos"
-    | "jade-ritual"
-    | "umbral"
-    | "utopica"
-    | "kits-experiencia"
-    | "default";
+  | "alma-terra"
+  | "ecos"
+  | "jade-ritual"
+  | "umbral"
+  | "utopica"
+  | "kits-experiencia"
+  | "default";
   onAddToCart?: (productId: string, quantity: number) => void;
   // New fields from migration 20260325000000
   promotionalTag?:
-    | "none"
-    | "lanzamiento"
-    | "descuento"
-    | "ultimas_unidades"
-    | null;
+  | "none"
+  | "lanzamiento"
+  | "descuento"
+  | "ultimas_unidades"
+  | null;
   discountTransferPercent?: number | null;
   discountCashPercent?: number | null;
 }
@@ -248,9 +248,8 @@ export default function ProductCard({
     return Array.from({ length: 5 }, (_, index) => (
       <Star
         key={index}
-        className={`h-4 w-4 transition-colors ${
-          index < Math.floor(rating) ? theme.star : "text-gray-300"
-        }`}
+        className={`h-4 w-4 transition-colors ${index < Math.floor(rating) ? theme.star : "text-gray-300"
+          }`}
       />
     ));
   };
@@ -296,6 +295,30 @@ export default function ProductCard({
             onLoad={() => setImageLoaded(true)}
             onError={() => setImageLoaded(true)}
           />
+
+          {/* Top Left Overlay Badges */}
+          <div className="absolute top-2 left-2 z-20 flex flex-wrap gap-1 max-w-[calc(100%-3rem)]">
+            {promotionalTag && promotionalTag !== "none" && renderPromotionalTagBadge()}
+            {isOnSale && (
+              <Badge
+                variant="destructive"
+                className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-xs px-2 py-0.5"
+              >
+                <span className="font-bold">OFERTA</span>
+              </Badge>
+            )}
+            {isNew && (
+              <Badge
+                className={cn(
+                  theme.badge,
+                  "font-semibold shadow-md animate-pulse-gentle text-xs px-2 py-0.5",
+                )}
+              >
+                <Sparkles className="h-2.5 w-2.5 mr-1" />
+                Nuevo
+              </Badge>
+            )}
+          </div>
 
           {/* Like Button */}
           <div className="absolute top-2 right-2 z-20">
@@ -358,38 +381,6 @@ export default function ProductCard({
           <div className="hidden lg:flex lg:flex-col h-full">
             {/* Top Content - scrollable if too tall */}
             <div className="space-y-2 lg:space-y-3 overflow-y-auto flex-1 pr-1">
-              {/* Badges */}
-              <div className="flex flex-wrap gap-1">
-                {renderPromotionalTagBadge()}
-                {isOnSale && (
-                  <Badge
-                    variant="destructive"
-                    className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-xs px-2 py-0.5"
-                  >
-                    <span className="font-bold">OFERTA</span>
-                  </Badge>
-                )}
-                {isNew && (
-                  <Badge
-                    className={cn(
-                      theme.badge,
-                      "font-semibold shadow-md animate-pulse-gentle text-xs px-2 py-0.5",
-                    )}
-                  >
-                    <Sparkles className="h-2.5 w-2.5 mr-1" />
-                    Nuevo
-                  </Badge>
-                )}
-                {isNatural && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-100 text-green-800 border-green-200 shadow-md text-xs px-2 py-0.5"
-                  >
-                    <Leaf className="h-2.5 w-2.5 mr-1" />
-                    Natural
-                  </Badge>
-                )}
-              </div>
 
               {/* Name */}
               <Link href={productHref} className="block group/link">
@@ -430,7 +421,7 @@ export default function ProductCard({
                   )}
                 </div>
                 {originalPrice && originalPrice > price && (
-                  <div className="text-sm text-green-600 font-semibold bg-green-50 px-2 py-1 rounded-md inline-block">
+                  <div className="text-sm text-[#791010] font-semibold bg-green-50 px-2 py-1 rounded-md inline-block">
                     Ahorrás {formatPrice(originalPrice - price)}
                   </div>
                 )}
@@ -563,67 +554,6 @@ export default function ProductCard({
           <div className="lg:hidden flex flex-col h-full">
             {/* Top Content - scrollable if too tall */}
             <div className="flex-1 overflow-y-auto space-y-1 pr-1">
-              {/* Badges - Smaller on mobile */}
-              <div className="flex flex-wrap gap-1">
-                {promotionalTag && promotionalTag !== "none" && (
-                  <Badge
-                    className="shadow-md text-[10px] px-1 py-0.5"
-                    style={{
-                      backgroundColor: "#FFF2DB",
-                      color: "#791010",
-                      fontFamily: "EB Garamond, var(--font-text), serif",
-                      fontStyle: "italic",
-                      fontWeight: 500,
-                      border: "none",
-                    }}
-                  >
-                    {promotionalTag === "lanzamiento" && (
-                      <Sparkles className="h-1.5 w-1.5 mr-0.5" />
-                    )}
-                    {promotionalTag === "descuento" && (
-                      <Leaf className="h-1.5 w-1.5 mr-0.5" />
-                    )}
-                    {promotionalTag === "ultimas_unidades" && (
-                      <AlertCircle className="h-1.5 w-1.5 mr-0.5" />
-                    )}
-                    {promotionalTag === "lanzamiento"
-                      ? "Lanzamiento"
-                      : promotionalTag === "descuento"
-                        ? "Descuento"
-                        : promotionalTag === "ultimas_unidades"
-                          ? "Últimas"
-                          : ""}
-                  </Badge>
-                )}
-                {isOnSale && (
-                  <Badge
-                    variant="destructive"
-                    className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-[10px] px-1 py-0.5"
-                  >
-                    <span className="font-bold">OFERTA</span>
-                  </Badge>
-                )}
-                {isNew && (
-                  <Badge
-                    className={cn(
-                      theme.badge,
-                      "font-semibold shadow-md animate-pulse-gentle text-[10px] px-1 py-0.5",
-                    )}
-                  >
-                    <Sparkles className="h-1.5 w-1.5 mr-0.5" />
-                    Nuevo
-                  </Badge>
-                )}
-                {isNatural && (
-                  <Badge
-                    variant="secondary"
-                    className="bg-green-100 text-green-800 border-green-200 shadow-md text-[10px] px-1 py-0.5"
-                  >
-                    <Leaf className="h-1.5 w-1.5 mr-0.5" />
-                    Natural
-                  </Badge>
-                )}
-              </div>
 
               {/* Name - Smaller, Left aligned */}
               <Link href={productHref} className="block group/link">
@@ -645,11 +575,10 @@ export default function ProductCard({
                   {Array.from({ length: 5 }, (_, index) => (
                     <Star
                       key={index}
-                      className={`h-2.5 w-2.5 transition-colors ${
-                        index < Math.floor(rating)
+                      className={`h-2.5 w-2.5 transition-colors ${index < Math.floor(rating)
                           ? theme.star
                           : "text-gray-300"
-                      }`}
+                        }`}
                     />
                   ))}
                 </div>

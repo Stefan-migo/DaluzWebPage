@@ -270,7 +270,7 @@ export default function ProductDetailPage() {
       },
       {
         id: "utopica",
-        name: "Utópica",
+        name: "Prisma",
         primaryColor: "#392E13",
         secondaryColor: "#F0EACE",
         buttonColor: "bg-[#392E13] hover:bg-[#392E13]/90 text-white",

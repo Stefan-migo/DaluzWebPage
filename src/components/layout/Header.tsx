@@ -314,7 +314,7 @@ export default function Header() {
                       </ListItem>
                       <ListItem
                         href="/categorias/linea-utopica"
-                        title="LINEA UTOPICA"
+                        title="LINEA PRISMA"
                       >
                         Sombras en polvo, Barra labial, Iluminadores
                       </ListItem>
@@ -1045,7 +1045,7 @@ export default function Header() {
                             style={{ color: "#1C1B1A" }}
                             onClick={() => setMobileMenuOpen(false)}
                           >
-                            Línea Utópica
+                            Línea Prisma
                           </Link>
                         </div>
                       </div>

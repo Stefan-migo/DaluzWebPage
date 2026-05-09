@@ -27,6 +27,7 @@ import {
   ArrowUpDown,
   X,
   Heart,
+  Tag,
 } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useLike } from "@/contexts/LikeContext";
@@ -62,6 +63,14 @@ interface Product {
     option1?: string;
     is_default: boolean;
   }>;
+  promotional_tag?:
+    | "none"
+    | "lanzamiento"
+    | "descuento"
+    | "ultimas_unidades"
+    | null;
+  discount_transfer_percent?: number | null;
+  discount_cash_percent?: number | null;
 }
 
 interface Category {
@@ -125,6 +134,7 @@ function ProductsContent() {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
+  const [showOnlySale, setShowOnlySale] = useState(false);
 
   // Fetch categories
   useEffect(() => {
@@ -155,6 +165,7 @@ function ProductsContent() {
           params.append("skin_type", selectedSkinType);
         if (priceRange.min) params.append("min_price", priceRange.min);
         if (priceRange.max) params.append("max_price", priceRange.max);
+        if (showOnlySale) params.append("on_sale", "true");
         if (sortBy) params.append("sort_by", getSortField(sortBy));
         if (getSortOrder(sortBy))
           params.append("sort_order", getSortOrder(sortBy));
@@ -188,6 +199,7 @@ function ProductsContent() {
     priceRange,
     sortBy,
     currentPage,
+    showOnlySale,
   ]);
 
   const getSortField = (sort: string) => {
@@ -256,6 +268,7 @@ function ProductsContent() {
     setSortBy("featured");
     setCurrentPage(1);
     setShowOnlyFavorites(false);
+    setShowOnlySale(false);
   };
 
   const hasActiveFilters = Boolean(
@@ -264,7 +277,8 @@ function ProductsContent() {
       (selectedSkinType && selectedSkinType !== "all") ||
       priceRange.min ||
       priceRange.max ||
-      showOnlyFavorites,
+      showOnlyFavorites ||
+      showOnlySale,
   );
 
   const displayedProducts = showOnlyFavorites
@@ -449,6 +463,15 @@ function ProductsContent() {
                       {showOnlyFavorites ? "Mostrando favoritos" : "Solo favoritos"}
                     </Button>
 
+                    <Button
+                      variant={showOnlySale ? "line-primary" : "outline"}
+                      onClick={() => { setShowOnlySale((v) => !v); setCurrentPage(1); }}
+                      className="w-full text-xs h-6"
+                    >
+                      <Tag className="h-3 w-3 mr-1" />
+                      {showOnlySale ? "Mostrando ofertas" : "Solo ofertas"}
+                    </Button>
+
                     {hasActiveFilters && (
                       <Button
                         variant="outline"
@@ -535,6 +558,11 @@ function ProductsContent() {
               showOnlyFavorites={showOnlyFavorites}
               setShowOnlyFavorites={setShowOnlyFavorites}
               favoritesCount={likedProducts.size}
+              showOnlySale={showOnlySale}
+              setShowOnlySale={(v) => {
+                setShowOnlySale(v);
+                setCurrentPage(1);
+              }}
             />
           </div>
 
@@ -626,6 +654,9 @@ function ProductsContent() {
                     onAddToCart={handleAddToCart}
                     variant="elegant"
                     className="p-[0]"
+                    promotionalTag={product.promotional_tag}
+                    discountTransferPercent={product.discount_transfer_percent}
+                    discountCashPercent={product.discount_cash_percent}
                   />
                 ))}
               </div>
