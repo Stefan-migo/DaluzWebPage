@@ -253,10 +253,14 @@ export default function CategoryPage() {
         </div>
 
         {/* Category Image */}
-        {(category.image_url || params.slug === 'linea-prisma') && (
+        {(category.image_url || params.slug === 'linea-prisma' || (params.slug as string).includes('kits')) && (
           <div className="mb-8 aspect-[3/1] relative overflow-hidden rounded-lg" style={{ borderRadius: '0px 15px' }}>
             <img
-              src={params.slug === 'linea-prisma' ? '/images/lineas/utopica/prisma-banner.png' : category.image_url}
+              src={
+                params.slug === 'linea-prisma' ? '/images/lineas/utopica/prisma-banner.png' : 
+                (params.slug as string).includes('kits') ? '/images/lineas/kits-experiencia-banner.png' : 
+                category.image_url
+              }
               alt={category.name}
               className="object-cover w-full h-full"
             />

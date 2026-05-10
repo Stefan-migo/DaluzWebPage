@@ -57,7 +57,7 @@ const productLines = [
   { id: "alma-terra", name: "Alma Terra" },
   { id: "ecos", name: "Ecos" },
   { id: "jade-ritual", name: "Jade Ritual" },
-  { id: "kits-experiencia", name: "Kits y Experiencia" },
+  { id: "kits-experiencia", slug: "kits-y-experiencia", name: "Kits y Experiencia" },
   { id: "umbral", name: "Umbral" },
   { id: "utopica", slug: "prisma", name: "Prisma" },
 ];
