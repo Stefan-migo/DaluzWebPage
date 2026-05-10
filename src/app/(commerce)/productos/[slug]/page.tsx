@@ -95,11 +95,11 @@ interface Product {
   product_variants?: ProductVariant[];
   // New fields from migration 20260325000000
   promotional_tag?:
-    | "none"
-    | "lanzamiento"
-    | "descuento"
-    | "ultimas_unidades"
-    | null;
+  | "none"
+  | "lanzamiento"
+  | "descuento"
+  | "ultimas_unidades"
+  | null;
   discount_transfer_percent?: number | null;
   discount_cash_percent?: number | null;
   access_id?: string | null;
@@ -674,7 +674,7 @@ export default function ProductDetailPage() {
                       {Math.round(
                         ((product.compare_at_price - currentPrice) /
                           product.compare_at_price) *
-                          100,
+                        100,
                       )}
                       %
                     </Badge>
@@ -694,11 +694,10 @@ export default function ProductDetailPage() {
                   <button
                     key={index}
                     onClick={() => selectImage(image, index)}
-                    className={`w-20 h-20 flex-shrink-0 relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                      selectedImage === image
-                        ? "border-dorado shadow-lg scale-105"
-                        : "border-gray-200 hover:border-gray-300 hover:scale-105"
-                    }`}
+                    className={`w-20 h-20 flex-shrink-0 relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${selectedImage === image
+                      ? "border-dorado shadow-lg scale-105"
+                      : "border-gray-200 hover:border-gray-300 hover:scale-105"
+                      }`}
                   >
                     <Image
                       src={image}
@@ -739,11 +738,10 @@ export default function ProductDetailPage() {
                       <button
                         key={index}
                         onClick={() => selectImage(image, index)}
-                        className={`w-16 ${getThumbnailSize(images.length).size} relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${
-                          selectedImage === image
-                            ? "border-dorado shadow-lg scale-105"
-                            : "border-gray-200 hover:border-gray-300 hover:scale-105"
-                        }`}
+                        className={`w-16 ${getThumbnailSize(images.length).size} relative overflow-hidden rounded-lg border-2 transition-all duration-300 ${selectedImage === image
+                          ? "border-dorado shadow-lg scale-105"
+                          : "border-gray-200 hover:border-gray-300 hover:scale-105"
+                          }`}
                       >
                         <Image
                           src={image}
@@ -854,7 +852,7 @@ export default function ProductDetailPage() {
                           className="absolute top-4 bg-red-500 text-white"
                           style={
                             product.promotional_tag &&
-                            product.promotional_tag !== "none"
+                              product.promotional_tag !== "none"
                               ? { top: "4rem" }
                               : {}
                           }
@@ -863,7 +861,7 @@ export default function ProductDetailPage() {
                           {Math.round(
                             ((product.compare_at_price - currentPrice) /
                               product.compare_at_price) *
-                              100,
+                            100,
                           )}
                           %
                         </Badge>
@@ -925,11 +923,10 @@ export default function ProductDetailPage() {
                     return (
                       <Star
                         key={i}
-                        className={`h-4 w-4 ${
-                          isFilled || isHalfFilled
-                            ? "fill-dorado text-dorado"
-                            : "text-gray-300"
-                        }`}
+                        className={`h-4 w-4 ${isFilled || isHalfFilled
+                          ? "fill-dorado text-dorado"
+                          : "text-gray-300"
+                          }`}
                       />
                     );
                   })}
@@ -960,63 +957,63 @@ export default function ProductDetailPage() {
               {/* Discount prices for transfer/cash payments */}
               {(product.discount_transfer_percent ||
                 product.discount_cash_percent) && (
-                <div className="flex flex-wrap gap-3 mt-2">
-                  {product.discount_transfer_percent &&
-                    product.discount_transfer_percent > 0 && (
-                      <div
-                        className="px-3 py-2 rounded-lg"
-                        style={{ backgroundColor: "#FFF2DB", color: "#791010" }}
-                      >
-                        <p
-                          className="text-sm font-medium"
-                          style={{
-                            fontFamily: "EB Garamond, var(--font-text), serif",
-                            fontStyle: "italic",
-                          }}
+                  <div className="flex flex-wrap gap-3 mt-2">
+                    {product.discount_transfer_percent &&
+                      product.discount_transfer_percent > 0 && (
+                        <div
+                          className="px-3 py-2 rounded-lg"
+                          style={{ backgroundColor: "#FFF2DB", color: "#791010" }}
                         >
-                          Transferencia / Débit{" "}
-                          <span className="font-bold">
-                            $
-                            {Math.round(
-                              currentPrice *
+                          <p
+                            className="text-sm font-medium"
+                            style={{
+                              fontFamily: "EB Garamond, var(--font-text), serif",
+                              fontStyle: "italic",
+                            }}
+                          >
+                            Transferencia / Débit{" "}
+                            <span className="font-bold">
+                              $
+                              {Math.round(
+                                currentPrice *
                                 (1 - product.discount_transfer_percent / 100),
-                            ).toLocaleString("es-AR")}
-                          </span>
-                        </p>
-                        <p className="text-xs opacity-75">
-                          -{product.discount_transfer_percent}% off
-                        </p>
-                      </div>
-                    )}
-                  {product.discount_cash_percent &&
-                    product.discount_cash_percent > 0 && (
-                      <div
-                        className="px-3 py-2 rounded-lg"
-                        style={{ backgroundColor: "#FFF2DB", color: "#791010" }}
-                      >
-                        <p
-                          className="text-sm font-medium"
-                          style={{
-                            fontFamily: "EB Garamond, var(--font-text), serif",
-                            fontStyle: "italic",
-                          }}
+                              ).toLocaleString("es-AR")}
+                            </span>
+                          </p>
+                          <p className="text-xs opacity-75">
+                            -{product.discount_transfer_percent}% off
+                          </p>
+                        </div>
+                      )}
+                    {product.discount_cash_percent &&
+                      product.discount_cash_percent > 0 && (
+                        <div
+                          className="px-3 py-2 rounded-lg"
+                          style={{ backgroundColor: "#FFF2DB", color: "#791010" }}
                         >
-                          Efectivo{" "}
-                          <span className="font-bold">
-                            $
-                            {Math.round(
-                              currentPrice *
+                          <p
+                            className="text-sm font-medium"
+                            style={{
+                              fontFamily: "EB Garamond, var(--font-text), serif",
+                              fontStyle: "italic",
+                            }}
+                          >
+                            Efectivo{" "}
+                            <span className="font-bold">
+                              $
+                              {Math.round(
+                                currentPrice *
                                 (1 - product.discount_cash_percent / 100),
-                            ).toLocaleString("es-AR")}
-                          </span>
-                        </p>
-                        <p className="text-xs opacity-75">
-                          -{product.discount_cash_percent}% off
-                        </p>
-                      </div>
-                    )}
-                </div>
-              )}
+                              ).toLocaleString("es-AR")}
+                            </span>
+                          </p>
+                          <p className="text-xs opacity-75">
+                            -{product.discount_cash_percent}% off
+                          </p>
+                        </div>
+                      )}
+                  </div>
+                )}
               {/* Installments info */}
               <p className="text-xs text-tierra-media mt-1">
                 Hasta 12 cuotas con tarjeta
@@ -1043,11 +1040,10 @@ export default function ProductDetailPage() {
                             : "outline"
                         }
                         onClick={() => handleVariantSelect(variant)}
-                        className={`h-auto p-3 text-left transition-all duration-300 ${
-                          selectedVariant?.id === variant.id
-                            ? `${getColorPalette().buttonColor} border-current`
-                            : getColorPalette().outlineColor
-                        }`}
+                        className={`h-auto p-3 text-left transition-all duration-300 ${selectedVariant?.id === variant.id
+                          ? `${getColorPalette().buttonColor} border-current`
+                          : getColorPalette().outlineColor
+                          }`}
                       >
                         <div>
                           <div className="font-medium">{variant.title}</div>
@@ -1145,9 +1141,8 @@ export default function ProductDetailPage() {
                     variant="outline"
                     size="sm"
                     onClick={() => setIsFavorite(!isFavorite)}
-                    className={`flex-1 ${getColorPalette().outlineColor} ${
-                      isFavorite ? "bg-red-50 border-red-200 text-red-600" : ""
-                    }`}
+                    className={`flex-1 ${getColorPalette().outlineColor} ${isFavorite ? "bg-red-50 border-red-200 text-red-600" : ""
+                      }`}
                   >
                     <Heart
                       className={`h-4 w-4 mr-2 ${isFavorite ? "fill-current text-red-500" : ""}`}
@@ -1211,7 +1206,7 @@ export default function ProductDetailPage() {
                   color: "white",
                 }}
               >
-                Descripción
+                Beneficios
               </TabsTrigger>
               <TabsTrigger
                 value="ingredients"
@@ -1225,7 +1220,7 @@ export default function ProductDetailPage() {
                   color: "white",
                 }}
               >
-                Ingredientes
+                Activos Maestros
               </TabsTrigger>
               <TabsTrigger
                 value="usage"
@@ -1253,7 +1248,7 @@ export default function ProductDetailPage() {
                   color: "white",
                 }}
               >
-                Detalles Físicos
+                Detalles
               </TabsTrigger>
               <TabsTrigger
                 value="reviews"
@@ -1330,7 +1325,7 @@ export default function ProductDetailPage() {
                   color: "white",
                 }}
               >
-                Detalles Físicos
+                Detalles
               </TabsTrigger>
               <TabsTrigger
                 value="reviews"
@@ -1566,12 +1561,12 @@ export default function ProductDetailPage() {
               >
                 <CardHeader>
                   <CardTitle style={{ color: getColorPalette().primaryColor }}>
-                    Detalles Físicos
+                    Detalles
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {product.weight && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {product.texture && (
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -1583,7 +1578,7 @@ export default function ProductDetailPage() {
                             className="font-semibold"
                             style={{ color: getColorPalette().primaryColor }}
                           >
-                            ⚖️
+                            ✨
                           </span>
                         </div>
                         <div>
@@ -1591,14 +1586,14 @@ export default function ProductDetailPage() {
                             className="font-medium"
                             style={{ color: getColorPalette().primaryColor }}
                           >
-                            Peso
+                            Textura
                           </p>
-                          <p className="text-tierra-media">{product.weight}g</p>
+                          <p className="text-tierra-media">{product.texture}</p>
                         </div>
                       </div>
                     )}
 
-                    {product.dimensions && (
+                    {product.aroma && (
                       <div className="flex items-center gap-3">
                         <div
                           className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -1610,7 +1605,7 @@ export default function ProductDetailPage() {
                             className="font-semibold"
                             style={{ color: getColorPalette().primaryColor }}
                           >
-                            📏
+                            🌿
                           </span>
                         </div>
                         <div>
@@ -1618,10 +1613,39 @@ export default function ProductDetailPage() {
                             className="font-medium"
                             style={{ color: getColorPalette().primaryColor }}
                           >
-                            Dimensiones
+                            Aroma
                           </p>
                           <p className="text-tierra-media">
-                            {product.dimensions}
+                            {product.aroma}
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {product.color && (
+                      <div className="flex items-center gap-3">
+                        <div
+                          className="w-10 h-10 rounded-lg flex items-center justify-center"
+                          style={{
+                            backgroundColor: `${getColorPalette().primaryColor}10`,
+                          }}
+                        >
+                          <span
+                            className="font-semibold"
+                            style={{ color: getColorPalette().primaryColor }}
+                          >
+                            🎨
+                          </span>
+                        </div>
+                        <div>
+                          <p
+                            className="font-medium"
+                            style={{ color: getColorPalette().primaryColor }}
+                          >
+                            Color
+                          </p>
+                          <p className="text-tierra-media">
+                            {product.color}
                           </p>
                         </div>
                       </div>
@@ -1649,11 +1673,12 @@ export default function ProductDetailPage() {
                     </div>
                   )}
 
-                  {!product.weight &&
-                    !product.dimensions &&
+                  {!product.texture &&
+                    !product.aroma &&
+                    !product.color &&
                     !product.package_characteristics && (
                       <p className="text-tierra-media">
-                        Información de detalles físicos no disponible.
+                        Información de detalles no disponible.
                       </p>
                     )}
                 </CardContent>

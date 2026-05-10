@@ -129,8 +129,9 @@ export default function ProductForm({
     usage_instructions: "",
     precautions: "",
     ingredients: [] as Array<{ name: string; percentage?: number }>,
-    weight: "",
-    dimensions: "",
+    texture: "",
+    aroma: "",
+    color: "",
     package_characteristics: "",
     promotional_tag: "none",
     discount_transfer_percent: "",
@@ -1285,29 +1286,39 @@ export default function ProductForm({
                 <div className="border-t pt-6">
                   <h3 className="text-sm font-medium mb-4 flex items-center gap-2">
                     <Box className="h-4 w-4" />
-                    Detalles Físicos
+                    Detalles
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="space-y-2">
-                      <Label>Peso (gramos)</Label>
+                      <Label>Textura</Label>
                       <Input
-                        type="number"
-                        value={formData.weight}
+                        value={formData.texture || ""}
                         onChange={(e) =>
-                          handleInputChange("weight", e.target.value)
+                          handleInputChange("texture", e.target.value)
                         }
-                        placeholder="Ej: 500"
+                        placeholder="Ej: Crema suave"
                         className="admin-input"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label>Dimensiones</Label>
+                      <Label>Aroma</Label>
                       <Input
-                        value={formData.dimensions}
+                        value={formData.aroma || ""}
                         onChange={(e) =>
-                          handleInputChange("dimensions", e.target.value)
+                          handleInputChange("aroma", e.target.value)
                         }
-                        placeholder="Ej: 15x10x5 cm"
+                        placeholder="Ej: Lavanda y menta"
+                        className="admin-input"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Color</Label>
+                      <Input
+                        value={formData.color || ""}
+                        onChange={(e) =>
+                          handleInputChange("color", e.target.value)
+                        }
+                        placeholder="Ej: Blanco"
                         className="admin-input"
                       />
                     </div>
