@@ -291,10 +291,6 @@ export default function CategoriesPage() {
           </p>
         </div>
 
-        <Button onClick={openCreateDialog} className="admin-btn-primary">
-          <Plus className="h-4 w-4 mr-2" />
-          Nueva Categoría
-        </Button>
       </div>
 
       {/* Categories Grid */}
@@ -328,14 +324,6 @@ export default function CategoriesPage() {
                     onClick={() => openEditDialog(category)}
                   >
                     <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="admin-btn-outline"
-                    onClick={() => openDeleteDialog(category)}
-                  >
-                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
@@ -381,10 +369,6 @@ export default function CategoriesPage() {
             >
               Aún no hay categorías para mostrar
             </p>
-            <Button onClick={openCreateDialog} className="admin-btn-primary">
-              <Plus className="h-4 w-4 mr-2" />
-              Crear Primera Categoría
-            </Button>
           </CardContent>
         </Card>
       )}

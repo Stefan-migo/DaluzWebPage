@@ -85,6 +85,7 @@ const productLines = [
   },
   {
     id: "utopica",
+    slug: "prisma",
     name: "Prisma",
     description: "Visión elevada",
     color: "text-utopica-primary",
@@ -351,7 +352,7 @@ export default function FeaturedLineSection({
             cuidadosamente elegidos para tu bienestar.
           </p>
 
-          <Link href={`/categorias/linea-${selectedLine.id}`}>
+          <Link href={`/categorias/linea-${"slug" in selectedLine ? selectedLine.slug : selectedLine.id}`}>
             <Button
               className={cn(
                 "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",
@@ -399,7 +400,7 @@ export default function FeaturedLineSection({
 
         {/* View More Button */}
         <div className="text-center mt-8">
-          <Link href={`/categorias/linea-${selectedLine.id}`}>
+          <Link href={`/categorias/linea-${"slug" in selectedLine ? selectedLine.slug : selectedLine.id}`}>
             <Button
               className={cn(
                 "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",

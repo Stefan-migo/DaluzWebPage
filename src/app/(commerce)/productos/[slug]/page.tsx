@@ -270,6 +270,7 @@ export default function ProductDetailPage() {
       },
       {
         id: "utopica",
+        slug: "prisma",
         name: "Prisma",
         primaryColor: "#392E13",
         secondaryColor: "#F0EACE",
@@ -1904,7 +1905,12 @@ export default function ProductDetailPage() {
 
           <div className="text-center mt-8">
             <Link
-              href={`/categorias/linea-${determineProductLine(product)?.id}`}
+              href={(() => {
+                const line = determineProductLine(product);
+                if (!line) return "/productos";
+                const lineSlug = "slug" in line ? line.slug : line.id;
+                return `/categorias/linea-${lineSlug}`;
+              })()}
             >
               <Button
                 className={`px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}

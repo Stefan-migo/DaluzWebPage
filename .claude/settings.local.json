@@ -22,7 +22,8 @@
       "Bash(grep -E \"productos[\\\\\\\\\\\\\\\\/]page|ProductCard\")",
       "WebSearch",
       "WebFetch(domain:supabase.com)",
-      "Bash(npx supabase *)"
+      "Bash(npx supabase *)",
+      "Bash(grep -rn \"linea-\\\\${\\\\|/linea-\\\\${\\\\|categorias/linea\\\\|getLineThemeFromSlug\\\\|includes\\('utopica'\\)\\\\|includes\\(\\\\\"utopica\\\\\"\\)\\\\|id: \\\\\"utopica\\\\\"\\\\|id: 'utopica'\" c:/Users/juan/Desktop/DaluzWebPage/src)"
     ]
   }
 }

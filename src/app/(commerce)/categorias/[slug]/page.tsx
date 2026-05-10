@@ -18,7 +18,7 @@ const getLineThemeFromSlug = (slug: string): 'alma-terra' | 'ecos' | 'jade-ritua
   if (slugLower.includes('jade-ritual')) return 'jade-ritual';
   if (slugLower.includes('kits')) return 'kits-experiencia';
   if (slugLower.includes('umbral')) return 'umbral';
-  if (slugLower.includes('utopica')) return 'utopica';
+  if (slugLower.includes('utopica') || slugLower.includes('prisma')) return 'utopica';
   return 'default';
 };
 
@@ -253,10 +253,10 @@ export default function CategoryPage() {
         </div>
 
         {/* Category Image */}
-        {category.image_url && (
+        {(category.image_url || params.slug === 'linea-prisma') && (
           <div className="mb-8 aspect-[3/1] relative overflow-hidden rounded-lg" style={{ borderRadius: '0px 15px' }}>
             <img
-              src={category.image_url}
+              src={params.slug === 'linea-prisma' ? '/images/lineas/utopica/prisma-banner.png' : category.image_url}
               alt={category.name}
               className="object-cover w-full h-full"
             />

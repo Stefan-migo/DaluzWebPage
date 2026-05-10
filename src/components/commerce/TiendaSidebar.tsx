@@ -59,7 +59,7 @@ const productLines = [
   { id: "jade-ritual", name: "Jade Ritual" },
   { id: "kits-experiencia", name: "Kits y Experiencia" },
   { id: "umbral", name: "Umbral" },
-  { id: "utopica", name: "Prisma" },
+  { id: "utopica", slug: "prisma", name: "Prisma" },
 ];
 
 const skinTypes = [
@@ -218,7 +218,8 @@ export default function TiendaSidebar({
                   className="w-full justify-start text-sm h-8 lg:h-9"
                   style={{ color: "#791010" }}
                   onClick={() => {
-                    window.location.href = `/categorias/linea-${line.id}`;
+                    const lineSlug = "slug" in line ? line.slug : line.id;
+                    window.location.href = `/categorias/linea-${lineSlug}`;
                   }}
                 >
                   {line.name}

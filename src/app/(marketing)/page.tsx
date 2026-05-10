@@ -804,7 +804,7 @@ export default async function HomePage() {
       </Link>
 
       {/* LÍNEA UTÓPICA */}
-      <Link href="/categorias/linea-utopica" className="block group">
+      <Link href="/categorias/linea-prisma" className="block group">
         <section
           className="relative py-12 px-6 overflow-hidden cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
           style={{ backgroundColor: "#392E13" }}
@@ -831,16 +831,16 @@ export default async function HomePage() {
             </p>
 
             {/* Product Image Container - Single Image */}
-            <div className="flex justify-center items-center mt-6 sm:mt-7 md:mt-8">
+            <div className="flex justify-center items-center mt-6 sm:mt-7 md:mt-8 px-4">
               <div
-                className="w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 lg:w-44 lg:h-44 xl:w-48 xl:h-48 card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-105 transition-transform duration-300"
+                className="w-full max-w-2xl aspect-[3/1] card-enhanced shadow-2xl overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform duration-300"
                 style={{ borderRadius: "0px 15px" }}
               >
                 <Image
-                  src="/images/lineas/utopica/utopica-producto-1.jpg"
-                  alt="Línea PRISMA - Producto 1"
-                  width={192}
-                  height={192}
+                  src="/images/lineas/utopica/prisma-banner.png"
+                  alt="Línea PRISMA - Banner"
+                  width={1200}
+                  height={400}
                   className="w-full h-full object-cover"
                   style={{ borderRadius: "0px 15px" }}
                 />

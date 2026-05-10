@@ -313,7 +313,7 @@ export default function Header() {
                         Bach
                       </ListItem>
                       <ListItem
-                        href="/categorias/linea-utopica"
+                        href="/categorias/linea-prisma"
                         title="LINEA PRISMA"
                       >
                         Sombras en polvo, Barra labial, Iluminadores
@@ -1040,7 +1040,7 @@ export default function Header() {
                             Línea Jade Ritual
                           </Link>
                           <Link
-                            href="/categorias/linea-utopica"
+                            href="/categorias/linea-prisma"
                             className="block py-1 text-sm font-text hover:text-brand-primary transition-colors opacity-80"
                             style={{ color: "#1C1B1A" }}
                             onClick={() => setMobileMenuOpen(false)}
