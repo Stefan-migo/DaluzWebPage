@@ -43,6 +43,8 @@ interface Product {
     option1?: string;
     is_default: boolean;
   }>;
+  installments_3_enabled?: boolean;
+  installments_6_enabled?: boolean;
 }
 
 interface Category {
@@ -116,6 +118,8 @@ export default function CategoryPage() {
       size: defaultVariant?.option1,
       sku: product.id,
       quantity,
+      installments3Enabled: product.installments_3_enabled,
+      installments6Enabled: product.installments_6_enabled,
     });
 
     toast.success(`${product.name} agregado al carrito`);

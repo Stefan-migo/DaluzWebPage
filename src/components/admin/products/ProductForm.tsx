@@ -121,6 +121,8 @@ export default function ProductForm({
     gallery: [] as string[],
     inventory_quantity: "0",
     is_featured: false,
+    installments_3_enabled: false,
+    installments_6_enabled: false,
     status: "active",
     skin_type: [] as string[],
     hair_type: [] as string[],
@@ -215,6 +217,8 @@ export default function ProductForm({
         usage_instructions: product.usage_instructions || "",
         precautions: product.precautions || "",
         is_featured: product.is_featured || false,
+        installments_3_enabled: product.installments_3_enabled || false,
+        installments_6_enabled: product.installments_6_enabled || false,
         status: product.status || "active",
         promotional_tag: product.promotional_tag || "none",
         discount_transfer_percent:
@@ -784,6 +788,43 @@ export default function ProductForm({
                         Descuento para pago en efectivo
                       </p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Installments */}
+                <div className="space-y-3 pt-4 border-t">
+                  <Label className="text-base font-medium">
+                    Cuotas sin interés
+                  </Label>
+                  <div className="flex items-center space-x-3">
+                    <Switch
+                      id="installments_3_enabled"
+                      checked={formData.installments_3_enabled}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("installments_3_enabled", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="installments_3_enabled"
+                      className="cursor-pointer"
+                    >
+                      Habilitar 3 cuotas sin interés
+                    </Label>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Switch
+                      id="installments_6_enabled"
+                      checked={formData.installments_6_enabled}
+                      onCheckedChange={(checked) =>
+                        handleInputChange("installments_6_enabled", checked)
+                      }
+                    />
+                    <Label
+                      htmlFor="installments_6_enabled"
+                      className="cursor-pointer"
+                    >
+                      Habilitar 6 cuotas sin interés
+                    </Label>
                   </div>
                 </div>
 

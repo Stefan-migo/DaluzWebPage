@@ -23,6 +23,8 @@ export interface CartItem {
   stock: number;
   size?: string;
   sku?: string;
+  installments3Enabled?: boolean;
+  installments6Enabled?: boolean;
 }
 
 interface CartState {

@@ -40,6 +40,8 @@ interface Product {
     option1?: string;
     is_default: boolean;
   }>;
+  installments_3_enabled?: boolean;
+  installments_6_enabled?: boolean;
 }
 
 interface FeaturedLineSectionProps {
@@ -273,6 +275,8 @@ export default function FeaturedLineSection({
       size: defaultVariant?.option1,
       sku: product.slug,
       quantity,
+      installments3Enabled: product.installments_3_enabled,
+      installments6Enabled: product.installments_6_enabled,
     });
 
     toast.success(`${product.name} agregado al carrito`);

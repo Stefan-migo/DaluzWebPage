@@ -71,6 +71,8 @@ interface Product {
     | null;
   discount_transfer_percent?: number | null;
   discount_cash_percent?: number | null;
+  installments_3_enabled?: boolean;
+  installments_6_enabled?: boolean;
 }
 
 interface Category {
@@ -261,6 +263,8 @@ function ProductsContent() {
       size: defaultVariant?.option1,
       sku: product.slug,
       quantity,
+      installments3Enabled: product.installments_3_enabled,
+      installments6Enabled: product.installments_6_enabled,
     });
 
     toast.success(`${product.name} agregado al carrito`);
@@ -685,6 +689,8 @@ function ProductsContent() {
                     promotionalTag={product.promotional_tag}
                     discountTransferPercent={product.discount_transfer_percent}
                     discountCashPercent={product.discount_cash_percent}
+                    installments3Enabled={product.installments_3_enabled}
+                    installments6Enabled={product.installments_6_enabled}
                   />
                 ))}
               </div>

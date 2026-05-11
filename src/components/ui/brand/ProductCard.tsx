@@ -16,6 +16,7 @@ import {
   Plus,
   Minus,
   AlertCircle,
+  CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLike } from "@/contexts/LikeContext";
@@ -57,6 +58,8 @@ interface ProductCardProps {
   | null;
   discountTransferPercent?: number | null;
   discountCashPercent?: number | null;
+  installments3Enabled?: boolean;
+  installments6Enabled?: boolean;
 }
 
 const cardVariants = {
@@ -164,6 +167,8 @@ export default function ProductCard({
   promotionalTag = "none",
   discountTransferPercent,
   discountCashPercent,
+  installments3Enabled = false,
+  installments6Enabled = false,
 }: ProductCardProps) {
   const productHref = `/productos/${slug || id}`;
   const [quantity, setQuantity] = useState(1);
@@ -195,6 +200,14 @@ export default function ProductCard({
       style: "currency",
       currency: "ARS",
     }).format(amount);
+  };
+
+  const formatInstallment = (amount: number) => {
+    return new Intl.NumberFormat("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      maximumFractionDigits: 0,
+    }).format(Math.round(amount));
   };
 
   // Get discount price based on percentage
@@ -425,6 +438,40 @@ export default function ProductCard({
                     Ahorrás {formatPrice(originalPrice - price)}
                   </div>
                 )}
+                {(installments3Enabled || installments6Enabled) && (
+                  <div className="flex flex-col gap-1.5">
+                    {installments3Enabled && (
+                      <div
+                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-md border whitespace-nowrap"
+                        style={{
+                          backgroundColor: "#ECFDF5",
+                          borderColor: "#A7F3D0",
+                          color: "#15803D",
+                        }}
+                      >
+                        <CreditCard className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="text-xs font-semibold">
+                          3 cuotas sin interés de {formatInstallment(price / 3)}
+                        </span>
+                      </div>
+                    )}
+                    {installments6Enabled && (
+                      <div
+                        className="flex items-center gap-2 px-2.5 py-1.5 rounded-md border whitespace-nowrap"
+                        style={{
+                          backgroundColor: "#ECFDF5",
+                          borderColor: "#A7F3D0",
+                          color: "#15803D",
+                        }}
+                      >
+                        <CreditCard className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="text-xs font-semibold">
+                          6 cuotas sin interés de {formatInstallment(price / 6)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* Discount prices for transfer/cash */}
                 {(transferDiscountPrice || cashDiscountPrice) && (
                   <div className="flex flex-wrap gap-2 text-xs">
@@ -599,6 +646,40 @@ export default function ProductCard({
                     </span>
                   )}
                 </div>
+                {(installments3Enabled || installments6Enabled) && (
+                  <div className="flex flex-col gap-1">
+                    {installments3Enabled && (
+                      <div
+                        className="flex items-center gap-1.5 px-1.5 py-1 rounded border whitespace-nowrap"
+                        style={{
+                          backgroundColor: "#ECFDF5",
+                          borderColor: "#A7F3D0",
+                          color: "#15803D",
+                        }}
+                      >
+                        <CreditCard className="h-3 w-3 flex-shrink-0" />
+                        <span className="text-[10px] font-semibold">
+                          3 cuotas sin interés de {formatInstallment(price / 3)}
+                        </span>
+                      </div>
+                    )}
+                    {installments6Enabled && (
+                      <div
+                        className="flex items-center gap-1.5 px-1.5 py-1 rounded border whitespace-nowrap"
+                        style={{
+                          backgroundColor: "#ECFDF5",
+                          borderColor: "#A7F3D0",
+                          color: "#15803D",
+                        }}
+                      >
+                        <CreditCard className="h-3 w-3 flex-shrink-0" />
+                        <span className="text-[10px] font-semibold">
+                          6 cuotas sin interés de {formatInstallment(price / 6)}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
                 {/* Discount prices for transfer/cash - Mobile */}
                 {(transferDiscountPrice || cashDiscountPrice) && (
                   <div className="flex flex-wrap gap-2 text-[10px]">

@@ -185,6 +185,8 @@ export async function PUT(
       usage_instructions: body.usage_instructions,
       precautions: body.precautions,
       is_featured: body.is_featured,
+      installments_3_enabled: body.installments_3_enabled ?? false,
+      installments_6_enabled: body.installments_6_enabled ?? false,
       status: body.status,
       updated_at: new Date().toISOString(),
       // Nuevos campos de la migración

@@ -228,6 +228,8 @@ export async function POST(request: NextRequest) {
       inventory_quantity: parseInt(productData.inventory_quantity) || 0,
       status: productData.status || "active",
       is_featured: productData.is_featured || false,
+      installments_3_enabled: productData.installments_3_enabled || false,
+      installments_6_enabled: productData.installments_6_enabled || false,
       published_at: productData.published_at || new Date().toISOString(),
       vendor: "ALKIMYA DA LUZ",
       currency: "ARS",

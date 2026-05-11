@@ -20,6 +20,7 @@ import {
   ShoppingBag,
   ArrowLeft,
   Shield,
+  Info,
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -604,6 +605,42 @@ export default function CheckoutPage() {
                 </div>
 
                 <Separator className="bg-gray-300" />
+
+                {(() => {
+                  const blocking = items.filter(
+                    (i) => !i.installments3Enabled,
+                  );
+                  const eligible = items.filter(
+                    (i) => i.installments3Enabled,
+                  );
+                  if (blocking.length === 0 || eligible.length === 0)
+                    return null;
+                  const blockingNames = blocking
+                    .map((i) => i.name)
+                    .join(", ");
+                  return (
+                    <div
+                      className="flex gap-2 p-3 rounded-lg text-xs leading-relaxed"
+                      style={{
+                        backgroundColor: "#FEF3C7",
+                        border: "1px solid #FCD34D",
+                        color: "#92400E",
+                      }}
+                    >
+                      <Info className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <strong>{blockingNames}</strong>{" "}
+                        {blocking.length === 1 ? "no tiene" : "no tienen"} 3
+                        cuotas sin interés habilitadas. Si{" "}
+                        {blocking.length === 1
+                          ? "lo retirás"
+                          : "los retirás"}{" "}
+                        del carrito, podés pagar el resto en 3 cuotas sin
+                        interés.
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Totals */}
                 <div className="space-y-2">

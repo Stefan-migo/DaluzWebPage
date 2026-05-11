@@ -35,6 +35,7 @@ import {
   AlertCircle,
   Sparkles,
   MessageSquare,
+  CreditCard,
 } from "lucide-react";
 import { toast } from "sonner";
 import RichTextDisplay from "@/components/ui/RichTextDisplay";
@@ -79,8 +80,9 @@ interface Product {
   precautions?: string;
   certifications: string[];
   shelf_life_months?: number;
-  weight?: number;
-  dimensions?: any;
+  texture?: string;
+  aroma?: string;
+  color?: string;
   package_characteristics?: string;
   tags: string[];
   is_featured: boolean;
@@ -103,6 +105,8 @@ interface Product {
   discount_transfer_percent?: number | null;
   discount_cash_percent?: number | null;
   access_id?: string | null;
+  installments_3_enabled?: boolean;
+  installments_6_enabled?: boolean;
 }
 
 export default function ProductDetailPage() {
@@ -376,6 +380,8 @@ export default function ProductDetailPage() {
       size: variant?.option1,
       sku: product.slug,
       quantity,
+      installments3Enabled: product.installments_3_enabled,
+      installments6Enabled: product.installments_6_enabled,
     });
 
     toast.success(`${product.name} agregado al carrito`);
@@ -954,6 +960,43 @@ export default function ProductDetailPage() {
               <p className="text-sm text-tierra-media">
                 Precio en pesos argentinos
               </p>
+              {(product.installments_3_enabled ||
+                product.installments_6_enabled) && (
+                <div className="flex flex-col gap-2 mt-2">
+                  {product.installments_3_enabled && (
+                    <div
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg border whitespace-nowrap"
+                      style={{
+                        backgroundColor: "#ECFDF5",
+                        borderColor: "#A7F3D0",
+                        color: "#15803D",
+                      }}
+                    >
+                      <CreditCard className="h-5 w-5 flex-shrink-0" />
+                      <span className="text-sm font-semibold">
+                        3 cuotas sin interés de $
+                        {Math.round(currentPrice / 3).toLocaleString("es-AR")}
+                      </span>
+                    </div>
+                  )}
+                  {product.installments_6_enabled && (
+                    <div
+                      className="flex items-center gap-3 px-3 py-2 rounded-lg border whitespace-nowrap"
+                      style={{
+                        backgroundColor: "#ECFDF5",
+                        borderColor: "#A7F3D0",
+                        color: "#15803D",
+                      }}
+                    >
+                      <CreditCard className="h-5 w-5 flex-shrink-0" />
+                      <span className="text-sm font-semibold">
+                        6 cuotas sin interés de $
+                        {Math.round(currentPrice / 6).toLocaleString("es-AR")}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              )}
               {/* Discount prices for transfer/cash payments */}
               {(product.discount_transfer_percent ||
                 product.discount_cash_percent) && (
@@ -1807,6 +1850,8 @@ export default function ProductDetailPage() {
                       relatedProduct.discount_transfer_percent
                     }
                     discountCashPercent={relatedProduct.discount_cash_percent}
+                    installments3Enabled={relatedProduct.installments_3_enabled}
+                    installments6Enabled={relatedProduct.installments_6_enabled}
                     onAddToCart={(productId: string, quantity: number) => {
                       const product = relatedProducts.find(
                         (p) => p.id === productId,
@@ -1830,6 +1875,8 @@ export default function ProductDetailPage() {
                         size: defaultVariant?.option1,
                         sku: product.slug,
                         quantity,
+                        installments3Enabled: product.installments_3_enabled,
+                        installments6Enabled: product.installments_6_enabled,
                       });
 
                       toast.success(`${product.name} agregado al carrito`);
@@ -1878,6 +1925,12 @@ export default function ProductDetailPage() {
                         discountCashPercent={
                           relatedProduct.discount_cash_percent
                         }
+                        installments3Enabled={
+                          relatedProduct.installments_3_enabled
+                        }
+                        installments6Enabled={
+                          relatedProduct.installments_6_enabled
+                        }
                         onAddToCart={(productId: string, quantity: number) => {
                           const product = relatedProducts.find(
                             (p) => p.id === productId,
@@ -1902,6 +1955,8 @@ export default function ProductDetailPage() {
                             size: defaultVariant?.option1,
                             sku: product.slug,
                             quantity,
+                            installments3Enabled: product.installments_3_enabled,
+                            installments6Enabled: product.installments_6_enabled,
                           });
 
                           toast.success(`${product.name} agregado al carrito`);

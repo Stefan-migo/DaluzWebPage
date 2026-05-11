@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Plus, Minus, ShoppingBag, Trash2, Package, Truck, CheckCircle2 } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Trash2, Package, Truck, CheckCircle2, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
@@ -262,6 +262,37 @@ export default function CartSidebar() {
                 </div>
 
                 {/* Order Summary */}
+                {(() => {
+                  const blocking = items.filter(
+                    (i) => !i.installments3Enabled,
+                  );
+                  const eligible = items.filter(
+                    (i) => i.installments3Enabled,
+                  );
+                  if (blocking.length === 0 || eligible.length === 0) return null;
+                  const blockingNames = blocking.map((i) => i.name).join(", ");
+                  return (
+                    <div
+                      className="flex gap-2 p-3 rounded-lg text-xs leading-relaxed"
+                      style={{
+                        backgroundColor: "#FEF3C7",
+                        border: "1px solid #FCD34D",
+                        color: "#92400E",
+                        borderRadius: "0px 15px",
+                      }}
+                    >
+                      <Info className="h-4 w-4 flex-shrink-0 mt-0.5" />
+                      <div>
+                        <strong>{blockingNames}</strong>{" "}
+                        {blocking.length === 1 ? "no tiene" : "no tienen"} 3
+                        cuotas sin interés habilitadas. Si{" "}
+                        {blocking.length === 1 ? "lo retirás" : "los retirás"} del
+                        carrito, podés pagar el resto en 3 cuotas sin interés.
+                      </div>
+                    </div>
+                  );
+                })()}
+
                 <div
                   className="space-y-3 p-4 rounded-lg"
                   style={{

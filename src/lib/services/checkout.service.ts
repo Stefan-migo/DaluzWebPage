@@ -4,6 +4,7 @@ import {
   getMercadoPagoAccessToken,
 } from "@/lib/mercadopago/config";
 import { OrdersRepository } from "@/lib/repositories/orders.repository";
+import { createServiceRoleClient } from "@/utils/supabase/server";
 
 // ============================================
 // Types
@@ -165,8 +166,18 @@ export class CheckoutService {
       }
     }
 
-    if (mpConfig.maxInstallments) {
-      paymentMethodsConfig.installments = mpConfig.maxInstallments;
+    const cartInstallmentsCap = await this.computeCartInstallmentsCap(items);
+    const globalCap = mpConfig.maxInstallments ?? null;
+    const effectiveCap =
+      globalCap !== null
+        ? Math.min(globalCap, cartInstallmentsCap)
+        : cartInstallmentsCap;
+    if (effectiveCap > 1) {
+      paymentMethodsConfig.installments = effectiveCap;
+    } else {
+      // Force single payment (no interest-free installments) when the cart
+      // contains a product that has neither 3 nor 6 cuotas enabled.
+      paymentMethodsConfig.installments = 1;
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.NEXT_PUBLIC_SITE_URL;
@@ -201,6 +212,49 @@ export class CheckoutService {
       preferenceId: result.id!,
       initPoint: result.init_point!,
     };
+  }
+
+  /**
+   * Compute the max installments cap for the cart using rule R1
+   * (strict minimum). For each product the cap is 6 if six installments are
+   * enabled, else 3 if three installments are enabled, else 1. The cart cap
+   * is the minimum across all products, so any single product without any
+   * installments enabled forces the entire cart to 1 (no installments).
+   */
+  private async computeCartInstallmentsCap(items: CartItem[]): Promise<number> {
+    if (items.length === 0) return 1;
+
+    const productIds = Array.from(new Set(items.map((i) => i.productId)));
+    const supabase = createServiceRoleClient();
+    const { data, error } = await supabase
+      .from("products")
+      .select("id, installments_3_enabled, installments_6_enabled")
+      .in("id", productIds);
+
+    if (error || !data) {
+      console.error("Error fetching installments flags:", error);
+      return 1;
+    }
+
+    const flagsById = new Map(
+      data.map((p: any) => [
+        p.id,
+        {
+          three: !!p.installments_3_enabled,
+          six: !!p.installments_6_enabled,
+        },
+      ]),
+    );
+
+    let cap = Infinity;
+    for (const id of productIds) {
+      const flags = flagsById.get(id);
+      const productCap = flags?.six ? 6 : flags?.three ? 3 : 1;
+      if (productCap < cap) cap = productCap;
+      if (cap === 1) break;
+    }
+
+    return cap === Infinity ? 1 : cap;
   }
 
   /**
