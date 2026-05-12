@@ -243,43 +243,43 @@ export default function ProductDetailPage() {
       {
         id: "alma-terra",
         name: "Alma Terra",
-        primaryColor: "#9B201A",
+        primaryColor: "#97000D",
         secondaryColor: "#F0EACE",
-        buttonColor: "bg-[#9B201A] hover:bg-[#9B201A]/90 text-white",
-        outlineColor: "border-[#9B201A]/20 text-[#9B201A] hover:bg-[#9B201A]/5",
+        buttonColor: "bg-[#97000D] hover:bg-[#97000D]/90 text-white",
+        outlineColor: "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
       },
       {
         id: "ecos",
         name: "Ecos",
-        primaryColor: "#12406F",
+        primaryColor: "#97000D",
         secondaryColor: "#F0EACE",
-        buttonColor: "bg-[#12406F] hover:bg-[#12406F]/90 text-white",
-        outlineColor: "border-[#12406F]/20 text-[#12406F] hover:bg-[#12406F]/5",
+        buttonColor: "bg-[#97000D] hover:bg-[#97000D]/90 text-white",
+        outlineColor: "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
       },
       {
         id: "jade-ritual",
         name: "Jade Ritual",
-        primaryColor: "#04412D",
+        primaryColor: "#97000D",
         secondaryColor: "#F0EACE",
-        buttonColor: "bg-[#04412D] hover:bg-[#04412D]/90 text-white",
-        outlineColor: "border-[#04412D]/20 text-[#04412D] hover:bg-[#04412D]/5",
+        buttonColor: "bg-[#97000D] hover:bg-[#97000D]/90 text-white",
+        outlineColor: "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
       },
       {
         id: "umbral",
         name: "Umbral",
-        primaryColor: "#EA4F12",
+        primaryColor: "#97000D",
         secondaryColor: "#F0EACE",
-        buttonColor: "bg-[#EA4F12] hover:bg-[#EA4F12]/90 text-white",
-        outlineColor: "border-[#EA4F12]/20 text-[#EA4F12] hover:bg-[#EA4F12]/5",
+        buttonColor: "bg-[#97000D] hover:bg-[#97000D]/90 text-white",
+        outlineColor: "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
       },
       {
         id: "utopica",
         slug: "prisma",
         name: "Prisma",
-        primaryColor: "#392E13",
+        primaryColor: "#97000D",
         secondaryColor: "#F0EACE",
-        buttonColor: "bg-[#392E13] hover:bg-[#392E13]/90 text-white",
-        outlineColor: "border-[#392E13]/20 text-[#392E13] hover:bg-[#392E13]/5",
+        buttonColor: "bg-[#97000D] hover:bg-[#97000D]/90 text-white",
+        outlineColor: "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
       },
     ];
 
@@ -305,11 +305,11 @@ export default function ProductDetailPage() {
       return {
         id: "default",
         name: "Default",
-        primaryColor: "#AE0000",
+        primaryColor: "#97000D",
         secondaryColor: "#F0EACE",
-        buttonColor: "bg-dorado hover:bg-dorado/90 text-azul-profundo",
+        buttonColor: "bg-dorado hover:bg-dorado/90 text-[#97000D]",
         outlineColor:
-          "border-azul-profundo/20 text-azul-profundo hover:bg-azul-profundo/5",
+          "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
       };
     }
 
@@ -322,11 +322,11 @@ export default function ProductDetailPage() {
     return {
       id: "default",
       name: "Default",
-      primaryColor: "#AE0000",
+      primaryColor: "#97000D",
       secondaryColor: "#F0EACE",
-      buttonColor: "bg-dorado hover:bg-dorado/90 text-azul-profundo",
+      buttonColor: "bg-dorado hover:bg-dorado/90 text-[#97000D]",
       outlineColor:
-        "border-azul-profundo/20 text-azul-profundo hover:bg-azul-profundo/5",
+        "border-[#97000D]/20 text-[#97000D] hover:bg-[#97000D]/5",
     };
   };
 
@@ -596,15 +596,15 @@ export default function ProductDetailPage() {
       <div className="container mx-auto px-4 py-8 relative z-10">
         {/* Breadcrumb */}
         <nav className="mb-6">
-          <ol className="flex items-center space-x-2 text-sm text-tierra-media">
+          <ol className="flex items-center space-x-2 text-sm" style={{ color: "#97000D" }}>
             <li>
-              <Link href="/" className="hover:text-azul-profundo">
+              <Link href="/" className="hover:opacity-70" style={{ color: "#97000D" }}>
                 Inicio
               </Link>
             </li>
             <li>/</li>
             <li>
-              <Link href="/productos" className="hover:text-azul-profundo">
+              <Link href="/productos" className="hover:opacity-70" style={{ color: "#97000D" }}>
                 Productos
               </Link>
             </li>
@@ -614,7 +614,8 @@ export default function ProductDetailPage() {
                 <li>
                   <Link
                     href={`/productos?category=${product.categories.id}`}
-                    className="hover:text-azul-profundo"
+                    className="hover:opacity-70"
+                    style={{ color: "#97000D" }}
                   >
                     {product.categories.name}
                   </Link>
@@ -622,7 +623,7 @@ export default function ProductDetailPage() {
               </>
             )}
             <li>/</li>
-            <li className="text-azul-profundo font-medium">{product.name}</li>
+            <li className="font-medium" style={{ color: "#97000D" }}>{product.name}</li>
           </ol>
         </nav>
 
@@ -888,7 +889,7 @@ export default function ProductDetailPage() {
           <div className="space-y-6 px-4 lg:px-[4rem]">
             {/* Header */}
             <div>
-              <h1 className="text-3xl font-bold text-azul-profundo mb-2">
+              <h1 className="text-3xl font-bold mb-2" style={{ color: "#97000D" }}>
                 {product.name}
               </h1>
 
@@ -902,7 +903,7 @@ export default function ProductDetailPage() {
                 {product.categories && (
                   <Badge
                     variant="outline"
-                    className="border-azul-profundo/20 text-azul-profundo"
+                    style={{ color: "#97000D", borderColor: "rgba(151, 0, 13, 0.2)" }}
                   >
                     {product.categories.name}
                   </Badge>
@@ -947,7 +948,7 @@ export default function ProductDetailPage() {
             {/* Price */}
             <div className="space-y-2">
               <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-azul-profundo">
+                <span className="text-3xl font-bold" style={{ color: "#97000D" }}>
                   ${currentPrice.toLocaleString("es-AR")}
                 </span>
                 {product.compare_at_price &&
@@ -1172,7 +1173,8 @@ export default function ProductDetailPage() {
 
                   <Button
                     onClick={handleAddToCart}
-                    className={`flex-1 font-semibold h-10 transition-all duration-300 hover:scale-105 ${getColorPalette().buttonColor}`}
+                    className="flex-1 font-semibold h-10 transition-all duration-300 hover:scale-105 text-white"
+                    style={{ backgroundColor: "#97000D" }}
                   >
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     Agregar al carrito
@@ -1206,7 +1208,10 @@ export default function ProductDetailPage() {
             )}
 
             {/* Benefits */}
-            <div className="space-y-3 p-4 bg-white/50 backdrop-blur-sm rounded-lg border border-azul-profundo/10">
+            <div
+              className="space-y-3 p-4 bg-white/50 backdrop-blur-sm rounded-lg border"
+              style={{ borderColor: "rgba(151, 0, 13, 0.1)" }}
+            >
               <div className="flex items-center gap-2">
                 <Truck className="h-4 w-4 text-verde-suave" />
                 <span className="text-sm text-tierra-media">
@@ -1214,7 +1219,7 @@ export default function ProductDetailPage() {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-azul-profundo" />
+                <Shield className="h-4 w-4" style={{ color: "#97000D" }} />
                 <span className="text-sm text-tierra-media">
                   Garantía de calidad y satisfacción
                 </span>

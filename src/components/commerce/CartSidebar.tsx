@@ -103,7 +103,7 @@ export default function CartSidebar() {
                     key={item.id}
                     className="flex gap-4 p-4 bg-white rounded-lg border transition-all hover:shadow-md"
                     style={{
-                      backgroundColor: 'var(--admin-accent-secondary)',
+                      backgroundColor: '#FFF2E9',
                       borderStyle: 'solid',
                       borderWidth: '1px',
                       borderColor: 'var(--admin-bg-secondary)',
