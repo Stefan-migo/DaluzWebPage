@@ -654,7 +654,7 @@ export default function ProductDetailPage() {
                       }}
                       className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
                     >
-                      <ArrowLeftSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                      <ArrowLeftSVG className="h-8 w-8 drop-shadow-lg" color="#97000D" />
                     </button>
                     <button
                       onClick={(e) => {
@@ -663,7 +663,7 @@ export default function ProductDetailPage() {
                       }}
                       className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
                     >
-                      <ArrowRightSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                      <ArrowRightSVG className="h-8 w-8 drop-shadow-lg" color="#97000D" />
                     </button>
                   </>
                 )}
@@ -733,7 +733,7 @@ export default function ProductDetailPage() {
                       className="w-full h-8 flex items-center justify-center transition-colors"
                       disabled={currentImageIndex === 0}
                     >
-                      <ArrowLeftSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
+                      <ArrowLeftSVG className="h-4 w-4 drop-shadow-lg rotate-90" color="#97000D" />
                     </button>
                   )}
 
@@ -773,7 +773,7 @@ export default function ProductDetailPage() {
                       className="w-full h-8 flex items-center justify-center transition-colors"
                       disabled={currentImageIndex >= images.length - 1}
                     >
-                      <ArrowRightSVG className="h-4 w-4 text-azul-profundo drop-shadow-lg rotate-90" />
+                      <ArrowRightSVG className="h-4 w-4 drop-shadow-lg rotate-90" color="#97000D" />
                     </button>
                   )}
                 </div>
@@ -802,7 +802,7 @@ export default function ProductDetailPage() {
                           }}
                           className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
                         >
-                          <ArrowLeftSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                          <ArrowLeftSVG className="h-8 w-8 drop-shadow-lg" color="#97000D" />
                         </button>
                         <button
                           onClick={(e) => {
@@ -811,7 +811,7 @@ export default function ProductDetailPage() {
                           }}
                           className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center transition-all duration-300 hover:scale-110"
                         >
-                          <ArrowRightSVG className="h-8 w-8 text-azul-profundo drop-shadow-lg" />
+                          <ArrowRightSVG className="h-8 w-8 drop-shadow-lg" color="#97000D" />
                         </button>
                       </>
                     )}
