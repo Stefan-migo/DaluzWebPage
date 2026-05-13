@@ -56,20 +56,52 @@ const verifySignature = async (
 export async function POST(req: NextRequest) {
   const rawBody = await req.text();
 
-  // Parse + validate with Zod
-  let body;
-  try {
-    const raw = JSON.parse(rawBody);
-    const parsed = webhookPayloadSchema.safeParse(raw);
-    if (!parsed.success) {
-      logger.warn("Invalid webhook payload", { source: "webhook/mp", issues: parsed.error.issues });
-      return NextResponse.json({ error: "Invalid webhook payload" }, { status: 400 });
+  // MP delivers webhooks in two shapes:
+  //   1) Modern JSON body: { type: 'payment', data: { id: '...' }, ... }
+  //   2) Legacy IPN with query string: ?topic=payment&id=123  (body may be empty or unrelated)
+  // We normalise both into the body shape the rest of the handler expects.
+  const url = new URL(req.url);
+  const queryTopic = url.searchParams.get("topic") || url.searchParams.get("type");
+  const queryId = url.searchParams.get("id") || url.searchParams.get("data.id");
+
+  let parsedJson: unknown = null;
+  if (rawBody) {
+    try {
+      parsedJson = JSON.parse(rawBody);
+    } catch {
+      // Body is not JSON — fall back to query params below.
     }
-    body = parsed.data;
-  } catch {
-    logger.warn("Error parsing webhook body", { source: "webhook/mp" });
-    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
+
+  const normalised: Record<string, unknown> = {};
+  if (parsedJson && typeof parsedJson === "object") {
+    Object.assign(normalised, parsedJson);
+  }
+  if (!normalised.type && queryTopic) {
+    normalised.type = queryTopic === "merchant_order" ? "merchant_order" : "payment";
+  }
+  if ((!normalised.data ||
+        typeof normalised.data !== "object" ||
+        (normalised.data as { id?: unknown }).id === undefined) && queryId) {
+    normalised.data = { id: queryId };
+  }
+
+  const parsed = webhookPayloadSchema.safeParse(normalised);
+  if (!parsed.success) {
+    logger.warn("Invalid webhook payload", {
+      source: "webhook/mp",
+      issues: parsed.error.issues,
+      receivedKeys: Object.keys(normalised),
+      hadJsonBody: parsedJson !== null,
+      queryTopic,
+      queryId,
+    });
+    return NextResponse.json(
+      { error: "Invalid webhook payload" },
+      { status: 400 },
+    );
+  }
+  const body = parsed.data;
 
   // Instantiate service chain (service client bypasses RLS)
   const supabaseService = getServiceClient();
