@@ -40,7 +40,15 @@ export interface Order {
   user_email: string
   email?: string
   customer_name: string
-  items: OrderItem[]
+  items?: OrderItem[]
+  order_items?: Array<{
+    product_name?: string
+    name?: string
+    quantity: number
+    unit_price?: number
+    price?: number
+    variant_title?: string
+  }>
   total_amount: number
   payment_method: string
   status: string
@@ -82,8 +90,22 @@ export class EmailNotificationService {
         minute: '2-digit'
       });
 
-      const orderItemsHTML = formatOrderItemsHTML(order.items);
-      const orderItemsText = formatOrderItemsText(order.items);
+      const rawItems = (order.order_items ?? order.items ?? []) as Array<{
+        name?: string;
+        product_name?: string;
+        quantity: number;
+        price?: number;
+        unit_price?: number;
+        variant_title?: string;
+      }>;
+      const normalisedItems = rawItems.map((item) => ({
+        name: item.name ?? item.product_name ?? "Producto",
+        quantity: item.quantity,
+        price: item.price ?? item.unit_price ?? 0,
+        variant_title: item.variant_title,
+      }));
+      const orderItemsHTML = formatOrderItemsHTML(normalisedItems);
+      const orderItemsText = formatOrderItemsText(normalisedItems);
 
       const variables = {
         ...getDefaultVariables(),
