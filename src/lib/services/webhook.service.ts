@@ -54,7 +54,7 @@ interface OrderUpdateData {
 // ============================================
 
 const STATUS_MAPPING: Record<MercadoPagoStatus, string> = {
-  approved: "completed",
+  approved: "paid",
   pending: "pending",
   rejected: "failed",
   cancelled: "cancelled",
