@@ -14,24 +14,39 @@ import { logger } from "@/lib/logger";
 
 const verifySignature = async (
   req: NextRequest,
+  dataId: string | undefined,
   webhookService: WebhookService,
 ): Promise<boolean> => {
-  const signature = req.headers.get("x-signature");
-  const timestamp = req.headers.get("x-request-id");
+  const signatureHeader = req.headers.get("x-signature");
+  const requestId = req.headers.get("x-request-id");
 
-  if (!signature || !timestamp) return false;
+  if (!signatureHeader || !requestId || !dataId) return false;
 
   const webhookSecret = await webhookService.getWebhookSecret();
   if (!webhookSecret) return false;
 
-  const [ts, hash] = signature.split(",");
-  const signedTemplate = `id:${timestamp};ts:${ts.split("=")[1]};`;
+  // x-signature has the shape: "ts=<unix>,v1=<hash>"
+  const parts = signatureHeader.split(",").reduce<Record<string, string>>(
+    (acc, segment) => {
+      const [key, value] = segment.split("=");
+      if (key && value) acc[key.trim()] = value.trim();
+      return acc;
+    },
+    {},
+  );
+
+  const ts = parts.ts;
+  const receivedHash = parts.v1;
+  if (!ts || !receivedHash) return false;
+
+  // MP signs: "id:<data.id>;request-id:<x-request-id>;ts:<ts>;"
+  const signedTemplate = `id:${dataId};request-id:${requestId};ts:${ts};`;
 
   const hmac = crypto.createHmac("sha256", webhookSecret);
   hmac.update(signedTemplate);
   const calculatedSignature = hmac.digest("hex");
 
-  return calculatedSignature === hash.split("=")[1];
+  return calculatedSignature === receivedHash;
 };
 
 // ============================================
@@ -65,7 +80,11 @@ export async function POST(req: NextRequest) {
 
   // Verify signature in production
   if (process.env.NODE_ENV === "production") {
-    const isValid = await verifySignature(req, webhookService);
+    const isValid = await verifySignature(
+      req,
+      body.data?.id !== undefined ? String(body.data.id) : undefined,
+      webhookService,
+    );
     if (!isValid) {
       logger.warn("Invalid webhook signature detected", { source: "webhook/mp" });
       await webhookService.logWebhook(body, "failed", {
