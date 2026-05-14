@@ -664,7 +664,7 @@ export const AlkimyaDaLuzIcon: React.FC<SVGProps> = ({ size = 64, className = ""
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -680,7 +680,7 @@ export const ProcesosIntegrativosIcon: React.FC<SVGProps> = ({ size = 64, classN
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -695,7 +695,7 @@ export const SesionesIcon: React.FC<SVGProps> = ({ size = 64, className = "" }) 
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -710,7 +710,7 @@ export const MembresiaIcon: React.FC<SVGProps> = ({ size = 64, className = "" })
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -1096,7 +1096,7 @@ export const EcologicaVeganaIcon: React.FC<SVGProps> = ({
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -1115,7 +1115,7 @@ export const PoderBotanicoIcon: React.FC<SVGProps> = ({
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -1134,7 +1134,7 @@ export const TransmutacionCoherenciaIcon: React.FC<SVGProps> = ({
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );
@@ -1153,7 +1153,7 @@ export const NeurocosmeticaIcon: React.FC<SVGProps> = ({
         width={size} 
         height={size}
         className="transition-transform duration-300 group-hover:scale-110"
-        style={{ filter: `brightness(0) saturate(100%)` }}
+        style={{ filter: `brightness(0) saturate(100%) invert(11%) sepia(96%) saturate(7472%) hue-rotate(2deg) brightness(95%) contrast(118%)` }}
       />
     </div>
   );

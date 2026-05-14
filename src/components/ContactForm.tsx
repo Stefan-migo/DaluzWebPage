@@ -10,34 +10,34 @@ export default function ContactForm() {
     email: '',
     message: ''
   })
-  
+
   const [errors, setErrors] = useState<{
     name?: string
     email?: string
     message?: string
   }>({})
-  
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
 
   const validateForm = (): boolean => {
     const newErrors: typeof errors = {}
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'El nombre es requerido'
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'El email es requerido'
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email inválido'
     }
-    
+
     if (!formData.message.trim()) {
       newErrors.message = 'El mensaje es requerido'
     }
-    
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -45,11 +45,11 @@ export default function ContactForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitError(null)
-    
+
     if (!validateForm()) return
-    
+
     setIsSubmitting(true)
-    
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -58,22 +58,22 @@ export default function ContactForm() {
         },
         body: JSON.stringify(formData),
       })
-      
+
       const data = await response.json()
-      
+
       if (!response.ok || !data.success) {
         throw new Error(data.error || data.details || 'Error al enviar el mensaje')
       }
-      
+
       setIsSubmitted(true)
       setFormData({ name: '', email: '', message: '' })
       setErrors({})
-      
+
     } catch (error) {
       console.error('Contact form error:', error)
       setSubmitError(
-        error instanceof Error 
-          ? error.message 
+        error instanceof Error
+          ? error.message
           : 'Error al enviar el mensaje. Por favor intenta nuevamente.'
       )
     } finally {
@@ -133,9 +133,8 @@ export default function ContactForm() {
             type="text"
             value={formData.name}
             onChange={(e) => handleChange('name', e.target.value)}
-            className={`form-enhanced w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text ${
-              errors.name ? 'border-red-300' : 'border-gray-200'
-            }`}
+            className={`form-enhanced w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text ${errors.name ? 'border-red-300' : 'border-gray-200'
+              }`}
             placeholder="Tu nombre completo"
             disabled={isSubmitting}
           />
@@ -146,7 +145,7 @@ export default function ContactForm() {
             </p>
           )}
         </div>
-        
+
         <div>
           <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
             Correo Electrónico
@@ -155,9 +154,8 @@ export default function ContactForm() {
             type="email"
             value={formData.email}
             onChange={(e) => handleChange('email', e.target.value)}
-            className={`form-enhanced w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text ${
-              errors.email ? 'border-red-300' : 'border-gray-200'
-            }`}
+            className={`form-enhanced w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text ${errors.email ? 'border-red-300' : 'border-gray-200'
+              }`}
             placeholder="tu@email.com"
             disabled={isSubmitting}
           />
@@ -168,7 +166,7 @@ export default function ContactForm() {
             </p>
           )}
         </div>
-        
+
         <div>
           <label className="block text-sm font-subtitle font-medium text-gray-700 mb-3">
             ¿En qué podemos ayudarte?
@@ -177,10 +175,9 @@ export default function ContactForm() {
             rows={5}
             value={formData.message}
             onChange={(e) => handleChange('message', e.target.value)}
-            className={`form-enhanced w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text resize-none ${
-              errors.message ? 'border-red-300' : 'border-gray-200'
-            }`}
-            placeholder="Cuéntanos sobre tu consulta, dudas sobre productos, servicios o cualquier otra pregunta..."
+            className={`form-enhanced w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-brand-primary focus:border-brand-primary transition-all duration-300 font-text resize-none ${errors.message ? 'border-red-300' : 'border-gray-200'
+              }`}
+            placeholder="Contame qué buscás o qué te trae a Da Luz"
             disabled={isSubmitting}
           />
           {errors.message && (
@@ -190,7 +187,7 @@ export default function ContactForm() {
             </p>
           )}
         </div>
-        
+
         {submitError && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
             <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -200,7 +197,7 @@ export default function ContactForm() {
             </div>
           </div>
         )}
-        
+
         <Button
           type="submit"
           disabled={isSubmitting}

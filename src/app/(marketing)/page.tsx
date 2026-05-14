@@ -807,12 +807,12 @@ export default async function HomePage() {
             />
           </div>
           {/* Enhanced Service Cards with Your Custom SVG Icons */}
-          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-7 pt-16 sm:pt-20 md:pt-24 lg:pt-32">
+          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 md:gap-6 lg:gap-7 pt-6 sm:pt-8 md:pt-10 lg:pt-12">
             {/* PROCESOS INTEGRATIVOS */}
             <div className="group card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 text-center flex flex-col">
               <div className="relative z-10 space-y-4 sm:space-y-5 md:space-y-6 flex-1 flex flex-col">
                 {/* Your Custom SVG Icon */}
-                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F6FBD6] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300 mx-auto">
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 text-brand-primary transition-all duration-300 mx-auto">
                   <ProcesosIntegrativosIcon
                     size={48}
                     className="sm:w-14 sm:h-14 md:w-16 md:h-16"
@@ -821,7 +821,7 @@ export default async function HomePage() {
 
                 {/* Title */}
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
-                  PROCESOS INTEGRATIVOS
+                  Procesos Cíclicos
                 </h3>
 
                 {/* Description */}
@@ -862,7 +862,7 @@ export default async function HomePage() {
             <div className="group card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 text-center flex flex-col">
               <div className="relative z-10 space-y-4 sm:space-y-5 md:space-y-6 flex-1 flex flex-col">
                 {/* Your Custom SVG Icon */}
-                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F6FBD6] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300 mx-auto">
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 text-brand-primary transition-all duration-300 mx-auto">
                   <SesionesIcon
                     size={48}
                     className="sm:w-14 sm:h-14 md:w-16 md:h-16"
@@ -871,7 +871,7 @@ export default async function HomePage() {
 
                 {/* Title */}
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
-                  SESIONES HOLÍSTICAS PARA TU BIENESTAR
+                  Sesiones Integrales
                 </h3>
 
                 {/* Description */}
@@ -906,7 +906,7 @@ export default async function HomePage() {
             <div className="group card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 text-center flex flex-col">
               <div className="relative z-10 space-y-4 sm:space-y-5 md:space-y-6 flex-1 flex flex-col">
                 {/* Your Custom SVG Icon */}
-                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-brand-primary/10 rounded-full text-brand-primary group-hover:bg-[#F6FBD6] group-hover:bg-opacity-95 group-hover:text-brand-primary transition-all duration-300 mx-auto">
+                <div className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 text-brand-primary transition-all duration-300 mx-auto">
                   <MembresiaIcon
                     size={48}
                     className="sm:w-14 sm:h-14 md:w-16 md:h-16"
@@ -915,7 +915,7 @@ export default async function HomePage() {
 
                 {/* Title */}
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-xl text-brand-primary group-hover:text-brand-secondary transition-colors duration-300">
-                  MEMBRESÍA: TU ESPACIO DE CRECIMIENTO
+                  Experiencias: Programas y Membresías
                 </h3>
 
                 {/* Description */}
@@ -948,7 +948,10 @@ export default async function HomePage() {
       </section>
 
       {/* ✨ ENHANCED PHILOSOPHY SECTION */}
-      <section className="section-enhanced relative py-12 md:py-16 lg:py-24 px-6 overflow-hidden">
+      <section
+        className="section-enhanced relative py-6 md:py-8 lg:py-16 px-6 overflow-hidden"
+        style={{ marginTop: "-3rem" }}
+      >
         {/* Mobile/Tablet Gradient Background */}
         <div
           className="absolute inset-0 xl:hidden"
@@ -1017,7 +1020,7 @@ export default async function HomePage() {
                     </p>
                     <p>
                       Te invitamos a Reconocer tus raíces, y a semillar con
-                      intención para nutrir tus frutos. ❤️
+                      intención para nutrir tus frutos.
                     </p>
                   </>
                 ),
@@ -1151,7 +1154,7 @@ export default async function HomePage() {
             className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-6xl mb-3 sm:mb-4 leading-tight"
             style={{ color: "#AE0000" }}
           >
-            BLOG DA LUZ: NEUROCOSMÉTICA Y ALKIMYA INTERIOR
+            BLOG DA LUZ
           </h2>
           {/* bottom gradient divider */}
           <div
@@ -1162,8 +1165,7 @@ export default async function HomePage() {
             }}
           />
           <p className="text-base sm:text-lg md:text-lg lg:text-xl xl:text-xl text-gray-800 max-w-3xl mx-auto leading-relaxed px-4">
-            Un espacio para la reflexión, la educación consciente y el
-            empoderamiento de tu rutina diaria.
+            Un espacio donde fusionamos teorías, reflexión e introspección con herramientas para la autogestión y la presencia.
           </p>
         </div>
 
@@ -1173,22 +1175,6 @@ export default async function HomePage() {
             <div className="grid lg:grid-cols-2 gap-8">
               {/* LEFT SIDE */}
               <div className="space-y-6 lg:mr-[5rem]">
-                {/* Section Title */}
-                <div className="text-center mb-4 sm:mb-5 md:mb-6 pb-[2rem] sm:pb-[2.5rem] md:pb-[3rem] pt-[1rem]">
-                  <h3
-                    className="font-title text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl leading-tight"
-                    style={{ color: "#AE0000" }}
-                  >
-                    NEUROCOSMETICA
-                  </h3>
-                  <div
-                    className="w-24 h-0.5 mx-auto mt-2"
-                    style={{
-                      background:
-                        "linear-gradient(to right, transparent, #AE0000, transparent)",
-                    }}
-                  />
-                </div>
                 <div className="grid grid-cols-2 grid-rows-2 gap-3 sm:gap-4">
                   {/* Big Post 1 - Top (2x1 spanning 2 columns) */}
                   {featuredPosts[0] && (
@@ -1330,13 +1316,6 @@ export default async function HomePage() {
 
               {/* RIGHT SIDE - Mirror of Left */}
               <div className="space-y-6 lg:ml-[5rem]">
-                {/* Section Title */}
-                <div className="text-center mb-4 sm:mb-5 md:mb-6 pb-[2rem] sm:pb-[2.5rem] md:pb-[3rem] pt-[1rem]">
-                  <h3 className="font-title text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl leading-tight ser-integral-title">
-                    SER INTEGRAL
-                  </h3>
-                  <div className="w-24 h-0.5 mx-auto mt-2 ser-integral-divider" />
-                </div>
                 <div className="grid grid-cols-2 grid-rows-2 gap-3 sm:gap-4">
                   {/* Small Post 1 - Top Left */}
                   {featuredPosts[0] && (
@@ -1591,22 +1570,18 @@ export default async function HomePage() {
                 "linear-gradient(to right, transparent, #AE0000, transparent)",
             }}
           />
-          <p className="text-base sm:text-lg lg:text-xl font-text text-gray-800 max-w-3xl mx-auto leading-relaxed">
-            Descubre la belleza de nuestros productos artesanales y los momentos
-            únicos de transformación
-          </p>
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-20">
+        <div className="container mx-auto max-w-7xl relative z-20 -mt-8 sm:-mt-10 md:-mt-12 lg:-mt-16">
           {/* Enhanced Interactive Gallery Carousel */}
           <InteractiveGallery />
           {/* Enhanced CTA */}
           <div className="text-center mt-16">
             <div className="space-y-4">
               <h3 className="font-subtitle text-2xl text-brand-primary">
-                Vive la Experiencia DA LUZ
+                FRAGMENTOS DE UN RITUAL VIVO
               </h3>
-              <p className="font-text text-gray-600 max-w-2xl mx-auto">
+              <p className="font-text max-w-2xl mx-auto text-brand-primary">
                 Cada imagen cuenta una historia de transformación, belleza
                 consciente y conexión con la naturaleza.
               </p>
@@ -1627,7 +1602,10 @@ export default async function HomePage() {
       </section>
 
       {/* ✨ ENHANCED CONTACTO Section */}
-      <section className="section-enhanced relative py-12 md:py-16 lg:py-24 px-6 overflow-hidden">
+      <section
+        className="section-enhanced relative py-6 md:py-8 lg:py-16 px-6 overflow-hidden"
+        style={{ marginTop: "-3rem" }}
+      >
         {/* Mobile/Tablet Gradient Background */}
         <div
           className="absolute inset-0 xl:hidden"
@@ -1673,9 +1651,14 @@ export default async function HomePage() {
         </div>
 
         <div className="container mx-auto max-w-7xl relative z-20 px-4">
-          <p className="text-base sm:text-lg lg:text-xl font-text max-w-3xl mx-auto leading-relaxed text-[#AE0000] xl:text-[#F0EACE]">
-            Estamos aquí para acompañarte en tu camino hacia el bienestar
-            consciente
+          <p
+            className="text-xl sm:text-2xl lg:text-3xl italic max-w-3xl mx-auto leading-relaxed text-center text-[#AE0000] xl:text-[#F0EACE]"
+            style={{
+              fontFamily:
+                "var(--font-playfair), 'Playfair Display', Georgia, serif",
+            }}
+          >
+            Iniciá tu transformación: enviame tu consulta
           </p>
           <div className="grid grid-cols-1 lg:grid-cols-2 pt-[3rem] lg:pt-[4rem] xl:pt-[5rem] gap-8 lg:gap-8 xl:gap-16 items-center">
             {/* Enhanced Contact Form */}
