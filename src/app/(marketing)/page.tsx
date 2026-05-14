@@ -25,7 +25,6 @@ import {
   BlogBackground,
   GaleriaBackground,
   ContactoBackground,
-  Explora5LineasBackground,
   ValorYConfianzaBackground,
   ServiciosHolisticosBackground,
   AlkimyaDaLuzIcon,
@@ -399,10 +398,15 @@ export default async function HomePage() {
                   </div>
 
                   {/* Enhanced CTA with responsive sizing */}
-                  <div className="pt-3 sm:pt-4 md:pt-5 lg:pt-6">
-                    <Link href="/raices">
+                  <div className="pt-3 sm:pt-4 md:pt-5 lg:pt-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    <Link href="/productos">
                       <Button className="group btn-enhanced px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 lg:px-7 lg:py-3.5 xl:px-8 xl:py-4 text-white font-semibold text-xs sm:text-sm md:text-sm lg:text-base xl:text-base w-full sm:w-auto">
-                        NUESTRO MANIFIESTO DA LUZ
+                        VER PRODUCTOS
+                      </Button>
+                    </Link>
+                    <Link href="/servicios/procesos">
+                      <Button className="group btn-enhanced px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 lg:px-7 lg:py-3.5 xl:px-8 xl:py-4 text-white font-semibold text-xs sm:text-sm md:text-sm lg:text-base xl:text-base w-full sm:w-auto">
+                        PROCESOS
                       </Button>
                     </Link>
                   </div>
@@ -449,11 +453,11 @@ export default async function HomePage() {
         <div
           className="text-center relative z-10 flex-shrink-0"
           style={{
-            paddingTop: "clamp(1.25rem, 3%, 2.5rem)",
+            paddingTop: "clamp(0.25rem, 1%, 1rem)",
             paddingBottom: "clamp(0.5rem, 1.5%, 1rem)",
           }}
         >
-          <div className="lg:mb-8 xl:mb-0"></div>
+          <div className="lg:mb-4 xl:mb-0"></div>
           {/* Top gradient divider - Desktop shows #F6FBD6, Mobile shows #AE0000 */}
           <div
             className="hidden xl:block w-32 h-0.5 mx-auto mb-5"
@@ -497,11 +501,11 @@ export default async function HomePage() {
         <div
           className="flex-1 flex items-center justify-center relative z-10 py-4 lg:py-8 xl:py-0"
           style={{
-            paddingTop: "clamp(0.5rem, 1vh, 1rem)",
+            paddingTop: "clamp(1.5rem, 3vh, 3rem)",
             paddingBottom: "clamp(0.5rem, 1vh, 1rem)",
           }}
         >
-          <div className="container mx-auto max-w-4xl w-full lg:-mt-12 xl:-mt-36">
+          <div className="container mx-auto max-w-4xl w-full lg:mt-0 xl:-mt-12">
             {/* Content */}
             <div className="space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-5 xl:space-y-8 text-center">
               {/* Main Description */}
@@ -510,8 +514,8 @@ export default async function HomePage() {
                   className="font-text text-base sm:text-lg md:text-lg lg:text-base xl:text-xl leading-relaxed"
                   style={{ color: "#1C1B1A" }}
                 >
-                  Una fusión entre saberes ancestrales y química moderna, creada
-                  para quienes buscan ir más allá de la cosmética.
+                  Una fusión entre saberes ancestrales y biotecnología consciente, creada para quienes buscan ir más allá de la cosmética convencional.
+
                 </p>
                 <p
                   className="font-text text-base sm:text-lg md:text-lg lg:text-base xl:text-xl leading-relaxed"
@@ -559,68 +563,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* EXPLORÁ NUESTRAS 5 LINEAS */}
-      <section
-        className="section-enhanced relative px-6 overflow-hidden py-12 md:py-16 lg:py-0 flex items-center"
-        style={{ minHeight: "400px", backgroundColor: "#F6FBD6" }}
-      >
-        {/* Mobile/Tablet Gradient Background */}
-        <div
-          className="absolute inset-0 xl:hidden"
-          style={{
-            background:
-              "linear-gradient(135deg, #F0EACE 0%, #F6FBD6 25%, #F0EACE 50%, rgba(174, 0, 0, 0.15) 75%, #F0EACE 100%)",
-          }}
-        />
-
-        {/* Custom SVG Background - Upper edge wave only - Desktop Only */}
-        <div
-          className="hidden xl:block absolute inset-0"
-          style={{ minHeight: "600px" }}
-        >
-          <Explora5LineasBackground
-            bgColor="#F6FBD6" // Default theme background color
-            waveColor="#AE0000" // Brand red wave
-            className="opacity-100"
-          />
-        </div>
-
-        {/* Centered Title - Vertically Centered */}
-        <div className="text-center relative z-20 w-full flex flex-col justify-center lg:min-h-[600px]">
-          {/* Top gradient divider */}
-          <div
-            className="w-32 h-0.5 mx-auto mb-5"
-            style={{
-              background:
-                "linear-gradient(to right, transparent, #AE0000, transparent)",
-            }}
-          />
-          <h2
-            className="font-title text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-6xl mb-3 sm:mb-4 leading-tight"
-            style={{ color: "#AE0000" }}
-          >
-            EXPLORÁ NUESTRAS 5 LINEAS
-          </h2>
-          {/* bottom gradient divider */}
-          <div
-            className="w-32 h-0.5 mx-auto mt-3 sm:mt-4 mb-4 sm:mb-5 md:mb-6"
-            style={{
-              background:
-                "linear-gradient(to right, transparent, #AE0000, transparent)",
-            }}
-          />
-
-          {/* Main Description */}
-          <div className="max-w-4xl mx-auto text-center px-4">
-            <p className="text-base sm:text-lg md:text-lg lg:text-xl xl:text-xl font-text text-gray-800 leading-relaxed">
-              5 líneas de productos cosméticos y de aromaterapia creadas para
-              nutrir tu cuerpo y tu alma. Rituales de uso que te invitan a
-              conectar con tu presencia y con tu cuerpo.
-            </p>
-          </div>
-        </div>
-      </section>
-
       {/* CARRUSEL DE LÍNEAS */}
       <LineasCarousel />
 
@@ -663,9 +605,9 @@ export default async function HomePage() {
           />
         </div>
 
-        <div className="container mx-auto max-w-7xl relative z-20 flex flex-col justify-center h-full py-12 pt-16 sm:pt-20 md:pt-24 lg:pt-12">
+        <div className="container mx-auto max-w-7xl relative z-20 flex flex-col justify-center h-full py-12 pt-8 sm:pt-10 md:pt-12 lg:pt-6">
           {/* Title */}
-          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-[8rem]">
+          <div className="text-center mb-4 sm:mb-5 md:mb-6 lg:mb-8">
             {/* Top gradient divider */}
             <div
               className="w-32 h-0.5 mx-auto mb-4 sm:mb-5"
@@ -690,9 +632,18 @@ export default async function HomePage() {
             />
           </div>
 
+          {/* Intro Text */}
+          <div className="max-w-4xl mx-auto text-center px-4 mb-8 sm:mb-10 md:mb-12 lg:mb-16">
+            <p className="font-text text-base sm:text-lg md:text-lg lg:text-xl xl:text-xl text-gray-800 leading-relaxed">
+              Compromiso con la pureza y la eficacia biológica. También, un
+              compromiso con tu Soberanía: te entregamos información y rituales
+              para que seas la guía de tu propio proceso.
+            </p>
+          </div>
+
           {/* Features Grid - Text Only Cards - Taller and better spaced */}
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-7 xl:gap-8">
-            <div className="card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
+            <div className="card-enhanced border-0 p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
               <div>
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-2xl xl:text-2xl text-brand-primary mb-3 sm:mb-4">
                   TRANSPARENCIA TOTAL
@@ -713,7 +664,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-            <div className="card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
+            <div className="card-enhanced border-0 p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
               <div>
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-2xl xl:text-2xl text-brand-primary mb-3 sm:mb-4">
                   CEREMONIA DIARIA
@@ -734,7 +685,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-            <div className="card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
+            <div className="card-enhanced border-0 p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
               <div>
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-2xl xl:text-2xl text-brand-primary mb-3 sm:mb-4">
                   TESOROS DA LUZ
@@ -755,7 +706,7 @@ export default async function HomePage() {
                 </Button>
               </Link>
             </div>
-            <div className="card-enhanced p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
+            <div className="card-enhanced border-0 p-5 sm:p-6 md:p-7 lg:p-8 xl:p-10 text-center flex flex-col justify-between h-full">
               <div>
                 <h3 className="font-subtitle text-lg sm:text-xl md:text-xl lg:text-2xl xl:text-2xl text-brand-primary mb-3 sm:mb-4">
                   MANIFIESTO Y VISIÓN

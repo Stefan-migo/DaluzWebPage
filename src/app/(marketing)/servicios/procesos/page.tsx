@@ -86,15 +86,9 @@ export default function ProcesosPage() {
         {/* Footer CTA */}
         <footer className="procesos-page-footer">
           <p className="procesos-page-cta-text">
-            ¿No sabés por dónde empezar? Escribinos y te orientamos hacia el proceso que tu cuerpo está pidiendo hoy.
+            ¿No sabés por dónde empezar?
           </p>
           <div className="procesos-page-buttons">
-            <a
-              href="mailto:contacto@daluzconsciente.com"
-              className="procesos-btn-cream"
-            >
-              ESCRIBINOS
-            </a>
             <Link href="/servicios/procesos/ciclos-alquimicos" className="procesos-btn-cream">
               CICLOS ALQUÍMICOS
             </Link>
