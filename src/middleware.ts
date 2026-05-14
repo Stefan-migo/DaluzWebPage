@@ -115,14 +115,14 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
+     * - _next/static, _next/image (Next internals)
+     * - favicon.ico, robots.txt, sitemap.xml (root metadata files)
+     * - fonts, images, svg (top-level public/ folders served from root)
+     * - any file with a static asset extension (defensive)
      * - api routes (except protected ones)
      * - marketing pages (public)
      * - blog content (public)
      */
-    "/((?!_next/static|_next/image|favicon.ico|public|api/(?!admin|checkout)|blog|servicios|alkimya|membresia).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|fonts/|images/|svg/|.*\\.(?:ttf|otf|woff|woff2|eot|png|jpg|jpeg|gif|webp|svg|ico|mp4|webm|avif)$|api/(?!admin|checkout)|blog|servicios|alkimya|membresia).*)",
   ],
 };

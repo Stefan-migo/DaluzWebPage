@@ -895,7 +895,7 @@ export default async function HomePage() {
 
                 {/* CTA */}
                 <div className="flex justify-center mt-6 w-full">
-                  <Link href="/procesos" className="w-full">
+                  <Link href="/servicios/procesos/ciclos-alquimicos" className="w-full">
                     <Button
                       variant="outline"
                       className="group/btn w-full text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300 whitespace-normal break-words h-auto py-2 px-4 flex items-center justify-center gap-2"
@@ -939,7 +939,7 @@ export default async function HomePage() {
 
                 {/* CTA */}
                 <div className="flex justify-center mt-6 w-full">
-                  <Link href="/procesos/sesiones-integrales" className="w-full">
+                  <Link href="/servicios/procesos/sesiones-integrales" className="w-full">
                     <Button
                       variant="outline"
                       className="group/btn w-full text-brand-primary hover:text-white hover:bg-brand-primary transition-all duration-300 whitespace-normal break-words h-auto py-2 px-4 flex items-center justify-center gap-2"
