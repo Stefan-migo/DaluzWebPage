@@ -391,14 +391,10 @@ export default async function HomePage() {
                   {/* Enhanced Content with mobile-friendly text sizing */}
                   <div className="space-y-3 sm:space-y-4 md:space-y-5 lg:space-y-4 xl:space-y-6 text-sm sm:text-base md:text-base lg:text-base xl:text-lg leading-relaxed">
                     <p className="font-text text-gray-800">
-                      Bienvenida/o a Da Luz, tu portal hacia la Alquimia Viva.
-                      Deseamos que experimentes la profunda conexión con tu Ser
-                      esencial. Creemos que la vida es tu mayor acto de
-                      creación, y nuestra intención es facilitarte una nueva
-                      forma de habitarte, más placentera y consciente. Te
-                      invitamos a sumergirte en un viaje interior donde tu
-                      cuerpo es el templo y el Placer es el verdadero pase hacia
-                      tu Poder Creador.
+                      Deseamos que experimentes la profunda conexión con tu Ser esencial.
+                      La vida es tu mayor acto de creación:
+                      te invitamos a un viaje donde tu cuerpo es el templo
+                      y el Placer es el verdadero pase hacia tu Poder Creador
                     </p>
                   </div>
 
