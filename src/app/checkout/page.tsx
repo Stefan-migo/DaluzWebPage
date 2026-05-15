@@ -117,9 +117,6 @@ export default function CheckoutPage() {
     );
   }
 
-  const shippingThreshold = 50000;
-  const shippingCost = total >= shippingThreshold ? 0 : 5000;
-  const totalWithShipping = total + shippingCost;
 
   const handleInputChange = (field: keyof CheckoutForm, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -651,40 +648,20 @@ export default function CheckoutPage() {
                     <span>Subtotal:</span>
                     <span>${total.toLocaleString("es-AR")}</span>
                   </div>
-                  <div
-                    className="flex justify-between text-sm"
-                    style={{ color: "#AE0000", opacity: 0.9 }}
-                  >
-                    <span>Envío:</span>
-                    <span
-                      style={{
-                        color: shippingCost === 0 ? "#10B981" : "#AE0000",
-                        opacity: shippingCost === 0 ? 1 : 0.9,
-                      }}
-                    >
-                      {shippingCost === 0
-                        ? "Gratis"
-                        : `$${shippingCost.toLocaleString("es-AR")}`}
-                    </span>
-                  </div>
-                  {total < shippingThreshold && (
-                    <p
-                      className="text-xs"
-                      style={{ color: "#AE0000", opacity: 0.7 }}
-                    >
-                      Agregar $
-                      {(shippingThreshold - total).toLocaleString("es-AR")} más
-                      para envío gratis
-                    </p>
-                  )}
                   <Separator className="bg-gray-300" />
                   <div
                     className="flex justify-between font-semibold text-lg font-title"
                     style={{ color: "#AE0000" }}
                   >
                     <span>Total:</span>
-                    <span>${totalWithShipping.toLocaleString("es-AR")}</span>
+                    <span>${total.toLocaleString("es-AR")}</span>
                   </div>
+                  <p
+                    className="text-xs pt-1"
+                    style={{ color: "#AE0000", opacity: 0.7 }}
+                  >
+                    El costo de envío se coordina por separado.
+                  </p>
                 </div>
               </CardContent>
             </Card>

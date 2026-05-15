@@ -18,16 +18,14 @@ import {
   AnimatedBackground,
   SobreNosotrosBackground,
   AlkimyaNeurocosmeticaBackground,
-  NuestrosServiciosBackground,
   NuestraFilosofiaBackground,
-  AlkimyaBackground,
-  BlogComunidadBackground,
+
   BlogBackground,
   GaleriaBackground,
   ContactoBackground,
   ValorYConfianzaBackground,
   ServiciosHolisticosBackground,
-  AlkimyaDaLuzIcon,
+
   SesionesIcon,
   ProcesosIntegrativosIcon,
   MembresiaIcon,
@@ -35,10 +33,7 @@ import {
   VisionIntegralIcon,
   CeremoniaPresenciaIcon,
   PlacerCreatividadIcon,
-  EcologicaVeganaIcon,
-  PoderBotanicoIcon,
-  TransmutacionCoherenciaIcon,
-  NeurocosmeticaIcon,
+
 } from "@/components/svg/SVGComponents";
 import InteractiveGallery from "@/components/InteractiveGallery";
 import LineasCarousel from "@/components/marketing/LineasCarousel";

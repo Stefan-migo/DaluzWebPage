@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X, Plus, Minus, ShoppingBag, Trash2, Package, Truck, CheckCircle2, Info } from "lucide-react";
+import { X, Plus, Minus, ShoppingBag, Trash2, Package, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Badge } from "@/components/ui/badge";
@@ -38,10 +38,6 @@ export default function CartSidebar() {
     }
   };
 
-  const shippingThreshold = 50000; // Free shipping threshold in ARS
-  const shippingCost = total >= shippingThreshold ? 0 : 5000;
-  const totalWithShipping = total + shippingCost;
-  const remainingForFreeShipping = shippingThreshold - total;
 
   return (
     <Sheet open={isOpen} onOpenChange={setCartOpen}>
@@ -216,51 +212,6 @@ export default function CartSidebar() {
                   backgroundColor: 'var(--admin-accent-primary)'
                 }}
               >
-                {/* Shipping Progress */}
-                <div className="space-y-2">
-                  {total < shippingThreshold ? (
-                    <div
-                      className="text-sm font-text p-4 rounded-lg"
-                      style={{
-                        backgroundColor: 'var(--admin-bg-tertiary)',
-                        borderRadius: '0px 15px',
-                        border: '1px solid var(--admin-bg-secondary)'
-                      }}
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <Truck className="h-4 w-4 text-brand-primary" />
-                        <p className="text-text-primary font-medium">
-                          Agregá {formatPrice(remainingForFreeShipping)} más para{" "}
-                          <span className="font-semibold text-brand-primary">envío gratis</span>
-                        </p>
-                      </div>
-                      <div className="w-full bg-white/50 rounded-full h-2.5 overflow-hidden">
-                        <div
-                          className="bg-brand-primary h-full rounded-full transition-all duration-500"
-                          style={{ width: `${Math.min((total / shippingThreshold) * 100, 100)}%` }}
-                        />
-                      </div>
-                      <p className="text-xs text-text-primary/60 mt-2">
-                        {Math.round((total / shippingThreshold) * 100)}% completado
-                      </p>
-                    </div>
-                  ) : (
-                    <div
-                      className="text-sm font-text p-4 rounded-lg flex items-center gap-2"
-                      style={{
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        borderRadius: '0px 15px',
-                        border: '1px solid rgba(16, 185, 129, 0.3)'
-                      }}
-                    >
-                      <CheckCircle2 className="h-5 w-5 text-green-600 flex-shrink-0" />
-                      <p className="text-green-800 font-medium">
-                        ¡Felicitaciones! Tu pedido tiene envío gratis
-                      </p>
-                    </div>
-                  )}
-                </div>
-
                 {/* Order Summary */}
                 {(() => {
                   const blocking = items.filter(
@@ -305,17 +256,14 @@ export default function CartSidebar() {
                     <span className="text-black/70">Subtotal:</span>
                     <span className="text-black font-medium">{formatPrice(total)}</span>
                   </div>
-                  <div className="flex justify-between text-sm font-text">
-                    <span className="text-black/70">Envío:</span>
-                    <span className={shippingCost === 0 ? "text-green-600 font-semibold" : "text-black font-medium"}>
-                      {shippingCost === 0 ? "Gratis" : formatPrice(shippingCost)}
-                    </span>
-                  </div>
                   <Separator className="my-2" style={{ backgroundColor: 'var(--admin-text-primary)' }} />
                   <div className="flex justify-between font-title text-lg">
                     <span className="text-black font-bold">Total:</span>
-                    <span className="text-black font-bold">{formatPrice(totalWithShipping)}</span>
+                    <span className="text-black font-bold">{formatPrice(total)}</span>
                   </div>
+                  <p className="text-xs text-black/60 font-text pt-1">
+                    El costo de envío se coordina por separado.
+                  </p>
                 </div>
 
                 {/* Action Buttons */}

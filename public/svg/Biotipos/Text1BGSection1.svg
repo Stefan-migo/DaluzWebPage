@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1591.28 366.76">
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1166.8 359.23" preserveAspectRatio="none">
   <defs>
     <style>
       .cls-1 {
-        fill: #fff2db;
+        fill: #fff2e9;
       }
     </style>
   </defs>
-  <g id="Layer_1-2" data-name="Layer 1">
-    <path class="cls-1" d="M0,0h1394.35c90.2,0,163.44,73.23,163.44,163.44v96.99H163.44C73.23,260.43,0,187.19,0,96.99V0h0Z"/>
-    <path class="cls-1" d="M33.49,106.33h1394.35c90.2,0,163.44,73.23,163.44,163.44v96.99H196.93c-90.2,0-163.44-73.23-163.44-163.44v-96.99h0Z"/>
-  </g>
+  <path class="cls-1" d="M1060.69,0c58.61,0,106.11,47.51,106.11,106.11v253.12H106.11C47.51,359.23,0,311.73,0,253.12V0"/>
 </svg>

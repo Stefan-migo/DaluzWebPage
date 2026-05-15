@@ -2,6 +2,96 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import BiotiposTablasCarousel from '@/components/biotipos/BiotiposTablasCarousel';
+
+const BIOTIPOS_COLUMNS = [
+  "Biotipo Cutáneo",
+  "Correspondencia a Dosha/s",
+  "Características Clave",
+  "Necesidades Esenciales",
+  "ALKIMYA RECOMENDADA",
+];
+
+const BIOTIPOS_TABLAS = [
+  {
+    title: "Piel Normal",
+    columns: BIOTIPOS_COLUMNS,
+    rows: [
+      {
+        "Biotipo Cutáneo": "Normal (Eudérmica)",
+        "Correspondencia a Dosha/s": "Tridoshic (Equilibrada)",
+        "Características Clave": "Piel lisa, suave, color uniforme y brillo moderado. Representa el equilibrio perfecto.",
+        "Necesidades Esenciales": "Mantenimiento y prevención. Foco en antioxidantes y humectantes ligeros.",
+        "ALKIMYA RECOMENDADA": "SERENA",
+      },
+    ],
+  },
+  {
+    title: "Piel Seca",
+    columns: BIOTIPOS_COLUMNS,
+    rows: [
+      {
+        "Biotipo Cutáneo": "Seca (Alípica)",
+        "Correspondencia a Dosha/s": "Vata (Éter y Aire)",
+        "Características Clave": "Piel fina, tirante, con tendencia a la descamación y arrugas. Déficit en secreción sebácea.",
+        "Necesidades Esenciales": "Nutrición intensa (aceites pesados), lípidos, ceramidas y alta humectación.",
+        "ALKIMYA RECOMENDADA": "NUTRE",
+      },
+    ],
+  },
+  {
+    title: "Piel Grasa",
+    columns: BIOTIPOS_COLUMNS,
+    rows: [
+      {
+        "Biotipo Cutáneo": "Grasa y/o Acnéica",
+        "Correspondencia a Dosha/s": "Kapha (Tierra y Agua)",
+        "Características Clave": "Piel gruesa, brillante, con poros dilatados, tendencia a comedones y/o acné. Exceso de secreción sebácea.",
+        "Necesidades Esenciales": "Regulación de sebo, activos astringentes (arcillas) y texturas ligeras.",
+        "ALKIMYA RECOMENDADA": "ILUMINA",
+      },
+    ],
+  },
+  {
+    title: "Piel Mixta",
+    columns: BIOTIPOS_COLUMNS,
+    rows: [
+      {
+        "Biotipo Cutáneo": "Mixta",
+        "Correspondencia a Dosha/s": "Vata/Kapha o Pitta/Kapha",
+        "Características Clave": "Sebo excesivo en la Zona T y áreas normales/secas en las mejillas.",
+        "Necesidades Esenciales": "Balancear. Regulación en Zona T y nutrición ligera en el resto del rostro.",
+        "ALKIMYA RECOMENDADA": "ILUMINA (Zona T) / SERENA (Resto)",
+      },
+    ],
+  },
+  {
+    title: "Piel Sensible",
+    columns: BIOTIPOS_COLUMNS,
+    rows: [
+      {
+        "Biotipo Cutáneo": "Sensible",
+        "Correspondencia a Dosha/s": "Pitta (Fuego y Agua)",
+        "Características Clave": "Piel que reacciona fácilmente a estímulos externos, con tendencia a rojeces, picazón e inflamación.",
+        "Necesidades Esenciales": "Calma, reparación de la barrera cutánea, activos desinflamatorios (Árnica, Manzanilla).",
+        "ALKIMYA RECOMENDADA": "CALMA",
+      },
+    ],
+  },
+  {
+    title: "Piel Madura",
+    columns: BIOTIPOS_COLUMNS,
+    rows: [
+      {
+        "Biotipo Cutáneo": "Madura",
+        "Correspondencia a Dosha/s": "Vata (Envejecimiento)",
+        "Características Clave": "Piel con pérdida de firmeza, elasticidad, volumen y líneas de expresión profundas.",
+        "Necesidades Esenciales": "Reafirmación, alta nutrición, colágeno vegetal y activos anti-edad.",
+        "ALKIMYA RECOMENDADA": "NUTRE / SERENA",
+      },
+    ],
+  },
+];
 
 
 // Quiz questions data
@@ -166,7 +256,7 @@ export default function BiotiposDoshasPage() {
           <div className="biotipos-section1-main-title-wrapper">
             <div className="biotipos-section1-main-title-bg"></div>
             <h1 className="biotipos-text-element biotipos-section1-main-title">
-              TU BIOTIPO Y CEREMONIA
+              ¡DESCUBRÍ TU BIOTIPO!
             </h1>
           </div>
 
@@ -315,246 +405,15 @@ export default function BiotiposDoshasPage() {
         </div>
       </section>
 
-      {/* Section 3 */}
-      <section id="section-pieles" className="relative overflow-hidden flex flex-col section-biotipos-3">
-
-        <div className="relative z-10 flex-1 section-biotipos-3-content">
-          {/* Main Title - Full Width */}
-          <div className="biotipos-section3-main-title-wrapper">
-            <div className="biotipos-section3-main-title-bg"></div>
-            <h2 className="biotipos-section3-main-title">
-              Los Biotipos Cutáneos: Tu Patrón Único
-            </h2>
-          </div>
-
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section3-secondary-title">
-            <div className="biotipos-section3-secondary-title-bg"></div>
-            <span className="biotipos-section3-secondary-title-text">Normal (Eudérmica)</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section3-table-container">
-            <div className="biotipos-section3-table-bg"></div>
-            <div className="biotipos-section3-table-content">
-              <table className="biotipos-section3-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Cutáneo</th>
-                    <th>Correspondencia a Dosha/s</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                    <th>ALKIMYA RECOMENDADA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Cutáneo">Normal (Eudérmica)</td>
-                    <td data-label="Correspondencia a Dosha/s">Tridoshic (Equilibrada)</td>
-                    <td data-label="Características Clave">Piel lisa, suave, color uniforme y brillo moderado. Representa el equilibrio perfecto.</td>
-                    <td data-label="Necesidades Esenciales">Mantenimiento y prevención. Foco en antioxidantes y humectantes ligeros.</td>
-                    <td data-label="ALKIMYA Recomendada">SERENA</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+      {/* Carrusel de Biotipos Cutáneos (reemplaza Sections 3-8) */}
+      <section id="section-pieles" className="section-biotipos-tablas">
+        <div className="biotipos-section3-main-title-wrapper">
+          <div className="biotipos-section3-main-title-bg"></div>
+          <h2 className="biotipos-section3-main-title">
+            Reconocé tu Biotipo Cutáneo
+          </h2>
         </div>
-      </section>
-
-      {/* Section 4 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-4">
-
-        <div className="relative z-10 flex-1 section-biotipos-4-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section4-secondary-title">
-            <div className="biotipos-section4-secondary-title-bg"></div>
-            <span className="biotipos-section4-secondary-title-text">Seca (Alípica)</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section4-table-container">
-            <div className="biotipos-section4-table-bg"></div>
-            <div className="biotipos-section4-table-content">
-              <table className="biotipos-section4-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Cutáneo</th>
-                    <th>Correspondencia a Dosha/s</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                    <th>ALKIMYA RECOMENDADA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Cutáneo">Seca (Alípica)</td>
-                    <td data-label="Correspondencia a Dosha/s">Vata (Éter y Aire)</td>
-                    <td data-label="Características Clave">Piel fina, tirante, con tendencia a la descamación y arrugas. Déficit en secreción sebácea.</td>
-                    <td data-label="Necesidades Esenciales">Nutrición intensa (aceites pesados), lípidos, ceramidas y alta humectación.</td>
-                    <td data-label="ALKIMYA Recomendada">NUTRE</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 5 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-5">
-
-        <div className="relative z-10 flex-1 section-biotipos-5-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section5-secondary-title">
-            <div className="biotipos-section5-secondary-title-bg"></div>
-            <span className="biotipos-section5-secondary-title-text">Grasa y/o Acnéica</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section5-table-container">
-            <div className="biotipos-section5-table-bg"></div>
-            <div className="biotipos-section5-table-content">
-              <table className="biotipos-section5-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Cutáneo</th>
-                    <th>Correspondencia a Dosha/s</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                    <th>ALKIMYA RECOMENDADA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Cutáneo">Grasa y/o Acnéica</td>
-                    <td data-label="Correspondencia a Dosha/s">Kapha (Tierra y Agua)</td>
-                    <td data-label="Características Clave">Piel gruesa, brillante, con poros dilatados, tendencia a comedones y/o acné. Exceso de secreción sebácea.</td>
-                    <td data-label="Necesidades Esenciales">Regulación de sebo, activos astringentes (arcillas) y texturas ligeras.</td>
-                    <td data-label="ALKIMYA Recomendada">ILUMINA</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 6 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-6">
-
-        <div className="relative z-10 flex-1 section-biotipos-6-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section6-secondary-title">
-            <div className="biotipos-section6-secondary-title-bg"></div>
-            <span className="biotipos-section6-secondary-title-text">Mixta</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section6-table-container">
-            <div className="biotipos-section6-table-bg"></div>
-            <div className="biotipos-section6-table-content">
-              <table className="biotipos-section6-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Cutáneo</th>
-                    <th>Correspondencia a Dosha/s</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                    <th>ALKIMYA RECOMENDADA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Cutáneo">Mixta</td>
-                    <td data-label="Correspondencia a Dosha/s">Vata/Kapha o Pitta/Kapha</td>
-                    <td data-label="Características Clave">Sebo excesivo en la Zona T y áreas normales/secas en las mejillas.</td>
-                    <td data-label="Necesidades Esenciales">Balancear. Regulación en Zona T y nutrición ligera en el resto del rostro.</td>
-                    <td data-label="ALKIMYA Recomendada">ILUMINA (Zona T) / SERENA (Resto)</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 7 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-7">
-
-        <div className="relative z-10 flex-1 section-biotipos-7-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section7-secondary-title">
-            <div className="biotipos-section7-secondary-title-bg"></div>
-            <span className="biotipos-section7-secondary-title-text">Sensible</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section7-table-container">
-            <div className="biotipos-section7-table-bg"></div>
-            <div className="biotipos-section7-table-content">
-              <table className="biotipos-section7-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Cutáneo</th>
-                    <th>Correspondencia a Dosha/s</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                    <th>ALKIMYA RECOMENDADA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Cutáneo">Sensible</td>
-                    <td data-label="Correspondencia a Dosha/s">Pitta (Fuego y Agua)</td>
-                    <td data-label="Características Clave">Piel que reacciona fácilmente a estímulos externos, con tendencia a rojeces, picazón e inflamación.</td>
-                    <td data-label="Necesidades Esenciales">Calma, reparación de la barrera cutánea, activos desinflamatorios (Árnica, Manzanilla).</td>
-                    <td data-label="ALKIMYA Recomendada">CALMA</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 8 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-8">
-
-        <div className="relative z-10 flex-1 section-biotipos-8-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section8-secondary-title">
-            <div className="biotipos-section8-secondary-title-bg"></div>
-            <span className="biotipos-section8-secondary-title-text">Madura</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section8-table-container">
-            <div className="biotipos-section8-table-bg"></div>
-            <div className="biotipos-section8-table-content">
-              <table className="biotipos-section8-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Cutáneo</th>
-                    <th>Correspondencia a Dosha/s</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                    <th>ALKIMYA RECOMENDADA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Cutáneo">Madura</td>
-                    <td data-label="Correspondencia a Dosha/s">Vata (Envejecimiento)</td>
-                    <td data-label="Características Clave">Piel con pérdida de firmeza, elasticidad, volumen y líneas de expresión profundas.</td>
-                    <td data-label="Necesidades Esenciales">Reafirmación, alta nutrición, colágeno vegetal y activos anti-edad.</td>
-                    <td data-label="ALKIMYA Recomendada">NUTRE / SERENA</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <BiotiposTablasCarousel tablas={BIOTIPOS_TABLAS} />
       </section>
 
       {/* Section 9 */}
