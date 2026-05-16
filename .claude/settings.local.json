@@ -26,7 +26,9 @@
       "Bash(grep -rn \"linea-\\\\${\\\\|/linea-\\\\${\\\\|categorias/linea\\\\|getLineThemeFromSlug\\\\|includes\\('utopica'\\)\\\\|includes\\(\\\\\"utopica\\\\\"\\)\\\\|id: \\\\\"utopica\\\\\"\\\\|id: 'utopica'\" c:/Users/juan/Desktop/DaluzWebPage/src)",
       "Bash(awk 'NR==628,/      {\\\\/\\\\* VALOR Y CONFIANZA DA LUZ \\\\*\\\\/}/' \"c:/Users/juan/Desktop/DaluzWebPage/src/app/\\(marketing\\)/page.tsx\")",
       "Bash(grep -cn \"<X[\\\\\\\\s/>]\\\\|{X}\\\\|\\\\bX\\\\\\\\b\" \"c:/Users/juan/Desktop/DaluzWebPage/src/components/commerce/CartSidebar.tsx\")",
-      "Bash(awk 'NR>=408 && NR<=650' \"c:/Users/juan/Desktop/DaluzWebPage/src/app/\\(marketing\\)/alkimya/biotipos-doshas/page.tsx\")"
+      "Bash(awk 'NR>=408 && NR<=650' \"c:/Users/juan/Desktop/DaluzWebPage/src/app/\\(marketing\\)/alkimya/biotipos-doshas/page.tsx\")",
+      "Bash(awk 'NR>=3800 && NR<=3835 {print NR\": \"$0}' \"c:/Users/juan/Desktop/DaluzWebPage/src/styles/biotipos.css\")",
+      "Bash(awk 'NR>=3971 && NR<=3990 {print NR\": \"$0}' \"c:/Users/juan/Desktop/DaluzWebPage/src/styles/biotipos.css\")"
     ]
   }
 }

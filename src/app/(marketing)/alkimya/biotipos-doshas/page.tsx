@@ -93,6 +93,48 @@ const BIOTIPOS_TABLAS = [
   },
 ];
 
+const BIOTIPOS_CAPILARES_COLUMNS = [
+  "Como se siente",
+  "Tu necesidad",
+  "Alkimyas Aliadas",
+];
+
+const BIOTIPOS_CAPILARES_TABLAS = [
+  {
+    title: "Cabello Seco (VATA)",
+    columns: BIOTIPOS_CAPILARES_COLUMNS,
+    rows: [
+      {
+        "Como se siente": "Pelo poroso, con frizz, quebrado o con puntas abiertas.",
+        "Tu necesidad": "Un abrazo de nutrición e hidratación intensa. Necesitás aceites y mantecas que sellen la cutícula y aporten el peso saludable que tus hebras piden.",
+        "Alkimyas Aliadas": "Shampoo Ilumina y Serum Capilar Ilumina.",
+      },
+    ],
+  },
+  {
+    title: "Cabello Graso (Kapha)",
+    columns: BIOTIPOS_CAPILARES_COLUMNS,
+    rows: [
+      {
+        "Como se siente": "Pelo grueso y pesado con cuero cabelludo oleoso y tendencia a la congestión. Se siente una pérdida de volumen y movimiento natural.",
+        "Tu necesidad": "Regulación sebácea y detox. Necesitás activos botánicos que purifiquen y texturas ligeras.",
+        "Alkimyas Aliadas": "Shampoo Serena.",
+      },
+    ],
+  },
+  {
+    title: "Cuero Cabelludo Sensible (Pitta)",
+    columns: BIOTIPOS_CAPILARES_COLUMNS,
+    rows: [
+      {
+        "Como se siente": "Cuero cabelludo con picazón, descamación (caspa) o enrojecimiento. También se manifiesta en pérdida excesiva o crecimiento lento debido al estrés o inflamación.",
+        "Tu necesidad": "Calma de raíz y estimulación folicular. Necesitás regular el pH, desinflamar el tejido y nutrir profundamente la base para que el pelo crezca con fuerza.",
+        "Alkimyas Aliadas": "Tónico Capilar Raíz y Shampoo Raíz.",
+      },
+    ],
+  },
+];
+
 
 // Quiz questions data
 const quizQuestions = [
@@ -461,189 +503,9 @@ export default function BiotiposDoshasPage() {
         </div>
       </section>
 
-      {/* Section 10 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-10">
-
-        <div className="relative z-10 flex-1 section-biotipos-10-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section10-secondary-title">
-            <div className="biotipos-section10-secondary-title-bg"></div>
-            <span className="biotipos-section10-secondary-title-text">Cabello Normal (Equilibrado)</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section10-table-container">
-            <div className="biotipos-section10-table-bg"></div>
-            <div className="biotipos-section10-table-content">
-              <table className="biotipos-section10-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Capilar</th>
-                    <th>Correspondencia a Dosha</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Capilar">Normal (Equilibrado)</td>
-                    <td data-label="Correspondencia a Dosha">Tridoshic (Equilibrada)</td>
-                    <td data-label="Características Clave">Pelo suave, con brillo natural y cuero cabelludo equilibrado.</td>
-                    <td data-label="Necesidades Esenciales">Mantenimiento, prevención y protección diaria.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 11 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-11">
-
-        <div className="relative z-10 flex-1 section-biotipos-11-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section11-secondary-title">
-            <div className="biotipos-section11-secondary-title-bg"></div>
-            <span className="biotipos-section11-secondary-title-text">Seco, Dañado y/o Rizado</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section11-table-container">
-            <div className="biotipos-section11-table-bg"></div>
-            <div className="biotipos-section11-table-content">
-              <table className="biotipos-section11-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Capilar</th>
-                    <th>Correspondencia a Dosha</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Capilar">Seco, Dañado y/o Rizado/Crespo</td>
-                    <td data-label="Correspondencia a Dosha">Vata (Éter y Aire)</td>
-                    <td data-label="Características Clave">Pelo poroso, con frizz, quebradizo, puntas abiertas. Incluye patrones rizados/crespos (naturalmente secos).</td>
-                    <td data-label="Necesidades Esenciales">Nutrición e hidratación intensa (aceites, mantecas) y terapias calmantes.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 12 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-12">
-
-        <div className="relative z-10 flex-1 section-biotipos-12-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section12-secondary-title">
-            <div className="biotipos-section12-secondary-title-bg"></div>
-            <span className="biotipos-section12-secondary-title-text">Graso / Pesado</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section12-table-container">
-            <div className="biotipos-section12-table-bg"></div>
-            <div className="biotipos-section12-table-content">
-              <table className="biotipos-section12-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Capilar</th>
-                    <th>Correspondencia a Dosha</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Capilar">Graso / Pesado</td>
-                    <td data-label="Correspondencia a Dosha">Kapha (Tierra y Agua)</td>
-                    <td data-label="Características Clave">Pelo grueso, pesado, con cuero cabelludo oleoso y tendencia a la congestión.</td>
-                    <td data-label="Necesidades Esenciales">Regulación del sebo, detox, activos astringentes y texturas ligeras.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 13 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-13">
-
-        <div className="relative z-10 flex-1 section-biotipos-13-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section13-secondary-title">
-            <div className="biotipos-section13-secondary-title-bg"></div>
-            <span className="biotipos-section13-secondary-title-text">Cuero Cabelludo Irritado/Caspa</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section13-table-container">
-            <div className="biotipos-section13-table-bg"></div>
-            <div className="biotipos-section13-table-content">
-              <table className="biotipos-section13-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Capilar</th>
-                    <th>Correspondencia a Dosha</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Capilar">Cuero Cabelludo Irritado/Caspa</td>
-                    <td data-label="Correspondencia a Dosha">Pitta/Kapha</td>
-                    <td data-label="Características Clave">Descamación, picazón, enrojecimiento o exceso de grasa. Signo de desequilibrio.</td>
-                    <td data-label="Necesidades Esenciales">Calma, control de la inflamación, regulación del pH. Solución clave: Tónico Capilar.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 14 */}
-      <section className="relative overflow-hidden flex flex-col section-biotipos-14">
-
-        <div className="relative z-10 flex-1 section-biotipos-14-content">
-          {/* Secondary Title */}
-          <h3 className="biotipos-text-element biotipos-section14-secondary-title">
-            <div className="biotipos-section14-secondary-title-bg"></div>
-            <span className="biotipos-section14-secondary-title-text">Caída y/o Crecimiento Lento</span>
-          </h3>
-
-          {/* Main Table Information */}
-          <div className="biotipos-text-element biotipos-section14-table-container">
-            <div className="biotipos-section14-table-bg"></div>
-            <div className="biotipos-section14-table-content">
-              <table className="biotipos-section14-table">
-                <thead>
-                  <tr>
-                    <th>Biotipo Capilar</th>
-                    <th>Correspondencia a Dosha</th>
-                    <th>Características Clave</th>
-                    <th>Necesidades Esenciales</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td data-label="Biotipo Capilar">Caída y/o Crecimiento Lento</td>
-                    <td data-label="Correspondencia a Dosha">Vata/Pitta</td>
-                    <td data-label="Características Clave">Pérdida excesiva o lento crecimiento. Ligada a estrés, deficiencias o inflamación.</td>
-                    <td data-label="Necesidades Esenciales">Fortalecimiento folicular, nutrición de la raíz, estimulación circulatoria. Solución clave: Tónico Capilar.</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      {/* Carrusel de Biotipos Capilares (reemplaza Sections 10-14) */}
+      <section className="section-biotipos-tablas">
+        <BiotiposTablasCarousel tablas={BIOTIPOS_CAPILARES_TABLAS} />
       </section>
 
       {/* Section 15 */}
