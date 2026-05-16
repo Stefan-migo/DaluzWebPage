@@ -10,17 +10,17 @@ import {
   Heart,
   ShoppingCart,
   Star,
-  Leaf,
   Sparkles,
   Eye,
   Plus,
   Minus,
-  AlertCircle,
   CreditCard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useLike } from "@/contexts/LikeContext";
-import RichTextDisplay from "@/components/ui/RichTextDisplay";
+import FlameIcon from "@/components/ui/brand/icons/FlameIcon";
+import StarBurstIcon from "@/components/ui/brand/icons/StarBurstIcon";
+import AlertHexagonIcon from "@/components/ui/brand/icons/AlertHexagonIcon";
 
 interface ProductCardProps {
   id: string;
@@ -216,37 +216,76 @@ export default function ProductCard({
     return basePrice * (1 - discountPercent / 100);
   };
 
-  // Render promotional tag badge with DaLuz style (beige background, bordó text)
-  const renderPromotionalTagBadge = () => {
-    if (!promotionalTag || promotionalTag === "none") return null;
+  // Calculate discount percent from compare_at_price (originalPrice)
+  const discountPercent =
+    originalPrice && originalPrice > price
+      ? Math.round(((originalPrice - price) / originalPrice) * 100)
+      : null;
 
-    const tagConfig = {
-      lanzamiento: { label: "Lanzamiento", icon: Sparkles },
-      descuento: { label: "Descuento", icon: Leaf },
-      ultimas_unidades: { label: "Últimas Unidades", icon: AlertCircle },
-    };
+  // Promotional tag badges (DaLuz style, per-tag color scheme)
+  const tagConfig = {
+    lanzamiento: {
+      label: "Lanzamiento",
+      icon: FlameIcon,
+      bgColor: "#faf7ef",
+      textColor: "#97000d",
+    },
+    destacado: {
+      label: "Destacado",
+      icon: StarBurstIcon,
+      bgColor: "#97000d",
+      textColor: "#fff2db",
+    },
+    descuento: {
+      label: discountPercent ? `-${discountPercent}%` : "Descuento",
+      icon: null as typeof FlameIcon | null,
+      bgColor: "#920000",
+      textColor: "#faf7ef",
+    },
+    ultimas_unidades: {
+      label: "Últimas Unidades",
+      icon: AlertHexagonIcon,
+      bgColor: "#920000",
+      textColor: "#faf7ef",
+    },
+  };
 
-    const config = tagConfig[promotionalTag as keyof typeof tagConfig];
-    if (!config) return null;
-
+  const renderBadge = (key: keyof typeof tagConfig) => {
+    const config = tagConfig[key];
     const Icon = config.icon;
-
     return (
       <Badge
+        key={key}
         className="shadow-md text-sm px-2 py-1"
         style={{
-          backgroundColor: "#FFF2DB",
-          color: "#791010",
+          backgroundColor: config.bgColor,
+          color: config.textColor,
           fontFamily: "EB Garamond, var(--font-text), serif",
           fontStyle: "italic",
           fontWeight: 500,
           border: "none",
         }}
       >
-        <Icon className="h-3 w-3 mr-1" />
+        {Icon && <Icon className="h-3 w-3 mr-1" />}
         {config.label}
       </Badge>
     );
+  };
+
+  const renderPromotionalTagBadges = () => {
+    const explicitTag =
+      promotionalTag && promotionalTag !== "none"
+        ? (promotionalTag as keyof typeof tagConfig)
+        : null;
+
+    // Show explicit tag (if any) + discount badge (if there's a price discount and
+    // the explicit tag isn't already "descuento")
+    const badges: Array<keyof typeof tagConfig> = [];
+    if (explicitTag) badges.push(explicitTag);
+    if (discountPercent && explicitTag !== "descuento") badges.push("descuento");
+
+    if (badges.length === 0) return null;
+    return badges.map((key) => renderBadge(key));
   };
 
   // Calculate discounted prices
@@ -272,13 +311,12 @@ export default function ProductCard({
       className={cn(
         "group relative overflow-hidden transition-all duration-500 flex flex-col box-border",
         "hover:shadow-xl h-[480px] sm:h-[520px] lg:h-[540px]",
-        lineTheme === "default" ? cardVariants[variant] : "",
         className,
       )}
       style={{
         pointerEvents: "auto",
         borderRadius: "0px 15px",
-        background: lineTheme !== "default" ? theme.background : undefined,
+        background: "#fff2e9",
         borderColor: lineTheme !== "default" ? `${theme.border}33` : undefined,
         borderWidth: lineTheme !== "default" ? "1px" : undefined,
       }}
@@ -286,8 +324,8 @@ export default function ProductCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative flex flex-col h-full box-border">
-        {/* Product Image - Fixed height for consistency */}
-        <div className="relative h-32 sm:h-36 lg:h-40 overflow-hidden bg-gradient-to-br from-bg-light to-bg-cream flex-shrink-0">
+        {/* Product Image - 40% of card height */}
+        <div className="relative h-[192px] sm:h-[208px] lg:h-[216px] overflow-hidden bg-gradient-to-br from-bg-light to-bg-cream flex-shrink-0">
           {!imageLoaded && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
           )}
@@ -309,38 +347,19 @@ export default function ProductCard({
             onError={() => setImageLoaded(true)}
           />
 
-          {/* Top Left Overlay Badges */}
-          <div className="absolute top-2 left-2 z-20 flex flex-wrap gap-1 max-w-[calc(100%-3rem)]">
-            {promotionalTag && promotionalTag !== "none" && renderPromotionalTagBadge()}
-            {isOnSale && (
-              <Badge
-                variant="destructive"
-                className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-xs px-2 py-0.5"
-              >
-                <span className="font-bold">OFERTA</span>
-              </Badge>
-            )}
-            {isNew && (
-              <Badge
-                className={cn(
-                  theme.badge,
-                  "font-semibold shadow-md animate-pulse-gentle text-xs px-2 py-0.5",
-                )}
-              >
-                <Sparkles className="h-2.5 w-2.5 mr-1" />
-                Nuevo
-              </Badge>
-            )}
+          {/* Top Left Overlay Badges (all promotional tags) */}
+          <div className="absolute top-2 left-2 z-20 flex flex-wrap gap-1 max-w-[calc(100%-1rem)]">
+            {renderPromotionalTagBadges()}
           </div>
 
-          {/* Like Button */}
-          <div className="absolute top-2 right-2 z-20">
+          {/* Like Button - Bottom Right */}
+          <div className="absolute bottom-2 right-2 z-20">
             <Heart
               className={cn(
-                "h-4 w-4 sm:h-5 sm:w-5 cursor-pointer transition-all duration-300 hover:scale-110",
+                "h-5 w-5 sm:h-6 sm:w-6 cursor-pointer transition-all duration-300 hover:scale-110 drop-shadow-md",
                 isFavorite
                   ? "fill-red-500 text-red-500"
-                  : "text-white/80 hover:text-red-500 hover:fill-red-500",
+                  : "text-white/90 hover:text-red-500 hover:fill-red-500",
                 likeLoading && "opacity-50",
               )}
               onClick={handleToggleFavorite}
@@ -398,7 +417,7 @@ export default function ProductCard({
               {/* Name */}
               <Link href={productHref} className="block group/link">
                 <h3
-                  className="font-semibold text-base lg:text-lg text-[#791010] line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight"
+                  className="font-semibold text-xl lg:text-2xl text-[#791010] line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight text-center"
                   style={{
                     fontFamily: "Playfair Display, var(--font-playfair), serif",
                     fontWeight: 600,
@@ -407,6 +426,13 @@ export default function ProductCard({
                 >
                   {name}
                 </h3>
+                <div
+                  className="mx-auto mt-1.5 h-px w-3/5"
+                  style={{
+                    background:
+                      "linear-gradient(to right, transparent, #920000 50%, transparent)",
+                  }}
+                />
               </Link>
 
               {/* Rating - Hidden on small screens */}
@@ -434,7 +460,7 @@ export default function ProductCard({
                   )}
                 </div>
                 {originalPrice && originalPrice > price && (
-                  <div className="text-sm text-[#791010] font-semibold bg-green-50 px-2 py-1 rounded-md inline-block">
+                  <div className="text-sm text-white font-semibold bg-[#920000] px-2 py-1 rounded-md inline-block">
                     Ahorrás {formatPrice(originalPrice - price)}
                   </div>
                 )}
@@ -510,14 +536,6 @@ export default function ProductCard({
                     )}
                   </div>
                 )}
-              </div>
-
-              {/* Description - Hidden on mobile to save space */}
-              <div className="hidden sm:block text-xs lg:text-sm text-text-secondary line-clamp-1 lg:line-clamp-2 leading-relaxed">
-                <RichTextDisplay
-                  content={description}
-                  className="text-xs lg:text-sm text-text-secondary line-clamp-1 lg:line-clamp-2 leading-relaxed [&_strong]:font-semibold [&_em]:italic [&_u]:underline [&_p]:m-0 [&_p]:p-0"
-                />
               </div>
 
               {/* Size */}
@@ -602,10 +620,10 @@ export default function ProductCard({
             {/* Top Content - scrollable if too tall */}
             <div className="flex-1 overflow-y-auto space-y-1 pr-1">
 
-              {/* Name - Smaller, Left aligned */}
+              {/* Name - Centered with decorative line */}
               <Link href={productHref} className="block group/link">
                 <h3
-                  className="font-semibold text-sm text-[#791010] line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight text-left"
+                  className="font-semibold text-lg text-[#791010] line-clamp-2 group-hover/link:text-brand-primary transition-colors duration-300 leading-tight text-center"
                   style={{
                     fontFamily: "Playfair Display, var(--font-playfair), serif",
                     fontWeight: 600,
@@ -614,6 +632,13 @@ export default function ProductCard({
                 >
                   {name}
                 </h3>
+                <div
+                  className="mx-auto mt-1 h-px w-3/5"
+                  style={{
+                    background:
+                      "linear-gradient(to right, transparent, #920000 50%, transparent)",
+                  }}
+                />
               </Link>
 
               {/* Rating - Compact, Left aligned */}

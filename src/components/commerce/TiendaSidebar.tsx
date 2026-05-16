@@ -150,7 +150,7 @@ export default function TiendaSidebar({
         </Button>
       </div>
       {/* Search */}
-      <Card variant="artisanal" className="lg:block">
+      <Card variant="artisanal" className="lg:block" style={{ backgroundColor: "#fff2db" }}>
         <CardHeader className="pb-2 lg:pb-3">
           <CardTitle
             className="text-base lg:text-lg flex items-center gap-2"
@@ -178,7 +178,7 @@ export default function TiendaSidebar({
       </Card>
 
       {/* Categories */}
-      <Card variant="artisanal">
+      <Card variant="artisanal" style={{ backgroundColor: "#fff2db" }}>
         <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
@@ -231,7 +231,7 @@ export default function TiendaSidebar({
       </Card>
 
       {/* Filters */}
-      <Card variant="artisanal">
+      <Card variant="artisanal" style={{ backgroundColor: "#fff2db" }}>
         <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
@@ -383,7 +383,7 @@ export default function TiendaSidebar({
       </Card>
 
       {/* Sort & Grid - Hidden on mobile */}
-      <Card variant="artisanal" className="hidden lg:block">
+      <Card variant="artisanal" className="hidden lg:block" style={{ backgroundColor: "#fff2db" }}>
         <CardHeader
           className="pb-3 cursor-pointer"
           onClick={() => {
