@@ -119,7 +119,7 @@
     letter-spacing: 1px;
     z-index: 1;
     padding: 0 !important;
-    margin: 0 !important;
+    margin: 0 0 0.5rem 0 !important;
   }
 
   /* Subtitle */
@@ -131,6 +131,7 @@
     font-family: 'Playfair Display', serif;
     font-style: italic;
     padding: 0 0.5rem;
+
   }
 
   /* Main text — solid card, NO SVG background */
@@ -4712,7 +4713,7 @@ div.biotipos-section14-table-bg[class*="-table-bg"] {
   }
 
   .biotipos-text-element.biotipos-section1-subtitle {
-    top: 10% !important;
+    top: 12% !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
     color: var(--color-brand-primary) !important;
