@@ -28,7 +28,16 @@
       "Bash(grep -cn \"<X[\\\\\\\\s/>]\\\\|{X}\\\\|\\\\bX\\\\\\\\b\" \"c:/Users/juan/Desktop/DaluzWebPage/src/components/commerce/CartSidebar.tsx\")",
       "Bash(awk 'NR>=408 && NR<=650' \"c:/Users/juan/Desktop/DaluzWebPage/src/app/\\(marketing\\)/alkimya/biotipos-doshas/page.tsx\")",
       "Bash(awk 'NR>=3800 && NR<=3835 {print NR\": \"$0}' \"c:/Users/juan/Desktop/DaluzWebPage/src/styles/biotipos.css\")",
-      "Bash(awk 'NR>=3971 && NR<=3990 {print NR\": \"$0}' \"c:/Users/juan/Desktop/DaluzWebPage/src/styles/biotipos.css\")"
+      "Bash(awk 'NR>=3971 && NR<=3990 {print NR\": \"$0}' \"c:/Users/juan/Desktop/DaluzWebPage/src/styles/biotipos.css\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/faq)",
+      "Bash(curl -s http://localhost:3001/faq)",
+      "Bash(SHOT_DIR=\"C:\\\\Users\\\\juan\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-juan-Desktop-DaluzWebPage\\\\d4ec6bcf-b1a7-4d4b-aa91-4763309ef7de\\\\scratchpad\" node \"C:\\\\Users\\\\juan\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-juan-Desktop-DaluzWebPage\\\\d4ec6bcf-b1a7-4d4b-aa91-4763309ef7de\\\\scratchpad\\\\shot.mjs\")",
+      "Bash(cp \"C:\\\\Users\\\\juan\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-juan-Desktop-DaluzWebPage\\\\d4ec6bcf-b1a7-4d4b-aa91-4763309ef7de\\\\scratchpad\\\\shot.mjs\" \"C:\\\\Users\\\\juan\\\\Desktop\\\\DaluzWebPage\\\\_shot_tmp.mjs\")",
+      "Bash(SHOT_DIR=\"C:\\\\Users\\\\juan\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-juan-Desktop-DaluzWebPage\\\\d4ec6bcf-b1a7-4d4b-aa91-4763309ef7de\\\\scratchpad\" node _shot_tmp.mjs)",
+      "Bash(npx tsc *)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\juan\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\" -Directory | Select-Object -ExpandProperty Name; \"--- typescript-language-server ---\"; $c = Get-Command typescript-language-server -ErrorAction SilentlyContinue; if \\($c\\) { $c.Source } else { \"NOT FOUND on PATH\" })"
     ]
   }
 }

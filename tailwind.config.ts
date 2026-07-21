@@ -250,6 +250,10 @@ const config = {
         "line-gradient":
           "linear-gradient(135deg, var(--line-primary) 0%, var(--line-secondary) 100%)",
 
+        // FAQ deep gradient (violeta → azul → teal)
+        "faq-gradient":
+          "linear-gradient(160deg, #2A2543 0%, #16345F 28%, #1A3F71 50%, #005080 78%, #0085B1 100%)",
+
         // Product Line Gradients
         "alma-gradient":
           "linear-gradient(135deg, var(--alma-primary) 0%, var(--alma-accent) 100%)",

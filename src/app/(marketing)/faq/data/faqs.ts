@@ -201,6 +201,6 @@ export const FAQ_DATA: FAQCategory[] = [
 export const FAQ_CONTACT_CTA = {
   title: "¿No encontrás tu respuesta?",
   subtitle: "Nuestra sabiduría está disponible para acompañarte.",
-  buttonText: "Escríbeme tu consulta personal",
+  buttonText: "Tu consulta personal",
   buttonLink: "https://wa.me/5493512344580",
 };
