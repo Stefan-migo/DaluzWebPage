@@ -160,13 +160,13 @@ export default function Footer() {
           <div className="text-center space-y-4 mb-8">
             <h3
               className="text-xl font-display font-normal"
-              style={{ color: "#FFF4B3" }}
+              style={{ color: "#FFFFFF" }}
             >
               DA LUZ CONSCIENTE
             </h3>
             <div
               className="text-xs font-caption"
-              style={{ color: "#FFF4B3", opacity: 0.8 }}
+              style={{ color: "#FFFFFF", opacity: 0.8 }}
             >
               Alkimyas para alma y cuerpo
             </div>
@@ -176,13 +176,13 @@ export default function Footer() {
           <div className="space-y-4 mb-8">
             <h4
               className="font-title font-medium text-center text-lg"
-              style={{ color: "#FFF4B3" }}
+              style={{ color: "#FFFFFF" }}
             >
               Contacto
             </h4>
             <div
               className="space-y-4 font-text"
-              style={{ color: "#FFF4B3", opacity: 0.9 }}
+              style={{ color: "#FFFFFF", opacity: 0.9 }}
             >
               {/* Email */}
               <div className="flex items-center justify-center space-x-3 px-4">
@@ -233,7 +233,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-              style={{ color: "#FFF4B3" }}
+              style={{ color: "#FFFFFF" }}
               aria-label="Instagram"
             >
               <Instagram className="h-5 w-5 lucide" />
@@ -243,7 +243,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-              style={{ color: "#FFF4B3" }}
+              style={{ color: "#FFFFFF" }}
               aria-label="Facebook"
             >
               <Facebook className="h-5 w-5 lucide" />
@@ -253,7 +253,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-              style={{ color: "#FFF4B3" }}
+              style={{ color: "#FFFFFF" }}
               aria-label="WhatsApp"
             >
               <MessageCircle className="h-5 w-5 lucide" />
@@ -265,7 +265,7 @@ export default function Footer() {
             <div>
               <h4
                 className="font-title font-medium mb-3 text-sm"
-                style={{ color: "#FFF4B3" }}
+                style={{ color: "#FFFFFF" }}
               >
                 Productos
               </h4>
@@ -273,14 +273,14 @@ export default function Footer() {
                 <Link
                   href="/productos"
                   className="block text-xs font-text"
-                  style={{ color: "#FFF4B3", opacity: 0.9 }}
+                  style={{ color: "#FFFFFF", opacity: 0.9 }}
                 >
                   Ver Todo
                 </Link>
                 <Link
                   href="/productos/kits"
                   className="block text-xs font-text"
-                  style={{ color: "#FFF4B3", opacity: 0.9 }}
+                  style={{ color: "#FFFFFF", opacity: 0.9 }}
                 >
                   Kits Especiales
                 </Link>
@@ -289,7 +289,7 @@ export default function Footer() {
             <div>
               <h4
                 className="font-title font-medium mb-3 text-sm"
-                style={{ color: "#FFF4B3" }}
+                style={{ color: "#FFFFFF" }}
               >
                 Membresía
               </h4>
@@ -297,14 +297,14 @@ export default function Footer() {
                 <Link
                   href="/membresia"
                   className="block text-xs font-text"
-                  style={{ color: "#FFF4B3", opacity: 0.9 }}
+                  style={{ color: "#FFFFFF", opacity: 0.9 }}
                 >
                   Programa
                 </Link>
                 <Link
                   href="/membresia/comunidad"
                   className="block text-xs font-text"
-                  style={{ color: "#FFF4B3", opacity: 0.9 }}
+                  style={{ color: "#FFFFFF", opacity: 0.9 }}
                 >
                   Comunidad
                 </Link>
@@ -315,7 +315,7 @@ export default function Footer() {
           {/* Values - Mobile */}
           <div
             className="flex justify-center space-x-4 mb-6 font-caption"
-            style={{ color: "#FFF4B3", opacity: 0.9 }}
+            style={{ color: "#FFFFFF", opacity: 0.9 }}
           >
             <div className="flex items-center space-x-1">
               <Leaf className="h-3 w-3 lucide" style={{ color: "#F8D794" }} />
@@ -337,7 +337,7 @@ export default function Footer() {
           {/* Copyright - Mobile */}
           <div
             className="text-center text-xs font-text pt-4 border-t border-white/20"
-            style={{ color: "#FFF4B3", opacity: 0.8 }}
+            style={{ color: "#FFFFFF", opacity: 0.8 }}
           >
             <div>© {currentYear} DA LUZ CONSCIENTE</div>
             <div className="mt-1">Todos los derechos reservados</div>
@@ -354,13 +354,13 @@ export default function Footer() {
               <div className="space-y-2">
                 <h3
                   className="text-2xl font-display font-normal"
-                  style={{ color: "#FFF4B3" }}
+                  style={{ color: "#FFFFFF" }}
                 >
                   DA LUZ CONSCIENTE
                 </h3>
                 <div
                   className="text-xs font-caption"
-                  style={{ color: "#FFF4B3", opacity: 0.8 }}
+                  style={{ color: "#FFFFFF", opacity: 0.8 }}
                 >
                   Alkimyas para alma y cuerpo
                 </div>
@@ -368,7 +368,7 @@ export default function Footer() {
 
               <p
                 className="text-sm font-text leading-relaxed"
-                style={{ color: "#FFF4B3", opacity: 0.9 }}
+                style={{ color: "#FFFFFF", opacity: 0.9 }}
               >
                 Transformamos vidas a través de la biocosmética artesanal y
                 terapias holísticas. Acompañamos tu camino hacia el bienestar
@@ -379,7 +379,7 @@ export default function Footer() {
               {/* Contact Info */}
               <div
                 className="space-y-2 text-sm font-text"
-                style={{ color: "#FFF4B3", opacity: 0.9 }}
+                style={{ color: "#FFFFFF", opacity: 0.9 }}
               >
                 <div className="flex items-center space-x-2">
                   <Mail
@@ -423,7 +423,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                  style={{ color: "#FFF4B3" }}
+                  style={{ color: "#FFFFFF" }}
                   aria-label="Instagram"
                 >
                   <Instagram className="h-5 w-5 lucide" />
@@ -433,7 +433,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                  style={{ color: "#FFF4B3" }}
+                  style={{ color: "#FFFFFF" }}
                   aria-label="Facebook"
                 >
                   <Facebook className="h-5 w-5 lucide" />
@@ -443,7 +443,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300"
-                  style={{ color: "#FFF4B3" }}
+                  style={{ color: "#FFFFFF" }}
                   aria-label="WhatsApp"
                 >
                   <MessageCircle className="h-5 w-5 lucide" />
@@ -456,7 +456,7 @@ export default function Footer() {
               <div key={section.title} className="space-y-4">
                 <h4
                   className="font-title font-medium"
-                  style={{ color: "#FFF4B3" }}
+                  style={{ color: "#FFFFFF" }}
                 >
                   {section.title}
                 </h4>
@@ -479,7 +479,7 @@ export default function Footer() {
                         <Link
                           href={link.href as any}
                           className="text-sm font-text transition-colors duration-300 block px-2 py-1 rounded hover:bg-white/10 hover:text-white"
-                          style={{ color: "#FFF4B3", opacity: 0.9 }}
+                          style={{ color: "#FFFFFF", opacity: 0.9 }}
                         >
                           {link.name}
                         </Link>
@@ -500,7 +500,7 @@ export default function Footer() {
             <div className="flex flex-col items-center md:items-start space-y-2">
               <div
                 className="flex items-center space-x-4 text-sm font-text"
-                style={{ color: "#FFF4B3", opacity: 0.8 }}
+                style={{ color: "#FFFFFF", opacity: 0.8 }}
               >
                 <span>© {currentYear} DA LUZ CONSCIENTE</span>
                 <span>•</span>
@@ -509,7 +509,7 @@ export default function Footer() {
               {/* Aviso Legal / Disclaimer */}
               <p
                 className="text-xs font-text"
-                style={{ color: "#FFF4B3", opacity: 0.6, maxWidth: "600px" }}
+                style={{ color: "#FFFFFF", opacity: 0.6, maxWidth: "600px" }}
               >
                 Aviso legal: Nuestros productos son cosméticos de venta libre
                 que acompañan procesos de bienestar. No reemplazan la consulta
@@ -520,7 +520,7 @@ export default function Footer() {
             {/* Values Icons */}
             <div
               className="flex items-center space-x-6 font-caption"
-              style={{ color: "#FFF4B3", opacity: 0.9 }}
+              style={{ color: "#FFFFFF", opacity: 0.9 }}
             >
               <div className="flex items-center space-x-1 text-xs">
                 <Leaf className="h-4 w-4 lucide" style={{ color: "#F8D794" }} />
@@ -545,7 +545,7 @@ export default function Footer() {
             {/* Payment Methods */}
             <div
               className="flex items-center space-x-2 text-xs font-caption"
-              style={{ color: "#FFF4B3", opacity: 0.9 }}
+              style={{ color: "#FFFFFF", opacity: 0.9 }}
             >
               <span>Aceptamos:</span>
               <Badge
