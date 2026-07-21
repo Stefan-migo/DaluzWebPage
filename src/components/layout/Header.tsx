@@ -142,6 +142,10 @@ const AZUL_PROFUNDO = "#0f3460";
 const isRaicesPage = (pathname: string) =>
   pathname === "/raices" || pathname === "/filosofia-proposito";
 
+/* FAQ page: coincide con el inicio del degradado azul de la página */
+const FAQ_BG = "#2A2543";
+const isFaqPage = (pathname: string) => pathname === "/faq";
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, profile, signOut } = useAuthContext();
@@ -156,7 +160,9 @@ export default function Header() {
     ? RAICES_BG
     : isProcesosPage(pathname ?? "")
       ? PROCESOS_BG
-      : "#AE0000";
+      : isFaqPage(pathname ?? "")
+        ? FAQ_BG
+        : "#AE0000";
 
   // Fetch latest blog posts
   useEffect(() => {

@@ -33,7 +33,7 @@ export const FAQ_DATA: FAQCategory[] = [
         question: "¿Todos sus ingredientes son naturales?",
         answer: `"Nuestra base es <strong>100% Botánica</strong>, pero nuestra eficacia es <strong>Dermo-Cosmética</strong>.<br><br>
         En Da Luz practicamos la <strong>Ciencia Verde</strong>: combinamos lo mejor de la tierra (aceites prensados, hidrolatos y plantas) con activos de alta pureza (como Niacinamida o Ácido Mandélico) creados en laboratorio para ser idénticos a los de la naturaleza pero más estables y efectivos.<br><br>
-        Evitamos lo controversial (parabenos, siliconas) y elegimos la <strong>pureza clínica</strong>. Si querés conocer el origen exacto de cada uno de nuestros activos, visitá nuestra <a href="/alkimya/activos-origen" class="text-brand-primary underline hover:opacity-80">Guía de Transparencia Botánica en nuestro Blog</a>."`,
+        Evitamos lo controversial (parabenos, siliconas) y elegimos la <strong>pureza clínica</strong>. Si querés conocer el origen exacto de cada uno de nuestros activos, visitá nuestra <a href="/alkimya/activos-origen" class="text-faq-ocean font-semibold underline hover:opacity-80">Guía de Transparencia Botánica en nuestro Blog</a>."`,
       },
       {
         question: "¿Cómo sé qué contiene exactamente cada producto?",
@@ -43,7 +43,7 @@ export const FAQ_DATA: FAQCategory[] = [
           <li><strong>En Activos y Origen:</strong> Disponés de nuestra base de datos completa organizada en <strong>3 cuadros desplegables</strong> donde detallamos nuestros activos, sus orígenes biológicos y qué Alkimyas los contienen.</li>
           <li><strong>Beneficio Real:</strong> Allí explicamos qué aporte real le brinda cada componente a tu biología.</li>
         </ul><br>
-        Podés consultar esta información completa en nuestra sección de <a href="/alkimya/activos-origen" class="text-brand-primary underline hover:opacity-80">ACTIVOS Y ORIGEN</a>.`,
+        Podés consultar esta información completa en nuestra sección de <a href="/alkimya/activos-origen" class="text-faq-ocean font-semibold underline hover:opacity-80">ACTIVOS Y ORIGEN</a>.`,
       },
       {
         question:
@@ -65,7 +65,7 @@ export const FAQ_DATA: FAQCategory[] = [
       {
         question: "¿Cómo sé qué Alquimia es la adecuada para mí?",
         answer: `La clave de la dermo-cosmética consciente es la <strong>bio-individualidad</strong>.<br><br>
-        Podés navegar nuestra sección de <a href="/alkimya/biotipos-doshas" class="text-brand-primary underline hover:opacity-80">Biotipos</a> para auto-conocerte y descubrir qué necesita tu piel hoy.<br><br>
+        Podés navegar nuestra sección de <a href="/alkimya/biotipos-doshas" class="text-faq-ocean font-semibold underline hover:opacity-80">Biotipos</a> para auto-conocerte y descubrir qué necesita tu piel hoy.<br><br>
         Desde allí, podrás acceder a tu <strong>CEREMONIA personalizada</strong>: un espacio donde te proponemos el ritual y las Alkimyas ideales para tu perfil específico.<br><br>
         Además, siempre podés consultarnos por WhatsApp para una asesoría personalizada gratuita.`,
       },
@@ -88,7 +88,7 @@ export const FAQ_DATA: FAQCategory[] = [
       {
         question: '¿Qué es el "Tesoro de Regalo" que recibo con mi compra?',
         answer: `Creemos que la medicina botánica se completa con el conocimiento. Por eso, con cada una de tus Alquimias, recibís un <strong>Tesoro de Regalo</strong>: una pieza informativa diseñada para guiarte en tu ritual, explicando desde el modo de uso hasta la energía de las plantas que te acompañan.<br><br>
-        Podés conocer más sobre este intercambio en nuestra sección <a href="/alkimya/tesoros-daluz" class="text-brand-primary underline hover:opacity-80">TESORO DA LUZ</a>.`,
+        Podés conocer más sobre este intercambio en nuestra sección <a href="/alkimya/tesoros-daluz" class="text-faq-ocean font-semibold underline hover:opacity-80">TESORO DA LUZ</a>.`,
       },
       {
         question: "¿Puedo realizar mi pedido por fuera de la web?",
@@ -148,7 +148,7 @@ export const FAQ_DATA: FAQCategory[] = [
         question:
           "¿Es normal que mi piel se ponga roja después de una mascarilla?",
         answer: `Sí, se llama <strong>Hiperemia</strong>. Es la activación de la microcirculación producida por los minerales de las arcillas. Es un signo de que los activos están trabajando.<br><br>
-        Si tenés rosácea activa o capilares frágiles, consultá nuestra <a href="/politicas/precauciones" class="text-brand-primary underline hover:opacity-80">Matriz de Precauciones</a>.`,
+        Si tenés rosácea activa o capilares frágiles, consultá nuestra <a href="/politicas/precauciones" class="text-faq-ocean font-semibold underline hover:opacity-80">Matriz de Precauciones</a>.`,
       },
       {
         question: "¿Debo descansar del uso de las tinturas o microdosis?",

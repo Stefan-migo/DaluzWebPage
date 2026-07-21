@@ -37,7 +37,10 @@
       "Bash(npx tsc *)",
       "mcp__plugin_context7_context7__resolve-library-id",
       "mcp__plugin_context7_context7__query-docs",
-      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\juan\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\" -Directory | Select-Object -ExpandProperty Name; \"--- typescript-language-server ---\"; $c = Get-Command typescript-language-server -ErrorAction SilentlyContinue; if \\($c\\) { $c.Source } else { \"NOT FOUND on PATH\" })"
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\juan\\\\.claude\\\\plugins\\\\cache\\\\claude-plugins-official\" -Directory | Select-Object -ExpandProperty Name; \"--- typescript-language-server ---\"; $c = Get-Command typescript-language-server -ErrorAction SilentlyContinue; if \\($c\\) { $c.Source } else { \"NOT FOUND on PATH\" })",
+      "PowerShell(\"--- git status ---\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3002/faq)",
+      "Bash(grep -iE \"\\\\.tsx$\")"
     ]
   }
 }

@@ -27,6 +27,11 @@ const RAICES_BG = "#0f3460";
 const RAICES_BORDER = "#1a4a7a";
 const isRaicesPage = (pathname: string) =>
   pathname === "/raices" || pathname === "/filosofia-proposito";
+
+/* FAQ page: enlaza con el final del degradado azul de la página */
+const FAQ_BG = "#005080";
+const FAQ_BORDER = "#0085B1";
+const isFaqPage = (pathname: string) => pathname === "/faq";
 import {
   Mail,
   Phone,
@@ -79,12 +84,16 @@ export default function Footer() {
     ? RAICES_BG
     : isProcesosPage(pathname ?? "")
       ? PROCESOS_BG
-      : "#AE0000";
+      : isFaqPage(pathname ?? "")
+        ? FAQ_BG
+        : "#AE0000";
   const footerBorder = isRaicesPage(pathname ?? "")
     ? RAICES_BORDER
     : isProcesosPage(pathname ?? "")
       ? PROCESOS_BORDER
-      : "#C70000";
+      : isFaqPage(pathname ?? "")
+        ? FAQ_BORDER
+        : "#C70000";
 
   const footerSections = [
     {

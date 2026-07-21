@@ -118,6 +118,18 @@ const config = {
           light: "var(--utopica-light)",
           lightest: "var(--utopica-lightest)",
         },
+        // FAQ palette (azul monocromático)
+        faq: {
+          deepest: "#2A2543",
+          deep: "#16345F",
+          mid: "#1A3F71",
+          ocean: "#005080",
+          bright: "#0085B1",
+          light: "#3FB6E0", // acento claro para íconos y detalles sobre fondo oscuro
+          surface: "#E7F0F8", // tarjetas claras de preguntas
+          "surface-hover": "#D8E7F4",
+          ink: "#16345F", // texto sobre tarjeta clara
+        },
         // Admin / UI accent colors (azul profundo #1E3A8A, dorado)
         "azul-profundo": "#1E3A8A",
         dorado: "#F8D794",

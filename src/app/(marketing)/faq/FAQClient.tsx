@@ -33,23 +33,25 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
-// Color palette for categories
+// Color palette for categories (tonos de la paleta azul, de claro a profundo)
 const categoryColors = [
-  "bg-alma-primary",
-  "bg-ecos-primary",
-  "bg-jade-primary",
-  "bg-umbral-primary",
-  "bg-brand-primary",
+  "bg-faq-bright",
+  "bg-faq-ocean",
+  "bg-faq-mid",
+  "bg-faq-deep",
+  "bg-faq-deepest",
 ];
 
-// Estilo de las píldoras inactivas sobre el fondo oscuro (glass claro)
+// Estilo de las píldoras sobre el fondo oscuro
+const pillActiveClasses =
+  "!bg-faq-bright !text-white !border-faq-bright hover:!bg-faq-light";
 const pillInactiveClasses =
   "!border-white/25 !bg-white/5 !text-white/90 hover:!bg-white/15 hover:!text-white";
 
 // Botón de acción para las tarjetas del CTA (se aplica directo al Link/anchor
 // porque el `asChild` del componente Button no propaga clases sobre un Fragment).
 const ctaButtonBase =
-  "inline-flex w-full items-center justify-center gap-2 h-11 rounded-md px-4 text-sm font-btn uppercase tracking-wider transition-all duration-300 hover:-translate-y-0.5";
+  "inline-flex w-full items-center justify-center gap-2 min-h-[2.75rem] rounded-md px-4 py-2.5 text-center text-sm leading-tight font-btn uppercase tracking-wider transition-all duration-300 hover:-translate-y-0.5";
 
 interface CollapsibleFAQProps {
   question: string;
@@ -74,15 +76,15 @@ function CollapsibleFAQ({
     >
       <Card
         variant="brand-subtle"
-        className="overflow-hidden rounded-none border-l-4 border-l-brand-primary !bg-bg-cream shadow-soft"
+        className="overflow-hidden rounded-none border-l-4 border-l-faq-ocean !bg-faq-surface shadow-soft"
       >
         <button
           onClick={onToggle}
-          className="w-full p-6 text-left hover:bg-bg-light transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/50"
+          className="w-full p-6 text-left hover:bg-faq-surface-hover transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-faq-ocean/50"
           aria-expanded={isOpen}
         >
           <div className="flex items-center justify-between gap-4">
-            <h3 className="font-heading text-lg font-semibold text-brand-primary md:text-xl">
+            <h3 className="font-heading text-lg font-semibold text-faq-ink md:text-xl">
               {question}
             </h3>
             <motion.div
@@ -90,7 +92,7 @@ function CollapsibleFAQ({
               transition={{ duration: 0.3 }}
               className="flex-shrink-0"
             >
-              <ChevronDown className="w-5 h-5 text-brand-primary" />
+              <ChevronDown className="w-5 h-5 text-faq-ocean" />
             </motion.div>
           </div>
         </button>
@@ -106,7 +108,7 @@ function CollapsibleFAQ({
             >
               <CardContent className="px-6 pb-6 pt-0">
                 <div
-                  className="font-body text-[#791010] prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-brand-primary prose-p:text-[#791010] prose-li:text-[#791010] prose-strong:text-brand-primary"
+                  className="font-body text-faq-ink prose prose-sm max-w-none prose-headings:font-heading prose-headings:text-faq-ocean prose-p:text-faq-ink prose-li:text-faq-ink prose-strong:text-faq-ocean prose-a:text-faq-ocean"
                   dangerouslySetInnerHTML={{ __html: answer }}
                 />
               </CardContent>
@@ -156,11 +158,11 @@ export default function FAQClient() {
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-32 h-32 border border-white/30 rounded-full" />
           <div className="absolute bottom-20 right-20 w-48 h-48 border border-white/20 rounded-full" />
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-brand-highlight/20 rounded-full blur-2xl" />
+          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-faq-light/20 rounded-full blur-2xl" />
         </div>
 
         {/* Golden line decoration */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-brand-highlight to-transparent" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-transparent via-faq-light to-transparent" />
 
         <div className="container relative mx-auto max-w-4xl text-center">
           <motion.div
@@ -168,7 +170,7 @@ export default function FAQClient() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-6 bg-brand-highlight/20 text-brand-highlight border-brand-highlight/30 backdrop-blur-sm">
+            <Badge className="mb-6 bg-faq-light/20 text-faq-light border-faq-light/30 backdrop-blur-sm">
               <HelpCircle className="w-4 h-4 mr-2" />
               Centro de Ayuda
             </Badge>
@@ -183,8 +185,8 @@ export default function FAQClient() {
 
             {/* Decorative divider */}
             <div className="flex items-center justify-center gap-4 mb-8">
-              <div className="w-12 h-px bg-brand-highlight/50" />
-              <div className="w-12 h-px bg-brand-highlight/50" />
+              <div className="w-12 h-px bg-faq-light/50" />
+              <div className="w-12 h-px bg-faq-light/50" />
             </div>
           </motion.div>
         </div>
@@ -198,8 +200,9 @@ export default function FAQClient() {
               variant={activeCategory === null ? "brand" : "brand-outline"}
               size="sm"
               onClick={() => selectCategory(null)}
-              className={`font-btn uppercase tracking-wider ${activeCategory === null ? "" : pillInactiveClasses
-                }`}
+              className={`font-btn uppercase tracking-wider ${
+                activeCategory === null ? pillActiveClasses : pillInactiveClasses
+              }`}
             >
               Todas
             </Button>
@@ -212,8 +215,9 @@ export default function FAQClient() {
                   variant={isActive ? "brand" : "brand-outline"}
                   size="sm"
                   onClick={() => selectCategory(category.id)}
-                  className={`font-btn uppercase tracking-wider ${isActive ? "" : pillInactiveClasses
-                    }`}
+                  className={`font-btn uppercase tracking-wider ${
+                    isActive ? pillActiveClasses : pillInactiveClasses
+                  }`}
                 >
                   {IconComponent && <IconComponent className="w-4 h-4 mr-2" />}
                   {category.name}
@@ -234,7 +238,7 @@ export default function FAQClient() {
         </div>
 
         {/* Golden line decoration */}
-        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-40 h-1 bg-gradient-to-r from-transparent via-brand-highlight/60 to-transparent" />
+        <div className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 w-40 h-1 bg-gradient-to-r from-transparent via-faq-light/60 to-transparent" />
 
         <div className="container relative mx-auto max-w-4xl">
           {filteredData.map((category, categoryIndex) => {
@@ -255,24 +259,24 @@ export default function FAQClient() {
                 <button
                   onClick={() => toggleCategory(category.id)}
                   aria-expanded={isCategoryOpen}
-                  className="group w-full rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors duration-300 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-highlight/60"
+                  className="group w-full rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm transition-colors duration-300 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-faq-light/60"
                 >
                   <div className="flex items-center gap-4">
                     <div
-                      className={`p-3 rounded-full ${accentColor} text-white flex-shrink-0`}
+                      className={`p-3 rounded-full ${accentColor} border border-white/20 text-white flex-shrink-0`}
                     >
                       {IconComponent && <IconComponent className="w-6 h-6" />}
                     </div>
                     <h2 className="font-velista text-2xl md:text-3xl font-bold text-text-inverse tracking-wide text-left">
                       {category.name}
                     </h2>
-                    <div className="flex-1 h-px bg-gradient-to-r from-brand-highlight/40 to-transparent" />
+                    <div className="flex-1 h-px bg-gradient-to-r from-faq-light/40 to-transparent" />
                     <motion.div
                       animate={{ rotate: isCategoryOpen ? 180 : 0 }}
                       transition={{ duration: 0.3 }}
                       className="flex-shrink-0"
                     >
-                      <ChevronDown className="w-6 h-6 text-brand-highlight" />
+                      <ChevronDown className="w-6 h-6 text-faq-light" />
                     </motion.div>
                   </div>
                 </button>
@@ -327,7 +331,7 @@ export default function FAQClient() {
             transition={{ duration: 0.6 }}
             className="text-center mb-12"
           >
-            <Badge className="mb-4 bg-white/10 text-brand-highlight border-brand-highlight/30 backdrop-blur-sm">
+            <Badge className="mb-4 bg-white/10 text-faq-light border-faq-light/30 backdrop-blur-sm">
               <MessageCircle className="w-4 h-4 mr-2" />
               ¿Necesitas ayuda personalizada?
             </Badge>
@@ -349,7 +353,7 @@ export default function FAQClient() {
             {/* Chat Card */}
             <Card variant="glass" className="text-center p-8 backdrop-blur-md border-white/15">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                <MessageCircle className="w-8 h-8 text-[#3FB6E0]" />
+                <MessageCircle className="w-8 h-8 text-faq-light" />
               </div>
               <h3 className="font-velista text-xl font-bold mb-2 text-text-inverse">
                 Chat en Vivo
@@ -368,7 +372,7 @@ export default function FAQClient() {
             {/* Email Card */}
             <Card variant="glass" className="text-center p-8 backdrop-blur-md border-white/15">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                <Mail className="w-8 h-8 text-brand-highlight" />
+                <Mail className="w-8 h-8 text-faq-light" />
               </div>
               <h3 className="font-velista text-xl font-bold mb-2 text-text-inverse">
                 Email
@@ -378,9 +382,9 @@ export default function FAQClient() {
               </p>
               <Link
                 href="mailto:daluzconsciente@gmail.com"
-                className={`${ctaButtonBase} bg-brand-highlight text-brand-primary shadow-soft hover:bg-brand-highlight/90`}
+                className={`${ctaButtonBase} border border-white/20 bg-faq-mid text-white shadow-soft hover:bg-faq-ocean`}
               >
-                <Mail className="w-4 h-4" />
+                <Mail className="w-4 h-4 shrink-0" />
                 Enviar Email
               </Link>
             </Card>
@@ -388,7 +392,7 @@ export default function FAQClient() {
             {/* WhatsApp Card */}
             <Card variant="glass" className="text-center p-8 backdrop-blur-md border-white/15">
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-                <Phone className="w-8 h-8 text-emerald-300" />
+                <Phone className="w-8 h-8 text-faq-light" />
               </div>
               <h3 className="font-velista text-xl font-bold mb-2 text-text-inverse">
                 WhatsApp
@@ -398,9 +402,9 @@ export default function FAQClient() {
               </p>
               <Link
                 href={FAQ_CONTACT_CTA.buttonLink}
-                className={`${ctaButtonBase} bg-emerald-500 text-white shadow-soft hover:bg-emerald-400`}
+                className={`${ctaButtonBase} bg-faq-bright text-white shadow-soft hover:bg-faq-light`}
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-4 h-4 shrink-0" />
                 {FAQ_CONTACT_CTA.buttonText}
               </Link>
             </Card>
