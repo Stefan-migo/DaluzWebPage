@@ -28,10 +28,11 @@ const RAICES_BORDER = "#1a4a7a";
 const isRaicesPage = (pathname: string) =>
   pathname === "/raices" || pathname === "/filosofia-proposito";
 
-/* FAQ page: enlaza con el final del degradado azul de la página */
+/* FAQ y Ayuda: enlaza con el final del degradado azul de la página */
 const FAQ_BG = "#005080";
 const FAQ_BORDER = "#0085B1";
-const isFaqPage = (pathname: string) => pathname === "/faq";
+const isFaqPage = (pathname: string) =>
+  pathname === "/faq" || pathname === "/ayuda";
 import {
   Mail,
   Phone,

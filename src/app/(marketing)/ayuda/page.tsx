@@ -10,20 +10,15 @@ import {
   Users,
   HelpCircle,
   ArrowRight,
-  ChevronRight,
   Clock,
-  MapPin,
-  Shield,
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-import { Button } from "@/components/ui/button";
 import styles from "./ayuda.module.css";
 
 type LineColor = "alma" | "ecos" | "jade" | "umbral";
-type ResourceColor = LineColor | "brand";
 
 const helpCategories: Array<{
   title: string;
@@ -83,43 +78,6 @@ const helpCategories: Array<{
         { text: "Tiempos de entrega", href: "/politicas/envio" },
       ],
       cta: "Ver políticas",
-    },
-  ];
-
-const popularResources: Array<{
-  title: string;
-  description: string;
-  icon: typeof HelpCircle;
-  href: string;
-  color: ResourceColor;
-}> = [
-    {
-      title: "Preguntas Frecuentes",
-      description: "Respuestas rápidas a las consultas más comunes",
-      icon: HelpCircle,
-      href: "/faq",
-      color: "brand",
-    },
-    {
-      title: "Políticas de Envío",
-      description: "Tiempos, costos y zonas de entrega",
-      icon: MapPin,
-      href: "/politicas/envio",
-      color: "ecos",
-    },
-    {
-      title: "Términos y Condiciones",
-      description: "Condiciones generales de compra",
-      icon: FileText,
-      href: "/politicas/terminos",
-      color: "jade",
-    },
-    {
-      title: "Política de Privacidad",
-      description: "Cómo protegemos tus datos",
-      icon: Shield,
-      href: "/politicas/privacidad",
-      color: "umbral",
     },
   ];
 
@@ -282,73 +240,15 @@ export default function AyudaPage() {
                   </ul>
 
                   <div className={styles.categoryCta}>
-                    <Button variant={category.color} className="w-full" asChild>
-                      <Link href={category.items[0].href}>
-                        {category.cta}
-                        <ArrowRight />
-                      </Link>
-                    </Button>
+                    <Link
+                      href={category.items[0].href}
+                      className={styles.cardButton}
+                    >
+                      {category.cta}
+                      <ArrowRight />
+                    </Link>
                   </div>
                 </motion.article>
-              );
-            })}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ===== RECURSOS POPULARES ===== */}
-      <section className={styles.section}>
-        <span className={styles.sectionBlobs} aria-hidden="true" />
-
-        <div className={styles.sectionInner}>
-          <motion.header
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className={styles.sectionHeader}
-          >
-            <span className={styles.sectionEyebrow}>
-              <span className={styles.sectionEyebrowIcon} aria-hidden="true">
-                <FileText />
-              </span>
-              Recursos útiles
-            </span>
-            <h2 className={styles.sectionHeading}>Recursos Populares</h2>
-            <p className={styles.sectionDescription}>
-              Los recursos más consultados por nuestra comunidad
-            </p>
-          </motion.header>
-
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true }}
-            className={styles.resourcesGrid}
-          >
-            {popularResources.map((resource) => {
-              const Icon = resource.icon;
-              return (
-                <motion.div
-                  key={resource.title}
-                  variants={itemVariants}
-                  className={styles.resourceCard}
-                  data-line={resource.color}
-                >
-                  <span className={styles.resourceAccent} aria-hidden="true" />
-                  <span className={styles.resourceIcon} aria-hidden="true">
-                    <Icon />
-                  </span>
-                  <h3 className={styles.resourceTitle}>{resource.title}</h3>
-                  <p className={styles.resourceDescription}>
-                    {resource.description}
-                  </p>
-                  <Link href={resource.href} className={styles.resourceLink}>
-                    Ver más
-                    <ChevronRight />
-                  </Link>
-                </motion.div>
               );
             })}
           </motion.div>
@@ -379,12 +279,10 @@ export default function AyudaPage() {
                 envíos y servicios.
               </p>
               <div className={styles.quickAction}>
-                <Button variant="alma" asChild>
-                  <Link href="/faq">
-                    Consultar FAQ
-                    <ArrowRight />
-                  </Link>
-                </Button>
+                <Link href="/faq" className={styles.cardButton}>
+                  Consultar FAQ
+                  <ArrowRight />
+                </Link>
               </div>
             </motion.article>
 
@@ -484,12 +382,10 @@ export default function AyudaPage() {
                     </p>
                     <span className={styles.contactCardData}>{method.data}</span>
                     <div className={styles.contactCardCta}>
-                      <Button variant={method.color} asChild>
-                        <Link href={method.href}>
-                          <Icon />
-                          {method.cta}
-                        </Link>
-                      </Button>
+                      <Link href={method.href} className={styles.cardButton}>
+                        <Icon />
+                        {method.cta}
+                      </Link>
                     </div>
                   </div>
                 </motion.article>

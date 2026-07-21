@@ -1,39 +1,53 @@
 /* =========================================================================
    Centro de Ayuda — Da Luz Consciente
-   Estilo Místico Atmosférico Refinado
+   Estilo azul profundo (mismo lenguaje visual que la sección FAQ)
    ========================================================================= */
 
 .page {
-  --cream: #fff2db;
-  --brand: #791010;
-  --brand-soft: rgba(120, 16, 16, 0.7);
-  --brand-faint: rgba(120, 16, 16, 0.08);
-  --brand-line: rgba(120, 16, 16, 0.12);
-  --highlight: #f8d794;
-  --alma: #9b201a;
-  --alma-light: #ffefc6;
-  --alma-lightest: #fff5d6;
-  --ecos: #12406f;
-  --ecos-light: #b7dfe5;
-  --ecos-lightest: #d8edf1;
-  --jade: #04412d;
-  --jade-light: #a8d4c1;
-  --jade-lightest: #d2e8de;
-  --umbral: #ea4f12;
-  --umbral-light: #fdcab4;
-  --umbral-lightest: #ffe2d2;
+  /* Degradado principal (idéntico al de FAQ) */
+  --grad: linear-gradient(
+    160deg,
+    #2a2543 0%,
+    #16345f 28%,
+    #1a3f71 50%,
+    #005080 78%,
+    #0085b1 100%
+  );
+
+  --cream: #eaf3fb; /* texto claro sobre el fondo oscuro */
+  --brand: #16345f; /* texto azul oscuro sobre tarjetas claras */
+  --brand-soft: rgba(22, 52, 95, 0.72);
+  --brand-faint: rgba(22, 52, 95, 0.08);
+  --brand-line: rgba(22, 52, 95, 0.12);
+  --highlight: #3fb6e0; /* acento azul claro (antes dorado) */
+
+  --surface: #e7f0f8; /* tarjetas claras sólidas */
+  --surface-strong: #eef5fb;
+  --surface-border: rgba(22, 52, 95, 0.1);
+
+  --light-soft: rgba(255, 255, 255, 0.82);
+
+  /* Acentos monocromáticos azules (para data-line) */
+  --alma: #0085b1;
+  --ecos: #005080;
+  --jade: #1a3f71;
+  --umbral: #16345f;
+
+  /* Tintes claros para los círculos de ícono sobre tarjeta clara */
+  --icon-tint-lo: #dcecf8;
+  --icon-tint-hi: #c3e2f2;
 
   --font-title: var(--font-velista), "VELISTA", serif;
   --font-subtitle: "Playfair Display", serif;
   --font-body: var(--font-eb-garamond), "EB Garamond", "Times New Roman", serif;
   --font-caption: var(--font-inter), "Inter", sans-serif;
 
-  --shadow-card: 0 8px 30px rgba(120, 16, 16, 0.08);
-  --shadow-card-hover: 0 16px 50px rgba(120, 16, 16, 0.18);
-  --shadow-soft: 0 4px 20px rgba(120, 16, 16, 0.06);
+  --shadow-card: 0 10px 34px rgba(4, 20, 44, 0.28);
+  --shadow-card-hover: 0 18px 52px rgba(4, 20, 44, 0.4);
+  --shadow-soft: 0 4px 20px rgba(4, 20, 44, 0.22);
 
-  background-color: var(--cream);
-  color: var(--brand);
+  background: var(--grad);
+  color: var(--cream);
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -53,7 +67,7 @@
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: linear-gradient(135deg, #791010 0%, #9b201a 50%, #791010 100%);
+  background: transparent;
 }
 
 .heroNoise {
@@ -83,8 +97,8 @@
   height: 480px;
   background: radial-gradient(
     circle,
-    rgba(248, 215, 148, 0.35) 0%,
-    rgba(248, 215, 148, 0) 70%
+    rgba(0, 133, 177, 0.35) 0%,
+    rgba(0, 133, 177, 0) 70%
   );
 }
 
@@ -95,8 +109,8 @@
   height: 520px;
   background: radial-gradient(
     circle,
-    rgba(189, 49, 28, 0.4) 0%,
-    rgba(189, 49, 28, 0) 70%
+    rgba(42, 37, 67, 0.5) 0%,
+    rgba(42, 37, 67, 0) 70%
   );
 }
 
@@ -124,11 +138,7 @@
 .heroEyebrowLine {
   width: 2.5rem;
   height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(248, 215, 148, 0.7)
-  );
+  background: linear-gradient(to right, transparent, rgba(63, 182, 224, 0.7));
 }
 
 .heroEyebrowIcon {
@@ -151,7 +161,7 @@
   letter-spacing: 0.05em;
   line-height: 1.05;
   margin: 0 0 1.5rem;
-  color: var(--cream);
+  color: #ffffff;
 }
 
 .heroSubtitle {
@@ -162,7 +172,7 @@
   line-height: 1.5;
   max-width: 42rem;
   margin: 0 auto 3rem;
-  color: rgba(255, 242, 219, 0.85);
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .heroDivider {
@@ -175,7 +185,7 @@
 .heroDividerLine {
   width: 3rem;
   height: 1px;
-  background-color: rgba(248, 215, 148, 0.6);
+  background-color: rgba(63, 182, 224, 0.6);
 }
 
 .heroDividerDot {
@@ -207,44 +217,6 @@
   margin: 0 auto;
 }
 
-.sectionBlobs {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.sectionBlobs::before,
-.sectionBlobs::after {
-  content: "";
-  position: absolute;
-  width: 360px;
-  height: 360px;
-  border-radius: 50%;
-  filter: blur(100px);
-}
-
-.sectionBlobs::before {
-  top: 10%;
-  left: 10%;
-  background: radial-gradient(
-    circle,
-    rgba(4, 65, 45, 0.08) 0%,
-    transparent 70%
-  );
-}
-
-.sectionBlobs::after {
-  bottom: 10%;
-  right: 10%;
-  background: radial-gradient(
-    circle,
-    rgba(155, 32, 26, 0.08) 0%,
-    transparent 70%
-  );
-}
-
 .sectionEyebrow {
   display: inline-flex;
   align-items: center;
@@ -256,9 +228,9 @@
   font-weight: 600;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--brand);
-  background-color: rgba(120, 16, 16, 0.08);
-  border: 1px solid rgba(120, 16, 16, 0.15);
+  color: var(--highlight);
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 999px;
   backdrop-filter: blur(8px);
 }
@@ -285,7 +257,7 @@
   font-weight: 400;
   letter-spacing: 0.04em;
   line-height: 1.15;
-  color: var(--brand);
+  color: #ffffff;
   margin: 0 0 1rem;
 }
 
@@ -295,13 +267,13 @@
   font-size: clamp(1rem, 1.5vw, 1.25rem);
   font-weight: 400;
   line-height: 1.6;
-  color: var(--brand-soft);
+  color: var(--light-soft);
   max-width: 38rem;
   margin: 0 auto;
 }
 
 /* =========================================================================
-   CATEGORÍAS — Glassmorphism atmosférico (cards principales)
+   CATEGORÍAS — tarjetas azul claro sólidas
    ========================================================================= */
 
 .categoriesGrid {
@@ -322,10 +294,8 @@
   flex-direction: column;
   padding: clamp(1.75rem, 3vw, 2.5rem);
   padding-left: clamp(2rem, 3.5vw, 2.75rem);
-  background-color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: var(--surface);
+  border: 1px solid var(--surface-border);
   border-radius: 0 15px 0 15px;
   box-shadow: var(--shadow-card);
   transition:
@@ -341,13 +311,13 @@
   left: 0;
   bottom: 0;
   width: 4px;
-  background-color: var(--accent-color, var(--brand));
+  background-color: var(--accent-color, var(--ecos));
   transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .categoryCard:hover {
   transform: translateY(-4px);
-  box-shadow: var(--shadow-hover, var(--shadow-card-hover));
+  box-shadow: var(--shadow-card-hover);
 }
 
 .categoryCard:hover .categoryAccent {
@@ -356,22 +326,18 @@
 
 .categoryCard[data-line="alma"] {
   --accent-color: var(--alma);
-  --shadow-hover: 0 16px 50px rgba(155, 32, 26, 0.22);
 }
 
 .categoryCard[data-line="ecos"] {
   --accent-color: var(--ecos);
-  --shadow-hover: 0 16px 50px rgba(18, 64, 111, 0.22);
 }
 
 .categoryCard[data-line="jade"] {
   --accent-color: var(--jade);
-  --shadow-hover: 0 16px 50px rgba(4, 65, 45, 0.22);
 }
 
 .categoryCard[data-line="umbral"] {
   --accent-color: var(--umbral);
-  --shadow-hover: 0 16px 50px rgba(234, 79, 18, 0.22);
 }
 
 .categoryHeader {
@@ -390,35 +356,13 @@
   height: 4rem;
   border-radius: 50%;
   margin-bottom: 1.25rem;
-  color: var(--accent-color, var(--brand));
+  color: var(--accent-color, var(--ecos));
   background: linear-gradient(
     135deg,
-    var(--icon-bg-from),
-    var(--icon-bg-to)
+    var(--icon-tint-lo),
+    var(--icon-tint-hi)
   );
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.6),
-    0 4px 12px rgba(120, 16, 16, 0.08);
-}
-
-.categoryCard[data-line="alma"] .categoryIcon {
-  --icon-bg-from: var(--alma-lightest);
-  --icon-bg-to: var(--alma-light);
-}
-
-.categoryCard[data-line="ecos"] .categoryIcon {
-  --icon-bg-from: var(--ecos-lightest);
-  --icon-bg-to: var(--ecos-light);
-}
-
-.categoryCard[data-line="jade"] .categoryIcon {
-  --icon-bg-from: var(--jade-lightest);
-  --icon-bg-to: var(--jade-light);
-}
-
-.categoryCard[data-line="umbral"] .categoryIcon {
-  --icon-bg-from: var(--umbral-lightest);
-  --icon-bg-to: var(--umbral-light);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
 }
 
 .categoryIcon :global(svg) {
@@ -468,11 +412,13 @@
   font-size: 0.95rem;
   color: var(--brand);
   text-decoration: none;
-  transition: color 0.25s ease, transform 0.25s ease;
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
 }
 
 .categoryItemLink:hover {
-  color: var(--accent-color, var(--brand));
+  color: var(--accent-color, var(--ecos));
   transform: translateX(2px);
 }
 
@@ -480,7 +426,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background-color: var(--accent-color, var(--brand));
+  background-color: var(--accent-color, var(--ecos));
   flex-shrink: 0;
   transition: transform 0.25s ease;
 }
@@ -493,186 +439,52 @@
   margin-top: auto;
 }
 
-.categoryCta :global(.lucide) {
-  transition: transform 0.3s ease;
-}
-
-.categoryCta :global(a):hover :global(.lucide) {
-  transform: translateX(3px);
+.categoryCta .cardButton {
+  width: 100%;
 }
 
 /* =========================================================================
-   RECURSOS POPULARES — Hermanas reducidas
+   BOTÓN AZUL (reemplaza al componente Button; se aplica al Link directo)
    ========================================================================= */
 
-.resourcesGrid {
-  display: grid;
-  gap: clamp(1rem, 2vw, 1.5rem);
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 640px) {
-  .resourcesGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .resourcesGrid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.resourceCard {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 2rem 1.5rem;
-  padding-left: 1.75rem;
-  background-color: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 0 15px 0 15px;
-  box-shadow: var(--shadow-card);
-  transition:
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-
-.resourceAccent {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 2px;
-  background-color: var(--accent-color, var(--brand));
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.resourceCard:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover, var(--shadow-card-hover));
-}
-
-.resourceCard:hover .resourceAccent {
-  width: 3px;
-}
-
-.resourceCard[data-line="brand"] {
-  --accent-color: var(--brand);
-  --shadow-hover: 0 14px 40px rgba(120, 16, 16, 0.18);
-}
-
-.resourceCard[data-line="alma"] {
-  --accent-color: var(--alma);
-  --shadow-hover: 0 14px 40px rgba(155, 32, 26, 0.18);
-}
-
-.resourceCard[data-line="ecos"] {
-  --accent-color: var(--ecos);
-  --shadow-hover: 0 14px 40px rgba(18, 64, 111, 0.18);
-}
-
-.resourceCard[data-line="jade"] {
-  --accent-color: var(--jade);
-  --shadow-hover: 0 14px 40px rgba(4, 65, 45, 0.18);
-}
-
-.resourceCard[data-line="umbral"] {
-  --accent-color: var(--umbral);
-  --shadow-hover: 0 14px 40px rgba(234, 79, 18, 0.18);
-}
-
-.resourceIcon {
+.cardButton {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  margin-bottom: 1rem;
-  color: var(--accent-color, var(--brand));
-  background: linear-gradient(
-    135deg,
-    var(--icon-bg-from, rgba(120, 16, 16, 0.05)),
-    var(--icon-bg-to, rgba(120, 16, 16, 0.1))
-  );
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
-}
-
-.resourceCard[data-line="brand"] .resourceIcon {
-  --icon-bg-from: rgba(120, 16, 16, 0.06);
-  --icon-bg-to: rgba(120, 16, 16, 0.12);
-}
-
-.resourceCard[data-line="alma"] .resourceIcon {
-  --icon-bg-from: var(--alma-lightest);
-  --icon-bg-to: var(--alma-light);
-}
-
-.resourceCard[data-line="ecos"] .resourceIcon {
-  --icon-bg-from: var(--ecos-lightest);
-  --icon-bg-to: var(--ecos-light);
-}
-
-.resourceCard[data-line="jade"] .resourceIcon {
-  --icon-bg-from: var(--jade-lightest);
-  --icon-bg-to: var(--jade-light);
-}
-
-.resourceCard[data-line="umbral"] .resourceIcon {
-  --icon-bg-from: var(--umbral-lightest);
-  --icon-bg-to: var(--umbral-light);
-}
-
-.resourceIcon :global(svg) {
-  width: 1.375rem;
-  height: 1.375rem;
-}
-
-.resourceTitle {
-  font-family: var(--font-title);
-  font-size: 1.0625rem;
-  font-weight: 400;
-  letter-spacing: 0.03em;
-  color: var(--brand);
-  margin: 0 0 0.5rem;
-}
-
-.resourceDescription {
-  font-family: var(--font-body);
-  font-size: 0.9rem;
-  line-height: 1.55;
-  color: var(--brand-soft);
-  margin: 0 0 1.25rem;
-  flex-grow: 1;
-}
-
-.resourceLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-family: var(--font-title);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-color, var(--brand));
-  text-decoration: none;
-  transition: gap 0.25s ease;
-}
-
-.resourceLink:hover {
   gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background-color: var(--accent-color, var(--accent-btn, #005080));
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 0 12px 0 12px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    transform 0.25s ease,
+    background-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
-.resourceLink :global(svg) {
-  width: 0.875rem;
-  height: 0.875rem;
+.cardButton:hover {
+  transform: translateY(-2px);
+  background-color: #0085b1;
+  box-shadow: 0 10px 26px rgba(0, 80, 128, 0.35);
+}
+
+.cardButton :global(.lucide),
+.cardButton :global(svg) {
+  width: 1rem;
+  height: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.cardButton:hover :global(.lucide) {
+  transform: translateX(3px);
 }
 
 /* =========================================================================
@@ -698,33 +510,30 @@
   align-items: center;
   text-align: center;
   padding: clamp(2rem, 3vw, 2.75rem) 2rem;
-  background-color: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background-color: var(--surface);
+  border: 1px solid var(--surface-border);
   border-radius: 0 15px 0 15px;
   box-shadow: var(--shadow-card);
-  transition: transform 0.35s ease, box-shadow 0.35s ease;
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 .quickCardFeatured {
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 16px 50px rgba(120, 16, 16, 0.14);
+  --accent-color: var(--alma);
+  background-color: var(--surface-strong);
+  border: 1px solid rgba(0, 133, 177, 0.35);
+  box-shadow: 0 18px 52px rgba(4, 20, 44, 0.38);
 }
 
 .quickCardFeatured:hover {
   transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(120, 16, 16, 0.2);
+  box-shadow: 0 22px 60px rgba(4, 20, 44, 0.46);
 }
 
 .quickCardComing {
-  opacity: 0.7;
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  opacity: 0.72;
+  background-color: rgba(231, 240, 248, 0.55);
 }
 
 .quickEyebrowComing {
@@ -740,9 +549,9 @@
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #8a6d2c;
-  background-color: rgba(248, 215, 148, 0.5);
-  border: 1px solid rgba(248, 215, 148, 0.8);
+  color: #005080;
+  background-color: rgba(0, 133, 177, 0.16);
+  border: 1px solid rgba(0, 133, 177, 0.4);
   border-radius: 999px;
 }
 
@@ -754,23 +563,19 @@
   height: 4rem;
   border-radius: 50%;
   margin-bottom: 1.5rem;
-  color: var(--icon-color, var(--brand));
+  color: var(--icon-color, var(--ecos));
   background: linear-gradient(
     135deg,
-    var(--icon-bg-from),
-    var(--icon-bg-to)
+    var(--icon-tint-lo),
+    var(--icon-tint-hi)
   );
-  box-shadow:
-    inset 0 1px 2px rgba(255, 255, 255, 0.6),
-    0 4px 12px rgba(120, 16, 16, 0.08);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
 }
 
 .quickCardFeatured .quickIcon {
   width: 5rem;
   height: 5rem;
   --icon-color: var(--alma);
-  --icon-bg-from: var(--alma-lightest);
-  --icon-bg-to: var(--alma-light);
 }
 
 .quickCardFeatured .quickIcon :global(svg) {
@@ -780,14 +585,10 @@
 
 .quickCardComing[data-line="ecos"] .quickIcon {
   --icon-color: var(--ecos);
-  --icon-bg-from: var(--ecos-lightest);
-  --icon-bg-to: var(--ecos-light);
 }
 
 .quickCardComing[data-line="jade"] .quickIcon {
   --icon-color: var(--jade);
-  --icon-bg-from: var(--jade-lightest);
-  --icon-bg-to: var(--jade-light);
 }
 
 .quickIcon :global(svg) {
@@ -829,8 +630,8 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--brand-soft);
-  background-color: rgba(120, 16, 16, 0.06);
-  border: 1px dashed rgba(120, 16, 16, 0.25);
+  background-color: rgba(22, 52, 95, 0.06);
+  border: 1px dashed rgba(22, 52, 95, 0.25);
   border-radius: 0 12px 0 12px;
   cursor: not-allowed;
 }
@@ -841,14 +642,14 @@
 }
 
 /* =========================================================================
-   CONTACTO — Cierre minimalista en cream
+   CONTACTO — cierre sobre el degradado
    ========================================================================= */
 
 .contactSection {
   position: relative;
   padding: clamp(4rem, 10vw, 8rem) clamp(1.5rem, 5vw, 3rem);
-  background-color: var(--cream);
-  border-top: 1px solid var(--brand-line);
+  background-color: transparent;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .contactInner {
@@ -874,8 +675,8 @@
   align-items: flex-start;
   gap: clamp(1rem, 2vw, 1.5rem);
   padding: clamp(1.5rem, 3vw, 2.25rem);
-  background-color: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(120, 16, 16, 0.25);
+  background-color: var(--surface);
+  border: 1px solid var(--surface-border);
   border-radius: 0 15px 0 15px;
   transition:
     border-color 0.3s ease,
@@ -884,20 +685,18 @@
 }
 
 .contactCard:hover {
-  border-color: rgba(120, 16, 16, 0.6);
-  box-shadow: 0 12px 30px rgba(120, 16, 16, 0.1);
+  border-color: rgba(0, 133, 177, 0.55);
+  box-shadow: 0 14px 36px rgba(4, 20, 44, 0.3);
   transform: translateY(-2px);
 }
 
 .contactCard[data-line="alma"] {
-  --contact-icon-from: var(--alma-lightest);
-  --contact-icon-to: var(--alma-light);
+  --accent-color: var(--alma);
   --contact-icon-color: var(--alma);
 }
 
 .contactCard[data-line="jade"] {
-  --contact-icon-from: var(--jade-lightest);
-  --contact-icon-to: var(--jade-light);
+  --accent-color: var(--jade);
   --contact-icon-color: var(--jade);
 }
 
@@ -909,13 +708,13 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  color: var(--contact-icon-color, var(--brand));
+  color: var(--contact-icon-color, var(--ecos));
   background: linear-gradient(
     135deg,
-    var(--contact-icon-from, rgba(120, 16, 16, 0.06)),
-    var(--contact-icon-to, rgba(120, 16, 16, 0.12))
+    var(--icon-tint-lo),
+    var(--icon-tint-hi)
   );
-  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.7);
 }
 
 .contactCardIcon :global(svg) {
@@ -963,7 +762,7 @@
 .contactFooter {
   text-align: center;
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
-  border-top: 1px solid var(--brand-line);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .contactFooterText {
@@ -972,7 +771,7 @@
   gap: 0.5rem;
   font-family: var(--font-caption);
   font-size: 0.85rem;
-  color: var(--brand-soft);
+  color: var(--light-soft);
   margin: 0 0 0.5rem;
 }
 
@@ -986,7 +785,7 @@
   font-size: 0.875rem;
   font-style: italic;
   line-height: 1.5;
-  color: rgba(120, 16, 16, 0.55);
+  color: rgba(255, 255, 255, 0.6);
   max-width: 36rem;
   margin: 0 auto;
 }
@@ -997,15 +796,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .categoryCard,
-  .resourceCard,
   .quickCardFeatured,
-  .contactCard {
+  .contactCard,
+  .cardButton {
     transition: none;
   }
   .categoryCard:hover,
-  .resourceCard:hover,
   .quickCardFeatured:hover,
-  .contactCard:hover {
+  .contactCard:hover,
+  .cardButton:hover {
     transform: none;
   }
   .categoryItemLink:hover,
