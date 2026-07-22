@@ -147,7 +147,8 @@ const FAQ_BG = "#2A2543";
 const isFaqPage = (pathname: string) =>
   pathname === "/faq" ||
   pathname === "/ayuda" ||
-  pathname === "/politicas/envio";
+  pathname === "/politicas/envio" ||
+  pathname === "/politicas/terminos";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

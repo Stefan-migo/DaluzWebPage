@@ -1,15 +1,6 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
   Shield,
   FileText,
   CreditCard,
@@ -19,45 +10,27 @@ import {
   Lock,
   Eye,
   Scale,
-  Gavel,
   ChevronRight,
+  ChevronDown,
   Mail,
   ArrowRight,
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Metadata is handled by the parent layout or through generateMetadata in server components
-
-const tableOfContents = [
-  { id: "generalidades", title: "1. Generalidades", icon: FileText },
-  {
-    id: "propiedad-intelectual",
-    title: "2. Propiedad Intelectual",
-    icon: Lock,
-  },
-  {
-    id: "compra-pagos",
-    title: "3. Proceso de Compra y Pagos",
-    icon: CreditCard,
-  },
-  { id: "envios", title: "4. Política de Envíos", icon: Truck },
-  {
-    id: "arrepentimiento",
-    title: "5. Derecho de Arrepentimiento",
-    icon: AlertTriangle,
-  },
-  { id: "exencion", title: "6. Exención de Responsabilidad", icon: Shield },
-  { id: "privacidad", title: "7. Política de Privacidad", icon: Lock },
-  { id: "derechos-arco", title: "8. Derechos ARCO", icon: Eye },
-  { id: "seguridad", title: "9. Seguridad", icon: Scale },
-];
+// Estilo de botón azul (aplicado directo al Link; el componente Button con
+// asChild no propaga clases sobre un Fragment de icono + texto).
+const btnSolid =
+  "inline-flex items-center justify-center gap-2 h-11 rounded-md px-6 text-sm font-title uppercase tracking-wider text-white bg-faq-bright shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-faq-light";
+const btnOutline =
+  "inline-flex items-center justify-center gap-2 h-11 rounded-md px-6 text-sm font-title uppercase tracking-wider text-faq-ocean border-2 border-faq-ocean transition-all duration-300 hover:-translate-y-0.5 hover:bg-faq-ocean hover:text-white";
 
 const generalidadesContent = [
   "Este sitio web es operado por Da Luz Consciente (en adelante, 'la Titular').",
   "Al navegar y comprar en este sitio, el usuario acepta los presentes términos y condiciones.",
   "Estos términos constituyen un acuerdo legal entre el usuario y Da Luz Consciente.",
-  "Si no acepta estos términos, por favor no utilize nuestro sitio web.",
+  "Si no acepta estos términos, por favor no utilice nuestro sitio web.",
 ];
 
 const propiedadIntelectualContent = [
@@ -106,26 +79,6 @@ const enviosContent = [
   },
 ];
 
-const arrepentimientoContent = [
-  {
-    label: "Plazo",
-    text: "10 días corridos según Ley 24.240 de Defensa del Consumidor.",
-  },
-  {
-    label: "Condiciones",
-    text: "Producto sin abrir, en perfecto estado, con comprobante de compra.",
-  },
-  {
-    label: "Costos",
-    text: "Los costos de devolución corren por cuenta del comprador.",
-  },
-  {
-    label: "Excepciones",
-    text: "Productos digitales descargables no admiten devolución una vez enviado el enlace.",
-    type: "warning",
-  },
-];
-
 const exencionContent = [
   "Nuestros productos acompañan procesos de bienestar y no reemplazan la consulta médica ni diagnósticos profesionales.",
   "Recomendamos consultar con un profesional de la salud antes de iniciar cualquier tratamiento.",
@@ -149,7 +102,7 @@ const privacidadContent = [
 
 const derechosArcoContent = [
   { label: "ACCESO", text: "Consultá qué datos tenemos tuyos" },
-  { label: "RECTIFICACIÓN", text: "Correct datos incorrectos" },
+  { label: "RECTIFICACIÓN", text: "Corregí datos incorrectos" },
   { label: "ELIMINACIÓN", text: "Solicitá eliminación de tus datos" },
 ];
 
@@ -159,22 +112,42 @@ const seguridadContent = [
   "No compartimos datos con terceros para marketing no relacionado",
 ];
 
-const colorVariants = {
-  alma: {
-    bg: "bg-alma-primary",
-    light: "bg-alma-lightest",
-    text: "text-alma-primary",
+// Índice de secciones (cada una es un panel desplegable)
+const sections = [
+  { id: "generalidades", number: "1", title: "Generalidades", icon: FileText },
+  {
+    id: "propiedad-intelectual",
+    number: "2",
+    title: "Propiedad Intelectual",
+    icon: Lock,
   },
-  brand: {
-    bg: "bg-brand-primary",
-    light: "bg-bg-cream",
-    text: "text-brand-primary",
+  {
+    id: "compra-pagos",
+    number: "3",
+    title: "Proceso de Compra y Pagos",
+    icon: CreditCard,
   },
-};
+  { id: "envios", number: "4", title: "Política de Envíos", icon: Truck },
+  {
+    id: "arrepentimiento",
+    number: "5",
+    title: "Derecho de Arrepentimiento",
+    icon: AlertTriangle,
+  },
+  {
+    id: "exencion",
+    number: "6",
+    title: "Exención de Responsabilidad",
+    icon: Shield,
+  },
+  { id: "privacidad", number: "7", title: "Política de Privacidad", icon: Lock },
+  { id: "derechos-arco", number: "8", title: "Derechos ARCO", icon: Eye },
+  { id: "seguridad", number: "9", title: "Seguridad", icon: Scale },
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants = {
@@ -190,90 +163,122 @@ function InfoBox({
   type?: "info" | "warning" | "success";
 }) {
   const styles = {
-    info: "bg-blue-50 border-blue-200 text-blue-800",
-    warning: "bg-amber-50 border-amber-200 text-amber-800",
-    success: "bg-green-50 border-green-200 text-green-800",
+    info: "bg-faq-ocean/10 border-faq-ocean/25 text-faq-ink",
+    warning: "bg-amber-500/10 border-amber-500/40 text-amber-800",
+    success: "bg-faq-bright/10 border-faq-bright/30 text-faq-ink",
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${styles[type]}`}>{children}</div>
+    <div className={`rounded-lg border p-4 ${styles[type]}`}>{children}</div>
   );
 }
 
-function SectionCard({
+function LabeledItem({ label, text }: { label: string; text: string }) {
+  return (
+    <div className="flex gap-4">
+      <div className="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-faq-ocean" />
+      <div>
+        <h4 className="font-heading font-semibold text-faq-ocean">{label}</h4>
+        <p className="font-body text-faq-ink/90">{text}</p>
+      </div>
+    </div>
+  );
+}
+
+function CollapsibleSection({
   id,
+  number,
   title,
   icon: Icon,
+  isOpen,
+  onToggle,
   children,
-  number,
 }: {
   id: string;
+  number: string;
   title: string;
   icon: React.ElementType;
+  isOpen: boolean;
+  onToggle: () => void;
   children: React.ReactNode;
-  number: string;
 }) {
   return (
-    <motion.section id={id} style={{ scrollMarginTop: "100px" }}>
-      <Card variant="brand" className="overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-brand-primary to-brand-secondary" />
-        <CardHeader>
+    <motion.section
+      id={id}
+      variants={itemVariants}
+      style={{ scrollMarginTop: "100px" }}
+    >
+      <div className="overflow-hidden rounded-2xl border border-faq-ink/10 bg-faq-surface shadow-soft">
+        <button
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          className="w-full p-5 text-left transition-colors duration-300 hover:bg-faq-surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-faq-ocean/50 md:p-6"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center">
-              <Icon className="w-6 h-6 text-brand-primary" />
-            </div>
-            <div>
-              <Badge
-                variant="outline"
-                className="mb-2 text-brand-primary border-brand-primary/30"
-              >
+            <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-faq-ocean/10 text-faq-ocean">
+              <Icon className="h-6 w-6" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <span className="mb-1 inline-block rounded-full border border-faq-ocean/30 px-2 py-0.5 font-caption text-xs font-medium text-faq-ocean">
                 Sección {number}
-              </Badge>
-              <CardTitle className="font-velista text-xl md:text-2xl font-bold">
+              </span>
+              <h3 className="font-velista text-lg font-bold text-faq-ink md:text-xl">
                 {title}
-              </CardTitle>
+              </h3>
             </div>
+            <motion.div
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex-shrink-0"
+            >
+              <ChevronDown className="h-5 w-5 text-faq-ocean" />
+            </motion.div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">{children}</CardContent>
-      </Card>
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-4 border-t border-faq-ink/10 p-5 md:p-6">
+                {children}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.section>
   );
 }
 
 export default function TerminosPage() {
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  const toggle = (id: string) => {
+    setOpenItems((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+  };
+
+  const isOpen = (id: string) => openItems.includes(id);
+
   return (
-    <div className="min-h-screen">
-      {/* Breadcrumb */}
-      <div className="py-4 px-6 bg-bg-cream border-b border-brand-primary/10">
-        <div className="container mx-auto max-w-6xl">
-          <nav className="flex items-center gap-2 text-sm font-caption text-[#791010]/70">
-            <Link
-              href="/"
-              className="hover:text-brand-primary transition-colors"
-            >
-              Inicio
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link
-              href="/ayuda"
-              className="hover:text-brand-primary transition-colors"
-            >
-              Ayuda
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-brand-primary font-medium">
-              Términos y Condiciones
-            </span>
-          </nav>
-        </div>
-      </div>
+    <div className="min-h-screen bg-faq-gradient">
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-primary py-24 px-6 md:py-32">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-1/4 w-40 h-40 border border-white/30 rounded-full" />
-          <div className="absolute bottom-10 right-20 w-24 h-24 border border-white/20 rounded-full" />
+      <section className="relative overflow-hidden px-6 py-24 md:py-32">
+        <div className="pointer-events-none absolute inset-0 opacity-40">
+          <div className="absolute -top-20 left-1/4 h-72 w-72 rounded-full bg-[#0085B1]/20 blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-[#2A2543]/40 blur-3xl" />
+        </div>
+        <div className="pointer-events-none absolute inset-0 opacity-10">
+          <div className="absolute left-1/4 top-20 h-40 w-40 rounded-full border border-white/30" />
+          <div className="absolute bottom-10 right-20 h-24 w-24 rounded-full border border-white/20" />
         </div>
 
         <div className="container relative mx-auto max-w-4xl text-center">
@@ -282,391 +287,263 @@ export default function TerminosPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-6 bg-highlight/20 text-highlight border-highlight/30 backdrop-blur-sm">
-              <Shield className="w-4 h-4 mr-2" />
-              Legales
-            </Badge>
 
-            <h1 className="font-velista text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-text-inverse tracking-wide">
+            <h1 className="mb-6 font-velista text-4xl font-bold tracking-wide text-text-inverse md:text-6xl lg:text-7xl">
               Términos y Condiciones
             </h1>
 
-            <p className="font-subtitle text-xl md:text-2xl text-text-inverse/90 mb-8 italic max-w-3xl mx-auto">
+            <p className="mx-auto mb-8 max-w-3xl font-subtitle text-xl italic text-white/90 md:text-2xl">
               Condiciones generales de uso y compra en nuestro sitio web
             </p>
 
             <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-px bg-highlight/50" />
-              <div className="w-2 h-2 bg-highlight rounded-full" />
-              <div className="w-12 h-px bg-highlight/50" />
+              <div className="h-px w-12 bg-faq-light/50" />
+              <div className="h-2 w-2 rounded-full bg-faq-light" />
+              <div className="h-px w-12 bg-faq-light/50" />
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Main Content with Sidebar */}
-      <section className="py-16 px-6">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-12 gap-12">
-            {/* Table of Contents - Sticky Sidebar */}
-            <motion.aside
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-3"
+      {/* Secciones desplegables */}
+      <section className="px-6 pb-12">
+        <div className="container mx-auto max-w-4xl">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 text-center font-body text-sm text-white/70"
+          >
+            Tocá cada sección para desplegar su contenido.
+          </motion.p>
+
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="space-y-4"
+          >
+            {/* 1. Generalidades */}
+            <CollapsibleSection
+              {...sections[0]}
+              isOpen={isOpen("generalidades")}
+              onToggle={() => toggle("generalidades")}
             >
-              <div className="lg:sticky lg:top-24">
-                <Card variant="brand" className="p-6">
-                  <CardHeader className="p-0 mb-4">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-brand-primary" />
-                      <CardTitle className="font-velista text-lg font-bold">
-                        Índice
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <nav className="space-y-2">
-                      {tableOfContents.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <a
-                            key={item.id}
-                            href={`#${item.id}`}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-bg-cream transition-colors group"
-                          >
-                            <IconComponent className="w-4 h-4 text-brand-primary/60 group-hover:text-brand-primary transition-colors" />
-                            <span className="text-sm text-[#791010]/70 group-hover:text-brand-primary transition-colors font-body">
-                              {item.title}
-                            </span>
-                          </a>
-                        );
-                      })}
-                    </nav>
-                  </CardContent>
-                </Card>
+              {generalidadesContent.map((text, index) => (
+                <p key={index} className="font-body text-faq-ink/90">
+                  {text}
+                </p>
+              ))}
+            </CollapsibleSection>
 
-                {/* Contact Card */}
-                <Card variant="brand-subtle" className="p-6 mt-6">
-                  <CardHeader className="p-0 mb-4">
-                    <CardTitle className="font-velista text-lg font-bold text-brand-primary">
-                      ¿Tenés dudas?
-                    </CardTitle>
-                    <CardDescription className="font-body text-sm text-[#791010]/70">
-                      Contactanos y te ayudamos
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <Button
-                      variant="brand"
-                      size="sm"
-                      className="w-full"
-                      asChild
-                    >
-                      <Link href="mailto:daluzalkimya@gmail.com">
-                        <Mail className="w-4 h-4 mr-2" />
-                        Escribir email
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.aside>
-
-            {/* Main Content */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="show"
-              className="lg:col-span-9 space-y-8"
+            {/* 2. Propiedad Intelectual */}
+            <CollapsibleSection
+              {...sections[1]}
+              isOpen={isOpen("propiedad-intelectual")}
+              onToggle={() => toggle("propiedad-intelectual")}
             >
-              {/* 1. Generalidades */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="generalidades"
-                  title="Generalidades"
-                  icon={FileText}
-                  number="1"
-                >
-                  <div className="space-y-4">
-                    {generalidadesContent.map((text, index) => (
-                      <p key={index} className="font-body text-[#791010]">
-                        {text}
-                      </p>
-                    ))}
-                  </div>
-                </SectionCard>
-              </motion.div>
-
-              {/* 2. Propiedad Intelectual */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="propiedad-intelectual"
-                  title="Propiedad Intelectual"
-                  icon={Lock}
-                  number="2"
-                >
-                  <div className="space-y-4">
-                    {propiedadIntelectualContent.map((item, index) => (
-                      <div key={index}>
-                        <h4 className="font-heading font-semibold text-brand-primary mb-2">
-                          {item.title}
-                        </h4>
-                        <p className="font-body text-[#791010]">{item.text}</p>
-                        {item.type === "warning" && (
-                          <InfoBox type="warning">
-                            <p className="font-body text-sm">
-                              <strong>Importante:</strong> {item.text}
-                            </p>
-                          </InfoBox>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </SectionCard>
-              </motion.div>
-
-              {/* 3. Proceso de Compra y Pagos */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="compra-pagos"
-                  title="Proceso de Compra y Pagos"
-                  icon={CreditCard}
-                  number="3"
-                >
-                  <div className="space-y-4">
-                    {compraPagosContent.map((item, index) => (
-                      <div key={index} className="flex gap-4">
-                        <div className="w-2 h-2 rounded-full bg-brand-primary mt-2 flex-shrink-0" />
-                        <div>
-                          <h4 className="font-heading font-semibold text-brand-primary">
-                            {item.label}
-                          </h4>
-                          <p className="font-body text-[#791010]">
-                            {item.text}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </SectionCard>
-              </motion.div>
-
-              {/* 4. Política de Envíos */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="envios"
-                  title="Política de Envíos y Entregas"
-                  icon={Truck}
-                  number="4"
-                >
-                  <div className="space-y-4">
-                    {enviosContent.map((item, index) => (
-                      <div key={index} className="flex gap-4">
-                        <div className="w-2 h-2 rounded-full bg-brand-primary mt-2 flex-shrink-0" />
-                        <div>
-                          <h4 className="font-heading font-semibold text-brand-primary">
-                            {item.label}
-                          </h4>
-                          <p className="font-body text-[#791010]">
-                            {item.text}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-6">
-                    <Button variant="brand-outline" size="sm" asChild>
-                      <Link href="/politicas/envio">
-                        Ver políticas de envío completas
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Link>
-                    </Button>
-                  </div>
-                </SectionCard>
-              </motion.div>
-
-              {/* 5. Derecho de Arrepentimiento */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="arrepentimiento"
-                  title="Derecho de Arrepentimiento"
-                  icon={AlertTriangle}
-                  number="5"
-                >
-                  <p className="font-body text-[#791010]">
-                    Según la <strong>Ley 24.240</strong> de Defensa del
-                    Consumidor, el cliente tiene{" "}
-                    <strong>10 días corridos</strong> para revocar su compra
-                    online.
-                  </p>
-                  <InfoBox type="info">
-                    <h4 className="font-heading font-semibold mb-2">
-                      Condiciones aplicables:
-                    </h4>
-                    <ul className="list-disc pl-5 space-y-1 font-body text-sm">
-                      <li>
-                        Aplicable a productos físicos no abiertos/en su estado
-                        original
-                      </li>
-                      <li>
-                        El producto debe estar en perfecto estado, sin uso
-                      </li>
-                      <li>Debe presentarse el comprobante de compra</li>
-                      <li>
-                        Los costos de devolución corren por cuenta del comprador
-                      </li>
-                    </ul>
-                  </InfoBox>
-                  <InfoBox type="warning">
-                    <p className="font-body text-sm">
-                      <strong>Importante:</strong> En productos digitales
-                      descargables (Ebooks), el acceso es inmediato y{" "}
-                      <strong>no admite devolución</strong> una vez enviado el
-                      enlace de descarga.
-                    </p>
-                  </InfoBox>
-                  <p className="font-body text-[#791010]">
-                    Para ejercer este derecho, contactanos a:{" "}
-                    <strong>daluzalkimya@gmail.com</strong>
-                  </p>
-                </SectionCard>
-              </motion.div>
-
-              {/* 6. Exención de Responsabilidad */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="exencion"
-                  title="Exención de Responsabilidad"
-                  icon={Shield}
-                  number="6"
-                >
-                  <div className="space-y-4">
-                    {exencionContent.map((text, index) => (
-                      <p key={index} className="font-body text-[#791010]">
-                        {text}
-                      </p>
-                    ))}
-                  </div>
-                  <InfoBox type="success">
-                    <div className="flex items-start gap-3">
-                      <Heart className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              {propiedadIntelectualContent.map((item, index) => (
+                <div key={index}>
+                  <h4 className="mb-2 font-heading font-semibold text-faq-ocean">
+                    {item.title}
+                  </h4>
+                  {item.type === "warning" ? (
+                    <InfoBox type="warning">
                       <p className="font-body text-sm">
-                        Los productos cosméticos son de venta libre y cumplen
-                        con las normativas vigentes de ANMAT. No testamos en
-                        animales (Cruelty Free).
+                        <strong>Importante:</strong> {item.text}
                       </p>
-                    </div>
-                  </InfoBox>
-                </SectionCard>
-              </motion.div>
+                    </InfoBox>
+                  ) : (
+                    <p className="font-body text-faq-ink/90">{item.text}</p>
+                  )}
+                </div>
+              ))}
+            </CollapsibleSection>
 
-              {/* Divider */}
-              <div className="flex items-center gap-4 py-8">
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
-                <Badge className="bg-brand-primary/10 text-brand-primary border-brand-primary/20">
-                  <Lock className="w-4 h-4 mr-2" />
-                  Política de Privacidad
-                </Badge>
-                <div className="flex-1 h-px bg-gradient-to-r from-transparent via-brand-primary/30 to-transparent" />
+            {/* 3. Proceso de Compra y Pagos */}
+            <CollapsibleSection
+              {...sections[2]}
+              isOpen={isOpen("compra-pagos")}
+              onToggle={() => toggle("compra-pagos")}
+            >
+              {compraPagosContent.map((item, index) => (
+                <LabeledItem key={index} label={item.label} text={item.text} />
+              ))}
+            </CollapsibleSection>
+
+            {/* 4. Política de Envíos */}
+            <CollapsibleSection
+              {...sections[3]}
+              isOpen={isOpen("envios")}
+              onToggle={() => toggle("envios")}
+            >
+              {enviosContent.map((item, index) => (
+                <LabeledItem key={index} label={item.label} text={item.text} />
+              ))}
+              <div className="pt-2">
+                <Link href="/politicas/envio" className={btnOutline}>
+                  Ver políticas de envío completas
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </div>
+            </CollapsibleSection>
 
-              {/* 7. Política de Privacidad */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="privacidad"
-                  title="Política de Privacidad"
-                  icon={Lock}
-                  number="7"
-                >
-                  <p className="font-body text-[#791010]">
-                    En cumplimiento con la <strong>Ley 25.326</strong> de
-                    Protección de Datos Personales, recolectamos datos
-                    únicamente para los siguientes fines:
-                  </p>
-                  <div className="space-y-4">
-                    {privacidadContent.map((item, index) => (
-                      <div key={index} className="flex gap-4">
-                        <div className="w-2 h-2 rounded-full bg-brand-primary mt-2 flex-shrink-0" />
-                        <div>
-                          <h4 className="font-heading font-semibold text-brand-primary">
-                            {item.label}
-                          </h4>
-                          <p className="font-body text-[#791010]">
-                            {item.text}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </SectionCard>
-              </motion.div>
+            {/* 5. Derecho de Arrepentimiento */}
+            <CollapsibleSection
+              {...sections[4]}
+              isOpen={isOpen("arrepentimiento")}
+              onToggle={() => toggle("arrepentimiento")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Según la <strong>Ley 24.240</strong> de Defensa del Consumidor,
+                el cliente tiene <strong>10 días corridos</strong> para revocar
+                su compra online.
+              </p>
+              <InfoBox type="info">
+                <h4 className="mb-2 font-heading font-semibold">
+                  Condiciones aplicables:
+                </h4>
+                <ul className="list-disc space-y-1 pl-5 font-body text-sm">
+                  <li>
+                    Aplicable a productos físicos no abiertos/en su estado
+                    original
+                  </li>
+                  <li>El producto debe estar en perfecto estado, sin uso</li>
+                  <li>Debe presentarse el comprobante de compra</li>
+                  <li>
+                    Los costos de devolución corren por cuenta del comprador
+                  </li>
+                </ul>
+              </InfoBox>
+              <InfoBox type="warning">
+                <p className="font-body text-sm">
+                  <strong>Importante:</strong> En productos digitales
+                  descargables (Ebooks), el acceso es inmediato y{" "}
+                  <strong>no admite devolución</strong> una vez enviado el
+                  enlace de descarga.
+                </p>
+              </InfoBox>
+              <p className="font-body text-faq-ink/90">
+                Para ejercer este derecho, contactanos a:{" "}
+                <strong>daluzalkimya@gmail.com</strong>
+              </p>
+            </CollapsibleSection>
 
-              {/* 8. Derechos ARCO */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="derechos-arco"
-                  title="Derechos ARCO"
-                  icon={Eye}
-                  number="8"
-                >
-                  <p className="font-body text-[#791010] mb-6">
-                    Podés solicitar en cualquier momento el{" "}
-                    <strong>Acceso</strong>, <strong>Rectificación</strong> o{" "}
-                    <strong>Eliminación</strong> de tus datos personales.
+            {/* 6. Exención de Responsabilidad */}
+            <CollapsibleSection
+              {...sections[5]}
+              isOpen={isOpen("exencion")}
+              onToggle={() => toggle("exencion")}
+            >
+              {exencionContent.map((text, index) => (
+                <p key={index} className="font-body text-faq-ink/90">
+                  {text}
+                </p>
+              ))}
+              <InfoBox type="success">
+                <div className="flex items-start gap-3">
+                  <Heart className="mt-0.5 h-5 w-5 flex-shrink-0 text-faq-ocean" />
+                  <p className="font-body text-sm">
+                    Los productos cosméticos son de venta libre y cumplen con
+                    las normativas vigentes de ANMAT. No testamos en animales
+                    (Cruelty Free).
                   </p>
-                  <div className="grid md:grid-cols-3 gap-4">
-                    {derechosArcoContent.map((item, index) => (
-                      <Card
-                        key={index}
-                        variant="brand-subtle"
-                        className="text-center p-4"
-                      >
-                        <CardTitle className="font-velista text-lg font-bold text-brand-primary mb-2">
-                          {item.label}
-                        </CardTitle>
-                        <p className="font-body text-sm text-[#791010]/70">
-                          {item.text}
-                        </p>
-                      </Card>
-                    ))}
-                  </div>
-                  <div className="mt-6">
-                    <p className="font-body text-[#791010]">
-                      Para ejercer estos derechos, envía un email a:{" "}
-                      <strong>daluzalkimya@gmail.com</strong>
+                </div>
+              </InfoBox>
+            </CollapsibleSection>
+
+            {/* 7. Política de Privacidad */}
+            <CollapsibleSection
+              {...sections[6]}
+              isOpen={isOpen("privacidad")}
+              onToggle={() => toggle("privacidad")}
+            >
+              <p className="font-body text-faq-ink/90">
+                En cumplimiento con la <strong>Ley 25.326</strong> de Protección
+                de Datos Personales, recolectamos datos únicamente para los
+                siguientes fines:
+              </p>
+              {privacidadContent.map((item, index) => (
+                <LabeledItem key={index} label={item.label} text={item.text} />
+              ))}
+            </CollapsibleSection>
+
+            {/* 8. Derechos ARCO */}
+            <CollapsibleSection
+              {...sections[7]}
+              isOpen={isOpen("derechos-arco")}
+              onToggle={() => toggle("derechos-arco")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Podés solicitar en cualquier momento el <strong>Acceso</strong>,{" "}
+                <strong>Rectificación</strong> o <strong>Eliminación</strong> de
+                tus datos personales.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                {derechosArcoContent.map((item, index) => (
+                  <div
+                    key={index}
+                    className="rounded-xl border border-faq-ink/10 bg-white/70 p-4 text-center"
+                  >
+                    <h4 className="mb-2 font-velista text-lg font-bold text-faq-ocean">
+                      {item.label}
+                    </h4>
+                    <p className="font-body text-sm text-faq-ink/70">
+                      {item.text}
                     </p>
                   </div>
-                </SectionCard>
-              </motion.div>
+                ))}
+              </div>
+              <p className="font-body text-faq-ink/90">
+                Para ejercer estos derechos, enviá un email a:{" "}
+                <strong>daluzalkimya@gmail.com</strong>
+              </p>
+            </CollapsibleSection>
 
-              {/* 9. Seguridad */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="seguridad"
-                  title="Seguridad"
-                  icon={Scale}
-                  number="9"
-                >
-                  <ul className="space-y-3">
-                    {seguridadContent.map((text, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <Shield className="w-5 h-5 text-brand-primary flex-shrink-0 mt-0.5" />
-                        <span className="font-body text-[#791010]">{text}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </SectionCard>
-              </motion.div>
-            </motion.div>
-          </div>
+            {/* 9. Seguridad */}
+            <CollapsibleSection
+              {...sections[8]}
+              isOpen={isOpen("seguridad")}
+              onToggle={() => toggle("seguridad")}
+            >
+              <ul className="space-y-3">
+                {seguridadContent.map((text, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <Shield className="mt-0.5 h-5 w-5 flex-shrink-0 text-faq-ocean" />
+                    <span className="font-body text-faq-ink/90">{text}</span>
+                  </li>
+                ))}
+              </ul>
+            </CollapsibleSection>
+          </motion.div>
+
+          {/* Contact CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mt-8 rounded-2xl bg-faq-surface p-8 text-center shadow-soft"
+          >
+            <h3 className="mb-1 font-velista text-xl font-bold text-faq-ink">
+              ¿Tenés dudas?
+            </h3>
+            <p className="mb-5 font-body text-faq-ink/70">
+              Contactanos y te ayudamos con cualquier consulta legal o de tu
+              compra.
+            </p>
+            <Link href="mailto:daluzalkimya@gmail.com" className={btnSolid}>
+              <Mail className="h-4 w-4" />
+              Escribir email
+            </Link>
+          </motion.div>
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="py-12 px-6 bg-bg-cream border-t border-brand-primary/10">
+      {/* Footer legal */}
+      <section className="border-t border-white/10 px-6 py-12">
         <div className="container mx-auto max-w-4xl text-center">
-          <p className="font-body text-[#791010]/70 text-sm">
+          <p className="font-body text-sm text-white/70">
             Fecha de última actualización:{" "}
             {new Date().toLocaleDateString("es-AR", {
               year: "numeric",
@@ -674,7 +551,7 @@ export default function TerminosPage() {
               day: "numeric",
             })}
           </p>
-          <p className="font-body text-[#791010]/50 text-xs mt-2">
+          <p className="mt-2 font-body text-xs text-white/50">
             © {new Date().getFullYear()} DA LUZ CONSCIENTE. Todos los derechos
             reservados.
           </p>

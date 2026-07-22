@@ -34,7 +34,8 @@ const FAQ_BORDER = "#0085B1";
 const isFaqPage = (pathname: string) =>
   pathname === "/faq" ||
   pathname === "/ayuda" ||
-  pathname === "/politicas/envio";
+  pathname === "/politicas/envio" ||
+  pathname === "/politicas/terminos";
 import {
   Mail,
   Phone,

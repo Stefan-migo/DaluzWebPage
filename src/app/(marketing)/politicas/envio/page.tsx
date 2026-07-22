@@ -180,22 +180,6 @@ export default function PoliticasEnvioPage() {
 
   return (
     <div className="min-h-screen bg-faq-gradient">
-      {/* Breadcrumb */}
-      <div className="border-b border-white/10 bg-white/5 px-6 py-4 backdrop-blur-sm">
-        <div className="container mx-auto max-w-6xl">
-          <nav className="flex items-center gap-2 font-caption text-sm text-white/70">
-            <Link href="/" className="transition-colors hover:text-white">
-              Inicio
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <Link href="/ayuda" className="transition-colors hover:text-white">
-              Ayuda
-            </Link>
-            <ChevronRight className="h-4 w-4" />
-            <span className="font-medium text-white">Políticas de Envío</span>
-          </nav>
-        </div>
-      </div>
 
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 py-24 md:py-32">
@@ -214,10 +198,6 @@ export default function PoliticasEnvioPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-faq-light/30 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
-              <Truck className="h-4 w-4" />
-              Información de Envíos
-            </span>
 
             <h1 className="mb-6 font-velista text-4xl font-bold tracking-wide text-text-inverse md:text-6xl lg:text-7xl">
               Políticas de Envío
@@ -235,29 +215,6 @@ export default function PoliticasEnvioPage() {
           </motion.div>
         </div>
       </section>
-
-      {/* Free Shipping Banner */}
-      <section className="border-y border-white/10 bg-white/5 px-6 py-8 backdrop-blur-sm">
-        <div className="container mx-auto max-w-4xl text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col items-center justify-center gap-4 md:flex-row"
-          >
-            <div className="flex items-center gap-3">
-              <Truck className="h-8 w-8 text-faq-light" />
-              <span className="font-heading text-lg font-bold text-white">
-                ¡Envío GRATIS en compras mayores a $15.000!
-              </span>
-            </div>
-            <span className="inline-flex items-center rounded-full bg-faq-bright px-3 py-1 text-sm font-semibold text-white">
-              Envío gratuito
-            </span>
-          </motion.div>
-        </div>
-      </section>
-
       {/* Shipping Zones */}
       <section className="relative overflow-hidden px-6 py-20">
         <div className="container mx-auto max-w-6xl">
@@ -267,10 +224,6 @@ export default function PoliticasEnvioPage() {
             transition={{ duration: 0.6 }}
             className="mb-16 text-center"
           >
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
-              <MapPin className="h-4 w-4" />
-              Cobertura y Tiempos
-            </span>
             <h2 className="mb-4 font-velista text-3xl font-bold text-text-inverse md:text-4xl">
               Zonas de Envío
             </h2>
@@ -336,10 +289,6 @@ export default function PoliticasEnvioPage() {
             transition={{ duration: 0.6 }}
             className="mb-12 text-center"
           >
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
-              <Shield className="h-4 w-4" />
-              Preguntas Frecuentes
-            </span>
             <h2 className="mb-4 font-velista text-3xl font-bold text-text-inverse md:text-4xl">
               Consultas sobre Envíos
             </h2>
