@@ -94,9 +94,9 @@ const contactMethods: Array<{
       title: "Soporte por Email",
       description: "Te respondemos en menos de 24 horas",
       icon: Mail,
-      href: "mailto:info@daluzconsciente.com",
+      href: "mailto:daluzalkimya@gmail.com",
       color: "alma",
-      data: "info@daluzconsciente.com",
+      data: "daluzalkimya@gmail.com",
       cta: "Enviar Email",
     },
     {
@@ -155,7 +155,7 @@ export default function AyudaPage() {
             <span className={styles.heroEyebrowIcon} aria-hidden="true">
               <Sparkles />
             </span>
-            <span>Estamos aquí para ayudarte</span>
+            <span>Estamos acá para ayudarte</span>
           </motion.div>
 
           <motion.h1 variants={heroItemVariants} className={styles.heroTitle}>
@@ -163,8 +163,8 @@ export default function AyudaPage() {
           </motion.h1>
 
           <motion.p variants={heroItemVariants} className={styles.heroSubtitle}>
-            Encuentra respuestas, guías y soporte completo para tu experiencia
-            con DA LUZ CONSCIENTE
+            Encontrá respuestas, guías y soporte completo para tu experiencia
+            con DA LUZ
           </motion.p>
 
           <motion.div

@@ -1,15 +1,6 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
   Truck,
   Clock,
   MapPin,
@@ -17,16 +8,36 @@ import {
   Shield,
   Phone,
   Mail,
-  CheckCircle,
   ChevronRight,
+  ChevronDown,
   ArrowRight,
-  PackageCheck,
   MapPinned,
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Metadata is handled by the parent layout or through generateMetadata in server components
+// Estilo de botón azul (aplicado directo al Link; el componente Button con
+// asChild no propaga clases sobre un Fragment de icono + texto).
+const btnSolid =
+  "inline-flex items-center justify-center gap-2 h-11 rounded-md px-6 text-sm font-title uppercase tracking-wider text-white bg-faq-bright shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-faq-light";
+const btnOutline =
+  "inline-flex items-center justify-center gap-2 h-11 rounded-md px-6 text-sm font-title uppercase tracking-wider text-white border-2 border-white/40 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10";
+
+// Acentos monocromáticos azules para las zonas (sobre tarjeta clara)
+const zoneColor: Record<
+  string,
+  { bar: string; chip: string; text: string }
+> = {
+  jade: { bar: "bg-faq-mid", chip: "bg-faq-mid/10", text: "text-faq-mid" },
+  ecos: { bar: "bg-faq-ocean", chip: "bg-faq-ocean/10", text: "text-faq-ocean" },
+  umbral: { bar: "bg-faq-deep", chip: "bg-faq-deep/10", text: "text-faq-deep" },
+  alma: {
+    bar: "bg-faq-bright",
+    chip: "bg-faq-bright/10",
+    text: "text-faq-bright",
+  },
+};
 
 const shippingZones = [
   {
@@ -63,35 +74,6 @@ const shippingZones = [
   },
 ];
 
-const shippingProcess = [
-  {
-    step: 1,
-    title: "Realizás tu pedido",
-    description: "Elegí tus Alquimias y completá el checkout",
-    icon: Package,
-  },
-  {
-    step: 2,
-    title: "Coordinamos el pago",
-    description:
-      "Te enviamos los datos para realizar la transferencia o pagás con Mercado Pago",
-    icon: CheckCircle,
-  },
-  {
-    step: 3,
-    title: "Preparamos tu pedido",
-    description:
-      "Tu pedido es preparado con cuidado y amor en nuestras instalaciones",
-    icon: PackageCheck,
-  },
-  {
-    step: 4,
-    title: "Despachamos tu envío",
-    description: "Te enviamos el número de seguimiento una vez despachado",
-    icon: Truck,
-  },
-];
-
 const faqShipping = [
   {
     question: "¿Cuál es el costo de envío?",
@@ -115,34 +97,6 @@ const faqShipping = [
   },
 ];
 
-const colorVariants = {
-  jade: {
-    bg: "bg-jade-primary",
-    light: "bg-jade-lightest",
-    text: "text-jade-primary",
-  },
-  ecos: {
-    bg: "bg-ecos-primary",
-    light: "bg-ecos-lightest",
-    text: "text-ecos-primary",
-  },
-  umbral: {
-    bg: "bg-umbral-primary",
-    light: "bg-umbral-lightest",
-    text: "text-umbral-primary",
-  },
-  alma: {
-    bg: "bg-alma-primary",
-    light: "bg-alma-lightest",
-    text: "text-alma-primary",
-  },
-  brand: {
-    bg: "bg-brand-primary",
-    light: "bg-bg-cream",
-    text: "text-brand-primary",
-  },
-};
-
 const containerVariants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.1 } },
@@ -153,40 +107,105 @@ const itemVariants = {
   show: { opacity: 1, y: 0 },
 };
 
-export default function PoliticasEnvioPage() {
+function CollapsibleShippingFAQ({
+  index,
+  question,
+  answer,
+  isOpen,
+  onToggle,
+}: {
+  index: number;
+  question: string;
+  answer: string;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
   return (
-    <div className="min-h-screen">
-      {/* Breadcrumb */}
-      <div className="py-4 px-6 bg-bg-cream border-b border-brand-primary/10">
-        <div className="container mx-auto max-w-6xl">
-          <nav className="flex items-center gap-2 text-sm font-caption text-[#791010]/70">
-            <Link
-              href="/"
-              className="hover:text-brand-primary transition-colors"
+    <motion.div variants={itemVariants}>
+      <div className="overflow-hidden rounded-none border-l-4 border-l-faq-ocean bg-faq-surface shadow-soft">
+        <button
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          className="w-full p-6 text-left transition-colors duration-300 hover:bg-faq-surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-faq-ocean/50"
+        >
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-faq-ocean text-sm font-bold text-white">
+                {index + 1}
+              </span>
+              <h3 className="font-heading text-lg font-semibold text-faq-ink">
+                {question}
+              </h3>
+            </div>
+            <motion.div
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex-shrink-0"
             >
+              <ChevronDown className="h-5 w-5 text-faq-ocean" />
+            </motion.div>
+          </div>
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <p className="px-6 pb-6 pl-[3.75rem] font-body text-faq-ink/90">
+                {answer}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.div>
+  );
+}
+
+export default function PoliticasEnvioPage() {
+  const [openItems, setOpenItems] = useState<number[]>([]);
+
+  const toggleItem = (index: number) => {
+    setOpenItems((prev) =>
+      prev.includes(index)
+        ? prev.filter((i) => i !== index)
+        : [...prev, index],
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-faq-gradient">
+      {/* Breadcrumb */}
+      <div className="border-b border-white/10 bg-white/5 px-6 py-4 backdrop-blur-sm">
+        <div className="container mx-auto max-w-6xl">
+          <nav className="flex items-center gap-2 font-caption text-sm text-white/70">
+            <Link href="/" className="transition-colors hover:text-white">
               Inicio
             </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link
-              href="/ayuda"
-              className="hover:text-brand-primary transition-colors"
-            >
+            <ChevronRight className="h-4 w-4" />
+            <Link href="/ayuda" className="transition-colors hover:text-white">
               Ayuda
             </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-brand-primary font-medium">
-              Políticas de Envío
-            </span>
+            <ChevronRight className="h-4 w-4" />
+            <span className="font-medium text-white">Políticas de Envío</span>
           </nav>
         </div>
       </div>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-primary py-24 px-6 md:py-32">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-1/4 w-40 h-40 border border-white/30 rounded-full" />
-          <div className="absolute bottom-10 right-20 w-24 h-24 border border-white/20 rounded-full" />
-          <div className="absolute top-1/2 right-1/3 w-32 h-32 bg-highlight/20 rounded-full blur-2xl" />
+      <section className="relative overflow-hidden px-6 py-24 md:py-32">
+        <div className="pointer-events-none absolute inset-0 opacity-40">
+          <div className="absolute -top-20 left-1/4 h-72 w-72 rounded-full bg-[#0085B1]/20 blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-[#2A2543]/40 blur-3xl" />
+        </div>
+        <div className="pointer-events-none absolute inset-0 opacity-10">
+          <div className="absolute left-1/4 top-20 h-40 w-40 rounded-full border border-white/30" />
+          <div className="absolute bottom-10 right-20 h-24 w-24 rounded-full border border-white/20" />
         </div>
 
         <div className="container relative mx-auto max-w-4xl text-center">
@@ -195,67 +214,67 @@ export default function PoliticasEnvioPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-6 bg-highlight/20 text-highlight border-highlight/30 backdrop-blur-sm">
-              <Truck className="w-4 h-4 mr-2" />
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-faq-light/30 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
+              <Truck className="h-4 w-4" />
               Información de Envíos
-            </Badge>
+            </span>
 
-            <h1 className="font-velista text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-text-inverse tracking-wide">
+            <h1 className="mb-6 font-velista text-4xl font-bold tracking-wide text-text-inverse md:text-6xl lg:text-7xl">
               Políticas de Envío
             </h1>
 
-            <p className="font-subtitle text-xl md:text-2xl text-text-inverse/90 mb-8 italic max-w-3xl mx-auto">
-              Todo lo que necesitas saber sobre nuestros envíos y entregas
+            <p className="mx-auto mb-8 max-w-3xl font-subtitle text-xl italic text-white/90 md:text-2xl">
+              Todo lo que necesitás saber sobre nuestros envíos y entregas
             </p>
 
             <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-px bg-highlight/50" />
-              <div className="w-2 h-2 bg-highlight rounded-full" />
-              <div className="w-12 h-px bg-highlight/50" />
+              <div className="h-px w-12 bg-faq-light/50" />
+              <div className="h-2 w-2 rounded-full bg-faq-light" />
+              <div className="h-px w-12 bg-faq-light/50" />
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Free Shipping Banner */}
-      <section className="py-8 px-6 bg-highlight/10 border-b border-highlight/20">
+      <section className="border-y border-white/10 bg-white/5 px-6 py-8 backdrop-blur-sm">
         <div className="container mx-auto max-w-4xl text-center">
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-4"
+            className="flex flex-col items-center justify-center gap-4 md:flex-row"
           >
             <div className="flex items-center gap-3">
-              <Truck className="w-8 h-8 text-brand-primary" />
-              <span className="font-heading text-lg font-bold text-brand-primary">
+              <Truck className="h-8 w-8 text-faq-light" />
+              <span className="font-heading text-lg font-bold text-white">
                 ¡Envío GRATIS en compras mayores a $15.000!
               </span>
             </div>
-            <Badge className="bg-brand-primary text-white">
+            <span className="inline-flex items-center rounded-full bg-faq-bright px-3 py-1 text-sm font-semibold text-white">
               Envío gratuito
-            </Badge>
+            </span>
           </motion.div>
         </div>
       </section>
 
       {/* Shipping Zones */}
-      <section className="py-20 px-6">
+      <section className="relative overflow-hidden px-6 py-20">
         <div className="container mx-auto max-w-6xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-16"
+            className="mb-16 text-center"
           >
-            <Badge className="mb-4 bg-brand-primary/10 text-brand-primary border-brand-primary/20">
-              <MapPin className="w-4 h-4 mr-2" />
+            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
+              <MapPin className="h-4 w-4" />
               Cobertura y Tiempos
-            </Badge>
-            <h2 className="font-velista text-3xl md:text-4xl font-bold mb-4 text-brand-primary">
+            </span>
+            <h2 className="mb-4 font-velista text-3xl font-bold text-text-inverse md:text-4xl">
               Zonas de Envío
             </h2>
-            <p className="font-body text-lg text-[#791010]/70 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl font-body text-lg text-white/80">
               Llegamos a toda Argentina con diferentes opciones según tu
               ubicación
             </p>
@@ -265,47 +284,41 @@ export default function PoliticasEnvioPage() {
             variants={containerVariants}
             initial="hidden"
             animate="show"
-            className="grid md:grid-cols-2 lg:grid-cols-4 gap-6"
+            className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
           >
             {shippingZones.map((zone) => {
-              const colors =
-                colorVariants[zone.color as keyof typeof colorVariants];
+              const colors = zoneColor[zone.color];
               const IconComponent = zone.icon;
 
               return (
                 <motion.div key={zone.zone} variants={itemVariants}>
-                  <Card
-                    variant="brand"
-                    className="text-center h-full relative overflow-hidden"
-                  >
-                    <div className={`h-1 ${colors.bg}`} />
-                    <CardHeader className="pb-2">
+                  <div className="relative h-full overflow-hidden rounded-2xl bg-faq-surface text-center shadow-soft">
+                    <div className={`h-1 ${colors.bar}`} />
+                    <div className="p-6">
                       <div
-                        className={`w-14 h-14 mx-auto mb-4 rounded-full ${colors.light} flex items-center justify-center ${colors.text}`}
+                        className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full ${colors.chip} ${colors.text}`}
                       >
-                        <IconComponent className="w-7 h-7" />
+                        <IconComponent className="h-7 w-7" />
                       </div>
-                      <CardTitle className="font-velista text-lg font-bold">
+                      <h3 className="mb-1 font-velista text-lg font-bold text-faq-ink">
                         {zone.zone}
-                      </CardTitle>
-                      <CardDescription className="font-body text-sm text-[#791010]/70">
+                      </h3>
+                      <p className="mb-4 font-body text-sm text-faq-ink/70">
                         {zone.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0">
+                      </p>
                       <div className="space-y-2">
                         <div className="flex items-center justify-center gap-2">
-                          <Clock className="w-4 h-4 text-brand-primary" />
-                          <span className="font-body text-sm font-semibold text-brand-primary">
+                          <Clock className="h-4 w-4 text-faq-ocean" />
+                          <span className="font-body text-sm font-semibold text-faq-ocean">
                             {zone.time}
                           </span>
                         </div>
-                        <div className="font-body text-sm text-[#791010]">
+                        <div className="font-body text-sm text-faq-ink">
                           {zone.price}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </motion.div>
               );
             })}
@@ -313,98 +326,21 @@ export default function PoliticasEnvioPage() {
         </div>
       </section>
 
-      {/* Shipping Process Timeline */}
-      <section className="py-20 px-6 bg-bg-cream relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 right-1/4 w-64 h-64 bg-jade-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-1/4 w-48 h-48 bg-alma-primary/10 rounded-full blur-3xl" />
-        </div>
-
-        <div className="container relative mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-16"
-          >
-            <Badge className="mb-4 bg-brand-primary/10 text-brand-primary border-brand-primary/20">
-              <Package className="w-4 h-4 mr-2" />
-              Así funciona
-            </Badge>
-            <h2 className="font-velista text-3xl md:text-4xl font-bold mb-4 text-brand-primary">
-              Proceso de Envío
-            </h2>
-            <p className="font-body text-lg text-[#791010]/70 max-w-2xl mx-auto">
-              Desde que realizás tu pedido hasta que llega a tus manos
-            </p>
-          </motion.div>
-
-          <div className="relative">
-            {/* Timeline line */}
-            <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 bg-gradient-to-r from-alma-primary via-ecos-primary to-jade-primary -translate-y-1/2" />
-
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="grid md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {shippingProcess.map((step, index) => {
-                const colorKeys = ["alma", "ecos", "jade", "brand"] as const;
-                const colors = colorVariants[colorKeys[index]];
-                const IconComponent = step.icon;
-
-                return (
-                  <motion.div
-                    key={step.step}
-                    variants={itemVariants}
-                    className="relative"
-                  >
-                    <Card variant="brand" className="text-center h-full">
-                      <div
-                        className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full ${colors.bg} flex items-center justify-center text-white font-velista text-lg font-bold shadow-lg z-10`}
-                      >
-                        {step.step}
-                      </div>
-                      <CardHeader className="pt-10">
-                        <div
-                          className={`w-14 h-14 mx-auto mb-4 rounded-full ${colors.light} flex items-center justify-center ${colors.text}`}
-                        >
-                          <IconComponent className="w-7 h-7" />
-                        </div>
-                        <CardTitle className="font-velista text-lg font-bold">
-                          {step.title}
-                        </CardTitle>
-                        <CardDescription className="font-body text-sm text-[#791010]/70">
-                          {step.description}
-                        </CardDescription>
-                      </CardHeader>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 px-6">
+      {/* FAQ Section — Consultas sobre Envíos (desplegables) */}
+      <section className="px-6 py-20">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-center mb-12"
+            className="mb-12 text-center"
           >
-            <Badge className="mb-4 bg-brand-primary/10 text-brand-primary border-brand-primary/20">
-              <Shield className="w-4 h-4 mr-2" />
+            <span className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
+              <Shield className="h-4 w-4" />
               Preguntas Frecuentes
-            </Badge>
-            <h2 className="font-velista text-3xl md:text-4xl font-bold mb-4 text-brand-primary">
+            </span>
+            <h2 className="mb-4 font-velista text-3xl font-bold text-text-inverse md:text-4xl">
               Consultas sobre Envíos
             </h2>
           </motion.div>
@@ -417,31 +353,21 @@ export default function PoliticasEnvioPage() {
             className="space-y-4"
           >
             {faqShipping.map((item, index) => (
-              <motion.div key={index} variants={itemVariants}>
-                <Card
-                  variant="brand-subtle"
-                  className="border-l-4 border-l-brand-primary"
-                >
-                  <CardHeader>
-                    <CardTitle className="font-heading text-lg font-semibold text-brand-primary flex items-center gap-3">
-                      <span className="w-6 h-6 rounded-full bg-brand-primary text-white text-sm flex items-center justify-center font-bold">
-                        {index + 1}
-                      </span>
-                      {item.question}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-body text-[#791010]">{item.answer}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
+              <CollapsibleShippingFAQ
+                key={index}
+                index={index}
+                question={item.question}
+                answer={item.answer}
+                isOpen={openItems.includes(index)}
+                onToggle={() => toggleItem(index)}
+              />
             ))}
           </motion.div>
         </div>
       </section>
 
       {/* Important Info */}
-      <section className="py-12 px-6 bg-bg-cream">
+      <section className="px-6 py-12">
         <div className="container mx-auto max-w-4xl">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -449,40 +375,41 @@ export default function PoliticasEnvioPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Card variant="brand" className="p-8 text-center">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <Shield className="w-6 h-6 text-brand-primary" />
-                <h3 className="font-velista text-xl font-bold text-brand-primary">
+            <div className="rounded-2xl bg-faq-surface p-8 text-center shadow-soft">
+              <div className="mb-4 flex items-center justify-center gap-3">
+                <Shield className="h-6 w-6 text-faq-ocean" />
+                <h3 className="font-velista text-xl font-bold text-faq-ink">
                   Compromiso con tu Experiencia
                 </h3>
               </div>
-              <p className="font-body text-[#791010] max-w-2xl mx-auto mb-6">
+              <p className="mx-auto mb-6 max-w-2xl font-body text-faq-ink/90">
                 Todos tus pedidos son preparados con sumo cuidado y enviados en
                 packaging protector para asegurar que lleguen en perfectas
                 condiciones. Si tenés alguna consulta sobre tu envío, no dudes
                 en contactarnos.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
-                <Button variant="brand" asChild>
-                  <Link href="/faq">
-                    Ver FAQ
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Link>
-                </Button>
-                <Button variant="brand-outline" asChild>
-                  <Link href="/ayuda">Centro de Ayuda</Link>
-                </Button>
+                <Link href="/faq" className={btnSolid}>
+                  Ver FAQ
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link
+                  href="/ayuda"
+                  className="inline-flex items-center justify-center gap-2 h-11 rounded-md border-2 border-faq-ocean px-6 text-sm font-title uppercase tracking-wider text-faq-ocean transition-all duration-300 hover:-translate-y-0.5 hover:bg-faq-ocean hover:text-white"
+                >
+                  Centro de Ayuda
+                </Link>
               </div>
-            </Card>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="py-20 px-6 bg-gradient-to-br from-brand-primary to-brand-secondary relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 right-10 w-32 h-32 border border-white/30 rounded-full" />
-          <div className="absolute bottom-20 left-20 w-48 h-48 border border-white/20 rounded-full" />
+      <section className="relative overflow-hidden border-t border-white/10 px-6 py-20">
+        <div className="pointer-events-none absolute inset-0 opacity-30">
+          <div className="absolute right-1/4 top-0 h-64 w-64 rounded-full bg-[#0085B1]/20 blur-3xl" />
+          <div className="absolute bottom-0 left-1/4 h-48 w-48 rounded-full bg-[#2A2543]/40 blur-3xl" />
         </div>
 
         <div className="container relative mx-auto max-w-4xl text-center">
@@ -492,31 +419,27 @@ export default function PoliticasEnvioPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-6 bg-white/20 text-white border-white/30 backdrop-blur-sm">
-              <Phone className="w-4 h-4 mr-2" />
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-faq-light/30 bg-white/10 px-4 py-1.5 font-caption text-xs font-semibold uppercase tracking-wider text-faq-light backdrop-blur-sm">
+              <Phone className="h-4 w-4" />
               ¿Necesitás ayuda?
-            </Badge>
-            <h2 className="font-velista text-3xl md:text-4xl font-bold mb-4 text-text-inverse">
+            </span>
+            <h2 className="mb-4 font-velista text-3xl font-bold text-text-inverse md:text-4xl">
               Contactanos por cualquier consulta
             </h2>
-            <p className="font-body text-lg text-text-inverse/80 mb-8 max-w-2xl mx-auto">
+            <p className="mx-auto mb-8 max-w-2xl font-body text-lg text-white/80">
               Estamos disponibles para ayudarte con cualquier duda sobre tus
               envíos
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Button variant="elegant" size="lg" asChild>
-                <Link href="mailto:info@daluzconsciente.com">
-                  <Mail className="w-5 h-5 mr-2" />
-                  info@daluzconsciente.com
-                </Link>
-              </Button>
-              <Button variant="elegant-outline" size="lg" asChild>
-                <Link href="https://wa.me/5490000000000">
-                  <Phone className="w-5 h-5 mr-2" />
-                  WhatsApp
-                </Link>
-              </Button>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link href="mailto:daluzalkimya@gmail.com" className={btnSolid}>
+                <Mail className="h-5 w-5" />
+                daluzalkimya@gmail.com
+              </Link>
+              <Link href="https://wa.me/5493512344580" className={btnOutline}>
+                <Phone className="h-5 w-5" />
+                WhatsApp
+              </Link>
             </div>
           </motion.div>
         </div>

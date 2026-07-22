@@ -142,10 +142,12 @@ const AZUL_PROFUNDO = "#0f3460";
 const isRaicesPage = (pathname: string) =>
   pathname === "/raices" || pathname === "/filosofia-proposito";
 
-/* FAQ y Ayuda: coincide con el inicio del degradado azul de la página */
+/* FAQ, Ayuda y Envíos: coincide con el inicio del degradado azul de la página */
 const FAQ_BG = "#2A2543";
 const isFaqPage = (pathname: string) =>
-  pathname === "/faq" || pathname === "/ayuda";
+  pathname === "/faq" ||
+  pathname === "/ayuda" ||
+  pathname === "/politicas/envio";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
