@@ -36,7 +36,8 @@ const isFaqPage = (pathname: string) =>
   pathname === "/ayuda" ||
   pathname === "/politicas/envio" ||
   pathname === "/politicas/terminos" ||
-  pathname === "/politicas/privacidad";
+  pathname === "/politicas/privacidad" ||
+  pathname === "/politicas/arrepentimiento";
 import {
   Mail,
   Phone,

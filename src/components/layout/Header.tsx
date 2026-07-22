@@ -149,7 +149,8 @@ const isFaqPage = (pathname: string) =>
   pathname === "/ayuda" ||
   pathname === "/politicas/envio" ||
   pathname === "/politicas/terminos" ||
-  pathname === "/politicas/privacidad";
+  pathname === "/politicas/privacidad" ||
+  pathname === "/politicas/arrepentimiento";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
