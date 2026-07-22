@@ -52,7 +52,7 @@ const compraPagosContent = [
   },
   {
     label: "Métodos de Pago",
-    text: "Procesados a través de Mercado Pago / PayPal. No almacenamos información de pago.",
+    text: "Procesados a través de Mercado Pago. No almacenamos información de pago.",
   },
   {
     label: "Confirmación",

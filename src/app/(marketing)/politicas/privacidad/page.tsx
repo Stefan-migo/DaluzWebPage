@@ -1,15 +1,6 @@
 "use client";
 
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
   Lock,
   Shield,
   FileText,
@@ -19,29 +10,56 @@ import {
   Database,
   CheckCircle,
   ChevronRight,
+  ChevronDown,
   User,
   MapPin,
-  Phone,
   CreditCard,
   ArrowRight,
   AlertCircle,
   Heart,
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
-// Metadata is handled by the parent layout or through generateMetadata in server components
-// For client components, we use useEffect to set document title if needed
+// Botón azul (aplicado directo al Link; el componente Button con asChild no
+// propaga clases sobre un Fragment de icono + texto).
+const btnSolid =
+  "inline-flex items-center justify-center gap-2 h-11 rounded-md px-6 text-sm font-title uppercase tracking-wider text-white bg-faq-bright shadow-soft transition-all duration-300 hover:-translate-y-0.5 hover:bg-faq-light";
+// Outline claro para fondos oscuros (sobre el degradado)
+const btnOutlineLight =
+  "inline-flex items-center justify-center gap-2 h-11 rounded-md px-6 text-sm font-title uppercase tracking-wider text-white border-2 border-white/40 transition-all duration-300 hover:-translate-y-0.5 hover:bg-white/10";
 
-const tableOfContents = [
-  { id: "compromiso", title: "Nuestro Compromiso", icon: Heart },
-  { id: "informacion", title: "Información que Recopilamos", icon: Database },
-  { id: "finalidad", title: "Cómo Usamos tu Información", icon: FileText },
-  { id: "proteccion", title: "Seguridad y Protección", icon: Lock },
-  { id: "derechos", title: "Tus Derechos (Ley 25.326)", icon: Eye },
-  { id: "cookies", title: "Cookies", icon: Database },
-  { id: "contacto", title: "Contacto", icon: Mail },
-];
+// Acentos monocromáticos azules (reemplazan las líneas de color)
+const toneColor: Record<
+  string,
+  { chip: string; text: string; dot: string; bar: string }
+> = {
+  alma: {
+    chip: "bg-faq-bright/10",
+    text: "text-faq-bright",
+    dot: "bg-faq-bright",
+    bar: "bg-faq-bright",
+  },
+  ecos: {
+    chip: "bg-faq-ocean/10",
+    text: "text-faq-ocean",
+    dot: "bg-faq-ocean",
+    bar: "bg-faq-ocean",
+  },
+  jade: {
+    chip: "bg-faq-mid/10",
+    text: "text-faq-mid",
+    dot: "bg-faq-mid",
+    bar: "bg-faq-mid",
+  },
+  brand: {
+    chip: "bg-faq-deep/10",
+    text: "text-faq-deep",
+    dot: "bg-faq-deep",
+    bar: "bg-faq-deep",
+  },
+};
 
 const dataTypes = [
   {
@@ -129,32 +147,40 @@ const securityItems = [
   },
 ];
 
-const colorVariants = {
-  alma: {
-    bg: "bg-alma-primary",
-    light: "bg-alma-lightest",
-    text: "text-alma-primary",
+// Índice de secciones (cada una es un panel desplegable)
+const sections = [
+  { id: "compromiso", number: "1", title: "Nuestro Compromiso", icon: Heart },
+  {
+    id: "informacion",
+    number: "2",
+    title: "Información que Recopilamos",
+    icon: Database,
   },
-  ecos: {
-    bg: "bg-ecos-primary",
-    light: "bg-ecos-lightest",
-    text: "text-ecos-primary",
+  {
+    id: "finalidad",
+    number: "3",
+    title: "Cómo Usamos tu Información",
+    icon: FileText,
   },
-  jade: {
-    bg: "bg-jade-primary",
-    light: "bg-jade-lightest",
-    text: "text-jade-primary",
+  { id: "proteccion", number: "4", title: "Seguridad y Protección", icon: Lock },
+  {
+    id: "derechos",
+    number: "5",
+    title: "Tus Derechos (Ley 25.326)",
+    icon: Eye,
   },
-  brand: {
-    bg: "bg-brand-primary",
-    light: "bg-bg-cream",
-    text: "text-brand-primary",
+  {
+    id: "cookies",
+    number: "6",
+    title: "Cookies y Tecnologías Similares",
+    icon: Database,
   },
-};
+  { id: "contacto", number: "7", title: "Contacto", icon: Mail },
+];
 
 const containerVariants = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants = {
@@ -172,114 +198,112 @@ function InfoBox({
   className?: string;
 }) {
   const styles = {
-    info: "bg-blue-50 border-blue-200 text-blue-800",
-    warning: "bg-amber-50 border-amber-200 text-amber-800",
-    success: "bg-green-50 border-green-200 text-green-800",
+    info: "bg-faq-ocean/10 border-faq-ocean/25 text-faq-ink",
+    warning: "bg-amber-500/10 border-amber-500/40 text-amber-800",
+    success: "bg-faq-bright/10 border-faq-bright/30 text-faq-ink",
   };
 
   return (
-    <div className={`border rounded-lg p-4 ${styles[type]} ${className}`}>
+    <div className={`rounded-lg border p-4 ${styles[type]} ${className}`}>
       {children}
     </div>
   );
 }
 
-function SectionCard({
+function CollapsibleSection({
   id,
+  number,
   title,
   icon: Icon,
-  badge,
+  isOpen,
+  onToggle,
   children,
 }: {
   id: string;
+  number: string;
   title: string;
   icon: React.ElementType;
-  badge?: string;
+  isOpen: boolean;
+  onToggle: () => void;
   children: React.ReactNode;
 }) {
   return (
-    <motion.section id={id} style={{ scrollMarginTop: "100px" }}>
-      <Card variant="brand" className="overflow-hidden">
-        <div className="h-1 bg-gradient-to-r from-brand-primary to-brand-secondary" />
-        <CardHeader>
+    <motion.section
+      id={id}
+      variants={itemVariants}
+      style={{ scrollMarginTop: "100px" }}
+    >
+      <div className="overflow-hidden rounded-2xl border border-faq-ink/10 bg-faq-surface shadow-soft">
+        <button
+          onClick={onToggle}
+          aria-expanded={isOpen}
+          className="w-full p-5 text-left transition-colors duration-300 hover:bg-faq-surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-faq-ocean/50 md:p-6"
+        >
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-brand-primary/10 flex items-center justify-center">
-              <Icon className="w-6 h-6 text-brand-primary" />
-            </div>
-            <div>
-              {badge && (
-                <Badge
-                  variant="outline"
-                  className="mb-2 text-brand-primary border-brand-primary/30"
-                >
-                  {badge}
-                </Badge>
-              )}
-              <CardTitle className="font-velista text-xl md:text-2xl font-bold">
+            <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-faq-ocean/10 text-faq-ocean">
+              <Icon className="h-6 w-6" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <span className="mb-1 inline-block rounded-full border border-faq-ocean/30 px-2 py-0.5 font-caption text-xs font-medium text-faq-ocean">
+                Sección {number}
+              </span>
+              <h3 className="font-velista text-lg font-bold text-faq-ink md:text-xl">
                 {title}
-              </CardTitle>
+              </h3>
             </div>
+            <motion.div
+              animate={{ rotate: isOpen ? 180 : 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex-shrink-0"
+            >
+              <ChevronDown className="h-5 w-5 text-faq-ocean" />
+            </motion.div>
           </div>
-        </CardHeader>
-        <CardContent className="space-y-4">{children}</CardContent>
-      </Card>
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden"
+            >
+              <div className="space-y-4 border-t border-faq-ink/10 p-5 md:p-6">
+                {children}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </motion.section>
   );
 }
 
-function HeartIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-    </svg>
-  );
-}
-
 export default function PrivacidadPage() {
+  const [openItems, setOpenItems] = useState<string[]>([]);
+
+  const toggle = (id: string) => {
+    setOpenItems((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
+    );
+  };
+
+  const isOpen = (id: string) => openItems.includes(id);
+
   return (
-    <div className="min-h-screen">
-      {/* Breadcrumb */}
-      <div className="py-4 px-6 bg-bg-cream border-b border-brand-primary/10">
-        <div className="container mx-auto max-w-6xl">
-          <nav className="flex items-center gap-2 text-sm font-caption text-[#791010]/70">
-            <Link
-              href="/"
-              className="hover:text-brand-primary transition-colors"
-            >
-              Inicio
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link
-              href="/ayuda"
-              className="hover:text-brand-primary transition-colors"
-            >
-              Ayuda
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-brand-primary font-medium">
-              Política de Privacidad
-            </span>
-          </nav>
-        </div>
-      </div>
+    <div className="min-h-screen bg-faq-gradient">
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-primary via-brand-secondary to-brand-primary py-24 px-6 md:py-32">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-1/4 w-40 h-40 border border-white/30 rounded-full" />
-          <div className="absolute bottom-10 right-20 w-24 h-24 border border-white/20 rounded-full" />
-          <div className="absolute top-1/2 right-1/3 w-32 h-32 bg-highlight/20 rounded-full blur-2xl" />
+      <section className="relative overflow-hidden px-6 py-24 md:py-32">
+        <div className="pointer-events-none absolute inset-0 opacity-40">
+          <div className="absolute -top-20 left-1/4 h-72 w-72 rounded-full bg-[#0085B1]/20 blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-[#2A2543]/40 blur-3xl" />
+        </div>
+        <div className="pointer-events-none absolute inset-0 opacity-10">
+          <div className="absolute left-1/4 top-20 h-40 w-40 rounded-full border border-white/30" />
+          <div className="absolute bottom-10 right-20 h-24 w-24 rounded-full border border-white/20" />
         </div>
 
         <div className="container relative mx-auto max-w-4xl text-center">
@@ -288,469 +312,347 @@ export default function PrivacidadPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <Badge className="mb-6 bg-highlight/20 text-highlight border-highlight/30 backdrop-blur-sm">
-              <Shield className="w-4 h-4 mr-2" />
-              Legales
-            </Badge>
 
-            <h1 className="font-velista text-4xl md:text-6xl lg:text-7xl font-bold mb-6 text-text-inverse tracking-wide">
+            <h1 className="mb-6 font-velista text-4xl font-bold tracking-wide text-text-inverse md:text-6xl lg:text-7xl">
               Política de Privacidad
             </h1>
 
-            <p className="font-subtitle text-xl md:text-2xl text-text-inverse/90 mb-8 italic max-w-3xl mx-auto">
+            <p className="mx-auto mb-8 max-w-3xl font-subtitle text-xl italic text-white/90 md:text-2xl">
               Cómo protegemos y usamos tus datos personales
             </p>
 
             <div className="flex items-center justify-center gap-4">
-              <div className="w-12 h-px bg-highlight/50" />
-              <div className="w-2 h-2 bg-highlight rounded-full" />
-              <div className="w-12 h-px bg-highlight/50" />
+              <div className="h-px w-12 bg-faq-light/50" />
+              <div className="h-2 w-2 rounded-full bg-faq-light" />
+              <div className="h-px w-12 bg-faq-light/50" />
             </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Trust Banner */}
-      <section className="py-8 px-6 bg-bg-cream border-b border-brand-primary/10">
+      {/* Secciones desplegables */}
+      <section className="px-6 pb-12">
         <div className="container mx-auto max-w-4xl">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex flex-wrap items-center justify-center gap-6 md:gap-12"
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 text-center font-body text-sm text-white/70"
           >
-            <div className="flex items-center gap-3">
-              <Lock className="w-6 h-6 text-brand-primary" />
-              <span className="font-body text-sm font-medium text-[#791010]">
-                Datos encriptados
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Shield className="w-6 h-6 text-brand-primary" />
-              <span className="font-body text-sm font-medium text-[#791010]">
-                Ley 25.326
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-6 h-6 text-brand-primary" />
-              <span className="font-body text-sm font-medium text-[#791010]">
-                Sin spam
-              </span>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+            Tocá cada sección para desplegar su contenido.
+          </motion.p>
 
-      {/* Main Content */}
-      <section className="py-16 px-6">
-        <div className="container mx-auto max-w-7xl">
-          <div className="grid lg:grid-cols-12 gap-12">
-            {/* Table of Contents - Sticky Sidebar */}
-            <motion.aside
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-              className="lg:col-span-3"
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="show"
+            className="space-y-4"
+          >
+            {/* 1. Nuestro Compromiso */}
+            <CollapsibleSection
+              {...sections[0]}
+              isOpen={isOpen("compromiso")}
+              onToggle={() => toggle("compromiso")}
             >
-              <div className="lg:sticky lg:top-24">
-                <Card variant="brand" className="p-6">
-                  <CardHeader className="p-0 mb-4">
-                    <div className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-brand-primary" />
-                      <CardTitle className="font-velista text-lg font-bold">
-                        Índice
-                      </CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <nav className="space-y-2">
-                      {tableOfContents.map((item) => {
-                        const IconComponent = item.icon;
-                        return (
-                          <a
-                            key={item.id}
-                            href={`#${item.id}`}
-                            className="flex items-center gap-3 p-2 rounded-lg hover:bg-bg-cream transition-colors group"
-                          >
-                            <IconComponent className="w-4 h-4 text-brand-primary/60 group-hover:text-brand-primary transition-colors" />
-                            <span className="text-sm text-[#791010]/70 group-hover:text-brand-primary transition-colors font-body">
-                              {item.title}
-                            </span>
-                          </a>
-                        );
-                      })}
-                    </nav>
-                  </CardContent>
-                </Card>
+              <p className="font-body text-faq-ink/90">
+                En <strong>DA LUZ CONSCIENTE</strong> respetamos tu privacidad y
+                nos comprometemos a proteger tus datos personales. Esta política
+                de privacidad describe cómo recopilamos, usamos, divulgamos y
+                protegemos tu información.
+              </p>
+              <InfoBox type="success">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-faq-ocean" />
+                  <p className="font-body text-sm">
+                    Cumplimos con la <strong>Ley 25.326</strong> de Protección
+                    de Datos Personales de Argentina y normativas equivalentes
+                    en otras jurisdicciones.
+                  </p>
+                </div>
+              </InfoBox>
+            </CollapsibleSection>
 
-                {/* Contact Card */}
-                <Card variant="brand-subtle" className="p-6 mt-6">
-                  <CardHeader className="p-0 mb-4">
-                    <CardTitle className="font-velista text-lg font-bold text-brand-primary">
-                      ¿Tenés dudas?
-                    </CardTitle>
-                    <CardDescription className="font-body text-sm text-[#791010]/70">
-                      Estamos para ayudarte
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="p-0">
-                    <Button
-                      variant="brand"
-                      size="sm"
-                      className="w-full"
-                      asChild
+            {/* 2. Información que Recopilamos */}
+            <CollapsibleSection
+              {...sections[1]}
+              isOpen={isOpen("informacion")}
+              onToggle={() => toggle("informacion")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Recopilamos los siguientes tipos de información de forma segura:
+              </p>
+              <div className="mt-2 grid gap-4 md:grid-cols-3">
+                {dataTypes.map((data, index) => {
+                  const colors = toneColor[data.color];
+                  const IconComponent = data.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="rounded-xl border border-faq-ink/10 bg-white/70 p-4"
                     >
-                      <Link href="mailto:daluzalkimya@gmail.com">
-                        <Mail className="w-4 h-4 mr-2" />
-                        Escribir email
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </motion.aside>
-
-            {/* Main Content */}
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="show"
-              className="lg:col-span-9 space-y-8"
-            >
-              {/* 1. Nuestro Compromiso */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="compromiso"
-                  title="Nuestro Compromiso"
-                  icon={HeartIcon}
-                  badge="Introducción"
-                >
-                  <p className="font-body text-[#791010]">
-                    En <strong>DA LUZ CONSCIENTE</strong> respetamos tu
-                    privacidad y nos comprometemos a proteger tus datos
-                    personales. Esta política de privacidad describe cómo
-                    recopilamos, usamos, divulgamos y protegemos tu información.
-                  </p>
-                  <InfoBox type="success">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                      <p className="font-body text-sm">
-                        Cumplimos con la <strong>Ley 25.326</strong> de
-                        Protección de Datos Personales de Argentina y normativas
-                        equivalentes en otras jurisdicciones.
-                      </p>
-                    </div>
-                  </InfoBox>
-                </SectionCard>
-              </motion.div>
-
-              {/* 2. Información que Recopilamos */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="informacion"
-                  title="Información que Recopilamos"
-                  icon={Database}
-                >
-                  <p className="font-body text-[#791010]">
-                    Recopilamos los siguientes tipos de información de forma
-                    segura:
-                  </p>
-                  <div className="grid md:grid-cols-3 gap-4 mt-6">
-                    {dataTypes.map((data, index) => {
-                      const colors =
-                        colorVariants[data.color as keyof typeof colorVariants];
-                      const IconComponent = data.icon;
-                      return (
-                        <Card
-                          key={index}
-                          variant="brand-subtle"
-                          className="p-4"
-                        >
-                          <div
-                            className={`w-10 h-10 rounded-full ${colors.light} flex items-center justify-center ${colors.text} mb-3`}
-                          >
-                            <IconComponent className="w-5 h-5" />
-                          </div>
-                          <h4 className="font-heading font-semibold text-brand-primary mb-2">
-                            {data.category}
-                          </h4>
-                          <ul className="space-y-1">
-                            {data.items.map((item, i) => (
-                              <li
-                                key={i}
-                                className="flex items-center gap-2 text-sm text-[#791010] font-body"
-                              >
-                                <div
-                                  className={`w-1.5 h-1.5 rounded-full ${colors.bg}`}
-                                />
-                                {item}
-                              </li>
-                            ))}
-                          </ul>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                </SectionCard>
-              </motion.div>
-
-              {/* 3. Cómo Usamos tu Información */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="finalidad"
-                  title="Cómo Usamos tu Información"
-                  icon={FileText}
-                >
-                  <p className="font-body text-[#791010]">
-                    Utilizamos tu información exclusivamente para los siguientes
-                    fines:
-                  </p>
-                  <div className="grid md:grid-cols-2 gap-4 mt-6">
-                    {purposeItems.map((item, index) => {
-                      const colorKeys = [
-                        "alma",
-                        "ecos",
-                        "jade",
-                        "brand",
-                      ] as const;
-                      const colors = colorVariants[colorKeys[index]];
-                      const IconComponent = item.icon;
-                      return (
-                        <Card
-                          key={index}
-                          variant="brand-subtle"
-                          className="p-4"
-                        >
-                          <div className="flex items-start gap-4">
-                            <div
-                              className={`w-10 h-10 rounded-full ${colors.light} flex items-center justify-center ${colors.text} flex-shrink-0`}
-                            >
-                              <IconComponent className="w-5 h-5" />
-                            </div>
-                            <div>
-                              <h4 className="font-heading font-semibold text-brand-primary mb-1">
-                                {item.title}
-                              </h4>
-                              <p className="font-body text-sm text-[#791010]/70">
-                                {item.description}
-                              </p>
-                            </div>
-                          </div>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                  <InfoBox type="info" className="mt-6">
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                      <p className="font-body text-sm">
-                        <strong>Importante:</strong> No utilizamos tus datos
-                        para spam ni compartimos con terceros para fines de
-                        marketing no relacionado con nuestros productos.
-                      </p>
-                    </div>
-                  </InfoBox>
-                </SectionCard>
-              </motion.div>
-
-              {/* 4. Seguridad y Protección */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="proteccion"
-                  title="Seguridad y Protección"
-                  icon={Lock}
-                >
-                  <div className="grid md:grid-cols-2 gap-4">
-                    {securityItems.map((item, index) => (
                       <div
-                        key={index}
-                        className="flex items-start gap-4 p-4 bg-bg-cream/50 rounded-lg"
+                        className={`mb-3 flex h-10 w-10 items-center justify-center rounded-full ${colors.chip} ${colors.text}`}
                       >
-                        <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Shield className="w-5 h-5 text-brand-primary" />
+                        <IconComponent className="h-5 w-5" />
+                      </div>
+                      <h4 className="mb-2 font-heading font-semibold text-faq-ocean">
+                        {data.category}
+                      </h4>
+                      <ul className="space-y-1">
+                        {data.items.map((item, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-2 font-body text-sm text-faq-ink/90"
+                          >
+                            <div
+                              className={`h-1.5 w-1.5 rounded-full ${colors.dot}`}
+                            />
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+            </CollapsibleSection>
+
+            {/* 3. Cómo Usamos tu Información */}
+            <CollapsibleSection
+              {...sections[2]}
+              isOpen={isOpen("finalidad")}
+              onToggle={() => toggle("finalidad")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Utilizamos tu información exclusivamente para los siguientes
+                fines:
+              </p>
+              <div className="mt-2 grid gap-4 md:grid-cols-2">
+                {purposeItems.map((item, index) => {
+                  const colorKeys = ["alma", "ecos", "jade", "brand"] as const;
+                  const colors = toneColor[colorKeys[index]];
+                  const IconComponent = item.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="rounded-xl border border-faq-ink/10 bg-white/70 p-4"
+                    >
+                      <div className="flex items-start gap-4">
+                        <div
+                          className={`flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full ${colors.chip} ${colors.text}`}
+                        >
+                          <IconComponent className="h-5 w-5" />
                         </div>
                         <div>
-                          <h4 className="font-heading font-semibold text-brand-primary mb-1">
+                          <h4 className="mb-1 font-heading font-semibold text-faq-ocean">
                             {item.title}
                           </h4>
-                          <p className="font-body text-sm text-[#791010]/70">
+                          <p className="font-body text-sm text-faq-ink/70">
                             {item.description}
                           </p>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </SectionCard>
-              </motion.div>
-
-              {/* 5. Tus Derechos */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="derechos"
-                  title="Tus Derechos (Ley 25.326)"
-                  icon={Eye}
-                >
-                  <p className="font-body text-[#791010]">
-                    Tenés los siguientes derechos sobre tus datos personales:
-                  </p>
-                  <div className="grid md:grid-cols-3 gap-4 mt-6">
-                    {rightsArco.map((right, index) => {
-                      const colors =
-                        colorVariants[
-                          right.color as keyof typeof colorVariants
-                        ];
-                      const IconComponent = right.icon;
-                      return (
-                        <Card
-                          key={index}
-                          variant="brand"
-                          className="text-center p-6 relative overflow-hidden"
-                        >
-                          <div
-                            className={`absolute top-0 left-0 right-0 h-1 ${colors.bg}`}
-                          />
-                          <div
-                            className={`w-14 h-14 mx-auto mb-4 rounded-full ${colors.light} flex items-center justify-center ${colors.text}`}
-                          >
-                            <IconComponent className="w-7 h-7" />
-                          </div>
-                          <h4 className="font-velista text-lg font-bold text-brand-primary mb-2">
-                            {right.title}
-                          </h4>
-                          <p className="font-body text-sm text-[#791010]/70">
-                            {right.description}
-                          </p>
-                        </Card>
-                      );
-                    })}
-                  </div>
-                  <InfoBox type="success" className="mt-6">
-                    <div className="flex items-start gap-3">
-                      <CheckCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                      <div>
-                        <p className="font-body text-sm font-medium">
-                          Para ejercer cualquiera de estos derechos, contactanos
-                          a: <strong>daluzalkimya@gmail.com</strong>
-                        </p>
-                        <p className="font-body text-sm mt-1">
-                          Responderemos tu solicitud dentro de los 30 días
-                          hábiles establecidos por ley.
-                        </p>
-                      </div>
                     </div>
-                  </InfoBox>
-                </SectionCard>
-              </motion.div>
+                  );
+                })}
+              </div>
+              <InfoBox type="info" className="mt-2">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-faq-ocean" />
+                  <p className="font-body text-sm">
+                    <strong>Importante:</strong> No utilizamos tus datos para
+                    spam ni compartimos con terceros para fines de marketing no
+                    relacionado con nuestros productos.
+                  </p>
+                </div>
+              </InfoBox>
+            </CollapsibleSection>
 
-              {/* 6. Cookies */}
-              <motion.div variants={itemVariants}>
-                <SectionCard
-                  id="cookies"
-                  title="Cookies y Tecnologías Similares"
-                  icon={Database}
-                >
-                  <p className="font-body text-[#791010]">
-                    Nuestro sitio utiliza cookies y tecnologías similares para
-                    mejorar tu experiencia de navegación:
-                  </p>
-                  <ul className="mt-4 space-y-3">
-                    {[
-                      "Recordar tus preferencias y ajustes",
-                      "Analizar el tráfico y rendimiento del sitio",
-                      "Personalizar el contenido según tus intereses",
-                    ].map((item, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <CheckCircle className="w-5 h-5 text-brand-primary flex-shrink-0 mt-0.5" />
-                        <span className="font-body text-[#791010]">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="font-body text-[#791010] mt-4">
-                    <strong>Gestionar cookies:</strong> Podés configurar tu
-                    navegador para rechazar todas las cookies o para indicar
-                    cuándo se envía una cookie. Sin embargo, algunas funciones
-                    del sitio pueden no funcionar correctamente sin cookies.
-                  </p>
-                </SectionCard>
-              </motion.div>
-
-              {/* 7. Contacto */}
-              <motion.div variants={itemVariants}>
-                <SectionCard id="contacto" title="Contacto" icon={Mail}>
-                  <p className="font-body text-[#791010]">
-                    Si tenés alguna pregunta sobre esta política de privacidad o
-                    querés ejercer tus derechos, contactanos:
-                  </p>
-                  <Card variant="brand-subtle" className="p-6 mt-4">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-full bg-brand-primary/10 flex items-center justify-center">
-                          <Shield className="w-5 h-5 text-brand-primary" />
-                        </div>
-                        <div>
-                          <h4 className="font-heading font-semibold text-brand-primary">
-                            DA LUZ CONSCIENTE
-                          </h4>
-                          <p className="font-body text-sm text-[#791010]/70">
-                            Tu privacidad, nuestra prioridad
-                          </p>
-                        </div>
-                      </div>
-                      <div className="pt-4 border-t border-brand-primary/10 space-y-2">
-                        <p className="font-body text-[#791010]">
-                          <strong>Email:</strong>{" "}
-                          <a
-                            href="mailto:daluzalkimya@gmail.com"
-                            className="text-brand-primary hover:underline"
-                          >
-                            daluzalkimya@gmail.com
-                          </a>
-                        </p>
-                        <p className="font-body text-[#791010]">
-                          <strong>Ubicación:</strong> Córdoba, Argentina
-                        </p>
-                      </div>
+            {/* 4. Seguridad y Protección */}
+            <CollapsibleSection
+              {...sections[3]}
+              isOpen={isOpen("proteccion")}
+              onToggle={() => toggle("proteccion")}
+            >
+              <div className="grid gap-4 md:grid-cols-2">
+                {securityItems.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-start gap-4 rounded-lg border border-faq-ink/10 bg-white/60 p-4"
+                  >
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-faq-ocean/10">
+                      <Shield className="h-5 w-5 text-faq-ocean" />
                     </div>
-                  </Card>
-                </SectionCard>
-              </motion.div>
-            </motion.div>
-          </div>
+                    <div>
+                      <h4 className="mb-1 font-heading font-semibold text-faq-ocean">
+                        {item.title}
+                      </h4>
+                      <p className="font-body text-sm text-faq-ink/70">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CollapsibleSection>
+
+            {/* 5. Tus Derechos */}
+            <CollapsibleSection
+              {...sections[4]}
+              isOpen={isOpen("derechos")}
+              onToggle={() => toggle("derechos")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Tenés los siguientes derechos sobre tus datos personales:
+              </p>
+              <div className="mt-2 grid gap-4 md:grid-cols-3">
+                {rightsArco.map((right, index) => {
+                  const colors = toneColor[right.color];
+                  const IconComponent = right.icon;
+                  return (
+                    <div
+                      key={index}
+                      className="relative overflow-hidden rounded-xl border border-faq-ink/10 bg-white/70 p-6 text-center"
+                    >
+                      <div
+                        className={`absolute left-0 right-0 top-0 h-1 ${colors.bar}`}
+                      />
+                      <div
+                        className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full ${colors.chip} ${colors.text}`}
+                      >
+                        <IconComponent className="h-7 w-7" />
+                      </div>
+                      <h4 className="mb-2 font-velista text-lg font-bold text-faq-ocean">
+                        {right.title}
+                      </h4>
+                      <p className="font-body text-sm text-faq-ink/70">
+                        {right.description}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+              <InfoBox type="success" className="mt-2">
+                <div className="flex items-start gap-3">
+                  <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-faq-ocean" />
+                  <div>
+                    <p className="font-body text-sm font-medium">
+                      Para ejercer cualquiera de estos derechos, contactanos a:{" "}
+                      <strong>daluzalkimya@gmail.com</strong>
+                    </p>
+                    <p className="mt-1 font-body text-sm">
+                      Responderemos tu solicitud dentro de los 30 días hábiles
+                      establecidos por ley.
+                    </p>
+                  </div>
+                </div>
+              </InfoBox>
+            </CollapsibleSection>
+
+            {/* 6. Cookies */}
+            <CollapsibleSection
+              {...sections[5]}
+              isOpen={isOpen("cookies")}
+              onToggle={() => toggle("cookies")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Nuestro sitio utiliza cookies y tecnologías similares para
+                mejorar tu experiencia de navegación:
+              </p>
+              <ul className="space-y-3">
+                {[
+                  "Recordar tus preferencias y ajustes",
+                  "Analizar el tráfico y rendimiento del sitio",
+                  "Personalizar el contenido según tus intereses",
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start gap-3">
+                    <CheckCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-faq-ocean" />
+                    <span className="font-body text-faq-ink/90">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="font-body text-faq-ink/90">
+                <strong>Gestionar cookies:</strong> Podés configurar tu
+                navegador para rechazar todas las cookies o para indicar cuándo
+                se envía una cookie. Sin embargo, algunas funciones del sitio
+                pueden no funcionar correctamente sin cookies.
+              </p>
+            </CollapsibleSection>
+
+            {/* 7. Contacto */}
+            <CollapsibleSection
+              {...sections[6]}
+              isOpen={isOpen("contacto")}
+              onToggle={() => toggle("contacto")}
+            >
+              <p className="font-body text-faq-ink/90">
+                Si tenés alguna pregunta sobre esta política de privacidad o
+                querés ejercer tus derechos, contactanos:
+              </p>
+              <div className="rounded-xl border border-faq-ink/10 bg-white/70 p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-faq-ocean/10">
+                      <Shield className="h-5 w-5 text-faq-ocean" />
+                    </div>
+                    <div>
+                      <h4 className="font-heading font-semibold text-faq-ocean">
+                        DA LUZ CONSCIENTE
+                      </h4>
+                      <p className="font-body text-sm text-faq-ink/70">
+                        Tu privacidad, nuestra prioridad
+                      </p>
+                    </div>
+                  </div>
+                  <div className="space-y-2 border-t border-faq-ink/10 pt-4">
+                    <p className="font-body text-faq-ink/90">
+                      <strong>Email:</strong>{" "}
+                      <a
+                        href="mailto:daluzalkimya@gmail.com"
+                        className="text-faq-ocean hover:underline"
+                      >
+                        daluzalkimya@gmail.com
+                      </a>
+                    </p>
+                    <p className="font-body text-faq-ink/90">
+                      <strong>Ubicación:</strong> Córdoba, Argentina
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleSection>
+          </motion.div>
         </div>
       </section>
 
       {/* Related Links */}
-      <section className="py-12 px-6 bg-bg-cream border-t border-brand-primary/10">
+      <section className="border-t border-white/10 px-6 py-12">
         <div className="container mx-auto max-w-4xl">
-          <h3 className="font-velista text-xl font-bold text-brand-primary text-center mb-8">
+          <h3 className="mb-8 text-center font-velista text-xl font-bold text-text-inverse">
             También te puede interesar
           </h3>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Button variant="brand-outline" asChild>
-              <Link href="/politicas/terminos">
-                Términos y Condiciones
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Link>
-            </Button>
-            <Button variant="brand-outline" asChild>
-              <Link href="/politicas/envio">Políticas de Envío</Link>
-            </Button>
-            <Button variant="brand-outline" asChild>
-              <Link href="/politicas/arrepentimiento">
-                Derecho de Arrepentimiento
-              </Link>
-            </Button>
-            <Button variant="brand-outline" asChild>
-              <Link href="/faq">Preguntas Frecuentes</Link>
-            </Button>
+            <Link href="/politicas/terminos" className={btnOutlineLight}>
+              Términos y Condiciones
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link href="/politicas/envio" className={btnOutlineLight}>
+              Políticas de Envío
+            </Link>
+            <Link href="/politicas/arrepentimiento" className={btnOutlineLight}>
+              Derecho de Arrepentimiento
+            </Link>
+            <Link href="/faq" className={btnSolid}>
+              Preguntas Frecuentes
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <section className="py-8 px-6 border-t border-brand-primary/10">
+      {/* Footer legal */}
+      <section className="border-t border-white/10 px-6 py-8">
         <div className="container mx-auto max-w-4xl text-center">
-          <p className="font-body text-[#791010]/70 text-sm">
+          <p className="font-body text-sm text-white/70">
             Fecha de última actualización:{" "}
             {new Date().toLocaleDateString("es-AR", {
               year: "numeric",
@@ -758,7 +660,7 @@ export default function PrivacidadPage() {
               day: "numeric",
             })}
           </p>
-          <p className="font-body text-[#791010]/50 text-xs mt-2">
+          <p className="mt-2 font-body text-xs text-white/50">
             © {new Date().getFullYear()} DA LUZ CONSCIENTE. Todos los derechos
             reservados.
           </p>
