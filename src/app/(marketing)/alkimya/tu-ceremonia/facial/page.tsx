@@ -1,7 +1,36 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import CeremoniaFacialCarousel from '@/components/marketing/CeremoniaFacialCarousel'
+import CeremoniaCarousel, {
+  type CeremoniaBanner,
+} from '@/components/marketing/CeremoniaCarousel'
 import '@/styles/ceremonia-facial.css'
+
+const BANNERS: CeremoniaBanner[] = [
+  {
+    src: '/images/ceremonias/carrusel/ceremonia-acne.webp',
+    alt: 'Ceremonia facial para piel con tendencia al acné: limpieza profunda y calma',
+  },
+  {
+    src: '/images/ceremonias/carrusel/ceremonia-pitta.webp',
+    alt: 'Ceremonia facial para piel sensible / Pitta: alivio y protección',
+  },
+  {
+    src: '/images/ceremonias/carrusel/ceremonia-mixta.webp',
+    alt: 'Ceremonia facial para piel mixta / Pitta-Kapha: hidratación y balance',
+  },
+  {
+    src: '/images/ceremonias/carrusel/ceremonia-madura.webp',
+    alt: 'Ceremonia facial para piel madura / Vata: nutrición y regeneración',
+  },
+  {
+    src: '/images/ceremonias/carrusel/ceremonia-grasa.webp',
+    alt: 'Ceremonia facial para piel grasa / Kapha: claridad y ligereza',
+  },
+  {
+    src: '/images/ceremonias/carrusel/ceremonia-seca.webp',
+    alt: 'Ceremonia facial para piel seca / Vata: suavidad y nutrición',
+  },
+]
 
 export const metadata: Metadata = {
   title: 'Ceremonia Facial | ALKIMYA | DA LUZ CONSCIENTE',
@@ -223,7 +252,10 @@ export default function CeremoniaFacialPage() {
 
         {/* Elegí tu Ceremonia - Carrusel de biotipos */}
         <section className="px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-12 lg:pb-32 -mt-4 sm:-mt-8 lg:-mt-16">
-          <CeremoniaFacialCarousel />
+          <CeremoniaCarousel
+            banners={BANNERS}
+            label="Ceremonias faciales según tu biotipo"
+          />
           <div className="mt-8 flex justify-center sm:mt-10">
             <Link
               href="/productos"

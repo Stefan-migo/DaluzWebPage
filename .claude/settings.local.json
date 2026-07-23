@@ -60,7 +60,8 @@
       "Bash(node \"C:/Users/juan/AppData/Local/Temp/claude/c--Users-juan-Desktop-DaluzWebPage/71605759-07df-42e3-9c90-1dfd2a39d309/scratchpad/shot3.js\")",
       "Bash(rm -rf .next)",
       "Bash(curl -s \"http://localhost:3002/alkimya/tu-ceremonia/facial\" -o \"C:/Users/juan/AppData/Local/Temp/claude/c--Users-juan-Desktop-DaluzWebPage/71605759-07df-42e3-9c90-1dfd2a39d309/scratchpad/page.html\" -w \"HTTP %{http_code}\\\\n\")",
-      "Bash(node \"C:/Users/juan/AppData/Local/Temp/claude/c--Users-juan-Desktop-DaluzWebPage/71605759-07df-42e3-9c90-1dfd2a39d309/scratchpad/shot6.js\")"
+      "Bash(node \"C:/Users/juan/AppData/Local/Temp/claude/c--Users-juan-Desktop-DaluzWebPage/71605759-07df-42e3-9c90-1dfd2a39d309/scratchpad/shot6.js\")",
+      "Bash(node \"C:/Users/juan/AppData/Local/Temp/claude/c--Users-juan-Desktop-DaluzWebPage/71605759-07df-42e3-9c90-1dfd2a39d309/scratchpad/resize-capilar.js\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\juan\\Desktop\\DaluzWebPage\\public\\images\\ceremonias"

@@ -5,49 +5,34 @@ import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-type Banner = {
+export type CeremoniaBanner = {
   src: string;
   alt: string;
 };
 
-const BANNERS: Banner[] = [
-  {
-    src: "/images/ceremonias/carrusel/ceremonia-acne.webp",
-    alt: "Ceremonia facial para piel con tendencia al acné: limpieza profunda y calma",
-  },
-  {
-    src: "/images/ceremonias/carrusel/ceremonia-pitta.webp",
-    alt: "Ceremonia facial para piel sensible / Pitta: alivio y protección",
-  },
-  {
-    src: "/images/ceremonias/carrusel/ceremonia-mixta.webp",
-    alt: "Ceremonia facial para piel mixta / Pitta-Kapha: hidratación y balance",
-  },
-  {
-    src: "/images/ceremonias/carrusel/ceremonia-madura.webp",
-    alt: "Ceremonia facial para piel madura / Vata: nutrición y regeneración",
-  },
-  {
-    src: "/images/ceremonias/carrusel/ceremonia-grasa.webp",
-    alt: "Ceremonia facial para piel grasa / Kapha: claridad y ligereza",
-  },
-  {
-    src: "/images/ceremonias/carrusel/ceremonia-seca.webp",
-    alt: "Ceremonia facial para piel seca / Vata: suavidad y nutrición",
-  },
-];
+type Props = {
+  banners: CeremoniaBanner[];
+  /** Destino al hacer click en un slide */
+  href?: string;
+  /** Etiqueta accesible del carrusel */
+  label?: string;
+};
 
 const AUTOPLAY_MS = 5000;
 const SWIPE_THRESHOLD = 50;
 
-export default function CeremoniaFacialCarousel() {
+export default function CeremoniaCarousel({
+  banners,
+  href = "/productos",
+  label = "Ceremonias según tu biotipo",
+}: Props) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
 
-  const total = BANNERS.length;
+  const total = banners.length;
 
   const goTo = (index: number) => {
     setCurrentIndex(((index % total) + total) % total);
@@ -100,17 +85,17 @@ export default function CeremoniaFacialCarousel() {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       aria-roledescription="carousel"
-      aria-label="Ceremonias faciales según tu biotipo"
+      aria-label={label}
     >
       {/* Track */}
       <div
         className="flex transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
-        {BANNERS.map((banner, idx) => (
+        {banners.map((banner, idx) => (
           <div key={banner.src} className="w-full flex-shrink-0">
             <Link
-              href="/productos"
+              href={href}
               className="block"
               aria-roledescription="slide"
               aria-label={`${idx + 1} de ${total}`}
@@ -118,9 +103,9 @@ export default function CeremoniaFacialCarousel() {
               <Image
                 src={banner.src}
                 alt={banner.alt}
-                width={1400}
-                height={422}
-                sizes="(max-width: 1300px) 100vw, 1300px"
+                width={2000}
+                height={563}
+                sizes="(max-width: 1500px) 100vw, 1500px"
                 priority={idx === 0}
                 className="h-auto w-full"
               />
@@ -155,7 +140,7 @@ export default function CeremoniaFacialCarousel() {
 
       {/* Dots */}
       <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2 sm:bottom-4 sm:gap-3">
-        {BANNERS.map((banner, idx) => (
+        {banners.map((banner, idx) => (
           <button
             key={`dot-${banner.src}`}
             type="button"
