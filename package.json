@@ -71,6 +71,7 @@
     "recharts": "^3.2.1",
     "resend": "^2.1.0",
     "sanity": "^3.99.0",
+    "sharp": "^0.35.3",
     "sonner": "^2.0.6",
     "styled-components": "^6.1.19",
     "tailwind-merge": "^2.6.0",

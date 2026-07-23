@@ -131,6 +131,17 @@
 
 }
 
+/* Grupo label + texto: los mantiene siempre juntos.
+   El cap de ancho evita que el texto sobrepase el fondo decorativo
+   en resoluciones intermedias (tablet). */
+.ceremonia-facial-block-group {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .ceremonia-facial-step-title {
   min-height: 100px;
   padding: 1rem 1.25rem;
@@ -295,41 +306,6 @@
   100% { transform: translateY(-15px); }
 }
 
-/* Alquimia title - mobile */
-.ceremonia-facial-alquimia-title {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  min-height: 90px;
-  margin: 0 auto 1.5rem;
-  padding: 1rem;
-}
-
-.ceremonia-facial-alquimia-title-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-facial-alquimia-title-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-title);
-  font-size: clamp(1.25rem, 5vw, 1.75rem);
-  font-weight: normal;
-  letter-spacing: 0.03em;
-  color: var(--color-bg-light, #F0EACE);
-  text-align: center;
-  z-index: 1;
-}
-
 /* ===========================
    DESKTOP ONLY (min-width: 1024px) - Zigzag, absolute positioning
    =========================== */
@@ -379,10 +355,11 @@
     padding: 0;
   }
 
-  /* Zigzag - absolute positioning */
+  /* Zigzag - absolute positioning.
+     Ahora se posiciona el GRUPO (label + texto), no cada bloque por separado,
+     así el título y su contenido nunca se separan. */
   .ceremonia-facial-step-title,
-  .ceremonia-facial-block-title,
-  .ceremonia-facial-block-text,
+  .ceremonia-facial-block-group,
   .ceremonia-facial-extra-block {
     position: absolute;
     margin-bottom: 0;
@@ -408,20 +385,15 @@
     right: 5%;
   }
 
-  .ceremonia-facial-block-title[data-zigzag="left"] {
-    left: 7%;
-  }
-
-  .ceremonia-facial-block-text[data-zigzag="left"],
+  .ceremonia-facial-block-group[data-zigzag="left"],
   .ceremonia-facial-extra-block[data-zigzag="left"] {
     left: 8%;
     right: auto;
   }
 
-  .ceremonia-facial-block-title[data-zigzag="right"],
-  .ceremonia-facial-block-text[data-zigzag="right"],
+  .ceremonia-facial-block-group[data-zigzag="right"],
   .ceremonia-facial-extra-block[data-zigzag="right"] {
-    /* Usamos 'left' en lugar de 'right' para que sus comienzos (izquierdos) estén perfectamente alineados. 
+    /* Usamos 'left' en lugar de 'right' para que sus comienzos (izquierdos) estén perfectamente alineados.
        Se usa un calc() para asegurar que entren en pantallas pequeñas sin sobrepasar el ancho. */
     left: calc(100% - 620px);
     right: auto;
@@ -444,35 +416,9 @@
     color: var(--color-bg-light, #F0EACE);
   }
 
-  .ceremonia-facial-block-title {
-    width: 480px;
-    max-width: 100%;
-    min-height: 70px;
-    padding: 0.75rem 1.25rem;
-  }
-
-  .ceremonia-facial-block-title-text {
-    position: absolute;
-    inset: 0;
-    padding: 0.75rem 1.25rem;
-    font-size: clamp(1rem, 1.35vw, 1.25rem);
-    color: var(--color-brand-primary, #AE0000);
-  }
-
-  .ceremonia-facial-block-text {
-    width: 480px;
-    max-width: 100%;
-    min-height: 100px;
-    padding: 1.25rem 1.5rem;
-  }
-
-  .ceremonia-facial-block-text-content {
-    position: relative;
-    min-height: 80px;
-    padding: 1.25rem 1.5rem;
-    font-size: clamp(1rem, 1.2vw, 1.25rem);
-    color: var(--color-text-inverse, #FFFFFF);
-  }
+  /* El par pill + panel hereda el estilo base (idéntico a 820/900px):
+     ancho 520px del grupo, gap de 0.5rem entre pill y panel, min-heights y
+     fuentes base. Solo se conserva el posicionamiento zigzag del grupo. */
 
   .ceremonia-facial-extra-block {
     width: 480px;
@@ -489,33 +435,21 @@
     color: var(--color-text-inverse, #FFFFFF);
   }
 
-  /* Desktop top positions */
+  /* Desktop top positions - se posiciona cada grupo por su orden */
   .ceremonia-facial-step-container>.ceremonia-facial-step-title {
     top: -101px;
   }
 
-  .ceremonia-facial-step-container>.ceremonia-facial-block-title:nth-child(2) {
+  .ceremonia-facial-step-container>.ceremonia-facial-block-group[data-order="1"] {
     top: 95px;
   }
 
-  .ceremonia-facial-step-container>.ceremonia-facial-block-text:nth-child(3) {
-    top: 157px;
-  }
-
-  .ceremonia-facial-step-container>.ceremonia-facial-block-title:nth-child(4) {
+  .ceremonia-facial-step-container>.ceremonia-facial-block-group[data-order="2"] {
     top: 315px;
   }
 
-  .ceremonia-facial-step-container>.ceremonia-facial-block-text:nth-child(5) {
-    top: 379px;
-  }
-
-  .ceremonia-facial-step-container>.ceremonia-facial-block-title:nth-child(6) {
+  .ceremonia-facial-step-container>.ceremonia-facial-block-group[data-order="3"] {
     top: 535px;
-  }
-
-  .ceremonia-facial-step-container>.ceremonia-facial-block-text:nth-child(7) {
-    top: 597px;
   }
 
   .ceremonia-facial-step-container>.ceremonia-facial-extra-block {
@@ -532,8 +466,7 @@
   }
 
   .ceremonia-facial-step-title,
-  .ceremonia-facial-block-title,
-  .ceremonia-facial-block-text,
+  .ceremonia-facial-block-group,
   .ceremonia-facial-extra-block {
     z-index: 10;
     /* Ensure text sits on top of overlapping photos */
@@ -580,18 +513,5 @@
   /* Section container */
   .ceremonia-facial-content .max-w-4xl {
     max-width: 65rem;
-  }
-
-  /* Alquimia title - desktop */
-  .ceremonia-facial-alquimia-title {
-    max-width: 600px;
-    min-height: 120px;
-    margin: 0 auto 2rem;
-  }
-
-  .ceremonia-facial-alquimia-title-text {
-    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
-    letter-spacing: 0.05em;
-    color: var(--color-bg-light, #F0EACE);
   }
 }

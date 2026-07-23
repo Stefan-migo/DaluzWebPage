@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import CeremoniaFacialCarousel from '@/components/marketing/CeremoniaFacialCarousel'
 import '@/styles/ceremonia-facial.css'
 
 export const metadata: Metadata = {
@@ -69,79 +70,6 @@ const PASOS: readonly Paso[] = [
   },
 ];
 
-const ALQUIMIAS = [
-  {
-    id: 'vata',
-    titulo: 'Tu Alquimia Vata',
-    subtitulo: 'Nutrición y Sello Lipídico (PIEL SECA / VATA)',
-    descripcion:
-      'Este kit combate la sequedad, la aspereza y las arrugas finas de Vata.',
-    productos: [
-      'Limpiador Ilumina',
-      'Tónico Facial',
-      'Serum Pureza',
-      'Serum Ilumina',
-      'Pasta Dental',
-      'Mascarilla Ilumina',
-    ],
-  },
-  {
-    id: 'kapha',
-    titulo: 'Tu Alquimia Kapha',
-    subtitulo: 'Equilibrio y Purificación (PIEL GRASA / KAPHA)',
-    descripcion: 'Purifica la piel gruesa y regula el exceso de sebo de Kapha.',
-    productos: [
-      'Gel Facial Serena',
-      'Tónico Facial',
-      'Serum Pureza (Día) / Serum Serena (Noche)',
-      'Crema Facial Serena',
-      'Mascarilla Serena',
-    ],
-  },
-  {
-    id: 'mixta',
-    titulo: 'Tu Alquimia Mixta',
-    subtitulo: 'Balance en la Zona T (PIEL MIXTA / DUAL)',
-    descripcion:
-      'Este kit combate la sequedad y devuelve lípidos reparando la barrera.',
-    productos: [
-      'Limpiador Pureza',
-      'Tónico Facial',
-      'Serum Soy',
-      'Crema Facial Serena',
-      'Gel Exfoliante',
-    ],
-  },
-  {
-    id: 'pitta',
-    titulo: 'Tu Alquimia Pitta',
-    subtitulo: 'Calma la Inflamación (PIEL SENSIBLE / PITTA)',
-    descripcion:
-      'Fortalece la barrera para evitar reacciones e irritaciones, devolviendo la paz a tu piel.',
-    productos: [
-      'Limpiador Ilumina',
-      'Tónico Facial',
-      'Serum Pureza',
-      'Crema Facial Ilumina',
-    ],
-  },
-  {
-    id: 'madura',
-    titulo: 'Tu Alquimia Madura',
-    subtitulo: 'Firmeza y Densidad (PIEL MADURA / FIRMEZA)',
-    descripcion:
-      'Combate la pérdida de colágeno y la sequedad. Aporta nutrición intensa.',
-    productos: [
-      'Limpiador Pureza',
-      'Tónico Facial',
-      'Serum Soy',
-      'Crema Facial (Día/Noche)',
-      'Contorno de Ojos - Prisma',
-      'Gel Exfoliante',
-    ],
-  },
-] as const
-
 export default function CeremoniaFacialPage() {
   return (
     <div className="ceremonia-facial-page">
@@ -193,62 +121,62 @@ export default function CeremoniaFacialPage() {
 
                   {/* Propósito y Beneficio */}
                   <div
-                    className="ceremonia-facial-block-title"
+                    className="ceremonia-facial-block-group"
                     data-zigzag={zigzag.proposito}
+                    data-order="1"
                   >
-                    <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-facial-block-title-text">
-                      Propósito y Beneficio
-                    </span>
-                  </div>
-                  <div
-                    className="ceremonia-facial-block-text"
-                    data-zigzag={zigzag.proposito}
-                  >
-                    <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content">
-                      {paso.proposito}
-                    </p>
+                    <div className="ceremonia-facial-block-title">
+                      <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
+                      <span className="ceremonia-facial-block-title-text">
+                        Propósito y Beneficio
+                      </span>
+                    </div>
+                    <div className="ceremonia-facial-block-text">
+                      <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
+                      <p className="ceremonia-facial-block-text-content">
+                        {paso.proposito}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Intención de la Ceremonia */}
                   <div
-                    className="ceremonia-facial-block-title"
+                    className="ceremonia-facial-block-group"
                     data-zigzag={zigzag.intencion}
+                    data-order="2"
                   >
-                    <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-facial-block-title-text">
-                      Intención de la Ceremonia
-                    </span>
-                  </div>
-                  <div
-                    className="ceremonia-facial-block-text"
-                    data-zigzag={zigzag.intencion}
-                  >
-                    <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content">
-                      {paso.intencion}
-                    </p>
+                    <div className="ceremonia-facial-block-title">
+                      <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
+                      <span className="ceremonia-facial-block-title-text">
+                        Intención de la Ceremonia
+                      </span>
+                    </div>
+                    <div className="ceremonia-facial-block-text">
+                      <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
+                      <p className="ceremonia-facial-block-text-content">
+                        {paso.intencion}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Consejos de Aplicación */}
                   <div
-                    className="ceremonia-facial-block-title"
+                    className="ceremonia-facial-block-group"
                     data-zigzag={zigzag.consejos}
+                    data-order="3"
                   >
-                    <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-facial-block-title-text">
-                      Consejos de Aplicación
-                    </span>
-                  </div>
-                  <div
-                    className="ceremonia-facial-block-text"
-                    data-zigzag={zigzag.consejos}
-                  >
-                    <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-facial-block-text-content whitespace-pre-line">
-                      {paso.consejos}
-                    </p>
+                    <div className="ceremonia-facial-block-title">
+                      <div className="ceremonia-facial-block-title-bg" aria-hidden="true" />
+                      <span className="ceremonia-facial-block-title-text">
+                        Consejos de Aplicación
+                      </span>
+                    </div>
+                    <div className="ceremonia-facial-block-text">
+                      <div className="ceremonia-facial-block-text-bg" aria-hidden="true" />
+                      <p className="ceremonia-facial-block-text-content whitespace-pre-line">
+                        {paso.consejos}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Texto extra (solo si aplica) */}
@@ -293,43 +221,16 @@ export default function CeremoniaFacialPage() {
           </div>
         </section>
 
-        {/* Elegí tu Alquimia */}
+        {/* Elegí tu Ceremonia - Carrusel de biotipos */}
         <section className="px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-12 lg:pb-32 -mt-4 sm:-mt-8 lg:-mt-16">
-          <div className="ceremonia-facial-alquimia-title">
-            <div className="ceremonia-facial-alquimia-title-bg" aria-hidden="true" />
-            <h3 className="ceremonia-facial-alquimia-title-text pb-2 lg:pb-4">
-              ¡Elegí tu Alquimia!
-            </h3>
-          </div>
-
-          <div className="mx-auto grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {ALQUIMIAS.map((alq) => (
-              <article
-                key={alq.id}
-                className="flex flex-col rounded-lg bg-white/90 px-6 pb-6 pt-3 shadow-md backdrop-blur-sm transition-shadow hover:shadow-lg sm:px-8 sm:pb-8 sm:pt-4"
-              >
-                <h4 className="font-title mb-1 text-xl font-normal text-[var(--color-brand-primary)] sm:text-2xl">
-                  {alq.titulo}
-                </h4>
-                <p className="font-subtitle mb-3 text-sm italic text-[var(--color-text-primary)]">
-                  {alq.subtitulo}
-                </p>
-                <p className="font-text mb-6 flex-1 text-base leading-relaxed text-[var(--color-text-primary)]">
-                  {alq.descripcion}
-                </p>
-                <ul className="font-text mb-6 list-inside list-decimal space-y-1 text-base text-[var(--color-text-primary)]">
-                  {alq.productos.map((p, i) => (
-                    <li key={i}>{p}</li>
-                  ))}
-                </ul>
-                <Link
-                  href="/productos"
-                  className="font-title inline-flex justify-center rounded-r-[15px] border-2 border-[var(--color-brand-primary)] bg-[var(--color-bg-light)] px-6 py-3 text-sm font-medium uppercase tracking-[1px] text-[var(--color-brand-primary)] transition-colors hover:bg-[var(--color-brand-primary)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2"
-                >
-                  ELEGÍ TU CEREMONIA!
-                </Link>
-              </article>
-            ))}
+          <CeremoniaFacialCarousel />
+          <div className="mt-8 flex justify-center sm:mt-10">
+            <Link
+              href="/productos"
+              className="font-title inline-flex justify-center rounded-r-[15px] border-2 border-[var(--color-brand-primary)] bg-[var(--color-bg-light)] px-8 py-4 text-sm font-medium uppercase tracking-[1px] text-[var(--color-brand-primary)] transition-colors hover:bg-[var(--color-brand-primary)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2 sm:text-base"
+            >
+              ELEGÍ TU CEREMONIA!
+            </Link>
           </div>
         </section>
       </main>
