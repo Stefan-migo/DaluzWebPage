@@ -131,6 +131,17 @@
 
 }
 
+/* Grupo label + texto: los mantiene siempre juntos.
+   El cap de ancho evita que el texto sobrepase el fondo decorativo
+   en resoluciones intermedias (tablet). */
+.ceremonia-corporal-block-group {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .ceremonia-corporal-step-title {
   min-height: 100px;
   padding: 1rem 1.25rem;
@@ -142,14 +153,17 @@
   margin-bottom: 0.5rem;
 }
 
+/* El inset horizontal lo aporta el contenido en % (ver -content abajo):
+   el fondo text2Bg.svg tiene esquinas de radio 10.86% del ancho, que al
+   escalar con background-size:100% 100% recortan el área pintada. */
 .ceremonia-corporal-block-text {
   min-height: 80px;
-  padding: 1rem 1.25rem;
+  padding: 1rem 0;
 }
 
 .ceremonia-corporal-extra-block {
   min-height: 80px;
-  padding: 1rem 1.25rem;
+  padding: 1rem 0;
 }
 
 /* SVG backgrounds - mobile (visible, adapted) */
@@ -212,7 +226,8 @@
 }
 
 .ceremonia-corporal-block-text-content {
-  padding: 1rem 1.25rem;
+  /* 12% > 10.86% (radio de esquina del SVG): el texto nunca entra en el recorte */
+  padding: 1rem 12%;
   font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
   line-height: 1.6;
@@ -221,7 +236,7 @@
 
 .ceremonia-corporal-extra-block-content {
   flex-direction: column;
-  padding: 1rem 1.25rem;
+  padding: 1rem 12%;
   font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
   line-height: 1.6;
@@ -300,41 +315,6 @@
   }
 }
 
-/* Alquimia title - mobile */
-.ceremonia-corporal-alquimia-title {
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  min-height: 90px;
-  margin: 0 auto 1.5rem;
-  padding: 1rem;
-}
-
-.ceremonia-corporal-alquimia-title-bg {
-  position: absolute;
-  inset: 0;
-  background-image: url('/svg/ceremonias/SectionTitleBg.svg');
-  background-size: 100% 100%;
-  background-position: center;
-  background-repeat: no-repeat;
-  z-index: 0;
-}
-
-.ceremonia-corporal-alquimia-title-text {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-title);
-  font-size: clamp(1.25rem, 5vw, 1.75rem);
-  font-weight: normal;
-  letter-spacing: 0.03em;
-  color: var(--color-bg-light, #F0EACE);
-  text-align: center;
-  z-index: 1;
-}
-
 /* ===========================
    DESKTOP ONLY (min-width: 1024px) - Zigzag, absolute positioning
    =========================== */
@@ -373,9 +353,10 @@
     color: var(--color-bg-light, #F0EACE);
   }
 
-  /* Step container */
+  /* Step container - alto suficiente para contener el 3er grupo
+     (top 535px + pill + panel) sin invadir el paso siguiente. */
   .ceremonia-corporal-step-container {
-    min-height: 680px;
+    min-height: 780px;
   }
 
   .ceremonia-corporal-mobile-card {
@@ -384,10 +365,11 @@
     padding: 0;
   }
 
-  /* Zigzag - absolute positioning */
+  /* Zigzag - absolute positioning.
+     Se posiciona el GRUPO (label + texto), no cada bloque por separado,
+     así el título y su contenido nunca se separan. */
   .ceremonia-corporal-step-title,
-  .ceremonia-corporal-block-title,
-  .ceremonia-corporal-block-text,
+  .ceremonia-corporal-block-group,
   .ceremonia-corporal-extra-block {
     position: absolute;
     margin-bottom: 0;
@@ -413,18 +395,13 @@
     right: 5%;
   }
 
-  .ceremonia-corporal-block-title[data-zigzag="left"] {
-    left: 7%;
-  }
-
-  .ceremonia-corporal-block-text[data-zigzag="left"],
+  .ceremonia-corporal-block-group[data-zigzag="left"],
   .ceremonia-corporal-extra-block[data-zigzag="left"] {
     left: 8%;
     right: auto;
   }
 
-  .ceremonia-corporal-block-title[data-zigzag="right"],
-  .ceremonia-corporal-block-text[data-zigzag="right"],
+  .ceremonia-corporal-block-group[data-zigzag="right"],
   .ceremonia-corporal-extra-block[data-zigzag="right"] {
     /* Usamos 'left' en lugar de 'right' para que sus comienzos (izquierdos) estÃ©n perfectamente alineados. 
        Se usa un calc() para asegurar que entren en pantallas pequeÃ±as sin sobrepasar el ancho. */
@@ -449,35 +426,9 @@
     color: var(--color-bg-light, #F0EACE);
   }
 
-  .ceremonia-corporal-block-title {
-    width: 480px;
-    max-width: 100%;
-    min-height: 70px;
-    padding: 0.75rem 1.25rem;
-  }
-
-  .ceremonia-corporal-block-title-text {
-    position: absolute;
-    inset: 0;
-    padding: 0.75rem 1.25rem;
-    font-size: clamp(1rem, 1.35vw, 1.25rem);
-    color: var(--color-brand-primary, #AE0000);
-  }
-
-  .ceremonia-corporal-block-text {
-    width: 480px;
-    max-width: 100%;
-    min-height: 100px;
-    padding: 1.25rem 1.5rem;
-  }
-
-  .ceremonia-corporal-block-text-content {
-    position: relative;
-    min-height: 80px;
-    padding: 1.25rem 1.5rem;
-    font-size: clamp(1rem, 1.2vw, 1.25rem);
-    color: var(--color-text-inverse, #FFFFFF);
-  }
+  /* El par pill + panel hereda el estilo base (idéntico en las tres
+     resoluciones): ancho 520px del grupo, gap de 0.5rem entre pill y panel,
+     min-heights y fuentes base. Solo se conserva el zigzag del grupo. */
 
   .ceremonia-corporal-extra-block {
     width: 480px;
@@ -499,28 +450,16 @@
     top: -101px;
   }
 
-  .ceremonia-corporal-step-container>.ceremonia-corporal-block-title:nth-child(2) {
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-group[data-order="1"] {
     top: 95px;
   }
 
-  .ceremonia-corporal-step-container>.ceremonia-corporal-block-text:nth-child(3) {
-    top: 157px;
-  }
-
-  .ceremonia-corporal-step-container>.ceremonia-corporal-block-title:nth-child(4) {
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-group[data-order="2"] {
     top: 315px;
   }
 
-  .ceremonia-corporal-step-container>.ceremonia-corporal-block-text:nth-child(5) {
-    top: 379px;
-  }
-
-  .ceremonia-corporal-step-container>.ceremonia-corporal-block-title:nth-child(6) {
+  .ceremonia-corporal-step-container>.ceremonia-corporal-block-group[data-order="3"] {
     top: 535px;
-  }
-
-  .ceremonia-corporal-step-container>.ceremonia-corporal-block-text:nth-child(7) {
-    top: 597px;
   }
 
   .ceremonia-corporal-step-container>.ceremonia-corporal-extra-block {
@@ -537,8 +476,7 @@
   }
 
   .ceremonia-corporal-step-title,
-  .ceremonia-corporal-block-title,
-  .ceremonia-corporal-block-text,
+  .ceremonia-corporal-block-group,
   .ceremonia-corporal-extra-block {
     z-index: 10;
     /* Ensure text sits on top of overlapping photos */
@@ -585,20 +523,5 @@
   /* Section container */
   .ceremonia-corporal-content .max-w-4xl {
     max-width: 65rem;
-  }
-
-  /* Alquimia title - desktop */
-  .ceremonia-corporal-alquimia-title {
-    max-width: 600px;
-    min-height: 120px;
-    margin: 0 auto 2rem;
-    margin-top: 0.5rem;
-    font-family: var(--font-title);
-  }
-
-  .ceremonia-corporal-alquimia-title-text {
-    font-size: clamp(1.5rem, 2.5vw, 2.5rem);
-    letter-spacing: 0.05em;
-    color: var(--color-bg-light, #F0EACE);
   }
 }

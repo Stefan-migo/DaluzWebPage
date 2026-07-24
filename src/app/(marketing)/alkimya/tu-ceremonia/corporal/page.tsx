@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import '@/styles/ceremonia-corporal.css'
 
 export const metadata: Metadata = {
@@ -38,19 +39,6 @@ const PASOS = [
       'Usa la Crema Corporal Pureza diariamente después de la ducha. Aplicar con masaje ascendente sobre la piel ligeramente húmeda.',
   },
 ] as const
-
-const KIT_CORPORAL = {
-  titulo: 'Kit Corporal',
-  subtitulo: 'El Ritual del Cuerpo: Conexion y Bienestar Diario',
-  descripcion:
-    'La piel corporal merece la misma atencion consciente. Este kit es la Alquimia perfecta para renovar, aliviar y nutrir tu cuerpo de pies a cabeza. Un ritual de detox, calma y tonificacion.',
-  productos: [
-    'GEL EXFOLIANTE',
-    'PASTA DENTAL',
-    'CREMA CORPORAL PUREZA',
-    'GEL FRIO SUSURRO',
-  ],
-} as const
 
 export default function CeremoniaCorporalPage() {
   return (
@@ -99,64 +87,64 @@ export default function CeremoniaCorporalPage() {
                     </h4>
                   </div>
 
-                  {/* PropÃ³sito y Beneficio */}
+                  {/* Propósito y Beneficio */}
                   <div
-                    className="ceremonia-corporal-block-title"
+                    className="ceremonia-corporal-block-group"
                     data-zigzag={zigzag.proposito}
+                    data-order="1"
                   >
-                    <div className="ceremonia-corporal-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-corporal-block-title-text">
-                      Propósito y Beneficio
-                    </span>
-                  </div>
-                  <div
-                    className="ceremonia-corporal-block-text"
-                    data-zigzag={zigzag.proposito}
-                  >
-                    <div className="ceremonia-corporal-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-corporal-block-text-content">
-                      {paso.proposito}
-                    </p>
+                    <div className="ceremonia-corporal-block-title">
+                      <div className="ceremonia-corporal-block-title-bg" aria-hidden="true" />
+                      <span className="ceremonia-corporal-block-title-text">
+                        Propósito y Beneficio
+                      </span>
+                    </div>
+                    <div className="ceremonia-corporal-block-text">
+                      <div className="ceremonia-corporal-block-text-bg" aria-hidden="true" />
+                      <p className="ceremonia-corporal-block-text-content">
+                        {paso.proposito}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* IntenciÃ³n de la Ceremonia */}
+                  {/* Intención de la Ceremonia */}
                   <div
-                    className="ceremonia-corporal-block-title"
+                    className="ceremonia-corporal-block-group"
                     data-zigzag={zigzag.intencion}
+                    data-order="2"
                   >
-                    <div className="ceremonia-corporal-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-corporal-block-title-text">
-                      Intención de la Ceremonia
-                    </span>
-                  </div>
-                  <div
-                    className="ceremonia-corporal-block-text"
-                    data-zigzag={zigzag.intencion}
-                  >
-                    <div className="ceremonia-corporal-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-corporal-block-text-content">
-                      {paso.intencion}
-                    </p>
+                    <div className="ceremonia-corporal-block-title">
+                      <div className="ceremonia-corporal-block-title-bg" aria-hidden="true" />
+                      <span className="ceremonia-corporal-block-title-text">
+                        Intención de la Ceremonia
+                      </span>
+                    </div>
+                    <div className="ceremonia-corporal-block-text">
+                      <div className="ceremonia-corporal-block-text-bg" aria-hidden="true" />
+                      <p className="ceremonia-corporal-block-text-content">
+                        {paso.intencion}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Consejos de AplicaciÃ³n */}
+                  {/* Consejos de Aplicación */}
                   <div
-                    className="ceremonia-corporal-block-title"
+                    className="ceremonia-corporal-block-group"
                     data-zigzag={zigzag.consejos}
+                    data-order="3"
                   >
-                    <div className="ceremonia-corporal-block-title-bg" aria-hidden="true" />
-                    <span className="ceremonia-corporal-block-title-text">
-                      Consejos de Aplicación
-                    </span>
-                  </div>
-                  <div
-                    className="ceremonia-corporal-block-text"
-                    data-zigzag={zigzag.consejos}
-                  >
-                    <div className="ceremonia-corporal-block-text-bg" aria-hidden="true" />
-                    <p className="ceremonia-corporal-block-text-content">
-                      {paso.consejos}
-                    </p>
+                    <div className="ceremonia-corporal-block-title">
+                      <div className="ceremonia-corporal-block-title-bg" aria-hidden="true" />
+                      <span className="ceremonia-corporal-block-title-text">
+                        Consejos de Aplicación
+                      </span>
+                    </div>
+                    <div className="ceremonia-corporal-block-text">
+                      <div className="ceremonia-corporal-block-text-bg" aria-hidden="true" />
+                      <p className="ceremonia-corporal-block-text-content">
+                        {paso.consejos}
+                      </p>
+                    </div>
                   </div>
 
                   {/* Foto del Paso Corporal */}
@@ -181,37 +169,29 @@ export default function CeremoniaCorporalPage() {
           </div>
         </section>
 
-        {/* ElegÃ­ tu Alquimia - Kit Corporal */}
+        {/* Elegí tu Ceremonia - Kit Corporal */}
         <section className="px-4 pb-16 sm:px-6 sm:pb-20 md:px-8 md:pb-24 lg:px-12 lg:pb-32">
-          <div className="ceremonia-corporal-alquimia-title">
-            <div className="ceremonia-corporal-alquimia-title-bg" aria-hidden="true" />
-            <h1 className="ceremonia-corporal-alquimia-title-text">
-              Elegí tu Alquimia!
-            </h1>
-          </div>
-
-          <article className="mx-auto max-w-2xl rounded-lg bg-white/90 p-6 shadow-md backdrop-blur-sm transition-shadow hover:shadow-lg sm:p-8">
-            <h4 className="font-title mb-2 text-xl font-normal text-[var(--color-brand-primary)] sm:text-2xl">
-              {KIT_CORPORAL.titulo}
-            </h4>
-            <p className="font-subtitle mb-4 text-base font-medium italic text-[var(--color-text-primary)]">
-              {KIT_CORPORAL.subtitulo}
-            </p>
-            <p className="font-text mb-6 text-base leading-relaxed text-[var(--color-text-primary)]">
-              {KIT_CORPORAL.descripcion}
-            </p>
-            <ul className="font-text mb-6 list-inside list-decimal space-y-1 text-base text-[var(--color-text-primary)]">
-              {KIT_CORPORAL.productos.map((p, i) => (
-                <li key={i}>{p}</li>
-              ))}
-            </ul>
+          <Link
+            href="/productos"
+            className="relative -mx-4 block overflow-hidden rounded-none shadow-2xl sm:mx-auto sm:max-w-[1600px] sm:rounded-xl"
+          >
+            <Image
+              src="/images/ceremonias/carrusel/corporal-kit.webp"
+              alt="Kit corporal: exfoliación, hidratación y alivio muscular"
+              width={2000}
+              height={563}
+              sizes="(max-width: 1500px) 100vw, 1500px"
+              className="h-auto w-full"
+            />
+          </Link>
+          <div className="mt-8 flex justify-center sm:mt-10">
             <Link
               href="/productos"
-              className="font-title inline-flex w-full justify-center rounded-r-[15px] border-2 border-[var(--color-brand-primary)] bg-[var(--color-bg-light)] px-6 py-3 text-sm font-medium uppercase tracking-[1px] text-[var(--color-brand-primary)] transition-colors hover:bg-[var(--color-brand-primary)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2 sm:w-auto"
+              className="font-title inline-flex justify-center rounded-r-[15px] border-2 border-[var(--color-brand-primary)] bg-[var(--color-bg-light)] px-8 py-4 text-sm font-medium uppercase tracking-[1px] text-[var(--color-brand-primary)] transition-colors hover:bg-[var(--color-brand-primary)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-primary)] focus-visible:ring-offset-2 sm:text-base"
             >
-              ELEGÍ TU CEREMONIA! | KIT CORPORAL
+              ELEGÍ TU CEREMONIA!
             </Link>
-          </article>
+          </div>
         </section>
       </main>
     </div>

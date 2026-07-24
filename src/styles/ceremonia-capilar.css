@@ -153,14 +153,17 @@
   margin-bottom: 0.5rem;
 }
 
+/* El inset horizontal lo aporta el contenido en % (ver -content abajo):
+   el fondo text2Bg.svg tiene esquinas de radio 10.86% del ancho, que al
+   escalar con background-size:100% 100% recortan el área pintada. */
 .ceremonia-capilar-block-text {
   min-height: 80px;
-  padding: 1rem 1.25rem;
+  padding: 1rem 0;
 }
 
 .ceremonia-capilar-extra-block {
   min-height: 80px;
-  padding: 1rem 1.25rem;
+  padding: 1rem 0;
 }
 
 /* SVG backgrounds - mobile (visible, adapted) */
@@ -223,7 +226,8 @@
 }
 
 .ceremonia-capilar-block-text-content {
-  padding: 1rem 1.25rem;
+  /* 12% > 10.86% (radio de esquina del SVG): el texto nunca entra en el recorte */
+  padding: 1rem 12%;
   font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
   line-height: 1.6;
@@ -232,7 +236,7 @@
 
 .ceremonia-capilar-extra-block-content {
   flex-direction: column;
-  padding: 1rem 1.25rem;
+  padding: 1rem 12%;
   font-family: var(--font-text, 'EB Garamond', 'Times New Roman', serif);
   font-size: clamp(0.9375rem, 3.5vw, 1.125rem);
   line-height: 1.6;
