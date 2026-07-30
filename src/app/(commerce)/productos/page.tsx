@@ -25,7 +25,6 @@ import {
   ChevronDown,
   ChevronRight,
   ArrowUpDown,
-  X,
   Heart,
   Tag,
 } from "lucide-react";
@@ -64,11 +63,11 @@ interface Product {
     is_default: boolean;
   }>;
   promotional_tag?:
-    | "none"
-    | "lanzamiento"
-    | "descuento"
-    | "ultimas_unidades"
-    | null;
+  | "none"
+  | "lanzamiento"
+  | "descuento"
+  | "ultimas_unidades"
+  | null;
   discount_transfer_percent?: number | null;
   discount_cash_percent?: number | null;
   installments_3_enabled?: boolean;
@@ -284,13 +283,13 @@ function ProductsContent() {
 
   const hasActiveFilters = Boolean(
     searchTerm ||
-      selectedCategory ||
-      (selectedSkinType && selectedSkinType !== "all") ||
-      (selectedHairType && selectedHairType !== "all") ||
-      priceRange.min ||
-      priceRange.max ||
-      showOnlyFavorites ||
-      showOnlySale,
+    selectedCategory ||
+    (selectedSkinType && selectedSkinType !== "all") ||
+    (selectedHairType && selectedHairType !== "all") ||
+    priceRange.min ||
+    priceRange.max ||
+    showOnlyFavorites ||
+    showOnlySale,
   );
 
   const displayedProducts = showOnlyFavorites
@@ -322,12 +321,13 @@ function ProductsContent() {
             {/* Search Card - Always Open */}
             <div className="col-span-3">
               <Card variant="artisanal" className="p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <Search className="h-4 w-4 text-azul-profundo" />
-                  <span className="text-sm font-medium">Buscar</span>
+                <div className="tienda-section-title flex items-center gap-2 mb-2">
+                  <Search className="h-4 w-4" />
+                  <span className="text-sm">Buscar</span>
                 </div>
                 <div className="relative">
                   <Input
+                    variant="tienda"
                     placeholder="Buscar productos..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -349,9 +349,10 @@ function ProductsContent() {
                     }))
                   }
                 >
-                  <div className="flex items-center gap-1">
-                    <Filter className="h-3 w-3 text-azul-profundo" />
-                    <span className="text-xs font-medium">Categorías</span>
+                  <div className="tienda-section-title flex items-center gap-1">
+                    <Filter className="h-3 w-3" />
+                    {/* Sin tilde: Synthese.otf no incluye el glifo "Í" y caería a otra fuente */}
+                    <span className="text-xs">Categorias</span>
                   </div>
                   {expandedSections.categories ? (
                     <ChevronDown className="h-3 w-3" />
@@ -361,11 +362,17 @@ function ProductsContent() {
                 </div>
                 {expandedSections.categories && (
                   <div className="mt-2 space-y-1 max-h-32 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+                    {/* El token va solo en reposo: la variante line-primary del
+                        item seleccionado trae texto blanco sobre fondo solido y
+                        el rojo del token lo dejaria ilegible. */}
                     <Button
                       variant={
                         selectedCategory === "" ? "line-primary" : "line-ghost"
                       }
-                      className="w-full justify-start text-xs h-6"
+                      className={cn(
+                        "w-full justify-start text-xs h-6",
+                        selectedCategory === "" ? "tienda-button" : "tienda-line-button",
+                      )}
                       onClick={() => setSelectedCategory("")}
                     >
                       Todas
@@ -378,7 +385,12 @@ function ProductsContent() {
                             ? "line-primary"
                             : "line-ghost"
                         }
-                        className="w-full justify-start text-xs h-6"
+                        className={cn(
+                          "w-full justify-start text-xs h-6",
+                          selectedCategory === category.id
+                            ? "tienda-button"
+                            : "tienda-line-button",
+                        )}
                         onClick={() => setSelectedCategory(category.id)}
                       >
                         {category.name}
@@ -401,9 +413,9 @@ function ProductsContent() {
                     }))
                   }
                 >
-                  <div className="flex items-center gap-1">
-                    <SlidersHorizontal className="h-3 w-3 text-azul-profundo" />
-                    <span className="text-xs font-medium">Filtros</span>
+                  <div className="tienda-section-title flex items-center gap-1">
+                    <SlidersHorizontal className="h-3 w-3" />
+                    <span className="text-xs">Filtros</span>
                   </div>
                   {expandedSections.filters ? (
                     <ChevronDown className="h-3 w-3" />
@@ -417,10 +429,10 @@ function ProductsContent() {
                       value={selectedSkinType}
                       onValueChange={setSelectedSkinType}
                     >
-                      <SelectTrigger className="h-6 text-xs">
+                      <SelectTrigger className="tienda-select-trigger h-6 text-xs">
                         <SelectValue placeholder="Piel" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="tienda-select-panel">
                         <SelectItem value="all">Todos</SelectItem>
                         <SelectItem value="dry">Seca</SelectItem>
                         <SelectItem value="oily">Grasa</SelectItem>
@@ -434,10 +446,10 @@ function ProductsContent() {
                       value={selectedHairType}
                       onValueChange={setSelectedHairType}
                     >
-                      <SelectTrigger className="h-6 text-xs">
+                      <SelectTrigger className="tienda-select-trigger h-6 text-xs">
                         <SelectValue placeholder="Cabello" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="tienda-select-panel">
                         <SelectItem value="all">Todos</SelectItem>
                         <SelectItem value="oily">Graso</SelectItem>
                         <SelectItem value="dry">Seco</SelectItem>
@@ -450,11 +462,13 @@ function ProductsContent() {
 
                     {/* Price Range */}
                     <div className="space-y-1">
-                      <label className="text-xs text-gray-600">Precio</label>
+                      <label className="tienda-field-label">Precio</label>
                       <div className="grid grid-cols-2 gap-1">
+                        {/* Sin tilde: Synthese.otf no trae los glifos "í"/"á" */}
                         <Input
+                          variant="tienda"
                           type="number"
-                          placeholder="Mín"
+                          placeholder="Min"
                           value={priceRange.min}
                           onChange={(e) =>
                             setPriceRange({
@@ -465,8 +479,9 @@ function ProductsContent() {
                           className="h-6 text-xs"
                         />
                         <Input
+                          variant="tienda"
                           type="number"
-                          placeholder="Máx"
+                          placeholder="Max"
                           value={priceRange.max}
                           onChange={(e) =>
                             setPriceRange({
@@ -479,36 +494,35 @@ function ProductsContent() {
                       </div>
                     </div>
 
+                    {/* Los iconos aparecen solo en estado activo */}
                     <Button
-                      variant={showOnlyFavorites ? "line-primary" : "outline"}
+                      variant="outline"
+                      data-active={showOnlyFavorites || undefined}
                       onClick={() => setShowOnlyFavorites((v) => !v)}
-                      className="w-full text-xs h-6"
+                      className="tienda-action-button w-full text-xs h-6"
                     >
-                      <Heart
-                        className={cn(
-                          "h-3 w-3 mr-1",
-                          showOnlyFavorites && "fill-current",
-                        )}
-                      />
-                      {showOnlyFavorites ? "Mostrando favoritos" : "Solo favoritos"}
+                      {showOnlyFavorites && (
+                        <Heart className="h-3 w-3 mr-1 fill-current" />
+                      )}
+                      Solo favoritos
                     </Button>
 
                     <Button
-                      variant={showOnlySale ? "line-primary" : "outline"}
+                      variant="outline"
+                      data-active={showOnlySale || undefined}
                       onClick={() => { setShowOnlySale((v) => !v); setCurrentPage(1); }}
-                      className="w-full text-xs h-6"
+                      className="tienda-action-button w-full text-xs h-6"
                     >
-                      <Tag className="h-3 w-3 mr-1" />
-                      {showOnlySale ? "Mostrando ofertas" : "Solo ofertas"}
+                      {showOnlySale && <Tag className="h-3 w-3 mr-1" />}
+                      Solo ofertas
                     </Button>
 
                     {hasActiveFilters && (
                       <Button
                         variant="outline"
                         onClick={clearFilters}
-                        className="w-full text-xs h-6"
+                        className="tienda-action-button w-full text-xs h-6"
                       >
-                        <X className="h-3 w-3 mr-1" />
                         Limpiar
                       </Button>
                     )}
@@ -529,9 +543,9 @@ function ProductsContent() {
                     }))
                   }
                 >
-                  <div className="flex items-center gap-1">
-                    <ArrowUpDown className="h-3 w-3 text-azul-profundo" />
-                    <span className="text-xs font-medium">Ordenar</span>
+                  <div className="tienda-section-title flex items-center gap-1">
+                    <ArrowUpDown className="h-3 w-3" />
+                    <span className="text-xs">Ordenar</span>
                   </div>
                   {expandedSections.sort ? (
                     <ChevronDown className="h-3 w-3" />
@@ -542,20 +556,22 @@ function ProductsContent() {
                 {expandedSections.sort && (
                   <div className="mt-2">
                     <Select value={sortBy} onValueChange={setSortBy}>
-                      <SelectTrigger className="h-6 text-xs">
+                      <SelectTrigger className="tienda-select-trigger h-6 text-xs">
                         <SelectValue placeholder="Ordenar por" />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent className="tienda-select-panel">
+                        {/* Etiquetas sin "á" ni ":": Synthese.otf no trae esos
+                            glifos y el panel usa esa tipografía */}
                         <SelectItem value="featured">Destacados</SelectItem>
                         <SelectItem value="price_asc">
-                          Precio: Menor a Mayor
+                          Precio menor a mayor
                         </SelectItem>
                         <SelectItem value="price_desc">
-                          Precio: Mayor a Menor
+                          Precio mayor a menor
                         </SelectItem>
-                        <SelectItem value="name_asc">Nombre: A-Z</SelectItem>
-                        <SelectItem value="name_desc">Nombre: Z-A</SelectItem>
-                        <SelectItem value="newest">Más Recientes</SelectItem>
+                        <SelectItem value="name_asc">Nombre A-Z</SelectItem>
+                        <SelectItem value="name_desc">Nombre Z-A</SelectItem>
+                        <SelectItem value="newest">Recientes</SelectItem>
                         <SelectItem value="rating">Mejor Valorados</SelectItem>
                       </SelectContent>
                     </Select>
@@ -589,7 +605,6 @@ function ProductsContent() {
               hasActiveFilters={hasActiveFilters}
               showOnlyFavorites={showOnlyFavorites}
               setShowOnlyFavorites={setShowOnlyFavorites}
-              favoritesCount={likedProducts.size}
               showOnlySale={showOnlySale}
               setShowOnlySale={(v) => {
                 setShowOnlySale(v);
@@ -606,11 +621,10 @@ function ProductsContent() {
             {/* Products Grid */}
             {loading ? (
               <div
-                className={`grid gap-3 sm:gap-4 lg:gap-6 ${
-                  gridCols === 2
-                    ? "grid-cols-1 sm:grid-cols-2"
-                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                }`}
+                className={`grid gap-3 sm:gap-4 lg:gap-6 ${gridCols === 2
+                  ? "grid-cols-1 sm:grid-cols-2"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                  }`}
               >
                 {Array.from({ length: 9 }).map((_, i) => (
                   <div
@@ -654,11 +668,10 @@ function ProductsContent() {
               </div>
             ) : (
               <div
-                className={`grid gap-3 sm:gap-4 lg:gap-6 ${
-                  gridCols === 2
-                    ? "grid-cols-1 sm:grid-cols-2"
-                    : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                }`}
+                className={`grid gap-3 sm:gap-4 lg:gap-6 ${gridCols === 2
+                  ? "grid-cols-1 sm:grid-cols-2"
+                  : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                  }`}
               >
                 {displayedProducts.map((product) => (
                   <ProductCard

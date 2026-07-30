@@ -30,6 +30,13 @@ const inputVariants = cva(
         umbral: "border-2 border-umbral-primary/30 bg-umbral-lightest/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-umbral-primary focus-visible:border-umbral-primary hover:border-umbral-primary/50",
         utopica: "border-2 border-utopica-primary/30 bg-utopica-lightest/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-utopica-primary focus-visible:border-utopica-primary hover:border-utopica-primary/50",
         
+        // Tienda unificada (2026): beige suave + borde fino azul institucional.
+        // El placeholder va al 65% (mismo "atenuado" que .tienda-field-label):
+        // se distingue del valor tipeado y aun así da 5.52:1 sobre el beige,
+        // por encima del 4.5:1 de WCAG AA. Al 55% quedaba en 4.00:1 y no pasaba.
+        tienda:
+          "font-synthese border border-azul-institucional bg-beige-suave text-azul-institucional placeholder:text-azul-institucional/65 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azul-institucional/35 focus-visible:ring-offset-0 focus-visible:border-azul-institucional hover:border-azul-institucional",
+
         // State Variants
         error: "border-2 border-destructive/50 bg-destructive/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive focus-visible:border-destructive text-destructive-foreground",
         success: "border-2 border-green-500/50 bg-green-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:border-green-500",

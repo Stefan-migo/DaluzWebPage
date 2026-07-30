@@ -130,6 +130,10 @@ const config = {
           "surface-hover": "#D8E7F4",
           ink: "#16345F", // texto sobre tarjeta clara
         },
+        // Azul Institucional DA LUZ - iconografía y títulos de la tienda
+        "azul-institucional": "#051341",
+        // Beige suave - fondo de los campos de formulario de la tienda
+        "beige-suave": "#FFF2E9",
         // Admin / UI accent colors (azul profundo #1E3A8A, dorado)
         "azul-profundo": "#1E3A8A",
         dorado: "#F8D794",
@@ -213,6 +217,7 @@ const config = {
         serif: ["var(--font-heading)", "Playfair Display", "serif"],
         malisha: ["var(--font-malisha)", "Malisha", "cursive"],
         velista: ["var(--font-velista)", "VELISTA", "serif"],
+        synthese: ["var(--font-synthese)", "Synthese", "sans-serif"],
       },
       fontSize: {
         // Enhanced Typography Scale using CSS variables
@@ -403,6 +408,139 @@ const config = {
         },
         ".text-body": {
           fontFamily: "var(--font-body)",
+        },
+        // ===============================================
+        // TIENDA - TIPOGRAFÍA UNIFICADA DE FILTROS
+        // ===============================================
+        // Título de cada bloque del sidebar/filtros de la tienda.
+        // font-synthesis: none evita que el navegador simule negrita sobre
+        // Synthese.otf, que ya es un corte Bold de por sí.
+        ".tienda-section-title": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontWeight: "600",
+          fontSynthesis: "none",
+          textTransform: "uppercase",
+          letterSpacing: "0.06em",
+          color: "#051341",
+        },
+        // Sub-label de campo dentro de una tarjeta de filtros ("Tipo de Piel").
+        // Deliberadamente en minúsculas, sans y atenuado: si compitiera con el
+        // título en Synthese se aplanaría la jerarquía de la tienda.
+        // El azul institucional al 65% mantiene la familia cromática y da 5.5:1
+        // de contraste sobre el crema #fff2db de las tarjetas (AA).
+        ".tienda-field-label": {
+          fontFamily: "var(--font-caption), Inter, sans-serif",
+          fontSize: "0.75rem",
+          fontWeight: "500",
+          letterSpacing: "0.01em",
+          textTransform: "none",
+          color: "rgb(5 19 65 / 0.65)",
+        },
+        // Trigger del <Select>: mismo lenguaje visual que el Input variant
+        // "tienda" (beige + borde fino azul + Synthese), para que los campos
+        // de un mismo formulario no se lean como controles distintos.
+        // El 65% del estado placeholder da 5.52:1 sobre el beige (AA).
+        // OJO con la clase duplicada: globals.css tiene una regla global
+        // `button:not(.btn-no-radius)` que impone VELISTA + uppercase. Es
+        // (0,1,1) y ademas se emite DESPUES de estas utilidades, asi que una
+        // clase simple (0,1,0) pierde. Duplicarla da (0,2,0) y gana siempre.
+        // El SelectTrigger de Radix renderiza un <button>, por eso le aplica.
+        ".tienda-select-trigger.tienda-select-trigger": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontSynthesis: "none",
+          backgroundColor: "#FFF2E9",
+          borderWidth: "1px",
+          borderColor: "#051341",
+          color: "#051341",
+          "&[data-placeholder]": {
+            color: "rgb(5 19 65 / 0.65)",
+          },
+        },
+        // Botones del sidebar de la tienda (lineas de producto, favoritos,
+        // ofertas, vista). Misma pelea de especificidad que el trigger: solo
+        // cambia la tipografia, el color de cada boton lo sigue poniendo su
+        // variante para no pisar el bordo de las lineas de producto.
+        ".tienda-button.tienda-button": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontSynthesis: "none",
+        },
+        // Botones de accion / filtro del sidebar (favoritos, ofertas, limpiar).
+        // Estado activo via [data-active] en vez de cambiar la variante CVA:
+        // line-primary arrastra shadow-line y hover:-translate-y-1, que es
+        // justo el resplandor que este diseno pide eliminar.
+        ".tienda-action-button.tienda-action-button": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontSynthesis: "none",
+          textTransform: "uppercase",
+          letterSpacing: "0.18em",
+          color: "#860119",
+          backgroundColor: "#FFF2E9",
+          borderWidth: "1px",
+          borderStyle: "solid",
+          borderColor: "#860119",
+          borderRadius: "0 15px",
+          boxShadow: "none",
+          filter: "none",
+          transform: "none",
+          transition: "background-color 0.2s ease, color 0.2s ease",
+          "&:hover, &[data-active]": {
+            backgroundColor: "#860119",
+            color: "#FFF2E9",
+            borderColor: "#860119",
+            boxShadow: "none",
+            filter: "none",
+            transform: "none",
+          },
+        },
+        // Neutraliza el halo rojo de las variantes line-*: shadow-line y
+        // shadow-line-lg estan definidas como "0 8px 25px var(--line-primary)"
+        // SIN alpha (a diferencia del resto de la escala, que usa rgba a 0.15),
+        // asi que pintan un resplandor opaco al 100%. Tambien anula el
+        // hover:-translate-y, que dentro de un control segmentado con
+        // overflow-hidden queda recortado.
+        // Clase duplicada: hay que ganarle a .shadow-line (0,1,0) y a
+        // .hover\\:shadow-line-lg:hover (0,2,0).
+        ".tienda-flat.tienda-flat": {
+          boxShadow: "none",
+          filter: "none",
+          transform: "none",
+          "&:hover": {
+            boxShadow: "none",
+            filter: "none",
+            transform: "none",
+          },
+        },
+        // Items de la lista de categorias / lineas de producto.
+        // Clase duplicada por la misma razon que .tienda-button: hay que
+        // ganarle al letter-spacing: 1px de la regla global de botones.
+        ".tienda-line-button.tienda-line-button": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontSynthesis: "none",
+          letterSpacing: "0.15em",
+          color: "#860119",
+          textDecorationLine: "none",
+          transition: "color 0.2s ease, text-decoration-color 0.2s ease",
+          // Doble senal en hover: rojo mas profundo + subrayado institucional.
+          // El subrayado ademas comunica que el item navega a otra pagina.
+          "&:hover": {
+            color: "#6B0114",
+            textDecorationLine: "underline",
+            textDecorationColor: "#051341",
+            textDecorationThickness: "1px",
+            textUnderlineOffset: "0.25em",
+          },
+        },
+        // Panel desplegable del <Select>, en Synthese como el trigger.
+        // OJO: Synthese.otf no trae "á" ni ":", así que las etiquetas de las
+        // opciones se redactaron evitando esos caracteres ("Recientes" en vez
+        // de "Más recientes", "Precio menor a mayor" sin dos puntos). Antes de
+        // agregar una opción nueva, verificar los glifos.
+        ".tienda-select-panel": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontSynthesis: "none",
+          backgroundColor: "#FFF2E9",
+          borderColor: "#051341",
+          color: "#051341",
         },
         // Enhanced Animation Utilities
         ".animate-alkimya-float": {

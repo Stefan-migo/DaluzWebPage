@@ -32,6 +32,30 @@
   font-display: swap;
 }
 
+/* ===============================================
+   ICONOGRAFÍA UNIFICADA - DA LUZ CONSCIENTE
+   ===============================================
+   lucide-react emite stroke-width="2" como atributo SVG en cada ícono.
+   Una regla CSS tiene más peso que un atributo de presentación, así que
+   esto afina el trazo en toda la web sin tocar los ~3.300 usos de <Icon />.
+   Sólo alcanza a .lucide: los SVG a mano (spinners, ondas de alkimya,
+   gráficos de Recharts) conservan su grosor propio.
+
+   El COLOR no se fija acá a propósito: lucide usa stroke="currentColor",
+   así que los íconos heredan el color de su contenedor. Declararlo aquí
+   rompería esa herencia y volvería ilegibles los íconos sobre fondo
+   oscuro (Footer, botones sólidos). Para pintarlos, usar la utilidad
+   text-azul-institucional en superficies claras.
+
+   IMPORTANTE: esta regla va FUERA de @layer a propósito. Dentro de un
+   @layer, Tailwind la purga porque el string "lucide" no aparece en el
+   JSX (lucide-react inyecta la clase en runtime desde node_modules, que
+   no se escanea). Fuera de @layer nunca se purga.
+   Para un ícono con otro grosor, usar style={{ strokeWidth: N }}. */
+.lucide {
+  stroke-width: 1.5;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -62,6 +86,8 @@
     /* Logo, hero titles, decorative */
     --font-velista: "VELISTA", serif;
     /* Section headers, elegant titles */
+    --font-synthese: "Synthese", sans-serif;
+    /* Tienda: títulos de filtros y controles (uso en MAYÚSCULAS) */
 
     /* SECONDARY FONTS (Google Fonts - Fallbacks) */
     --font-heading: "Playfair Display", serif;

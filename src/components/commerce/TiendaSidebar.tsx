@@ -16,7 +16,6 @@ import {
 import {
   Search,
   Filter,
-  X,
   ChevronDown,
   ChevronRight,
   Grid3X3,
@@ -47,7 +46,6 @@ interface TiendaSidebarProps {
   hasActiveFilters: boolean;
   showOnlyFavorites?: boolean;
   setShowOnlyFavorites?: (value: boolean) => void;
-  favoritesCount?: number;
   showOnlySale?: boolean;
   setShowOnlySale?: (value: boolean) => void;
   className?: string;
@@ -79,11 +77,13 @@ const hairTypes = [
   { value: "straight", label: "Lacio" },
 ];
 
+// Las etiquetas evitan "á" y ":": Synthese.otf no incluye esos glifos y el
+// panel del Select se renderiza con esa tipografía.
 const sortOptions = [
   { value: "featured", label: "Destacados" },
-  { value: "newest", label: "Más recientes" },
-  { value: "price_asc", label: "Precio: menor a mayor" },
-  { value: "price_desc", label: "Precio: mayor a menor" },
+  { value: "newest", label: "Recientes" },
+  { value: "price_asc", label: "Precio menor a mayor" },
+  { value: "price_desc", label: "Precio mayor a menor" },
   { value: "name", label: "Nombre A-Z" },
 ];
 
@@ -107,7 +107,6 @@ export default function TiendaSidebar({
   hasActiveFilters,
   showOnlyFavorites = false,
   setShowOnlyFavorites,
-  favoritesCount = 0,
   showOnlySale = false,
   setShowOnlySale,
   className,
@@ -137,7 +136,7 @@ export default function TiendaSidebar({
       <div className="lg:hidden mb-2">
         <Button
           variant="outline"
-          className="w-full flex items-center gap-2 text-sm h-9"
+          className="tienda-button w-full flex items-center gap-2 text-sm h-9"
           onClick={() =>
             setExpandedSections((prev) => ({
               ...prev,
@@ -152,22 +151,16 @@ export default function TiendaSidebar({
       {/* Search */}
       <Card variant="artisanal" className="lg:block" style={{ backgroundColor: "#fff2db" }}>
         <CardHeader className="pb-2 lg:pb-3">
-          <CardTitle
-            className="text-base lg:text-lg flex items-center gap-2"
-            style={{
-              fontFamily: "EB Garamond, var(--font-text), serif",
-              fontWeight: 600,
-              fontStyle: "normal",
-            }}
-          >
-            <Search className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
-            Buscar Productos
+          <CardTitle className="tienda-section-title text-base lg:text-lg flex items-center gap-2">
+            <Search className="h-4 w-4 lg:h-5 lg:w-5" />
+            Buscar
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-azul-institucional h-4 w-4" />
             <Input
+              variant="tienda"
               placeholder="Buscar productos..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -186,17 +179,11 @@ export default function TiendaSidebar({
             toggleSection("categories");
           }}
         >
-          <CardTitle
-            className="text-base lg:text-lg flex items-center justify-between"
-            style={{
-              fontFamily: "EB Garamond, var(--font-text), serif",
-              fontWeight: 600,
-              fontStyle: "normal",
-            }}
-          >
+          <CardTitle className="tienda-section-title text-base lg:text-lg flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <Filter className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
-              Categorías
+              <Filter className="h-4 w-4 lg:h-5 lg:w-5" />
+              {/* Sin tilde: Synthese.otf no incluye el glifo "Í" y caería a otra fuente */}
+              Categorias
             </span>
             {expandedSections.categories ? (
               <ChevronDown className="h-4 w-4" />
@@ -215,8 +202,7 @@ export default function TiendaSidebar({
                   variant={
                     selectedCategory === line.id ? "line-primary" : "line-ghost"
                   }
-                  className="w-full justify-start text-sm h-8 lg:h-9"
-                  style={{ color: "#791010" }}
+                  className="tienda-line-button w-full justify-start text-sm h-8 lg:h-9"
                   onClick={() => {
                     const lineSlug = "slug" in line ? line.slug : line.id;
                     window.location.href = `/categorias/linea-${lineSlug}`;
@@ -239,16 +225,9 @@ export default function TiendaSidebar({
             toggleSection("filters");
           }}
         >
-          <CardTitle
-            className="text-base lg:text-lg flex items-center justify-between"
-            style={{
-              fontFamily: "EB Garamond, var(--font-text), serif",
-              fontWeight: 600,
-              fontStyle: "normal",
-            }}
-          >
+          <CardTitle className="tienda-section-title text-base lg:text-lg flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <SlidersHorizontal className="h-4 w-4 lg:h-5 lg:w-5 text-azul-profundo" />
+              <SlidersHorizontal className="h-4 w-4 lg:h-5 lg:w-5" />
               Filtros
             </span>
             {expandedSections.filters ? (
@@ -262,17 +241,17 @@ export default function TiendaSidebar({
           <CardContent className="pt-0 space-y-3 lg:space-y-4">
             {/* Skin Type */}
             <div>
-              <label className="text-xs lg:text-sm font-medium mb-2 block">
+              <label className="tienda-field-label mb-2 block">
                 Tipo de Piel
               </label>
               <Select
                 value={selectedSkinType}
                 onValueChange={setSelectedSkinType}
               >
-                <SelectTrigger className="h-8 lg:h-10 text-sm">
+                <SelectTrigger className="tienda-select-trigger h-8 lg:h-10 text-sm">
                   <SelectValue placeholder="Todos los tipos" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="tienda-select-panel">
                   <SelectItem value="all">Todos los tipos</SelectItem>
                   {skinTypes.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
@@ -285,17 +264,17 @@ export default function TiendaSidebar({
 
             {/* Hair Type */}
             <div>
-              <label className="text-xs lg:text-sm font-medium mb-2 block">
+              <label className="tienda-field-label mb-2 block">
                 Tipo de Cabello
               </label>
               <Select
                 value={selectedHairType}
                 onValueChange={setSelectedHairType}
               >
-                <SelectTrigger className="h-8 lg:h-10 text-sm">
+                <SelectTrigger className="tienda-select-trigger h-8 lg:h-10 text-sm">
                   <SelectValue placeholder="Todos los tipos" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="tienda-select-panel">
                   <SelectItem value="all">Todos los tipos</SelectItem>
                   {hairTypes.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
@@ -308,13 +287,15 @@ export default function TiendaSidebar({
 
             {/* Price Range */}
             <div>
-              <label className="text-xs lg:text-sm font-medium mb-2 block">
+              <label className="tienda-field-label mb-2 block">
                 Rango de Precio
               </label>
               <div className="grid grid-cols-2 gap-2">
+                {/* Sin tilde: Synthese.otf no trae los glifos "í"/"á" */}
                 <Input
+                  variant="tienda"
                   type="number"
-                  placeholder="Mín"
+                  placeholder="Min"
                   value={priceRange.min}
                   onChange={(e) =>
                     setPriceRange({ ...priceRange, min: e.target.value })
@@ -322,8 +303,9 @@ export default function TiendaSidebar({
                   className="h-8 lg:h-10 text-sm"
                 />
                 <Input
+                  variant="tienda"
                   type="number"
-                  placeholder="Máx"
+                  placeholder="Max"
                   value={priceRange.max}
                   onChange={(e) =>
                     setPriceRange({ ...priceRange, max: e.target.value })
@@ -333,38 +315,35 @@ export default function TiendaSidebar({
               </div>
             </div>
 
-            {/* Favorites Toggle */}
+            {/* Favorites Toggle - el icono aparece solo en estado activo */}
             {setShowOnlyFavorites && (
               <Button
-                variant={showOnlyFavorites ? "line-primary" : "outline"}
+                variant="outline"
+                data-active={showOnlyFavorites || undefined}
                 onClick={() => setShowOnlyFavorites(!showOnlyFavorites)}
-                className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
+                className="tienda-action-button w-full flex items-center justify-center gap-2 text-sm h-8 lg:h-9"
               >
-                <Heart
-                  className={cn(
-                    "h-4 w-4",
-                    showOnlyFavorites && "fill-current",
-                  )}
-                />
-                {showOnlyFavorites
-                  ? `Mostrando favoritos (${favoritesCount})`
-                  : "Mis favoritos"}
+                {showOnlyFavorites && (
+                  <Heart className="h-4 w-4 fill-current" />
+                )}
+                Mis favoritos
               </Button>
             )}
 
-            {/* Sale Toggle */}
+            {/* Sale Toggle - el icono aparece solo en estado activo */}
             {setShowOnlySale && (
               <Button
-                variant={showOnlySale ? "line-primary" : "outline"}
+                variant="outline"
+                data-active={showOnlySale || undefined}
                 onClick={() => setShowOnlySale(!showOnlySale)}
-                className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
+                className="tienda-action-button w-full flex items-center justify-center gap-2 text-sm h-8 lg:h-9"
               >
-                <Tag className="h-4 w-4" />
-                {showOnlySale ? "Mostrando ofertas" : "Solo ofertas"}
+                {showOnlySale && <Tag className="h-4 w-4" />}
+                Solo ofertas
               </Button>
             )}
 
-            {/* Clear Filters */}
+            {/* Clear Filters - sin icono: no tiene estado activo */}
             {hasActiveFilters && (
               <Button
                 variant="outline"
@@ -372,9 +351,8 @@ export default function TiendaSidebar({
                   console.log("Clear filters clicked");
                   onClearFilters();
                 }}
-                className="w-full flex items-center gap-2 text-sm h-8 lg:h-9"
+                className="tienda-action-button w-full flex items-center justify-center gap-2 text-sm h-8 lg:h-9"
               >
-                <X className="h-4 w-4" />
                 Limpiar filtros
               </Button>
             )}
@@ -391,16 +369,9 @@ export default function TiendaSidebar({
             toggleSection("sort");
           }}
         >
-          <CardTitle
-            className="text-lg flex items-center justify-between"
-            style={{
-              fontFamily: "EB Garamond, var(--font-text), serif",
-              fontWeight: 600,
-              fontStyle: "normal",
-            }}
-          >
+          <CardTitle className="tienda-section-title text-lg flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <Grid3X3 className="h-5 w-5 text-azul-profundo" />
+              <Grid3X3 className="h-5 w-5" />
               Ordenar y Vista
             </span>
             {expandedSections.sort ? (
@@ -414,14 +385,14 @@ export default function TiendaSidebar({
           <CardContent className="pt-0 space-y-4">
             {/* Sort Options */}
             <div>
-              <label className="text-sm font-medium mb-2 block">
+              <label className="tienda-field-label mb-2 block">
                 Ordenar por
               </label>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger>
+                <SelectTrigger className="tienda-select-trigger">
                   <SelectValue placeholder="Seleccionar orden" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="tienda-select-panel">
                   {sortOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
@@ -433,7 +404,7 @@ export default function TiendaSidebar({
 
             {/* Grid Options */}
             <div>
-              <label className="text-sm font-medium mb-2 block">Vista</label>
+              <label className="tienda-field-label mb-2 block">Vista</label>
               <div className="flex border rounded-lg overflow-hidden">
                 <Button
                   variant={gridCols === 2 ? "line-primary" : "line-ghost"}
@@ -442,7 +413,7 @@ export default function TiendaSidebar({
                     console.log("Grid 2x2 clicked");
                     setGridCols(2);
                   }}
-                  className="flex-1 rounded-none"
+                  className="tienda-button tienda-flat flex-1 rounded-none"
                 >
                   <Grid2X2 className="h-4 w-4 mr-2" />
                   2x2
@@ -454,7 +425,7 @@ export default function TiendaSidebar({
                     console.log("Grid 3x3 clicked");
                     setGridCols(3);
                   }}
-                  className="flex-1 rounded-none"
+                  className="tienda-button tienda-flat flex-1 rounded-none"
                 >
                   <Grid3X3 className="h-4 w-4 mr-2" />
                   3x3
@@ -470,16 +441,8 @@ export default function TiendaSidebar({
         <Card variant="artisanal">
           <CardContent className="pt-4">
             <div className="space-y-2">
-              <h4
-                className="font-semibold text-sm"
-                style={{
-                  fontFamily: "EB Garamond, var(--font-text), serif",
-                  fontWeight: 600,
-                  fontStyle: "normal",
-                }}
-              >
-                Filtros Activos:
-              </h4>
+              {/* Sin ":" — Synthese.otf no incluye ese glifo y caería a otra fuente */}
+              <h4 className="tienda-section-title text-sm">Filtros Activos</h4>
               <div className="flex flex-wrap gap-2">
                 {searchTerm && (
                   <Badge variant="secondary" className="text-xs">
