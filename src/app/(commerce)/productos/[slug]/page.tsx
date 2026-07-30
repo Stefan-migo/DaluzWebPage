@@ -687,7 +687,10 @@ export default function ProductDetailPage() {
                     </Badge>
                   )}
                 {product.is_featured && (
-                  <Badge className="absolute top-4 right-4 bg-dorado text-white">
+                  <Badge
+                    variant="outline"
+                    className="tienda-badge absolute top-4 right-4"
+                  >
                     Destacado
                   </Badge>
                 )}
@@ -825,15 +828,8 @@ export default function ProductDetailPage() {
                     {product.promotional_tag &&
                       product.promotional_tag !== "none" && (
                         <Badge
-                          className="absolute top-4 left-4 shadow-md"
-                          style={{
-                            backgroundColor: "#FFF2DB",
-                            color: "#791010",
-                            fontFamily: "EB Garamond, var(--font-text), serif",
-                            fontStyle: "italic",
-                            fontWeight: 500,
-                            border: "none",
-                          }}
+                          variant="outline"
+                          className="tienda-badge absolute top-4 left-4 shadow-md"
                         >
                           {product.promotional_tag === "lanzamiento" && (
                             <Sparkles className="h-3 w-3 mr-1" />
@@ -874,7 +870,10 @@ export default function ProductDetailPage() {
                         </Badge>
                       )}
                     {product.is_featured && (
-                      <Badge className="absolute top-4 right-4 bg-dorado text-azul-profundo">
+                      <Badge
+                        variant="outline"
+                        className="tienda-badge absolute top-4 right-4"
+                      >
                         <Sparkles className="h-3 w-3 mr-1" />
                         Destacado
                       </Badge>

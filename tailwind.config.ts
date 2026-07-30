@@ -492,6 +492,23 @@ const config = {
             transform: "none",
           },
         },
+        // Badges de la ficha de producto ("Ultimas Unidades", "Destacado").
+        // Usar SIEMPRE con variant="outline": la variante default del Badge
+        // agrega la clase badge-default-hover, que en globals.css pisa el color
+        // con !important y romperia el hover de abajo.
+        ".tienda-badge": {
+          backgroundColor: "#FFF2DB",
+          color: "#791010",
+          borderColor: "transparent",
+          fontFamily: "EB Garamond, var(--font-text), serif",
+          fontStyle: "italic",
+          fontWeight: "500",
+          transition: "background-color 0.2s ease, color 0.2s ease",
+          "&:hover": {
+            backgroundColor: "#791010",
+            color: "#FFF2DB",
+          },
+        },
         // Superficie de las tarjetas del sidebar de la tienda. Reemplaza el
         // style={{ backgroundColor: "#fff2db" }} que estaba repetido inline en
         // 4 de las 5 tarjetas (la de Filtros Activos se habia quedado sin el y
