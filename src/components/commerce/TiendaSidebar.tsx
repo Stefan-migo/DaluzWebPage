@@ -149,7 +149,7 @@ export default function TiendaSidebar({
         </Button>
       </div>
       {/* Search */}
-      <Card variant="artisanal" className="lg:block" style={{ backgroundColor: "#fff2db" }}>
+      <Card variant="artisanal" className="tienda-card lg:block">
         <CardHeader className="pb-2 lg:pb-3">
           <CardTitle className="tienda-section-title text-base lg:text-lg flex items-center gap-2">
             <Search className="h-4 w-4 lg:h-5 lg:w-5" />
@@ -171,7 +171,7 @@ export default function TiendaSidebar({
       </Card>
 
       {/* Categories */}
-      <Card variant="artisanal" style={{ backgroundColor: "#fff2db" }}>
+      <Card variant="artisanal" className="tienda-card">
         <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
@@ -217,7 +217,7 @@ export default function TiendaSidebar({
       </Card>
 
       {/* Filters */}
-      <Card variant="artisanal" style={{ backgroundColor: "#fff2db" }}>
+      <Card variant="artisanal" className="tienda-card">
         <CardHeader
           className="pb-2 lg:pb-3 cursor-pointer"
           onClick={() => {
@@ -361,7 +361,7 @@ export default function TiendaSidebar({
       </Card>
 
       {/* Sort & Grid - Hidden on mobile */}
-      <Card variant="artisanal" className="hidden lg:block" style={{ backgroundColor: "#fff2db" }}>
+      <Card variant="artisanal" className="tienda-card hidden lg:block">
         <CardHeader
           className="pb-3 cursor-pointer"
           onClick={() => {
@@ -438,7 +438,7 @@ export default function TiendaSidebar({
 
       {/* Active Filters Summary */}
       {hasActiveFilters && (
-        <Card variant="artisanal">
+        <Card variant="artisanal" className="tienda-card">
           <CardContent className="pt-4">
             <div className="space-y-2">
               {/* Sin ":" — Synthese.otf no incluye ese glifo y caería a otra fuente */}

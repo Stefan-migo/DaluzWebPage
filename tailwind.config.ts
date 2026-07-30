@@ -492,6 +492,15 @@ const config = {
             transform: "none",
           },
         },
+        // Superficie de las tarjetas del sidebar de la tienda. Reemplaza el
+        // style={{ backgroundColor: "#fff2db" }} que estaba repetido inline en
+        // 4 de las 5 tarjetas (la de Filtros Activos se habia quedado sin el y
+        // caia al bg-bg-cream de la variante artisanal, visiblemente distinto).
+        // Clase simple: aca no hay una regla de mayor especificidad que pisar,
+        // solo la utilidad bg-bg-cream, y esta se emite despues.
+        ".tienda-card": {
+          backgroundColor: "#fff2db",
+        },
         // Neutraliza el halo rojo de las variantes line-*: shadow-line y
         // shadow-line-lg estan definidas como "0 8px 25px var(--line-primary)"
         // SIN alpha (a diferencia del resto de la escala, que usa rgba a 0.15),

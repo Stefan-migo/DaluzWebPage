@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from "react";
 import ProductCard from "@/components/ui/brand/ProductCard";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Sparkles } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { useCart } from "@/contexts/CartContext";
@@ -322,17 +320,7 @@ export default function FeaturedLineSection({
       <div className="container mx-auto px-4 relative z-10">
         {/* Section Header */}
         <div className="text-center mb-8">
-          <Badge
-            className={cn(
-              "mb-4 px-4 py-2 text-sm font-semibold hover:bg-inherit hover:text-inherit",
-              selectedLine.bgColor,
-              selectedLine.borderColor,
-              selectedLine.color,
-            )}
-          >
-            <Sparkles className="h-4 w-4 mr-2" />
-            Línea Destacada
-          </Badge>
+
 
           <h2
             className={cn(
@@ -345,7 +333,7 @@ export default function FeaturedLineSection({
               fontStyle: "normal",
             }}
           >
-            Descubre la línea {selectedLine.name}
+            Descubri la línea {selectedLine.name}
           </h2>
 
           <p
@@ -357,18 +345,7 @@ export default function FeaturedLineSection({
           </p>
 
           <Link href={`/categorias/linea-${"slug" in selectedLine ? selectedLine.slug : selectedLine.id}`}>
-            <Button
-              className={cn(
-                "group relative px-10 py-4 text-lg font-semibold text-white transition-all duration-500 transform hover:scale-105 overflow-hidden",
-                selectedLine.buttonColor,
-              )}
-              style={{
-                borderRadius: "50px",
-              }}
-            >
-              <span className="relative z-10">Ver toda la línea</span>
-              <div className="absolute inset-0 -top-1 -left-1 w-[calc(100%+8px)] h-[calc(100%+8px)] bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-out"></div>
-            </Button>
+
           </Link>
         </div>
 
