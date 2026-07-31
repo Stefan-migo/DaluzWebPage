@@ -492,6 +492,27 @@ const config = {
             transform: "none",
           },
         },
+        // CTA "Ver todos los productos" de las paginas de linea.
+        // El color de cada linea entra por la custom property --line-cta, que
+        // se setea inline en el JSX. Es la unica forma de que el hover funcione:
+        // si el color viniera en style={{ color }} inline, ninguna regla :hover
+        // podria pisarlo (inline gana siempre sobre una hoja de estilos).
+        // Clase duplicada para ganarle a la regla global de botones y al
+        // hover:bg-accent de la variante outline.
+        ".tienda-line-cta.tienda-line-cta": {
+          fontFamily: "var(--font-synthese), Synthese, sans-serif",
+          fontSynthesis: "none",
+          backgroundColor: "transparent",
+          color: "var(--line-cta)",
+          borderColor: "var(--line-cta)",
+          transition: "background-color 0.2s ease, color 0.2s ease",
+          "&:hover": {
+            backgroundColor: "var(--line-cta)",
+            color: "#FFFFFF",
+            borderColor: "var(--line-cta)",
+            opacity: "1",
+          },
+        },
         // Badges de la ficha de producto ("Ultimas Unidades", "Destacado").
         // Usar SIEMPRE con variant="outline": la variante default del Badge
         // agrega la clase badge-default-hover, que en globals.css pisa el color

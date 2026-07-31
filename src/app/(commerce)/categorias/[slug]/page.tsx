@@ -279,7 +279,11 @@ export default function CategoryPage() {
               No hay productos disponibles en esta categoría
             </p>
             <Link href="/productos">
-              <Button variant="outline" style={{ borderColor: lineColors.primary, color: lineColors.primary }} className="hover:opacity-80">
+              <Button
+                variant="outline"
+                className="tienda-line-cta"
+                style={{ "--line-cta": lineColors.primary } as React.CSSProperties}
+              >
                 Ver todos los productos
               </Button>
             </Link>
@@ -317,8 +321,11 @@ export default function CategoryPage() {
         {/* Back to Products */}
         <div className="mt-12 text-center">
           <Link href="/productos">
-            <Button variant="outline" style={{ borderColor: lineColors.primary, color: lineColors.primary }} className="hover:opacity-80">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button
+              variant="outline"
+              className="tienda-line-cta"
+              style={{ "--line-cta": lineColors.primary } as React.CSSProperties}
+            >
               Ver todos los productos
             </Button>
           </Link>
