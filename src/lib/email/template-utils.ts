@@ -79,7 +79,7 @@ export function formatOrderItemsText(
     name: string;
     quantity: number;
     price: number;
-    variant_title?: string;
+    variant_title?: string | null;
   }>,
 ): string {
   const formatCurrency = (amount: number): string => {

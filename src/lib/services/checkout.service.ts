@@ -97,6 +97,7 @@ export class CheckoutService {
       unit_price: item.price,
       total_price: item.price * item.quantity,
       product_name: item.name,
+      product_image: item.image || null,
       variant_title: item.size || null,
       sku: item.sku || null,
     }));

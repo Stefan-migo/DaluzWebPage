@@ -526,6 +526,7 @@ export type Database = {
           product_id: string;
           variant_id: string | null;
           product_name: string;
+          product_image: string | null;
           variant_title: string | null;
           quantity: number;
           unit_price: number;
@@ -538,6 +539,7 @@ export type Database = {
           product_id: string;
           variant_id?: string | null;
           product_name: string;
+          product_image?: string | null;
           variant_title?: string | null;
           quantity: number;
           unit_price: number;
@@ -550,6 +552,7 @@ export type Database = {
           product_id?: string;
           variant_id?: string | null;
           product_name?: string;
+          product_image?: string | null;
           variant_title?: string | null;
           quantity?: number;
           unit_price?: number;
