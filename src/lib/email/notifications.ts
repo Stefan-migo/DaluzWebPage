@@ -30,6 +30,23 @@ function getPaymentMethodLabel(paymentMethod: string): string {
   return ARGENTINA_PAYMENT_LABELS[paymentMethod as keyof typeof ARGENTINA_PAYMENT_LABELS] || paymentMethod
 }
 
+/**
+ * Nombre del cliente para el saludo del mail.
+ *
+ * La tabla orders NO tiene columna customer_name: el nombre que carga el
+ * cliente en el checkout se guarda en shipping_name. Leer solo customer_name
+ * (undefined cuando la orden viene de la base) hacia que todos los mails
+ * saludaran "Hola Cliente".
+ */
+function resolveCustomerName(order: Order): string {
+  return (
+    order.customer_name ||
+    order.shipping_name ||
+    order.profiles?.full_name ||
+    'Cliente'
+  )
+}
+
 // Types for order data from database
 export interface OrderItem {
   id: string
@@ -96,6 +113,8 @@ export class EmailNotificationService {
         return { success: false, error: 'No customer email found' };
       }
 
+      const customerName = resolveCustomerName(order);
+
       const orderDate = new Date(order.created_at).toLocaleDateString('es-AR', {
         year: 'numeric',
         month: 'long',
@@ -146,7 +165,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: order.customer_name || 'Cliente',
+        customer_name: customerName,
         order_number: order.order_number,
         order_date: orderDate,
         order_total: formatCurrency(order.total_amount),
@@ -175,7 +194,7 @@ export class EmailNotificationService {
         : "";
 
       const text = [
-        `Hola ${order.customer_name || "Cliente"},`,
+        `Hola ${customerName},`,
         ``,
         `Recibimos tu pedido ${order.order_number} del ${orderDate}.`,
         ``,
@@ -230,8 +249,7 @@ export class EmailNotificationService {
       }
 
       const customerEmail = order.user_email || order.email || order.profiles?.email;
-      const customerName = order.customer_name || order.profiles?.full_name || 'Cliente';
-      
+
       if (!customerEmail) {
         return { success: false, error: 'No customer email found' };
       }
@@ -243,7 +261,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: customerName,
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         carrier: order.carrier || 'Transporte',
         tracking_number: order.tracking_number || 'Pendiente',
@@ -296,15 +314,14 @@ export class EmailNotificationService {
       }
 
       const customerEmail = order.user_email || order.email || order.profiles?.email;
-      const customerName = order.customer_name || order.profiles?.full_name || 'Cliente';
-      
+
       if (!customerEmail) {
         return { success: false, error: 'No customer email found' };
       }
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: customerName,
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         delivery_date: order.delivered_at 
           ? new Date(order.delivered_at).toLocaleDateString('es-AR', {
@@ -373,7 +390,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: order.customer_name || 'Cliente',
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         amount: formatCurrency(order.total_amount),
         payment_method: getPaymentMethodLabel(order.payment_method),
@@ -428,7 +445,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: order.customer_name || 'Cliente',
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         amount: formatCurrency(order.total_amount),
         payment_method: getPaymentMethodLabel(order.payment_method)

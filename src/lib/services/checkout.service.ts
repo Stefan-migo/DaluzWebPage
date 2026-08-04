@@ -61,21 +61,48 @@ export class CheckoutService {
   /**
    * Create an order in the database.
    */
-  async createOrder(userId: string, email: string, items: CartItem[]): Promise<OrderRecord> {
+  async createOrder(
+    userId: string,
+    customerInfo: CustomerInfo,
+    items: CartItem[],
+  ): Promise<OrderRecord> {
     const totalAmount = items.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0,
     );
 
+    // El checkout ya recolecta y valida nombre, telefono y direccion, pero
+    // antes solo se los mandaba a MercadoPago y no quedaban en la orden. Sin
+    // esto el mail de confirmacion no puede saludar por nombre ni mostrar el
+    // domicilio, y el pedido queda sin datos de envio para preparar el despacho.
+    const shippingName = [customerInfo.firstName, customerInfo.lastName]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+
+    const streetAddress = [customerInfo.address, customerInfo.addressNumber]
+      .filter(Boolean)
+      .join(" ")
+      .trim();
+
     try {
       const order = await this.ordersRepo.insert({
         order_number: `DL-${Date.now()}`,
         user_id: userId,
-        email,
+        email: customerInfo.email,
         status: "pending",
         subtotal: totalAmount,
         total_amount: totalAmount,
         currency: "ARS",
+        shipping_name: shippingName || null,
+        shipping_email: customerInfo.email,
+        shipping_phone: customerInfo.phone || null,
+        shipping_address: streetAddress || null,
+        shipping_city: customerInfo.city || null,
+        shipping_state: customerInfo.state || null,
+        shipping_postal_code: customerInfo.postalCode || null,
+        shipping_country: customerInfo.country || null,
+        notes: customerInfo.notes || null,
       });
 
       return order as OrderRecord;

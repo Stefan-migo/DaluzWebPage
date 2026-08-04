@@ -164,7 +164,11 @@ export function renderShippingAddress(address: EmailShippingAddress): string {
     ? `<div style="font-weight:600;color:#051341;">${escapeHtml(address.shipping_name)}</div>`
     : "";
 
+  // El encabezado va DENTRO del bloque a proposito: si estuviera en el
+  // template quedaria un titulo "Envio a" colgado sin nada debajo cuando la
+  // orden no tiene direccion.
   return `
+  <h2 style="margin:0 0 8px 0;font-size:14px;letter-spacing:0.08em;text-transform:uppercase;color:#051341;">Envío a</h2>
   <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;border-collapse:collapse;">
     <tr>
       <td style="padding:12px 16px;background-color:#fff2db;font-size:14px;color:#051341;line-height:1.5;">

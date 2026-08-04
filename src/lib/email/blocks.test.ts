@@ -174,6 +174,12 @@ describe("renderShippingAddress", () => {
     expect(renderShippingAddress({ shipping_address: null })).toBe("");
   });
 
+  it("incluye el encabezado dentro del bloque, no en el template", () => {
+    // Asi el titulo desaparece junto con la direccion en vez de quedar colgado.
+    expect(renderShippingAddress(full)).toContain("Envío a");
+    expect(renderShippingAddress({})).not.toContain("Envío a");
+  });
+
   it("escapa HTML", () => {
     const html = renderShippingAddress({
       ...full,
