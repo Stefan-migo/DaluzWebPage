@@ -34,14 +34,19 @@ function getPaymentMethodLabel(paymentMethod: string): string {
  * Nombre del cliente para el saludo del mail.
  *
  * La tabla orders NO tiene columna customer_name: el nombre que carga el
- * cliente en el checkout se guarda en shipping_name. Leer solo customer_name
- * (undefined cuando la orden viene de la base) hacia que todos los mails
- * saludaran "Hola Cliente".
+ * cliente en el checkout se guarda partido en shipping_first_name y
+ * shipping_last_name. Leer solo customer_name (undefined cuando la orden
+ * viene de la base) hacia que todos los mails saludaran "Hola Cliente".
  */
 function resolveCustomerName(order: Order): string {
+  const shippingName = [order.shipping_first_name, order.shipping_last_name]
+    .filter(Boolean)
+    .join(' ')
+    .trim()
+
   return (
     order.customer_name ||
-    order.shipping_name ||
+    shippingName ||
     order.profiles?.full_name ||
     'Cliente'
   )
@@ -76,8 +81,12 @@ export interface Order {
   subtotal?: number
   shipping_amount?: number
   discount_amount?: number | null
-  shipping_name?: string | null
-  shipping_address?: string | null
+  // Nombres reales de la tabla orders (migracion 20241220000001).
+  // src/types/database.ts esta desactualizado y declara shipping_name /
+  // shipping_address / notes, que NO existen en la base.
+  shipping_first_name?: string | null
+  shipping_last_name?: string | null
+  shipping_address_1?: string | null
   shipping_city?: string | null
   shipping_state?: string | null
   shipping_postal_code?: string | null
@@ -155,9 +164,11 @@ export class EmailNotificationService {
         total_amount: order.total_amount,
       });
 
+      // El bloque recibe una direccion "de presentacion", no las columnas
+      // crudas: por eso el mapeo de nombres ocurre aca y no dentro de blocks.
       const shippingAddressHTML = renderShippingAddress({
-        shipping_name: order.shipping_name,
-        shipping_address: order.shipping_address,
+        shipping_name: customerName,
+        shipping_address: order.shipping_address_1,
         shipping_city: order.shipping_city,
         shipping_state: order.shipping_state,
         shipping_postal_code: order.shipping_postal_code,
@@ -182,10 +193,10 @@ export class EmailNotificationService {
       // La version de texto se construye desde los datos, NO arrancando
       // etiquetas del HTML: con tablas ese metodo produce un choclo ilegible,
       // y una parte de texto pobre empeora el puntaje anti-spam.
-      const addressText = order.shipping_address
+      const addressText = order.shipping_address_1
         ? [
-            order.shipping_name,
-            order.shipping_address,
+            customerName,
+            order.shipping_address_1,
             [order.shipping_city, order.shipping_state].filter(Boolean).join(", "),
             order.shipping_postal_code ? `CP ${order.shipping_postal_code}` : null,
           ]
