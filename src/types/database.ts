@@ -445,15 +445,19 @@ export type Database = {
           payment_status: string;
           mercadoPago_id: string | null;
           mercadoPago_status: string | null;
-          shipping_name: string | null;
-          shipping_email: string | null;
+          // Nombres reales segun la migracion 20241220000001. Este bloque
+          // declaraba shipping_name / shipping_email / shipping_address /
+          // notes, que NO existen en la base y provocaban PGRST204 al insertar.
+          shipping_first_name: string | null;
+          shipping_last_name: string | null;
           shipping_phone: string | null;
-          shipping_address: string | null;
+          shipping_address_1: string | null;
+          shipping_address_2: string | null;
           shipping_city: string | null;
           shipping_state: string | null;
           shipping_postal_code: string | null;
           shipping_country: string | null;
-          notes: string | null;
+          customer_notes: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -471,15 +475,16 @@ export type Database = {
           payment_status?: string;
           mercadoPago_id?: string | null;
           mercadoPago_status?: string | null;
-          shipping_name?: string | null;
-          shipping_email?: string | null;
+          shipping_first_name?: string | null;
+          shipping_last_name?: string | null;
           shipping_phone?: string | null;
-          shipping_address?: string | null;
+          shipping_address_1?: string | null;
+          shipping_address_2?: string | null;
           shipping_city?: string | null;
           shipping_state?: string | null;
           shipping_postal_code?: string | null;
           shipping_country?: string | null;
-          notes?: string | null;
+          customer_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -497,15 +502,16 @@ export type Database = {
           payment_status?: string;
           mercadoPago_id?: string | null;
           mercadoPago_status?: string | null;
-          shipping_name?: string | null;
-          shipping_email?: string | null;
+          shipping_first_name?: string | null;
+          shipping_last_name?: string | null;
           shipping_phone?: string | null;
-          shipping_address?: string | null;
+          shipping_address_1?: string | null;
+          shipping_address_2?: string | null;
           shipping_city?: string | null;
           shipping_state?: string | null;
           shipping_postal_code?: string | null;
           shipping_country?: string | null;
-          notes?: string | null;
+          customer_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };

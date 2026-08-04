@@ -75,11 +75,9 @@ export class CheckoutService {
     // antes solo se los mandaba a MercadoPago y no quedaban en la orden. Sin
     // esto el mail de confirmacion no puede saludar por nombre ni mostrar el
     // domicilio, y el pedido queda sin datos de envio para preparar el despacho.
-    const shippingName = [customerInfo.firstName, customerInfo.lastName]
-      .filter(Boolean)
-      .join(" ")
-      .trim();
-
+    // Los nombres de columna salen de la migracion 20241220000001, NO de
+    // src/types/database.ts: ese archivo esta desactualizado y describe
+    // columnas que no existen (shipping_name, shipping_address, notes).
     const streetAddress = [customerInfo.address, customerInfo.addressNumber]
       .filter(Boolean)
       .join(" ")
@@ -94,15 +92,15 @@ export class CheckoutService {
         subtotal: totalAmount,
         total_amount: totalAmount,
         currency: "ARS",
-        shipping_name: shippingName || null,
-        shipping_email: customerInfo.email,
+        shipping_first_name: customerInfo.firstName || null,
+        shipping_last_name: customerInfo.lastName || null,
         shipping_phone: customerInfo.phone || null,
-        shipping_address: streetAddress || null,
+        shipping_address_1: streetAddress || null,
         shipping_city: customerInfo.city || null,
         shipping_state: customerInfo.state || null,
         shipping_postal_code: customerInfo.postalCode || null,
-        shipping_country: customerInfo.country || null,
-        notes: customerInfo.notes || null,
+        shipping_country: customerInfo.country || "Argentina",
+        customer_notes: customerInfo.notes || null,
       });
 
       return order as OrderRecord;
