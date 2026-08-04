@@ -74,7 +74,10 @@
       "Bash(git commit *)",
       "Bash(npx vitest *)",
       "Bash(npm test *)",
-      "Bash(echo \"TSC EXIT: $?\")"
+      "Bash(echo \"TSC EXIT: $?\")",
+      "Bash(git mv *)",
+      "Bash(mv src/app/api/email/image/route.test.ts src/lib/email/allowed-hosts.test.ts)",
+      "Bash(sed -i 's|from \"./route\"|from \"./allowed-hosts\"|' src/lib/email/allowed-hosts.test.ts)"
     ],
     "additionalDirectories": [
       "c:\\Users\\juan\\Desktop\\DaluzWebPage\\public\\images\\ceremonias"

@@ -1,6 +1,7 @@
 import { readFile } from "fs/promises";
 import path from "path";
 import sharp from "sharp";
+import { isAllowedImageHost } from "@/lib/email/allowed-hosts";
 
 export const runtime = "nodejs";
 
@@ -16,39 +17,6 @@ const CACHE_HEADERS = {
   // La imagen de un pedido ya emitido no cambia nunca.
   "Cache-Control": "public, max-age=31536000, immutable",
 };
-
-/**
- * Allowlist de hosts.
- *
- * Sin esto la ruta seria un open proxy: cualquiera podria pasarle
- * src=http://169.254.169.254/... para alcanzar direcciones internas (SSRF),
- * o colgarse del servidor como CDN gratis para servir sus propias imagenes.
- */
-export function isAllowedImageHost(rawUrl: string): boolean {
-  let parsed: URL;
-  try {
-    parsed = new URL(rawUrl);
-  } catch {
-    return false;
-  }
-
-  if (parsed.protocol !== "https:" && parsed.protocol !== "http:") return false;
-
-  const allowed = new Set<string>();
-  for (const envUrl of [
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_APP_URL,
-  ]) {
-    if (!envUrl) continue;
-    try {
-      allowed.add(new URL(envUrl).host);
-    } catch {
-      // Variable de entorno mal formada: se ignora en vez de romper.
-    }
-  }
-
-  return allowed.has(parsed.host);
-}
 
 async function placeholderResponse(): Promise<Response> {
   try {
