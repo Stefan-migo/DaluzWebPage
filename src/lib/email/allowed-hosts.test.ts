@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { isAllowedImageHost } from "./route";
+import { isAllowedImageHost } from "./allowed-hosts";
 
 describe("isAllowedImageHost", () => {
   beforeEach(() => {
