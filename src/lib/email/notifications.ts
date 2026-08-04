@@ -5,10 +5,15 @@ import {
 } from './template-loader'
 import {
   replaceTemplateVariables,
-  formatOrderItemsHTML,
   formatOrderItemsText,
   getDefaultVariables
 } from './template-utils'
+import {
+  renderOrderItems,
+  renderOrderTotals,
+  renderShippingAddress,
+  type EmailOrderItem
+} from './blocks'
 import { ARGENTINA_PAYMENT_LABELS } from '../mercadopago'
 import { createServiceRoleClient } from '@/utils/supabase/server'
 
@@ -23,6 +28,23 @@ function formatCurrency(amount: number): string {
 // Helper function to get payment method label
 function getPaymentMethodLabel(paymentMethod: string): string {
   return ARGENTINA_PAYMENT_LABELS[paymentMethod as keyof typeof ARGENTINA_PAYMENT_LABELS] || paymentMethod
+}
+
+/**
+ * Nombre del cliente para el saludo del mail.
+ *
+ * La tabla orders NO tiene columna customer_name: el nombre que carga el
+ * cliente en el checkout se guarda en shipping_name. Leer solo customer_name
+ * (undefined cuando la orden viene de la base) hacia que todos los mails
+ * saludaran "Hola Cliente".
+ */
+function resolveCustomerName(order: Order): string {
+  return (
+    order.customer_name ||
+    order.shipping_name ||
+    order.profiles?.full_name ||
+    'Cliente'
+  )
 }
 
 // Types for order data from database
@@ -48,8 +70,17 @@ export interface Order {
     unit_price?: number
     price?: number
     variant_title?: string
+    product_image?: string | null
   }>
   total_amount: number
+  subtotal?: number
+  shipping_amount?: number
+  discount_amount?: number | null
+  shipping_name?: string | null
+  shipping_address?: string | null
+  shipping_city?: string | null
+  shipping_state?: string | null
+  shipping_postal_code?: string | null
   payment_method: string
   status: string
   created_at: string
@@ -82,6 +113,8 @@ export class EmailNotificationService {
         return { success: false, error: 'No customer email found' };
       }
 
+      const customerName = resolveCustomerName(order);
+
       const orderDate = new Date(order.created_at).toLocaleDateString('es-AR', {
         year: 'numeric',
         month: 'long',
@@ -97,36 +130,91 @@ export class EmailNotificationService {
         price?: number;
         unit_price?: number;
         variant_title?: string;
+        product_image?: string | null;
       }>;
-      const normalisedItems = rawItems.map((item) => ({
+      const normalisedItems: EmailOrderItem[] = rawItems.map((item) => ({
         name: item.name ?? item.product_name ?? "Producto",
         quantity: item.quantity,
         price: item.price ?? item.unit_price ?? 0,
         variant_title: item.variant_title,
+        product_image: item.product_image,
       }));
-      const orderItemsHTML = formatOrderItemsHTML(normalisedItems);
+
+      const orderItemsHTML = renderOrderItems(normalisedItems);
       const orderItemsText = formatOrderItemsText(normalisedItems);
+
+      // Si la orden no trae subtotal, se reconstruye desde los items.
+      const subtotal =
+        order.subtotal ??
+        normalisedItems.reduce((acc, i) => acc + i.price * i.quantity, 0);
+
+      const orderTotalsHTML = renderOrderTotals({
+        subtotal,
+        shipping_amount: order.shipping_amount ?? 0,
+        discount_amount: order.discount_amount ?? 0,
+        total_amount: order.total_amount,
+      });
+
+      const shippingAddressHTML = renderShippingAddress({
+        shipping_name: order.shipping_name,
+        shipping_address: order.shipping_address,
+        shipping_city: order.shipping_city,
+        shipping_state: order.shipping_state,
+        shipping_postal_code: order.shipping_postal_code,
+      });
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: order.customer_name || 'Cliente',
+        customer_name: customerName,
         order_number: order.order_number,
         order_date: orderDate,
         order_total: formatCurrency(order.total_amount),
         order_items: orderItemsHTML,
+        order_totals: orderTotalsHTML,
+        shipping_address: shippingAddressHTML,
         payment_method: getPaymentMethodLabel(order.payment_method),
         order_items_text: orderItemsText
       };
 
       const subject = replaceTemplateVariables(template.subject, variables);
       const html = replaceTemplateVariables(template.content, variables);
-      
-      // Generate plain text version (basic HTML to text conversion)
-      const text = html
-        .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
-        .replace(/<[^>]+>/g, '')
-        .replace(/\n\s*\n/g, '\n')
-        .trim();
+
+      // La version de texto se construye desde los datos, NO arrancando
+      // etiquetas del HTML: con tablas ese metodo produce un choclo ilegible,
+      // y una parte de texto pobre empeora el puntaje anti-spam.
+      const addressText = order.shipping_address
+        ? [
+            order.shipping_name,
+            order.shipping_address,
+            [order.shipping_city, order.shipping_state].filter(Boolean).join(", "),
+            order.shipping_postal_code ? `CP ${order.shipping_postal_code}` : null,
+          ]
+            .filter(Boolean)
+            .join("\n")
+        : "";
+
+      const text = [
+        `Hola ${customerName},`,
+        ``,
+        `Recibimos tu pedido ${order.order_number} del ${orderDate}.`,
+        ``,
+        `PRODUCTOS`,
+        orderItemsText,
+        ``,
+        `Subtotal: ${formatCurrency(subtotal)}`,
+        `Envío: ${(order.shipping_amount ?? 0) > 0 ? formatCurrency(order.shipping_amount!) : "Gratis"}`,
+        (order.discount_amount ?? 0) > 0
+          ? `Descuento: - ${formatCurrency(order.discount_amount!)}`
+          : null,
+        `Total: ${formatCurrency(order.total_amount)}`,
+        addressText ? `` : null,
+        addressText ? `ENVÍO A` : null,
+        addressText || null,
+        ``,
+        `Gracias por tu compra.`,
+      ]
+        .filter((line) => line !== null)
+        .join("\n");
 
       const result = await sendEmail({
         to: customerEmail,
@@ -161,8 +249,7 @@ export class EmailNotificationService {
       }
 
       const customerEmail = order.user_email || order.email || order.profiles?.email;
-      const customerName = order.customer_name || order.profiles?.full_name || 'Cliente';
-      
+
       if (!customerEmail) {
         return { success: false, error: 'No customer email found' };
       }
@@ -174,7 +261,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: customerName,
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         carrier: order.carrier || 'Transporte',
         tracking_number: order.tracking_number || 'Pendiente',
@@ -227,15 +314,14 @@ export class EmailNotificationService {
       }
 
       const customerEmail = order.user_email || order.email || order.profiles?.email;
-      const customerName = order.customer_name || order.profiles?.full_name || 'Cliente';
-      
+
       if (!customerEmail) {
         return { success: false, error: 'No customer email found' };
       }
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: customerName,
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         delivery_date: order.delivered_at 
           ? new Date(order.delivered_at).toLocaleDateString('es-AR', {
@@ -304,7 +390,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: order.customer_name || 'Cliente',
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         amount: formatCurrency(order.total_amount),
         payment_method: getPaymentMethodLabel(order.payment_method),
@@ -359,7 +445,7 @@ export class EmailNotificationService {
 
       const variables = {
         ...getDefaultVariables(),
-        customer_name: order.customer_name || 'Cliente',
+        customer_name: resolveCustomerName(order),
         order_number: order.order_number,
         amount: formatCurrency(order.total_amount),
         payment_method: getPaymentMethodLabel(order.payment_method)

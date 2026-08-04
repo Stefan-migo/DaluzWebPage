@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     const checkoutService = new CheckoutService(ordersRepo);
 
     // === Business Logic via Service ===
-    const order = await checkoutService.createOrder(user.id, customerInfo.email, items);
+    const order = await checkoutService.createOrder(user.id, customerInfo, items);
     await checkoutService.createOrderItems(order.id, items);
 
     try {

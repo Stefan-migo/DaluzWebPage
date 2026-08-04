@@ -71,7 +71,10 @@
       "Bash(node -e \"const p=require\\('./package.json'\\);console.log\\('lucide-react:', \\(p.dependencies&&p.dependencies['lucide-react']\\)||\\(p.devDependencies&&p.devDependencies['lucide-react']\\)\\)\")",
       "Bash(node -e \"console.log\\(require\\('./node_modules/lucide-react/package.json'\\).version\\)\")",
       "Bash",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(npx vitest *)",
+      "Bash(npm test *)",
+      "Bash(echo \"TSC EXIT: $?\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\juan\\Desktop\\DaluzWebPage\\public\\images\\ceremonias"
