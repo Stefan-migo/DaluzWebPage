@@ -67,6 +67,16 @@ export default function CheckoutPage() {
     notes: "",
   });
 
+  // Cambiar de metodo invalida la preferencia de MercadoPago ya creada.
+  //
+  // Sin esto pasan tres cosas: el boton de enviar queda deshabilitado para
+  // siempre (su disabled incluye !!preferenceId y nada lo limpiaba), el brick
+  // de Wallet sigue montado aunque elijas transferencia, y al re-renderizar el
+  // SDK de MercadoPago agrega un segundo boton en vez de reemplazar el primero.
+  useEffect(() => {
+    setPreferenceId(null);
+  }, [paymentMethod]);
+
   // Si faltan los datos bancarios, la opcion transferencia no se ofrece:
   // es preferible a mandar al cliente a transferir a ninguna parte.
   useEffect(() => {
@@ -868,8 +878,12 @@ export default function CheckoutPage() {
               )}
             </Button>
 
-            {/* This component will handle the redirect to Mercado Pago */}
-            {preferenceId && (
+            {/* This component will handle the redirect to Mercado Pago.
+                La guarda por metodo es defensa en profundidad: el efecto de
+                arriba ya limpia preferenceId al cambiar de metodo, pero esto
+                garantiza que el brick nunca aparezca en el flujo de
+                transferencia aunque quede un id colgado. */}
+            {preferenceId && paymentMethod === "mercadopago" && (
               <div className="mt-4">
                 <Wallet initialization={{ preferenceId }} />
               </div>
