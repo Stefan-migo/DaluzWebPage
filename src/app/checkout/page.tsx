@@ -21,6 +21,7 @@ import {
   ArrowLeft,
   Shield,
   Info,
+  Landmark,
 } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -526,83 +527,132 @@ export default function CheckoutPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div
-                  className="p-4 border rounded-lg"
+                {transferAvailable && (
+                  <p className="text-sm mb-3" style={{ color: "#AE0000" }}>
+                    Elegí cómo querés pagar:
+                  </p>
+                )}
+
+                {/* Radios reales, ocultos visualmente: el label los activa al
+                    hacer click y ademas quedan accesibles por teclado y lector
+                    de pantalla sin escribir manejo de foco a mano. */}
+                <label
+                  className="flex items-start gap-3 p-4 border cursor-pointer transition-all"
                   style={{
                     borderRadius: "0px 15px",
                     borderColor: "#AE0000",
                     borderWidth: paymentMethod === "mercadopago" ? 2 : 1,
                     backgroundColor:
                       paymentMethod === "mercadopago"
-                        ? "rgba(174, 0, 0, 0.08)"
+                        ? "rgba(174, 0, 0, 0.10)"
                         : "transparent",
-                    cursor: "pointer",
                   }}
-                  onClick={() => setPaymentMethod("mercadopago")}
                 >
-                  <div className="flex items-center justify-center mb-2">
-                    <Shield
-                      className="h-6 w-6 mr-2"
-                      style={{ color: "#AE0000" }}
-                    />
-                    <span
-                      className="font-semibold font-title"
-                      style={{ color: "#AE0000" }}
-                    >
-                      Mercado Pago
-                    </span>
-                  </div>
-                  <p
-                    className="text-sm text-center"
-                    style={{ color: "#AE0000" }}
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="mercadopago"
+                    checked={paymentMethod === "mercadopago"}
+                    onChange={() => setPaymentMethod("mercadopago")}
+                    className="sr-only"
+                  />
+                  <span
+                    className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"
+                    style={{ borderColor: "#AE0000" }}
+                    aria-hidden="true"
                   >
-                    Pago seguro con tarjeta de crédito, débito, transferencia
-                    bancaria o efectivo
-                  </p>
-                  <div className="mt-3 flex justify-center">
-                    <Badge
-                      variant="default"
-                      className=" border-admin-success/30"
+                    {paymentMethod === "mercadopago" && (
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ backgroundColor: "#AE0000" }}
+                      />
+                    )}
+                  </span>
+                  <span className="flex-1">
+                    <span className="flex items-center gap-2">
+                      <Shield className="h-5 w-5" style={{ color: "#AE0000" }} />
+                      <span
+                        className="font-semibold font-title"
+                        style={{ color: "#AE0000" }}
+                      >
+                        Mercado Pago
+                      </span>
+                    </span>
+                    <span
+                      className="block text-sm mt-1"
+                      style={{ color: "#AE0000" }}
                     >
-                      Pago 100% seguro
-                    </Badge>
-                  </div>
-                </div>
+                      Tarjeta de crédito, débito o efectivo. Pagás ahora y el
+                      pedido queda confirmado al instante.
+                    </span>
+                  </span>
+                </label>
 
                 {transferAvailable && (
-                  <div
-                    className="p-4 border rounded-lg mt-3"
+                  <label
+                    className="flex items-start gap-3 p-4 border cursor-pointer transition-all mt-3"
                     style={{
                       borderRadius: "0px 15px",
                       borderColor: "#AE0000",
                       borderWidth: paymentMethod === "bank_transfer" ? 2 : 1,
                       backgroundColor:
                         paymentMethod === "bank_transfer"
-                          ? "rgba(174, 0, 0, 0.08)"
+                          ? "rgba(174, 0, 0, 0.10)"
                           : "transparent",
-                      cursor: "pointer",
                     }}
-                    onClick={() => setPaymentMethod("bank_transfer")}
                   >
-                    <div className="flex items-center justify-center mb-2">
-                      <CreditCard
-                        className="h-6 w-6 mr-2"
-                        style={{ color: "#AE0000" }}
-                      />
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="bank_transfer"
+                      checked={paymentMethod === "bank_transfer"}
+                      onChange={() => setPaymentMethod("bank_transfer")}
+                      className="sr-only"
+                    />
+                    <span
+                      className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2"
+                      style={{ borderColor: "#AE0000" }}
+                      aria-hidden="true"
+                    >
+                      {paymentMethod === "bank_transfer" && (
+                        <span
+                          className="h-2.5 w-2.5 rounded-full"
+                          style={{ backgroundColor: "#AE0000" }}
+                        />
+                      )}
+                    </span>
+                    <span className="flex-1">
+                      <span className="flex items-center gap-2 flex-wrap">
+                        <Landmark
+                          className="h-5 w-5"
+                          style={{ color: "#AE0000" }}
+                        />
+                        <span
+                          className="font-semibold font-title"
+                          style={{ color: "#AE0000" }}
+                        >
+                          Transferencia bancaria
+                        </span>
+                        <span
+                          className="text-xs px-2 py-0.5 font-semibold"
+                          style={{
+                            backgroundColor: "#AE0000",
+                            color: "#FFF2E9",
+                            borderRadius: "0 8px",
+                          }}
+                        >
+                          CON DESCUENTO
+                        </span>
+                      </span>
                       <span
-                        className="font-semibold font-title"
+                        className="block text-sm mt-1"
                         style={{ color: "#AE0000" }}
                       >
-                        Transferencia bancaria
+                        Te damos el CBU y tenés 72 horas para transferir. El
+                        pedido se confirma cuando recibimos el pago.
                       </span>
-                    </div>
-                    <p
-                      className="text-sm text-center"
-                      style={{ color: "#AE0000" }}
-                    >
-                      Te damos el CBU y tenés 72 horas para transferir
-                    </p>
-                  </div>
+                    </span>
+                  </label>
                 )}
               </CardContent>
             </Card>
