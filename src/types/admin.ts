@@ -77,9 +77,14 @@ export type PaymentStatus =
   | "paid"
   | "failed"
   | "refunded"
-  | "partially_refunded";
+  | "partially_refunded"
+  | "awaiting_transfer"
+  | "proof_submitted";
+// "transfer" es un valor preexistente y se deja como esta. El flujo de
+// transferencia bancaria escribe "bank_transfer".
 export type PaymentMethod =
   | "transfer"
+  | "bank_transfer"
   | "credit_card"
   | "debit_card"
   | "cash"

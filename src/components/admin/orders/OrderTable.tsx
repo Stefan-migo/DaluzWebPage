@@ -229,6 +229,33 @@ function OrderActions({
           </DropdownMenuItem>
         )}
         <DropdownMenuSeparator />
+        {order.payment_method === "bank_transfer" &&
+          order.payment_status === "awaiting_transfer" && (
+            <DropdownMenuItem
+              onClick={async () => {
+                if (
+                  !confirm(
+                    `¿Confirmar que recibiste la transferencia del pedido ${order.order_number}? Esto descuenta stock y le avisa al cliente.`,
+                  )
+                ) {
+                  return;
+                }
+                const res = await fetch(
+                  `/api/admin/orders/${order.id}/confirm-transfer`,
+                  { method: "POST" },
+                );
+                if (res.ok) {
+                  window.location.reload();
+                } else {
+                  const data = await res.json();
+                  alert(data.error || "No se pudo confirmar");
+                }
+              }}
+            >
+              <Package className="h-4 w-4 mr-2" />
+              Confirmar transferencia
+            </DropdownMenuItem>
+          )}
         {order.status === "pending" && onUpdateStatus && (
           <DropdownMenuItem
             onClick={() => onUpdateStatus(order.id, "processing")}

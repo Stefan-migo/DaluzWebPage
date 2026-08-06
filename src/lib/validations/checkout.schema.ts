@@ -30,6 +30,9 @@ export const customerInfoSchema = z.object({
 export const checkoutPayloadSchema = z.object({
   items: z.array(cartItemSchema).min(1, "No items in cart"),
   customerInfo: customerInfoSchema,
+  // .default protege a clientes cacheados que todavia no mandan el campo:
+  // siguen funcionando por MercadoPago en vez de romper.
+  paymentMethod: z.enum(["mercadopago", "bank_transfer"]).default("mercadopago"),
 });
 
 export type CheckoutPayload = z.infer<typeof checkoutPayloadSchema>;

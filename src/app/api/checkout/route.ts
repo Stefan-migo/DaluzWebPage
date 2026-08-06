@@ -3,8 +3,16 @@ import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { getServiceClient } from "@/lib/auth/helpers";
 import { OrdersRepository } from "@/lib/repositories/orders.repository";
+import { ProductsRepository } from "@/lib/repositories/products.repository";
+import { SystemRepository } from "@/lib/repositories/system.repository";
 import { CheckoutService } from "@/lib/services/checkout.service";
 import { checkoutPayloadSchema } from "@/lib/validations/checkout.schema";
+import {
+  parseBankTransferConfig,
+  BANK_TRANSFER_CONFIG_KEYS,
+} from "@/lib/payments/bank-transfer-config";
+import { calculateTransferDiscount } from "@/lib/payments/transfer-discount";
+import { EmailNotificationService } from "@/lib/email/notifications";
 import { logger } from "@/lib/logger";
 
 export async function POST(req: NextRequest) {
@@ -58,7 +66,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const { items, customerInfo } = parsed.data;
+    const { items, customerInfo, paymentMethod } = parsed.data;
 
     logger.info("Checkout request received", {
       source: "checkout",
@@ -66,8 +74,68 @@ export async function POST(req: NextRequest) {
     });
 
     // === Instantiate service chain (service client bypasses RLS) ===
-    const ordersRepo = new OrdersRepository(getServiceClient());
+    const serviceClient = getServiceClient();
+    const ordersRepo = new OrdersRepository(serviceClient);
     const checkoutService = new CheckoutService(ordersRepo);
+
+    if (paymentMethod === "bank_transfer") {
+      const systemRepo = new SystemRepository(serviceClient);
+      const productsRepo = new ProductsRepository(serviceClient);
+
+      // Sin datos bancarios cargados no se puede cobrar por transferencia.
+      const configRows = await systemRepo.getConfigs([...BANK_TRANSFER_CONFIG_KEYS]);
+      const bank = parseBankTransferConfig(configRows);
+      if (!bank) {
+        return NextResponse.json(
+          { error: "La transferencia bancaria no esta disponible en este momento." },
+          { status: 503 },
+        );
+      }
+
+      // Los porcentajes se leen de la base, nunca del cliente: aceptar un total
+      // calculado en el navegador permitiria pedirse cualquier descuento.
+      const products = await productsRepo.findManyByIds(items.map((i) => i.productId));
+      const percentByProductId: Record<string, number> = {};
+      for (const p of products) {
+        if (p.discount_transfer_percent) {
+          percentByProductId[p.id] = p.discount_transfer_percent;
+        }
+      }
+
+      const totals = calculateTransferDiscount(items, percentByProductId);
+
+      const order = await checkoutService.createOrder(
+        user.id,
+        customerInfo,
+        items,
+        "bank_transfer",
+        totals,
+      );
+      await checkoutService.createOrderItems(order.id, items);
+
+      // Un fallo de mail no puede romper la compra: la pantalla de
+      // instrucciones es la fuente de verdad, el mail es respaldo.
+      try {
+        const fullOrder = await ordersRepo.findByIdWithItems(order.id);
+        if (fullOrder) {
+          await EmailNotificationService.sendBankTransferInstructions(
+            fullOrder as never,
+            bank,
+          );
+        }
+      } catch (mailError) {
+        logger.error(
+          "Failed to send bank transfer instructions",
+          mailError instanceof Error ? mailError : undefined,
+          { source: "checkout" },
+        );
+      }
+
+      return NextResponse.json({
+        method: "bank_transfer",
+        redirectUrl: `/checkout/transferencia/${order.id}`,
+      });
+    }
 
     // === Business Logic via Service ===
     const order = await checkoutService.createOrder(user.id, customerInfo, items);
@@ -76,6 +144,7 @@ export async function POST(req: NextRequest) {
     try {
       const result = await checkoutService.createMercadoPagoPreference(order, items, customerInfo);
       return NextResponse.json({
+        method: "mercadopago",
         id: result.preferenceId,
         init_point: result.initPoint,
       });

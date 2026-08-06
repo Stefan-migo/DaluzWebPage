@@ -250,6 +250,129 @@ export class EmailNotificationService {
   }
 
   // Send shipping notification using DB template
+  // Instrucciones de pago por transferencia bancaria.
+  // La pantalla /checkout/transferencia es la fuente de verdad de los datos
+  // bancarios; este mail es una copia de respaldo.
+  static async sendBankTransferInstructions(
+    order: Order & { transfer_expires_at?: string | null },
+    bank: { cbu: string; alias: string; holder: string; bank: string },
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const template = await loadEmailTemplate('bank_transfer_instructions', true);
+      if (!template) {
+        console.warn('⚠️ No active bank_transfer_instructions template found');
+        return { success: false, error: 'No active template found' };
+      }
+
+      const customerEmail = order.user_email || order.email;
+      if (!customerEmail) return { success: false, error: 'No customer email found' };
+
+      const customerName = resolveCustomerName(order);
+
+      const rawItems = (order.order_items ?? order.items ?? []) as Array<{
+        name?: string; product_name?: string; quantity: number;
+        price?: number; unit_price?: number; variant_title?: string;
+        product_image?: string | null;
+      }>;
+      const normalisedItems: EmailOrderItem[] = rawItems.map((item) => ({
+        name: item.name ?? item.product_name ?? 'Producto',
+        quantity: item.quantity,
+        price: item.price ?? item.unit_price ?? 0,
+        variant_title: item.variant_title,
+        product_image: item.product_image,
+      }));
+
+      const subtotal =
+        order.subtotal ??
+        normalisedItems.reduce((acc, i) => acc + i.price * i.quantity, 0);
+
+      const deadline = order.transfer_expires_at
+        ? new Date(order.transfer_expires_at).toLocaleDateString('es-AR', {
+            day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit',
+          })
+        : '';
+
+      const bankDetails = `
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;border-collapse:collapse;">
+          <tr><td style="padding:12px 16px;background-color:#fff2db;font-size:14px;color:#051341;line-height:1.7;">
+            <div><strong>CBU:</strong> ${bank.cbu}</div>
+            <div><strong>Alias:</strong> ${bank.alias}</div>
+            <div><strong>Titular:</strong> ${bank.holder}</div>
+            <div><strong>Banco:</strong> ${bank.bank}</div>
+          </td></tr>
+        </table>`;
+
+      const variables = {
+        ...getDefaultVariables(),
+        customer_name: customerName,
+        order_number: order.order_number,
+        order_total: formatCurrency(order.total_amount),
+        transfer_deadline: deadline,
+        bank_details: bankDetails,
+        order_items: renderOrderItems(normalisedItems),
+        order_totals: renderOrderTotals({
+          subtotal,
+          shipping_amount: order.shipping_amount ?? 0,
+          discount_amount: order.discount_amount ?? 0,
+          total_amount: order.total_amount,
+        }),
+      };
+
+      const text = [
+        `Hola ${customerName},`,
+        ``,
+        `Para confirmar tu pedido ${order.order_number} transferí ${formatCurrency(order.total_amount)} antes del ${deadline}.`,
+        ``,
+        `CBU: ${bank.cbu}`,
+        `Alias: ${bank.alias}`,
+        `Titular: ${bank.holder}`,
+        `Banco: ${bank.bank}`,
+        ``,
+        `Nuestro alias es siempre ${bank.alias} y nunca lo cambiamos.`,
+      ].join('\n');
+
+      return await sendEmail({
+        to: customerEmail,
+        subject: replaceTemplateVariables(template.subject, variables),
+        html: replaceTemplateVariables(template.content, variables),
+        text,
+      });
+    } catch (error) {
+      console.error('Error sending bank transfer instructions:', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  }
+
+  // Aviso de cancelacion por vencimiento del plazo de transferencia.
+  static async sendBankTransferExpired(
+    order: Order,
+  ): Promise<{ success: boolean; error?: string }> {
+    try {
+      const template = await loadEmailTemplate('bank_transfer_expired', true);
+      if (!template) return { success: false, error: 'No active template found' };
+
+      const customerEmail = order.user_email || order.email;
+      if (!customerEmail) return { success: false, error: 'No customer email found' };
+
+      const customerName = resolveCustomerName(order);
+      const variables = {
+        ...getDefaultVariables(),
+        customer_name: customerName,
+        order_number: order.order_number,
+      };
+
+      return await sendEmail({
+        to: customerEmail,
+        subject: replaceTemplateVariables(template.subject, variables),
+        html: replaceTemplateVariables(template.content, variables),
+        text: `Hola ${customerName}, no recibimos la transferencia de tu pedido ${order.order_number} y lo cancelamos.`,
+      });
+    } catch (error) {
+      console.error('Error sending bank transfer expired email:', error);
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+    }
+  }
+
   static async sendShippingNotification(order: Order): Promise<{ success: boolean; error?: string }> {
     try {
       const template = await loadEmailTemplate('order_shipped', true);

@@ -1,9 +1,9 @@
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import { getMercadoPagoAccessToken } from "@/lib/mercadopago/config";
-import { EmailNotificationService } from "@/lib/email/notifications";
 import { OrdersRepository } from "@/lib/repositories/orders.repository";
 import { ProductsRepository } from "@/lib/repositories/products.repository";
 import { SystemRepository } from "@/lib/repositories/system.repository";
+import { OrderPaymentService } from "./order-payment.service";
 
 // ============================================
 // Types
@@ -184,8 +184,13 @@ export class WebhookService {
 
     // Post-approval actions — skip if already processed (idempotency)
     if (paymentInfo.status === "approved" && !alreadyApproved) {
-      await this.sendConfirmationEmail(orderId);
-      await this.updateInventory(orderId);
+      // Los efectos del cobro viven en OrderPaymentService porque tambien los
+      // usa la confirmacion manual de transferencias desde el panel.
+      const paymentService = new OrderPaymentService(
+        this.ordersRepo,
+        this.productsRepo,
+      );
+      await paymentService.confirmOrderPayment(orderId);
       await this.grantTreasures(orderId);
     }
 
@@ -194,60 +199,9 @@ export class WebhookService {
     );
   }
 
-  /**
-   * Send order confirmation email.
-   */
-  private async sendConfirmationEmail(orderId: string): Promise<void> {
-    try {
-      const order = await this.ordersRepo.findByIdWithItems(orderId);
-
-      if (order && order.email) {
-        await EmailNotificationService.sendOrderConfirmation(order);
-        console.log(`📧 Order confirmation email sent to ${order.email}`);
-      }
-    } catch (emailError) {
-      console.error("Failed to send order confirmation email:", emailError);
-    }
-  }
-
-  /**
-   * Decrease product inventory after a successful payment.
-   */
-  async updateInventory(orderId: string): Promise<void> {
-    try {
-      const orderItems = await this.ordersRepo.getItemsByOrderId(orderId);
-
-      if (!orderItems || orderItems.length === 0) return;
-
-      for (const item of orderItems) {
-        try {
-          await this.productsRepo.decreaseStock(item.product_id, item.quantity);
-        } catch (stockError) {
-          console.warn("RPC function failed, updating inventory directly:", stockError);
-          const product = await this.productsRepo.findById(item.product_id);
-
-          if (product) {
-            const newInventory = Math.max(0, (product.inventory_quantity ?? 0) - item.quantity);
-            const newStock = Math.max(
-              0,
-              (product.stock_quantity ?? product.inventory_quantity ?? 0) - item.quantity,
-            );
-            try {
-              await this.productsRepo.update(item.product_id, {
-                inventory_quantity: newInventory,
-                stock_quantity: newStock,
-                updated_at: new Date().toISOString(),
-              });
-            } catch (updateErr) {
-              console.error(`Failed to update inventory for product ${item.product_id}:`, updateErr);
-            }
-          }
-        }
-      }
-    } catch (inventoryError) {
-      console.error("Error updating inventory:", inventoryError);
-    }
-  }
+  // sendConfirmationEmail y updateInventory se movieron a
+  // OrderPaymentService.confirmOrderPayment: tener dos copias garantizaba que
+  // el camino de MercadoPago y el de transferencia se desincronizaran.
 
   /**
    * Grant treasure access to user based on products purchased.

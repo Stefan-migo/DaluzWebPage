@@ -47,6 +47,10 @@ export default function CheckoutPage() {
 
   const [loading, setLoading] = useState(false);
   const [preferenceId, setPreferenceId] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<
+    "mercadopago" | "bank_transfer"
+  >("mercadopago");
+  const [transferAvailable, setTransferAvailable] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [termsError, setTermsError] = useState(false);
   const [form, setForm] = useState<CheckoutForm>({
@@ -61,6 +65,20 @@ export default function CheckoutPage() {
     zipCode: "",
     notes: "",
   });
+
+  // Si faltan los datos bancarios, la opcion transferencia no se ofrece:
+  // es preferible a mandar al cliente a transferir a ninguna parte.
+  useEffect(() => {
+    fetch("/api/public/config?keys=bank_transfer_cbu,bank_transfer_alias")
+      .then((r) => r.json())
+      .then((res) => {
+        const configs = res?.configs ?? {};
+        setTransferAvailable(
+          Boolean(configs.bank_transfer_cbu && configs.bank_transfer_alias),
+        );
+      })
+      .catch(() => setTransferAvailable(false));
+  }, []);
 
   // Initialize Mercado Pago with dynamic public key
   useEffect(() => {
@@ -197,6 +215,7 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           items: items,
           customerInfo: form,
+          paymentMethod,
         }),
       });
 
@@ -218,6 +237,13 @@ export default function CheckoutPage() {
           : errorMessage;
 
         throw new Error(fullError);
+      }
+
+      if (data.method === "bank_transfer" && data.redirectUrl) {
+        // El carrito se vacia en la pantalla de instrucciones, no aca: si
+        // fallara la navegacion, el cliente no debe quedarse sin carrito.
+        router.push(data.redirectUrl);
+        return;
       }
 
       if (data.id) {
@@ -505,8 +531,14 @@ export default function CheckoutPage() {
                   style={{
                     borderRadius: "0px 15px",
                     borderColor: "#AE0000",
-                    backgroundColor: "rgba(174, 0, 0, 0.05)",
+                    borderWidth: paymentMethod === "mercadopago" ? 2 : 1,
+                    backgroundColor:
+                      paymentMethod === "mercadopago"
+                        ? "rgba(174, 0, 0, 0.08)"
+                        : "transparent",
+                    cursor: "pointer",
                   }}
+                  onClick={() => setPaymentMethod("mercadopago")}
                 >
                   <div className="flex items-center justify-center mb-2">
                     <Shield
@@ -536,6 +568,42 @@ export default function CheckoutPage() {
                     </Badge>
                   </div>
                 </div>
+
+                {transferAvailable && (
+                  <div
+                    className="p-4 border rounded-lg mt-3"
+                    style={{
+                      borderRadius: "0px 15px",
+                      borderColor: "#AE0000",
+                      borderWidth: paymentMethod === "bank_transfer" ? 2 : 1,
+                      backgroundColor:
+                        paymentMethod === "bank_transfer"
+                          ? "rgba(174, 0, 0, 0.08)"
+                          : "transparent",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => setPaymentMethod("bank_transfer")}
+                  >
+                    <div className="flex items-center justify-center mb-2">
+                      <CreditCard
+                        className="h-6 w-6 mr-2"
+                        style={{ color: "#AE0000" }}
+                      />
+                      <span
+                        className="font-semibold font-title"
+                        style={{ color: "#AE0000" }}
+                      >
+                        Transferencia bancaria
+                      </span>
+                    </div>
+                    <p
+                      className="text-sm text-center"
+                      style={{ color: "#AE0000" }}
+                    >
+                      Te damos el CBU y tenés 72 horas para transferir
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

@@ -65,11 +65,21 @@ export class CheckoutService {
     userId: string,
     customerInfo: CustomerInfo,
     items: CartItem[],
+    paymentMethod: "mercadopago" | "bank_transfer" = "mercadopago",
+    totals?: { subtotal: number; discount: number; total: number },
   ): Promise<OrderRecord> {
-    const totalAmount = items.reduce(
+    const fallbackTotal = items.reduce(
       (acc, item) => acc + item.price * item.quantity,
       0,
     );
+
+    // Los totales llegan ya calculados en el flujo de transferencia, que aplica
+    // el descuento por producto. MercadoPago usa el total de lista.
+    const subtotal = totals?.subtotal ?? fallbackTotal;
+    const discount = totals?.discount ?? 0;
+    const totalAmount = totals?.total ?? fallbackTotal;
+
+    const isTransfer = paymentMethod === "bank_transfer";
 
     // El checkout ya recolecta y valida nombre, telefono y direccion, pero
     // antes solo se los mandaba a MercadoPago y no quedaban en la orden. Sin
@@ -89,9 +99,15 @@ export class CheckoutService {
         user_id: userId,
         email: customerInfo.email,
         status: "pending",
-        subtotal: totalAmount,
+        subtotal,
+        discount_amount: discount,
         total_amount: totalAmount,
         currency: "ARS",
+        payment_method: isTransfer ? "bank_transfer" : null,
+        payment_status: isTransfer ? "awaiting_transfer" : "pending",
+        transfer_expires_at: isTransfer
+          ? new Date(Date.now() + 72 * 60 * 60 * 1000).toISOString()
+          : null,
         shipping_first_name: customerInfo.firstName || null,
         shipping_last_name: customerInfo.lastName || null,
         shipping_phone: customerInfo.phone || null,
