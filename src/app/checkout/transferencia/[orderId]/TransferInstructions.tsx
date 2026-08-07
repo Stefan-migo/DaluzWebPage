@@ -32,11 +32,12 @@ export default function TransferInstructions(props: Props) {
     setTimeout(() => setCopied(null), 2000);
   };
 
-  const rows: [string, string][] = [
+  // Solo CBU y alias llevan boton de copiar: son los unicos que se pegan en el
+  // formulario del banco. Titular y banco se leen para verificar el destino,
+  // no se copian, y darles boton agrega ruido a la accion que importa.
+  const copyableRows: [string, string][] = [
     ["CBU", props.cbu],
     ["Alias", props.alias],
-    ["Titular", props.holder],
-    ["Banco", props.bank],
   ];
 
   return (
@@ -63,7 +64,7 @@ export default function TransferInstructions(props: Props) {
       </div>
 
       <div className="space-y-2">
-        {rows.map(([label, value]) => (
+        {copyableRows.map(([label, value]) => (
           <div
             key={label}
             className="flex items-center justify-between p-3 border"
@@ -85,6 +86,18 @@ export default function TransferInstructions(props: Props) {
             </button>
           </div>
         ))}
+      </div>
+
+      {/* Datos para verificar a quien le estas transfiriendo, sin boton. */}
+      <div className="text-sm space-y-1 px-1" style={{ color: "#051341" }}>
+        <p>
+          <span className="text-gray-600">Titular:</span>{" "}
+          <span className="font-medium">{props.holder}</span>
+        </p>
+        <p>
+          <span className="text-gray-600">Banco:</span>{" "}
+          <span className="font-medium">{props.bank}</span>
+        </p>
       </div>
 
       <p className="text-sm text-gray-700">
